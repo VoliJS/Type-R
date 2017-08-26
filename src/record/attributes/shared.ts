@@ -1,6 +1,6 @@
-import { Record } from '../transaction'
-import { AnyType } from './generic'
-import { ItemsBehavior, Owner, transactionApi, Transactional, TransactionOptions, TransactionalConstructor } from '../../transactions' 
+import { AnyType } from './any'
+import { AttributesContainer } from './updates'
+import { ItemsBehavior, Owner, transactionApi, Transactional, TransactionOptions } from '../../transactions' 
 import { tools, eventsApi } from '../../object-plus'
 
 const { on, off } = eventsApi,
@@ -18,9 +18,9 @@ const shareAndListen = ItemsBehavior.listen | ItemsBehavior.share;
 
 /** @private */
 export class SharedType extends AnyType {
-    type : TransactionalConstructor
+    type : typeof Transactional
 
-    clone( value : Transactional, record : Record ) : Transactional {
+    clone( value : Transactional, record : AttributesContainer ) : Transactional {
         // References are not cloned.
         if( !value || value._owner !== record ) return value;
 
@@ -40,11 +40,11 @@ export class SharedType extends AnyType {
         }
     }
 
-    convert( value : any, options : TransactionOptions, prev : any, record : Record ) : Transactional {
+    convert( value : any, options : TransactionOptions, prev : any, record : AttributesContainer ) : Transactional {
         if( value == null || value instanceof this.type ) return value;
 
         // Convert type using implicitly created rtransactional object.
-        const implicitObject = new this.type( value, options, shareAndListen );
+        const implicitObject = new ( this.type as any )( value, options, shareAndListen );
 
         // To prevent a leak, we need to take an ownership on it.
         aquire( record, implicitObject, this.name );
@@ -61,7 +61,7 @@ export class SharedType extends AnyType {
     }
 
     // Listening to the change events
-    _handleChange( next : Transactional, prev : Transactional, record : Record ){
+    _handleChange( next : Transactional, prev : Transactional, record : AttributesContainer ){
         if( prev ){
             // If there was an implicitly created object, remove an ownership.
             if( prev._owner === record ){
@@ -80,7 +80,7 @@ export class SharedType extends AnyType {
         } 
     }
 
-    dispose( record : Record, value : Transactional ){
+    dispose( record : AttributesContainer, value : Transactional ){
         if( value ){
             const owned = value._owner === record;
             this.handleChange( void 0, value, record );

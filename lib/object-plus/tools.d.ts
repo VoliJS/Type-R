@@ -34,7 +34,7 @@ export interface LogOptions {
 export declare let log: Log;
 export declare function isValidJSON(value: any): boolean;
 export declare function getBaseClass(Class: Function): any;
-export declare function getChangedStatics(Ctor: Function, ...names: string[]): {};
+export declare function assignToClassProto<T, K extends keyof T>(Class: any, definition: T, ...names: K[]): void;
 export declare function isEmpty(obj: {}): boolean;
 export declare type Iteratee = (value: any, key?: string | number) => any;
 export declare function some(obj: any, fun: Iteratee): any;

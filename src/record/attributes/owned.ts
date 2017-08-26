@@ -1,13 +1,13 @@
-import { Record } from '../transaction' 
-import { AnyType } from './generic'
-import { Owner, transactionApi, Transactional, ItemsBehavior, TransactionOptions, TransactionalConstructor } from '../../transactions'
+import { AnyType } from './any'
+import { Owner, transactionApi, Transactional, ItemsBehavior, TransactionOptions } from '../../transactions'
 import { tools } from '../../object-plus'
+import { AttributesContainer } from './updates'
 import { ValidationError } from '../../validation'
 
 const { free, aquire } = transactionApi;
 
 export class AggregatedType extends AnyType {
-    type : TransactionalConstructor
+    type : typeof Transactional
 
     clone( value : Transactional ) : Transactional {
         return value ? value.clone() : value;
@@ -28,7 +28,7 @@ export class AggregatedType extends AnyType {
         }
     }
 
-    convert( value : any, options : TransactionOptions, prev : any, record : Record ) : Transactional {
+    convert( value : any, options : TransactionOptions, prev : any, record : AttributesContainer ) : Transactional {
         // Invoke class factory to handle abstract classes
         if( value == null ) return value;
         
@@ -45,14 +45,14 @@ export class AggregatedType extends AnyType {
         return <any>this.type.create( value, options );
     }
 
-    dispose ( record : Record, value : Transactional ){
+    dispose ( record : AttributesContainer, value : Transactional ){
         if( value ){
             this.handleChange( void 0, value, record );
             value.dispose();
         }
     }
 
-    validate( record : Record, value : Transactional ) : ValidationError {
+    validate( record : AttributesContainer, value : Transactional ) : ValidationError {
         var error = value && value.validationError;
         if( error ) return error;
     }
@@ -65,7 +65,7 @@ export class AggregatedType extends AnyType {
         options.changeHandlers.unshift( this._handleChange );
     }
 
-    _handleChange( next : Transactional, prev : Transactional, record : Record ){
+    _handleChange( next : Transactional, prev : Transactional, record : AttributesContainer ){
         prev && free( record, prev );
         
         if( next && !aquire( record, next, this.name ) ){
@@ -73,5 +73,3 @@ export class AggregatedType extends AnyType {
         }
     }
 }
-
-Record._attribute = AggregatedType;

@@ -1,4 +1,4 @@
-import { AnyType } from './generic';
+import { AnyType } from './any';
 export declare class DateType extends AnyType {
     convert(value: any, a?: any, b?: any, record?: any): any;
     validate(model: any, value: any, name: any): string;

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module":"commonjs",
+    "inlineSources": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "noImplicitAny": false,
+    "removeComments":true,
+    "experimentalDecorators": true
+  },
+  "files":[
+    "./*.ts"
+  ]
+}

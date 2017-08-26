@@ -1,7 +1,6 @@
-import { Messenger, CallbacksByEvents, MessengersByCid, MixinRules, MessengerDefinition, eventsApi, Constructor, MixableConstructor } from './object-plus';
+import { Messenger, CallbacksByEvents, MessengersByCid, MixinsState, MessengerDefinition, eventsApi } from './object-plus';
 import { ValidationError, Validatable, ChildrenErrors } from './validation';
 import { Traversable } from './traversable';
-export declare type TransactionalConstructor = MixableConstructor<Transactional>;
 export declare type TransactionalDefinition = MessengerDefinition;
 export declare enum ItemsBehavior {
     share = 1,
@@ -9,13 +8,13 @@ export declare enum ItemsBehavior {
     persistent = 4,
 }
 export declare abstract class Transactional implements Messenger, Validatable, Traversable {
-    static create: (a: any, b?: any, c?: any) => Transactional;
-    static mixins: (...mixins: (Constructor<any> | {})[]) => MixableConstructor<Transactional>;
-    static mixinRules: (mixinRules: MixinRules) => MixableConstructor<Transactional>;
-    static mixTo: (...args: Constructor<any>[]) => MixableConstructor<Transactional>;
-    static extend: (spec?: TransactionalDefinition, statics?: {}) => MixableConstructor<Transactional>;
-    static define: (spec?: TransactionalDefinition, statics?: {}) => MixableConstructor<Transactional>;
-    static predefine: () => typeof Messenger;
+    static __super__: object;
+    static mixins: MixinsState;
+    static define: (definition?: TransactionalDefinition, statics?: object) => typeof Transactional;
+    static extend: (definition?: TransactionalDefinition, statics?: object) => typeof Transactional;
+    static onDefine: (definition: TransactionalDefinition, BaseClass: typeof Transactional) => void;
+    static onExtend(BaseClass: typeof Transactional): void;
+    static create(a: any, b?: any): Transactional;
     on: (events: string | CallbacksByEvents, callback, context?) => this;
     once: (events: string | CallbacksByEvents, callback, context?) => this;
     off: (events?: string | CallbacksByEvents, callback?, context?) => this;

@@ -10,7 +10,7 @@ export interface CollectionOptions extends TransactionOptions {
 }
 export declare type Predicate = (val: Record, key: number) => boolean | object;
 export interface CollectionDefinition extends TransactionalDefinition {
-    model?: Record;
+    model?: typeof Record;
     itemEvents?: EventsDefinition;
     _itemEvents?: EventMap;
 }
@@ -20,9 +20,9 @@ export declare class Collection extends Transactional implements CollectionCore 
     static Subset: typeof Collection;
     static Refs: typeof Collection;
     static _SubsetOf: typeof Collection;
-    createSubset(models: any, options: any): any;
-    static predefine(): any;
-    static define(protoProps?: CollectionDefinition, staticProps?: any): any;
+    createSubset(models: ElementsArg, options: any): any;
+    static onExtend(BaseClass: typeof Transactional): void;
+    static onDefine(definition: CollectionDefinition, BaseClass: any): void;
     static subsetOf: (collectionReference: any) => any;
     _itemEvents: EventMap;
     models: Record[];
@@ -59,9 +59,9 @@ export declare class Collection extends Transactional implements CollectionCore 
     static _attribute: typeof AggregatedType;
     pluck(key: string): any[];
     sort(options?: TransactionOptions): this;
-    push(model: any, options: any): Record[];
-    pop(options: any): Record;
-    unshift(model: any, options: any): Record[];
+    push(model: ElementsArg, options: CollectionOptions): Record[];
+    pop(options: CollectionOptions): Record;
+    unshift(model: ElementsArg, options: CollectionOptions): Record[];
     shift(options?: CollectionOptions): Record;
     slice(): Record[];
     indexOf(modelOrId: any): number;

@@ -1,5 +1,4 @@
-import { define } from '../src/class'
-import { Record } from '../src/record/'
+import { predefine, define, Record, Collection } from '../../src'
 import { expect } from 'chai'
 
 describe( 'Record', () =>{
@@ -12,7 +11,9 @@ describe( 'Record', () =>{
             @define( {
                 a : 'a'
             } )
-            class M extends Record {}
+            class M extends Record {
+                a : string
+            }
 
             expect( M.prototype.a ).to.eql( 'a' );
         } );
@@ -31,6 +32,12 @@ describe( 'Record', () =>{
                 }
             } )
             class M extends Record {
+                s : string
+                n : number
+                b : boolean
+                o : object
+                a : Array< any >
+                d : Date
             }
 
             it( "invokes constructor to create defaults", () =>{
@@ -56,7 +63,7 @@ describe( 'Record', () =>{
                 expect( m.s ).to.equal( '55' );
                 expect( m.n ).to.equal( 1 );
                 expect( m.b ).to.equal( true );
-                expect( m.o ).to.eql( {} );
+                expect( m.o ).to.be.an.instanceOf( Object )
                 expect( m.a ).to.eql( [] );
                 expect( m.d ).to.be.instanceof( Date );
             } );
@@ -64,17 +71,17 @@ describe( 'Record', () =>{
             it( "convert values to defined types on assignment", () =>{
                 const m = new M();
 
-                m.s = 55;
-                m.n = "1";
-                m.b = 'not bool';
-                m.o = "not an object";
-                m.a = "not an array";
-                m.d = 678678678;
+                m.s = 55 as any;
+                m.n = "1" as any;
+                m.b = 'not bool' as any;
+                m.o = "not an object" as any;
+                m.a = "not an array" as any;
+                m.d = 678678678  as any;
 
                 expect( m.s ).to.equal( '55' );
                 expect( m.n ).to.equal( 1 );
                 expect( m.b ).to.equal( true );
-                expect( m.o ).to.eql( {} );
+                expect( m.o ).to.be.an.instanceOf( Object );
                 expect( m.a ).to.eql( [] );
                 expect( m.d ).to.be.instanceof( Date );
             } );
@@ -94,7 +101,7 @@ describe( 'Record', () =>{
                 expect( m.s ).to.equal( '55' );
                 expect( m.n ).to.equal( 1 );
                 expect( m.b ).to.equal( true );
-                expect( m.o ).to.eql( {} );
+                expect( m.o ).to.be.an.instanceOf( Object );
                 expect( m.a ).to.eql( [] );
                 expect( m.d ).to.be.instanceof( Date );
             } );
@@ -111,6 +118,12 @@ describe( 'Record', () =>{
                 }
             } )
             class M extends Record {
+                    s : string
+                    n : number
+                    b : boolean
+                    o : object
+                    a : any[]
+                    d : Date
             }
 
             it( "accepts values as type spec", () =>{
@@ -120,7 +133,7 @@ describe( 'Record', () =>{
                 expect( m.b ).to.equal( true );
 
                 expect( m.o ).to.not.equal( {} );
-                expect( m.o ).to.eql( {} );
+                expect( m.o ).to.be.an.instanceOf( Object );
 
                 expect( m.a ).to.not.equal( [] );
                 expect( m.a ).to.eql( [] );
@@ -152,14 +165,21 @@ describe( 'Record', () =>{
                         d : Date.value( 22222 )
                     }
                 } )
-                class M extends Record {}
+                class M extends Record {
+                    s : string
+                    n : number
+                    b : boolean
+                    o : object
+                    a : any[]
+                    d : Date                    
+                }
 
                 const m = new M();
 
                 expect( m.s ).to.equal( '55' );
                 expect( m.n ).to.equal( 1 );
                 expect( m.b ).to.equal( true );
-                expect( m.o ).to.eql( {} );
+                expect( m.o ).to.be.an.instanceOf( Object );
                 expect( m.a ).to.eql( [] );
                 expect( m.d ).to.be.instanceof( Date );
             } );
@@ -175,7 +195,14 @@ describe( 'Record', () =>{
                         d : Date.value( null )
                     }
                 } )
-                class M extends Record {}
+                class M extends Record {
+                    s : string
+                    n : number
+                    b : boolean
+                    o : object
+                    a : any[]
+                    d : Date                    
+                }
 
                 const m = new M();
 
@@ -192,7 +219,7 @@ describe( 'Record', () =>{
     describe( "Record's collection", () =>{
         it( "is defined in the base Record", ()=>{
             expect( Record.Collection ).to.be.a( 'function' );
-            expect( Record.Collection.prototype.Record ).to.eql( Record );
+            expect( Record.Collection.prototype.model ).to.eql( Record );
         } );
 
         it( "is created on Record's extension", () =>{
@@ -202,7 +229,7 @@ describe( 'Record', () =>{
 
             const { prototype } = M.Collection;
             expect( prototype ).to.be.instanceof( Record.Collection );
-            expect( prototype.Record ).to.eql( M );
+            expect( prototype.model ).to.eql( M );
         } );
 
         it( "takes properties from .collection", () =>{
@@ -214,7 +241,7 @@ describe( 'Record', () =>{
             class M extends Record {
             }
 
-            expect( M.Collection.prototype.a ).to.eql( 'a' );
+            expect( ( M as any ).Collection.prototype.a ).to.eql( 'a' );
         } );
 
         it( "can be defined separately", () =>{
@@ -222,19 +249,19 @@ describe( 'Record', () =>{
                 a : 'a'
             } )
             class C extends Collection {
+                a : string
             }
 
-            @define( {
-                collection : C
-            } )
+            @define
             class M extends Record {
+                static Collection = C;
             }
 
-            expect( M.Collection ).to.eql( C );
-            const { prototype } = M.Collection;
+            expect( M.Collection ).to.equal( C );
+            const { prototype } = M.Collection as any;
             expect( prototype ).to.be.instanceof( Record.Collection );
             expect( prototype.a ).to.eql( 'a' );
-            expect( prototype.Record ).to.eql( M );
+            expect( prototype.model ).to.eql( M );
         } );
     } );
 
@@ -243,12 +270,12 @@ describe( 'Record', () =>{
         class M1 extends Record {
         }
 
-        class M2 extends Record {}
+        @predefine class M2 extends Record {}
         M2.define();
 
         it( 'predefine collection types', ()=>{
-            expect( M1.Collection ).to.be.func;
-            expect( M2.Collection ).to.be.func;
+            expect( M1.Collection ).to.be.instanceOf( Function );
+            expect( M2.Collection ).to.be.instanceOf( Function );
         } );
 
         it( "can't be instantiated", ()=>{
@@ -258,10 +285,11 @@ describe( 'Record', () =>{
         it( 'support forward declaration', () =>{
             @define
             class M extends Record {
+                a : string
             }
 
             expect( M.Collection ).to.be.a( 'function' );
-            expect( M.Collection.prototype.Record ).to.eql( M );
+            expect( M.Collection.prototype.model ).to.eql( M );
 
             M.define( {
                 a : 'a'

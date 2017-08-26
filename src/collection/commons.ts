@@ -20,7 +20,7 @@ export interface CollectionCore extends Transactional, Owner {
     _shared : number
     _aggregationError : Record[]
 
-    _log( level : string, text : string, value )
+    _log( level : string, text : string, value : any ) : void
 }
 
 // Collection's manipulation methods elements
@@ -44,7 +44,7 @@ export function dispose( collection : CollectionCore ) : Record[]{
 }
 
 /** @private */
-export function convertAndAquire( collection : CollectionCore, attrs : {} | Record, options ){
+export function convertAndAquire( collection : CollectionCore, attrs : {} | Record, options : CollectionOptions ){
     const { model } = collection;
     
     let record : Record;

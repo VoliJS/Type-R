@@ -1,4 +1,4 @@
-import { AnyType } from './generic'
+import { AnyType } from './any'
 import { tools } from '../../object-plus'
 
 const DateProto = Date.prototype;

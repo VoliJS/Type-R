@@ -1,4 +1,4 @@
-import { AnyType, AttributeDescriptor } from '../record'
+import { AnyType, AttributeOptions } from '../record'
 import { parseReference, CollectionReference } from './commons'
 import { Collection } from '../collection'
 import { Record } from '../record'

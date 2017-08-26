@@ -1,5 +1,4 @@
 import { Record, Attribute, AttributeDescriptor } from '../transaction';
-import { Constructor } from '../../object-plus';
 import { TransactionOptions } from '../../transactions';
 export declare type ChangeAttrHandler = ((value: any, attr: string) => void) | string;
 declare global  {
@@ -30,7 +29,7 @@ export declare class AnyType implements Attribute {
     createPropertyDescriptor(): PropertyDescriptor | void;
     value: any;
     static defaultValue: any;
-    type: Constructor<any>;
+    type: Function;
     parse: (value, key: string) => any;
     initialize(name: string, options: any): void;
     options: ExtendedAttributeDescriptor;

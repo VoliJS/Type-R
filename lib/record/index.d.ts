@@ -1,19 +1,4 @@
-import { Record } from './transaction';
-import { ChainableAttributeSpec } from './typespec';
+import { Record } from './record';
+import { ChainableAttributeSpec } from './attributes';
 export * from './attributes';
 export { Record, ChainableAttributeSpec };
-declare global  {
-    interface DateConstructor {
-        microsoft: any;
-        timestamp: any;
-    }
-}
-declare global  {
-    interface NumberConstructor {
-        integer: Function;
-    }
-    interface Window {
-        Integer: Function;
-    }
-}
-export declare function createSharedTypeSpec(Constructor: any, Attribute: any): void;

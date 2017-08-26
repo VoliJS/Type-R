@@ -1,17 +1,17 @@
-import { ClassDefinition, Constructor } from '../object-plus';
-import { CloneOptions, Transactional, Transaction, TransactionOptions, Owner } from '../transactions';
+import { CloneOptions, Transactional, TransactionalDefinition, Transaction, TransactionOptions, Owner } from '../transactions';
 import { ChildrenErrors } from '../validation';
-export interface RecordDefinition extends ClassDefinition {
+import { Collection } from '../collection';
+export interface RecordDefinition extends TransactionalDefinition {
+    idAttribute?: string;
     attributes?: AttributeDescriptorMap;
-    defaults?: AttributeDescriptorMap | (() => AttributeDescriptorMap);
-    collection?: typeof Transactional | {};
+    collection?: object;
     Collection?: typeof Transactional;
 }
 export interface AttributeDescriptorMap {
     [name: string]: AttributeDescriptor;
 }
 export interface AttributeDescriptor {
-    type?: Constructor<any>;
+    type?: Function;
     value?: any;
     parse?: AttributeParse;
     toJSON?: AttributeToJSON;
@@ -55,11 +55,12 @@ export interface ConstructorOptions extends TransactionOptions {
     clone?: boolean;
 }
 export declare class Record extends Transactional implements Owner {
-    static define(protoProps: RecordDefinition, staticProps?: any): typeof Record;
-    static predefine: () => typeof Record;
-    static Collection: typeof Transactional;
+    static onDefine(definition: any, BaseClass: any): void;
+    static Collection: typeof Collection;
+    static DefaultCollection: typeof Collection;
     static from: (collectionReference: any) => any;
     static defaults(attrs: AttributeDescriptorMap): typeof Record;
+    static attributes(attrs: AttributeDescriptorMap): typeof Record;
     _previousAttributes: {};
     previousAttributes(): any;
     attributes: AttributesValues;

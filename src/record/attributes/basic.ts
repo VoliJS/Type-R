@@ -1,4 +1,4 @@
-import { AnyType } from './generic'
+import { AnyType } from './any'
 import { tools } from '../../object-plus'
 
 // Default attribute type for all constructor functions...
@@ -83,3 +83,27 @@ export class ArrayType extends AnyType {
 }
 
 Array._attribute = ArrayType;
+
+export function doNothing(){}
+
+export class FunctionType extends AnyType {
+    // Functions are not serialized.
+    toJSON( value ) { return void 0; }
+    create(){ return doNothing; }
+
+    convert( value, a?, b?, record? ) {
+        // Fix incompatible constructor behaviour of Array...
+        if( value == null || typeof value === 'function' ) return value;
+
+        this._log( 'warn', 'assigned with non-function', value, record );
+
+        return doNothing;
+    }
+
+    isChanged( a, b ) { return a !== b; }
+
+    // Functions are not cloned.
+    clone( value ){ return value; }
+}
+
+Function._attribute = FunctionType;

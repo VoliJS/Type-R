@@ -1,4 +1,4 @@
-import { AnyType } from './generic';
+import { AnyType } from './any';
 export declare class PrimitiveType extends AnyType {
     type: NumberConstructor | StringConstructor | BooleanConstructor;
     dispose(): void;
@@ -17,5 +17,13 @@ export declare class ArrayType extends AnyType {
     toJSON(value: any): any;
     dispose(): void;
     convert(value: any, a?: any, b?: any, record?: any): any;
+    clone(value: any): any;
+}
+export declare function doNothing(): void;
+export declare class FunctionType extends AnyType {
+    toJSON(value: any): any;
+    create(): typeof doNothing;
+    convert(value: any, a?: any, b?: any, record?: any): any;
+    isChanged(a: any, b: any): boolean;
     clone(value: any): any;
 }

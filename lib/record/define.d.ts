@@ -1,5 +1,5 @@
 import { AnyType } from './attributes';
-import { Attribute, AttributeDescriptorMap, CloneAttributesCtor } from './transaction';
+import { AttributesValues, CloneAttributesCtor } from './attributes';
 import { eventsApi } from '../object-plus';
 export interface DynamicMixin {
     _attributes: AttributesSpec;
@@ -15,10 +15,10 @@ export interface DynamicMixin {
 export interface AttributesSpec {
     [key: string]: AnyType;
 }
-export declare type ForEach = (obj: {}, iteratee: (val: any, key?: string, spec?: Attribute) => void) => void;
+export declare type ForEach = (obj: {}, iteratee: (val: any, key?: string, spec?: AnyType) => void) => void;
 export declare type Defaults = (attrs?: {}) => {};
 export declare type Parse = (data: any) => any;
 export declare type ToJSON = () => any;
-export declare function compile(rawSpecs: AttributeDescriptorMap, baseAttributes: AttributesSpec): DynamicMixin;
+export declare function compile(rawSpecs: AttributesValues, baseAttributes: AttributesSpec): DynamicMixin;
 export declare function createForEach(attrSpecs: AttributesSpec): ForEach;
 export declare function createCloneCtor(attrSpecs: AttributesSpec): CloneAttributesCtor;

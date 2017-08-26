@@ -1,6 +1,6 @@
 {
   "name": "type-r",
-  "version": "1.0.3",
+  "version": "1.1.0-a00",
   "description": "Reactive serializable data layer for modern JS applications",
   "main": "./dist/index.js",
   "module": "./lib/index.js",
@@ -15,7 +15,8 @@
   },
   "scripts": {
     "prepublish": "node_modules/.bin/webpack -p",
-    "test": "tests/nestedtypes/node_modules/.bin/mocha tests/nestedtypes/functionality",
+    "test": "node_modules/.bin/mocha tests/nestedtypes/functionality && npm run test:ts",
+    "test:ts": "node_modules/.bin/mocha --opts tests/typescript/mocha.opts",
     "build": "node_modules/.bin/tsc && npm run prepublish",
     "docs": "node docs/build.js"
   },
@@ -38,12 +39,17 @@
   },
   "homepage": "https://github.com/gaperton/TransactionalJS#readme",
   "devDependencies": {
+    "@types/chai": "^4.0.0",
+    "@types/mocha": "^2.2.41",
+    "chai": "^4.0.2",
     "handlebars": "^4.0.10",
     "highlight.js": "^9.12.0",
     "marked": "^0.3.6",
+    "mocha": "^3.4.2",
     "source-map-loader": "*",
     "ts-loader": "*",
-    "typescript": "<2.4.0",
+    "ts-node": "^3.0.6",
+    "typescript": "*",
     "webpack": "*"
   }
 }

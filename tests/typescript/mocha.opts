@@ -1,0 +1,4 @@
+--require tests/typescript/tshook 
+--reporter dot
+--watch-extensions tsx,ts 
+tests/typescript/*.ts

@@ -1,7 +1,6 @@
 import { AnyType } from './attributes';
-import { Attribute, AttributesValues, AttributeDescriptorMap, CloneAttributesCtor } from './transaction'
+import { createAttribute, AttributesValues, CloneAttributesCtor } from './attributes'
 import { tools, eventsApi } from '../object-plus'
-import { toAttributeDescriptor } from './typespec'
 import { CompiledReference } from '../traversable'
 
 const { defaults, isValidJSON, transform, log } = tools,
@@ -26,14 +25,14 @@ export interface AttributesSpec {
     [ key : string ] : AnyType
 }
 
-export type ForEach   = ( obj : {}, iteratee : ( val : any, key? : string, spec? : Attribute ) => void ) => void;
+export type ForEach   = ( obj : {}, iteratee : ( val : any, key? : string, spec? : AnyType ) => void ) => void;
 export type Defaults  = ( attrs? : {} ) => {}
 export type Parse     = ( data : any ) => any;
 export type ToJSON    = () => any;
 
 // Compile attributes spec
 /** @private */
-export function compile( rawSpecs : AttributeDescriptorMap, baseAttributes : AttributesSpec ) : DynamicMixin {
+export function compile( rawSpecs : AttributesValues, baseAttributes : AttributesSpec ) : DynamicMixin {
     const myAttributes = transform( <AttributesSpec>{}, rawSpecs, createAttribute ),
           allAttributes = defaults( <AttributesSpec>{}, myAttributes, baseAttributes ),
           Attributes = createCloneCtor( allAttributes ),
@@ -58,12 +57,6 @@ export function compile( rawSpecs : AttributeDescriptorMap, baseAttributes : Att
     }
 
     return mixin;
-}
-
-// Create attribute from the type spec.
-/** @private */
-function createAttribute( spec, name ){
-    return AnyType.create( toAttributeDescriptor( spec ), name );
 }
 
 // Build events map for attribute change events.

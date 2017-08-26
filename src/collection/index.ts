@@ -1,4 +1,4 @@
-import { define, tools, eventsApi, EventMap, EventsDefinition, Mixable } from '../object-plus'
+import { define, tools, eventsApi, EventMap, definitions, mixinRules, EventsDefinition, Mixable } from '../object-plus'
 import { ItemsBehavior, transactionApi, Transactional, CloneOptions, Transaction, TransactionOptions, TransactionalDefinition, Owner } from '../transactions'
 import { Record, SharedType, AggregatedType, createSharedTypeSpec } from '../record'
 
@@ -9,7 +9,7 @@ import { removeOne, removeMany } from './remove'
 
 const { trigger2, on, off } = eventsApi,
     { begin, commit, markAsDirty } = transactionApi,
-    { omit, log, assign, defaults } = tools;
+    { omit, log, assign, defaults, assignToClassProto } = tools;
 
 let _count = 0;
 
@@ -26,12 +26,16 @@ export interface CollectionOptions extends TransactionOptions {
 export type Predicate = ( val : Record, key : number ) => boolean | object;
 
 export interface CollectionDefinition extends TransactionalDefinition {
-    model? : Record,
+    model? : typeof Record,
     itemEvents? : EventsDefinition
     _itemEvents? : EventMap
 }
 
 const slice = Array.prototype.slice;
+
+class CollectionRefsType extends SharedType {
+    static defaultValue = [];
+}
 
 @define({
     // Default client id prefix 
@@ -39,6 +43,11 @@ const slice = Array.prototype.slice;
     model : Record,
     _changeEventName : 'changes',
     _aggregationError : null
+})
+@definitions({
+    comparator : mixinRules.value,
+    model : mixinRules.protoValue,
+    itemEvents : mixinRules.merge
 })
 export class Collection extends Transactional implements CollectionCore {
     _shared : number
@@ -48,7 +57,7 @@ export class Collection extends Transactional implements CollectionCore {
     static Refs : typeof Collection
     static _SubsetOf : typeof Collection
     
-    createSubset( models, options ){
+    createSubset( models : ElementsArg, options ){
         const SubsetOf = (<any>this.constructor).subsetOf( this ).options.type,
             subset   = new SubsetOf( models, options );
             
@@ -56,7 +65,7 @@ export class Collection extends Transactional implements CollectionCore {
         return subset;
     }
 
-    static predefine() : any {
+    static onExtend( BaseClass : typeof Transactional ){
         // Cached subset collection must not be inherited.
         const Ctor = this;
         this._SubsetOf = null;
@@ -65,34 +74,27 @@ export class Collection extends Transactional implements CollectionCore {
             Ctor.call( this, a, b, ItemsBehavior.share | ( listen ? ItemsBehavior.listen : 0 ) );
         }
 
-        Mixable.mixTo( RefsCollection );
+        Mixable.mixins.populate( RefsCollection );
         
         RefsCollection.prototype = this.prototype;
         RefsCollection._attribute = CollectionRefsType;
 
         this.Refs = this.Subset = <any>RefsCollection;
 
-        Transactional.predefine.call( this );
+        Transactional.onExtend.call( this, BaseClass );
         createSharedTypeSpec( this, SharedType );
-        return this;
     }
     
-    static define( protoProps : CollectionDefinition = {}, staticProps? ){
-                // Extract record definition from static members, if any.
-        const   staticsDefinition : CollectionDefinition = tools.getChangedStatics( this, 'comparator', 'model', 'itemEvents' ),
-                // Definition can be made either through statics or define argument.
-                // Merge them together, so we won't care about it below. 
-                definition = assign( staticsDefinition, protoProps );
-
-        const spec : CollectionDefinition = omit( definition, 'itemEvents' );
-
+    static onDefine( definition : CollectionDefinition, BaseClass : any ){
         if( definition.itemEvents ){
-            const eventsMap = new EventMap( this.prototype._itemEvents );
+            const eventsMap = new EventMap( BaseClass.prototype._itemEvents );
             eventsMap.addEventsMap( definition.itemEvents );
-            spec._itemEvents = eventsMap; 
+            this.prototype._itemEvents = eventsMap;
         }
 
-        return Transactional.define.call( this, spec, staticProps );
+        if( definition.comparator ) this.prototype.comparator = definition.comparator;
+
+        Transactional.onDefine.call( this, definition );
     }
 
     static subsetOf : ( collectionReference : any ) => any;
@@ -429,19 +431,19 @@ export class Collection extends Transactional implements CollectionCore {
     }
 
     // Add a model to the end of the collection.
-    push(model, options) {
+    push(model : ElementsArg, options : CollectionOptions ) {
       return this.add(model, assign({at: this.length}, options));
     }
 
     // Remove a model from the end of the collection.
-    pop(options) {
+    pop( options : CollectionOptions ) {
       var model = this.at(this.length - 1);
       this.remove(model, options);
       return model;
     }
 
     // Add a model to the beginning of the collection.
-    unshift(model, options) {
+    unshift(model : ElementsArg, options : CollectionOptions ) {
       return this.add(model, assign({at: 0}, options));
     }
 
@@ -500,10 +502,6 @@ function toElements( collection : Collection, elements : ElementsArg, options : 
     return Array.isArray( parsed ) ? parsed : [ parsed ];
 }
 
-class CollectionRefsType extends SharedType {
-    static defaultValue = [];
-}
-
 createSharedTypeSpec( Collection, SharedType );
 
 Record.Collection = <any>Collection;
@@ -512,7 +510,7 @@ function bindContext( fun : Function, context? : any ){
     return context !== void 0 ? ( v, k ) => fun.call( context, v, k ) : fun;
 }
 
-function toPredicateFunction( iteratee : Predicate, context ){
+function toPredicateFunction( iteratee : Predicate, context : any ){
     if( typeof iteratee === 'object' ){
         // Wrap object to the predicate...
         return x => {

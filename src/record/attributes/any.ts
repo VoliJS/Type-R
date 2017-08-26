@@ -1,11 +1,8 @@
-import { setAttribute, Record, Attribute, Transform, ChangeHandler, AttributeDescriptor } from '../transaction'
-import { Constructor, tools } from '../../object-plus'
+import { setAttribute, AttributesContainer, AttributeUpdatePipeline, Transform, ChangeHandler } from './updates'
+import { tools } from '../../object-plus'
 import { Owner, Transactional, TransactionOptions } from '../../transactions'
 
 const { notEqual, assign} = tools;
-
-type GetHook = ( value : any, key : string ) => any;
-export type ChangeAttrHandler = ( ( value : any, attr : string ) => void ) | string;
 
 declare global {
     interface Function {
@@ -13,20 +10,35 @@ declare global {
     }
 }
 
-interface ExtendedAttributeDescriptor extends AttributeDescriptor {
+export interface AttributeOptions {
     _attribute? : typeof AnyType
-    validate? : ( record : Record, value : any, key : string ) => any
+    validate? : ( record : AttributesContainer, value : any, key : string ) => any
     isRequired? : boolean
     changeEvents? : boolean
-} 
 
-export { ExtendedAttributeDescriptor as AttributeDescriptor }
+    type? : Function
+    value? : any
+
+    parse? : AttributeParse
+    toJSON? : AttributeToJSON
+   
+    getHooks? : GetHook[]
+    transforms? : Transform[]
+    changeHandlers? : ChangeHandler[]
+
+    _onChange? : ChangeAttrHandler
+}
+
+export type GetHook = ( value : any, key : string ) => any;
+export type AttributeToJSON = ( value : any, key : string ) => any
+export type AttributeParse = ( value : any, key : string ) => any
+export type ChangeAttrHandler = ( ( value : any, attr : string ) => void ) | string;
 
 // TODO: interface differs from options, do something obout it
 /** @private */
-export class AnyType implements Attribute {
+export class AnyType implements AttributeUpdatePipeline {
     // Factory method to create attribute from options 
-    static create( options : ExtendedAttributeDescriptor, name : string ) : AnyType {
+    static create( options : AttributeOptions, name : string ) : AnyType {
         const type = options.type,
               AttributeCtor = options._attribute || ( type ? type._attribute : AnyType );
 
@@ -44,10 +56,10 @@ export class AnyType implements Attribute {
     /**
      * Stage 1. Transform stage
      */
-    transform( value, options : TransactionOptions, prev, model : Record ) { return value; }
+    transform( value, options : TransactionOptions, prev, model : AttributesContainer ) { return value; }
 
     // convert attribute type to `this.type`.
-    convert( value, options : TransactionOptions, prev, model : Record ) { return value; }
+    convert( value, options : TransactionOptions, prev, model : AttributesContainer ) { return value; }
 
     /**
      * Stage 2. Check if attr value is changed
@@ -59,7 +71,7 @@ export class AnyType implements Attribute {
     /**
      * Stage 3. Handle attribute change
      */
-    handleChange( next, prev, model : Record ) {}
+    handleChange( next, prev, model : AttributesContainer ) {}
 
     /**
      * End update pipeline definitions.
@@ -70,7 +82,7 @@ export class AnyType implements Attribute {
 
     // generic clone function for typeless attributes
     // Must be overriden in sublass
-    clone( value : any, record : Record ) {
+    clone( value : any, record : AttributesContainer ) {
         if( value && typeof value === 'object' ) {
             // delegate to object's clone(), if it exist...
             if( value.clone ) return value.clone();
@@ -86,11 +98,11 @@ export class AnyType implements Attribute {
         return value;
     }
 
-    dispose( record : Record, value : any ) : void {
+    dispose( record : AttributesContainer, value : any ) : void {
         this.handleChange( void 0, value, record );
     }
 
-    validate( record : Record, value : any, key : string ){}
+    validate( record : AttributesContainer, value : any, key : string ){}
 
     toJSON( value, key ) {
         return value && value.toJSON ? value.toJSON() : value;
@@ -123,26 +135,26 @@ export class AnyType implements Attribute {
     // Used as global default value for the given metatype  
     static defaultValue : any;
 
-    type : Constructor< any >
+    type : Function
 
     parse : ( value, key : string ) => any
 
     initialize( name : string, options ){}
 
-    options : ExtendedAttributeDescriptor
+    options : AttributeOptions
 
     propagateChanges : boolean
 
-    _log( level : string, text : string, value, record : Record ){
+    _log( level : string, text : string, value, record : AttributesContainer ){
         tools.log[ level ]( `[Attribute Update] ${ record.getClassName() }.${ this.name }: ` + text, value, 'Attributes spec:', record._attributes );
     }
 
-    constructor( public name : string, a_options : ExtendedAttributeDescriptor ) {        
+    constructor( public name : string, a_options : AttributeOptions ) {        
         // Save original options...
         this.options = a_options;
 
         // Clone options.
-        const options : ExtendedAttributeDescriptor = assign( { getHooks : [], transforms : [], changeHandlers : [] }, a_options );
+        const options : AttributeOptions = assign( { getHooks : [], transforms : [], changeHandlers : [] }, a_options );
         options.getHooks = options.getHooks.slice();
         options.transforms = options.transforms.slice();
         options.changeHandlers = options.changeHandlers.slice();
@@ -185,7 +197,7 @@ export class AnyType implements Attribute {
             const getHook = this.getHook = getHooks.reduce( chainGetHooks );
 
             const { validate } = this;
-            this.validate = function( record : Record, value : any, key : string ){
+            this.validate = function( record : AttributesContainer, value : any, key : string ){
                 return validate.call( this, record, getHook.call( record, value, key ), key );
             }
         }
@@ -202,9 +214,6 @@ export class AnyType implements Attribute {
     getHook : ( value, key : string ) => any = null
     get : ( value, key : string ) => any
 }
-
-Record.prototype._attributes = { id : AnyType.create({ value : void 0 }, 'id' )};
-Record.prototype.defaults = function( attrs : { id? : string } = {} ){ return { id : attrs.id } };
 
 /** @private */
 function chainChangeHandlers( prevHandler : ChangeHandler, nextHandler : ChangeHandler ) : ChangeHandler {
@@ -229,7 +238,7 @@ function chainTransforms( prevTransform : Transform, nextTransform : Transform )
 }
 
 function wrapIsRequired( validate ){
-    return function( record : Record, value : any, key : string ){
+    return function( record : AttributesContainer, value : any, key : string ){
         return value ? validate.call( this, record, value, key ) : 'Required';
     }
 }
