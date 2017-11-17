@@ -49,7 +49,7 @@ export declare class Record extends Transactional implements IORecord, Attribute
     Attributes: AttributesConstructor;
     AttributesCopy: AttributesCopyConstructor;
     forEachAttr(attrs: {}, iteratee: (value: any, key?: string, spec?: AnyType) => void): void;
-    each(iteratee: (value?: any, key?: string) => void, context?: any): void;
+    each(iteratee: (value: any, key: string) => void, context?: any): void;
     keys(): string[];
     values(): any[];
     _toJSON(): {};
