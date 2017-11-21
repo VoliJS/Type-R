@@ -3316,6 +3316,7 @@ function defineSubsetCollection(CollectionConstructor) {
             configurable: true
         });
         SubsetOfCollection.prototype.add = function (a_elements, options) {
+            if (options === void 0) { options = {}; }
             var resolvedWith = this.resolvedWith, toAdd = toArray(a_elements);
             if (resolvedWith) {
                 return _super.prototype.add.call(this, resolveRefs(resolvedWith, toAdd), options);
@@ -3330,6 +3331,7 @@ function defineSubsetCollection(CollectionConstructor) {
             }
         };
         SubsetOfCollection.prototype.reset = function (a_elements, options) {
+            if (options === void 0) { options = {}; }
             var resolvedWith = this.resolvedWith, elements = toArray(a_elements);
             return resolvedWith ?
                 _super.prototype.reset.call(this, resolveRefs(resolvedWith, elements), options) :

@@ -66,7 +66,8 @@
       </div>
         <ul class="toc-footer">
                 <li><a href="https://github.com/Volicon/Type-R">GitHub repository</a></li>
-                <li><a href="https://github.com/Volicon/Type-R/issues">Ask the question or report the bug</a></li>
+                <li><a href="https://github.com/Volicon/Type-R/issues">Report the bug</a></li>
+                <li><a href="https://groups.google.com/forum/#!forum/volicon-open-source">Ask the question</a></li>
                 <li><a href="http://www.volicon.com/">Supported by <img style="vertical-align: middle" src="images/volicon_verizon_dm.png"/></a></li>
         </ul>
     </div>
@@ -506,6 +507,7 @@ To create nested record or collection you should just mention its constructor fu
 <li>They are validated as part of the record.</li>
 <li>They are serialized as nested JSON.</li>
 </ul>
+<p>The nature of aggregation relationship in OO is explained in this <a href="https://medium.com/@gaperton/nestedtypes-2-0-meet-an-aggregation-and-the-rest-of-oo-animals-a9fca7c36ecf">article</a>.</p>
 <h3 id="-attrdef-recordorcollection"><code>attrDef</code> : RecordOrCollection</h3>
 <p>Aggregated record or collection. Represented as nested object or array in record&#39;s JSON. Aggregated members are owned by the record and treated as its <em>integral part</em> (recursively created, cloned, serialized, validated, and disposed).
 One object can have single owner. The record with its aggregated attributes forms an <em>aggregation tree</em>.</p>
@@ -1420,7 +1422,18 @@ Store.global = <span class="hljs-keyword">new</span> MyStore();
 <h3 id="recordorcollection-clone-pinstore-true-">recordOrCollection.clone({ pinStore : true })</h3>
 <p>Make the cloned object to preserve the reference to its original store.</p>
 <p>Cloned objects don&#39;t have an owner by default, thus they loose the reference to their store as no ownership chain can be traversed. <code>pinStore</code> option should be used in such a cases.</p>
-<h1 id="class-definitions-and-mixins">Class definitions and mixins</h1>
+<h1 id="reactjs-bindings">ReactJS bindings</h1>
+<p><a href="https://volicon.github.io/React-MVx/">React-MVx</a> is an MVVM application frameworks which uses Type-R to manage a multi-layer application state.</p>
+<ul>
+<li>React-MVx adds <a href="https://volicon.github.io/React-MVx/#link">two-way data binding</a> capabilities to both Record and Collection. Data-binding is based on the <a href="https://medium.com/@gaperton/managing-state-and-forms-with-react-part-1-12eacb647112">&quot;value link&quot; pattern</a> and implemented with Link class from <a href="https://github.com/Volicon/NestedLink">NestedLink</a> library taking the value and validation error directly from the Record.</li>
+<li><a href="https://volicon.github.io/Type-R/#record">Record</a> class is used to manage <a href="https://volicon.github.io/React-MVx/#state">component&#39;s state</a>.</li>
+<li>The subset of the <a href="https://volicon.github.io/Type-R/#definition">Record attributes type annotation</a> is used to define component <a href="https://volicon.github.io/React-MVx/#props">props</a> and <a href="https://volicon.github.io/React-MVx/#context">context</a>.</li>
+<li><a href="https://volicon.github.io/Type-R/#store">Store</a> class is used to represent <a href="https://volicon.github.io/React-MVx/#store">component&#39;s store</a> (also called &quot;local store&quot;), which is typically used in the root component of SPA page associated with a route. The state of the children components uses upper component&#39;s stores to resolve id-references.</li>
+<li>Type-R <a href="https://volicon.github.io/Type-R/#-static-store-global">global store</a> may be used as a store for the data shared by application pages. This store is used to resolve id-references in case if local stores lookup failed.</li>
+</ul>
+<aside class="warning">
+The meaning of the Store in Type-R and React-Mvx is very different to that in other frameworks. The sole reason you need the store is to have collections of records which are being used to resolve id-references. If you don't have <a href="https://volicon.github.io/Type-R/#id-references">id-references</a> in JSON, you don't need stores. Use state instead.
+</aside><h1 id="class-definitions-and-mixins">Class definitions and mixins</h1>
 <h2 id="class-definitions">Class Definitions</h2>
 <p>Type-R mechanic is based on class transformations at the moment of module load. These transformations are controlled by <em>definitions</em> in static class members.</p>
 <h3 id="-decorator-definitions-propname-rule-"><code>decorator</code> @definitions({ propName : <code>rule</code>, ... })</h3>

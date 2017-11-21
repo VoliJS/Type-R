@@ -372,6 +372,8 @@ All nested records and collections are *aggregated* by default and behave as int
 - They are validated as part of the record.
 - They are serialized as nested JSON.
 
+The nature of aggregation relationship in OO is explained in this [article](https://medium.com/@gaperton/nestedtypes-2-0-meet-an-aggregation-and-the-rest-of-oo-animals-a9fca7c36ecf).
+
 ### `attrDef` : RecordOrCollection
 
 Aggregated record or collection. Represented as nested object or array in record's JSON. Aggregated members are owned by the record and treated as its _integral part_ (recursively created, cloned, serialized, validated, and disposed).
