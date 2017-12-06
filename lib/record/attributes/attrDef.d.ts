@@ -8,7 +8,7 @@ export interface AttributeCheck {
 export declare class ChainableAttributeSpec {
     options: AttributeOptions;
     constructor(options: AttributeOptions);
-    check(check: AttributeCheck, error: any): ChainableAttributeSpec;
+    check(check: AttributeCheck, error?: any): ChainableAttributeSpec;
     readonly asProp: (proto: object, name: string) => void;
     readonly isRequired: ChainableAttributeSpec;
     endpoint(endpoint: IOEndpoint): ChainableAttributeSpec;
