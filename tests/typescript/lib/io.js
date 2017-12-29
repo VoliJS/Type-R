@@ -135,7 +135,7 @@ describe('IO', function () {
         var s = new TestStore();
         s.fetch().then(function () {
             expect(s.a.first().id).to.eql("777");
-            expect(s.b.first().id).to.eql("666");
+            expect(s.b.first().id).to.eql(666);
             expect(s.c.first().id).to.eql("555");
             done();
         });

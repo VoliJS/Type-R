@@ -117,7 +117,7 @@ describe( 'IO', function(){
         const s = new TestStore();
         s.fetch().then( () => {
             expect( s.a.first().id ).to.eql( "777" );
-            expect( s.b.first().id ).to.eql( "666" );
+            expect( s.b.first().id ).to.eql( 666 );
             expect( s.c.first().id ).to.eql( "555" );
 
             done();

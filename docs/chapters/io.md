@@ -294,11 +294,11 @@ Initialized as `null` and serialized as `record.id`. Is not recursively cloned, 
 Changes in shared record are not detected.
 
 `sourceCollection` may be:
-- the variable pointing to the collection;
+- the JS variable pointing to the collection singleton;
 - the function returning the collection;
-- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the record's `this`.
-- `^` symbol in path means "take the owner" (`getOwner()` call).
-- `~` symbol in path means "take the store" (`getStore()` call).
+- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the record's `this`. Following shortcuts may be used in path:
+    - `owner.path` (or `^path`) works as `() => this.getOwner().path`.
+    - `store.path` (or `~path`) works as `() => this.getStore().path`.
 
 ```javascript
     @define class State extends Record {

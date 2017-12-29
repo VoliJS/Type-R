@@ -1291,11 +1291,13 @@ Initialized as <code>null</code> and serialized as <code>record.id</code>. Is no
 <p>Changes in shared record are not detected.</p>
 <p><code>sourceCollection</code> may be:</p>
 <ul>
-<li>the variable pointing to the collection;</li>
+<li>the JS variable pointing to the collection singleton;</li>
 <li>the function returning the collection;</li>
-<li>the string with the dot-separated <em>relative object path</em> to the collection. It is resolved dynamically relative to the record&#39;s <code>this</code>.</li>
-<li><code>^</code> symbol in path means &quot;take the owner&quot; (<code>getOwner()</code> call).</li>
-<li><code>~</code> symbol in path means &quot;take the store&quot; (<code>getStore()</code> call).</li>
+<li>the string with the dot-separated <em>relative object path</em> to the collection. It is resolved dynamically relative to the record&#39;s <code>this</code>. Following shortcuts may be used in path:<ul>
+<li><code>owner.path</code> (or <code>^path</code>) works as <code>() =&gt; this.getOwner().path</code>.</li>
+<li><code>store.path</code> (or <code>~path</code>) works as <code>() =&gt; this.getStore().path</code>.</li>
+</ul>
+</li>
 </ul>
 <pre><code class="highlight javascript">    @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Record</span> </span>{
         items : Item.Collection,

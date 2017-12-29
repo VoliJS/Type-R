@@ -867,23 +867,24 @@ var ValidationError = (function () {
     return ValidationError;
 }());
 
-var referenceMask = /\^|([^.]+)/g;
+var referenceMask = /\^|(store\.[^.]+)|([^.]+)/g;
 var CompiledReference = (function () {
     function CompiledReference(reference, splitTail) {
         if (splitTail === void 0) { splitTail = false; }
         var path = reference
             .match(referenceMask)
             .map(function (key) {
-            if (key === '^')
+            if (key === '^' || key === 'owner')
                 return 'getOwner()';
             if (key[0] === '~')
                 return "getStore().get(\"" + key.substr(1) + "\")";
+            if (key.indexOf('store.') === 0)
+                return "getStore().get(\"" + key.substr(6) + "\")";
             return key;
         });
         this.tail = splitTail && path.pop();
         this.local = !path.length;
-        path.unshift('self');
-        this.resolve = new Function('self', "return " + path.join('.') + ";");
+        this.resolve = new Function('self', "\n            var v = self." + path.shift() + ";\n                           \n            " + path.map(function (x) { return "\n                v = v && v." + x + ";\n            "; }).join('') + "\n\n            return v;\n        ");
     }
     return CompiledReference;
 }());
@@ -1032,7 +1033,12 @@ var Transactional = (function () {
         return this;
     };
     Transactional.prototype.assignFrom = function (source) {
-        return this.set(source.__inner_state__ || source, { merge: true });
+        this.set(source.__inner_state__ || source, { merge: true });
+        var _changeToken = source._changeToken;
+        if (_changeToken) {
+            this._changeToken = _changeToken;
+        }
+        return this;
     };
     Transactional.prototype.parse = function (data, options) { return data; };
     Transactional.prototype.deepGet = function (reference) {
@@ -2525,14 +2531,14 @@ function sortElements(collection, options) {
 function addIndex(index, model) {
     index[model.cid] = model;
     var id = model.id;
-    if (id != null) {
+    if (id || id === 0) {
         index[id] = model;
     }
 }
 function removeIndex(index, model) {
     delete index[model.cid];
     var id = model.id;
-    if (id != null) {
+    if (id || id === 0) {
         delete index[id];
     }
 }
@@ -2880,7 +2886,7 @@ var Collection = (function (_super) {
             eventsMap.addEventsMap(definition.itemEvents);
             this.prototype._itemEvents = eventsMap;
         }
-        if (definition.comparator)
+        if (definition.comparator !== void 0)
             this.prototype.comparator = definition.comparator;
         Transactional.onDefine.call(this, definition);
     };
@@ -16357,9 +16363,8 @@ var MemoryEndpoint = (function () {
         var id = Number(a_id);
         if (!isNaN(id)) {
             this.index[0] = Math.max(this.index[0], id);
-            return String(id);
         }
-        return String(this.index[0]++);
+        return a_id || String(this.index[0]++);
     };
     MemoryEndpoint.prototype.create = function (json, options) {
         var id = json.id = this.generateId(json.id);
@@ -16630,7 +16635,7 @@ describe('IO', function () {
         var s = new TestStore();
         s.fetch().then(function () {
             chai_1(s.a.first().id).to.eql("777");
-            chai_1(s.b.first().id).to.eql("666");
+            chai_1(s.b.first().id).to.eql(666);
             chai_1(s.c.first().id).to.eql("555");
             done();
         });
