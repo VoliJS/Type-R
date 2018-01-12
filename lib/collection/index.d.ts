@@ -34,7 +34,7 @@ export declare class Collection<R extends Record = Record> extends Transactional
     comparator: GenericComparator;
     getStore(): Transactional;
     _store: Transactional;
-    _comparator: (a: R, b: R) => number;
+    _comparator: (a: Record, b: Record) => number;
     _onChildrenChange(record: R, options?: TransactionOptions, initiator?: Transactional): void;
     get(objOrId: string | R | Object): R;
     each(iteratee: (val: R, key: number) => void, context?: any): void;

@@ -148,7 +148,7 @@ export class Collection< R extends Record = Record> extends Transactional implem
     _store : Transactional
 
     get comparator(){ return this._comparator; }
-    _comparator : ( a : R, b : R ) => number
+    _comparator : ( a : Record, b : Record ) => number
 
     _onChildrenChange( record : R, options : TransactionOptions = {}, initiator? : Transactional ){
         // Ignore updates from nested transactions.
