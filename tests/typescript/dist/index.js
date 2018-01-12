@@ -1033,11 +1033,14 @@ var Transactional = (function () {
         return this;
     };
     Transactional.prototype.assignFrom = function (source) {
-        this.set(source.__inner_state__ || source, { merge: true });
-        var _changeToken = source._changeToken;
-        if (_changeToken) {
-            this._changeToken = _changeToken;
-        }
+        var _this = this;
+        this.transaction(function () {
+            _this.set(source.__inner_state__ || source, { merge: true });
+            var _changeToken = source._changeToken;
+            if (_changeToken) {
+                _this._changeToken = _changeToken;
+            }
+        });
         return this;
     };
     Transactional.prototype.parse = function (data, options) { return data; };
@@ -3355,6 +3358,13 @@ function defineSubsetCollection(CollectionConstructor) {
                 this.models.map(function (model) { return model.id; });
         };
         SubsetOfCollection.prototype._validateNested = function () { return 0; };
+        Object.defineProperty(SubsetOfCollection.prototype, "length", {
+            get: function () {
+                return this.models.length || (this.refs ? this.refs.length : 0);
+            },
+            enumerable: true,
+            configurable: true
+        });
         SubsetOfCollection.prototype.clone = function (owner) {
             var Ctor = this.constructor, copy = new Ctor([], {
                 model: this.model,
