@@ -9,5 +9,5 @@
 - Type-R [global store](https://volicon.github.io/Type-R/#-static-store-global) may be used as a store for the data shared by application pages. This store is used to resolve id-references in case if local stores lookup failed.
 
 <aside class="warning">
-The meaning of the Store in Type-R and React-Mvx is very different to that in other frameworks. The sole reason you need the store is to have collections of records which are being used to resolve id-references. If you don't have <a href="https://volicon.github.io/Type-R/#id-references">id-references</a> in JSON, you don't need stores. Use state instead.
+The meaning of the Store in Type-R and React-Mvx is very different to that in other frameworks. The sole reason you need the store is to have collections of records which are being used to resolve id-references. If you don't have <a href="https://volicon.github.io/Type-R/#normalized-data">id-references</a> in JSON, you don't need stores. Use state instead.
 </aside>

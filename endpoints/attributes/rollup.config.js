@@ -3,10 +3,10 @@ import uglify from 'rollup-plugin-uglify';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
-    input : 'lib/endpoints/attributes.js',
+    input : 'lib/index.js',
 
     output : {
-        file   : 'endpoints/attributes/index.js',
+        file   : 'dist/index.js',
         format : 'umd',
         name   : 'attributesIO'
     },

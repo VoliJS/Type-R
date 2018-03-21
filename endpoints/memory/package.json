@@ -1,10 +1,11 @@
 {
     "name": "memoryIO",
-    "main": "./index.js",
-    "jsnext:main": "../../lib/endpoints/memory.js",
-    "module": "../../lib/endpoints/memory.js",
-    "types": "../../lib/endpoints/memory.d.ts",
+    "main": "./dist/index.js",
+    "jsnext:main": "./lib/index.js",
+    "module": "./lib/index.js",
+    "types": "./lib/index.d.ts",
     "scripts": {
+        "build":"../../node_modules/.bin/tsc && ../../node_modules/.bin/rollup --config"
     },
     "author": "Vlad Balin",
     "license": "MIT"

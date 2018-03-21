@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { Mixable, define, predefine, mixins, mixinRules, definitions } from '../../../lib';
+import { Mixable, define, predefine, mixins, mixinRules, definitions } from 'type-r';
 import { expect } from 'chai';
 var M = {
     num: 1,

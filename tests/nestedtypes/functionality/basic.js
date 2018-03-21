@@ -128,7 +128,7 @@
 
                 m.elements.add({});
 
-                expect( m.elements.first().elements.length ).to.be.zero;
+                expect( m.elements.first().elements.length ).to.eql( 0 );
 
             });
         });

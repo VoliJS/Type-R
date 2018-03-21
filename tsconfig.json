@@ -12,9 +12,6 @@
     "experimentalDecorators": true
   },
   "files":[
-    "./src/index.ts",
-    "./src/endpoints/memory.ts",
-    "./src/endpoints/attributes.ts",
-    "./src/endpoints/localStorage.ts"
+    "./src/index.ts"
   ]
 }

@@ -24,13 +24,117 @@ users
     .then( () => console.log( user.id );
 ```
 
-## IOEndpoint
+## I/O API
 
-An endpoint represents the persistent collection of records serialized to JSON. It has CRUD methods used by the Record, list method used by the collection, and an optional methods to subscribe for the data changes which are used by collection's live updates API. There are several pre-defined endpoints bundled with Type-R which can be used for mock testing, working with localStorage, and IO composition.
+### `static` endpoint
 
-All IOEndpoint methods must return abortable promises (created with `createIOPromise()`). An IOEndpoint instance is shared by all of the class instances it's attached to and therefore it's normally *must be stateless*.
+I/O endpoint declaration which should be used in Record or Collection definition to enable I/O API.
 
-### `endpoint` memoryIO( mockData?, delay? )
+If an endpoint is defined for the `MyRecord`, it's automatically defined for the corresponding `MyRecord.Collection` as well.
+
+### `attrDef` : Type.has.endpoint( `endpoint` )
+
+Override or define an I/O endpoint for the specific record's attribute.
+
+### obj.getEndpoint()
+
+Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's record using `Type.has.endpoint( ... )` attribute declaration.
+
+```javascript
+@define class User extends Record {
+    static endpoint = restfulIO( '/api/users' );
+    ...
+}
+
+@define class UserRole extends Record {
+    static endpoint = restfulIO( '/api/roles' );
+    static attributes = {
+        // Use the relative path '/api/roles/:id/users'
+        users : User.Collection.has.endpoint( restfulIO( './users' ) ),
+        ...
+    }
+}
+```
+
+### record.fetch( options? )
+
+Asynchronously fetch the record using `endpoint.read()` method. Returns an abortable ES6 promise.
+
+An endpoint must be defined for the record in order to use that method.
+
+### record.save( options? )
+
+Asynchronously save the record using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
+
+An endpoint must be defined for the record in order to use that method.
+
+### record.destroy( options? )
+
+Asynchronously destroy the record using `endpoint.destroy()` method. Returns an abortable ES6 promise. The record is removed from the aggregating collection upon the completion of the I/O request.
+
+An endpoint must be defined for the record in order to use that method.
+
+### collection.fetch( options? )
+
+Fetch the collection. Returns an abortable promise.
+
+`options` accepts an optional `liveUpdates` parameter. When `true`, collection subscribes for the live updates when I/O is finished.
+
+### collection.liveUpdates( true | false )
+
+Subscribe for the live data updates if an I/O endpoint supports it (`subscribe()`/`unsubscribe()` IOEndpoint methods).
+
+<aside class="notice">
+No built-in I/O enpoints support that functionality yet.
+</aside>
+
+### obj.hasPendingIO()
+
+Returns an abortable promise if there's any I/O pending with the object, or `null` otherwise.
+
+Can be used to check for active I/O in progress or to abort pending I/O operation. Please note, that all pending I/O is aborted automatically when new I/O operation is started or an object is disposed. When I/O is aborted, the promise is rejected.
+
+```javascript
+const promise = users.hasPendingIO();
+if( promise && promise.abort ) promise.abort();
+```
+
+## I/O endpoints
+
+### restfulIO( url, options? )
+
+HTTP REST client endpoint. Requires `window.fetch` available natively or through the polyfill. Implements standard BackboneJS REST semantic.
+
+All I/O methods append an optional `options.params` object to the URL parameters translating them to string with `JSON.stringify()`.
+
+- `record.save()` makes:
+    - `POST url`, if the model has no id. Expects to receive `{ id : recordId }`.
+    - `PUT url/:id`, if the model has an id.
+- `collection.fetch()` makes `GET url`.
+- `record.destroy()` makes `DELETE url`.
+
+Supports URI relative to owner (`./relative/url` resolves as `/owner/:id/relative/url/:id` ).
+
+```javascript
+import { restfulIO } from 'type-r/endpoints/restful'
+
+@define class Role extends Record {
+    static endpoint = restfulIO( '/api/roles' );
+    ...
+}
+
+@define class User extends Record {
+    static endpoint = restfulIO( '/api/users' );
+    
+    static attributes = {
+        // Roles collection here has relative url /api/users/:user_id/roles/
+        roles : Role.Collection.has.endpoint( restfulIO( './roles' ) ), 
+        ...
+    }
+}
+```
+
+### memoryIO( mockData?, delay? )
 
 Endpoint for mock testing. Takes optional array with mock data, and optional `delay` parameter which is the simulated I/O delay in milliseconds.
 
@@ -43,7 +147,7 @@ import { memoryIO } from 'type-r/endpoints/memory'
 }
 ```
 
-### `endpoint` localStorageIO( key )
+### localStorageIO( key )
 
 Endpoint for localStorage. Takes `key` parameter which must be unique for the persistent record's collection.
 
@@ -56,7 +160,7 @@ import { localStorageIO } from 'type-r/endpoints/localStorage'
 }
 ```
 
-### `endpoint` attributesIO()
+### attributesIO()
 
 Endpoint for I/O composition. Redirects record's `fetch()` request to its attributes and returns the combined abortable promise. Does not enable any other I/O methods and can be used with `record.fetch()` only.
 
@@ -77,21 +181,30 @@ const store = new PageStore();
 store.fetch().then( () => renderUI() );
 ```
 
-### `endpoint` httpRestIO( url )
+### proxyIO( RecordCtor )
 
-<aside class="warning">
-Not implemented yet, is scheduled for v2.1
-</aside>
+Create IO endpoint from the Record class. This endpoint is designed for use on the server side with a data layer managed by Type-R.
 
-Simple HTTP REST endpoint.
+Assuming that you have Type-R records with endpoints working with the database, you can create an endpoint which will use
+an existing Record subclass as a transport. This endpoint can be connected to the RESTful endpoint API on the server side which will serve JSON to the restfulIO endpoint on the client.
 
-- `create()` makes `POST url`, expecting to receive `{ id : recordId }` or other object used to update the record.
-- `read()` makes `GET url/:id`.
-- `update()` makes `PUT url/:id`.
-- `destroy()` makes `DELETE url/:id`.
-- `list()` makes `GET url`.
+An advantage of this approach is that JSON schema will be transparently validated on the server side by the Type-R.
 
-All I/O methods append an optional `options.params` object to the URL parameters translating them to string using `JSON.stringify()`.
+```javascript
+    import { proxyIO } from 'type-r/endpoint/proxy'
+    
+    ...
+
+    const usersIO = proxyIO( User );
+```
+
+## IOEndpoint Interface
+
+An IO endpoint is an "plug-in" abstraction representing the persistent collection of JSON objects, which is required to enable records and collections I/O API. There are several pre-defined endpoints included in Type-R package which can be used for HTTP REST I/O, mock testing, working with localStorage, and IO composition.
+
+You will need to define custom endpoint if you would like to implement or customize serialization transport for Type-R objects. Use built-in endpoints as an example and the starting boilerplate.
+
+All IOEndpoint methods might return standard Promises or abortable promises (created with `createIOPromise()`). An IOEndpoint instance is shared by all of the class instances it's attached to and therefore it's normally *must be stateless*.
 
 ### endpoint.read( id, options, record )
 
@@ -150,53 +263,9 @@ const abortablePromise = createIOPromise( ( resolve, reject, onAbort ) =>{
 });
 ```
 
-## Record and Collection
+## Serialization
 
 Record and Collection has a portion of common API related to the I/O and serialization.
-
-### `static` endpoint
-
-I/O endpoint declaration which should be used in Record or Collection definition to enable I/O API.
-
-If an endpoint is defined for the `MyRecord`, it's automatically defined for the corresponding `MyRecord.Collection` as well.
-
-### obj.hasPendingIO()
-
-Returns an abortable promise if there's any I/O pending with the object, or `null` otherwise.
-
-Can be used to check for active I/O in progress or to abort pending I/O operation. Please note, that all pending I/O is aborted automatically when new I/O operation is started or an object is disposed. When I/O is aborted, the promise is rejected.
-
-```javascript
-const promise = users.hasPendingIO();
-if( promise ) promise.abort();
-```
-
-### obj.getEndpoint()
-
-Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's record using `Type.has.endpoint( ... )` attribute declaration.
-
-```javascript
-@define class User extends Record {
-    static endpoint = httpRestIO( '/api/users' );
-    ...
-}
-
-@define class UserRole extends Record {
-    static endpoint = httpRestIO( '/api/roles' );
-    static attributes = {
-        // Use the relative path '/api/roles/:id/users'
-        users : User.Collection.has.endpoint( httpRestIO( './users' ) ),
-        ...
-    }
-}
-
-const role = new UserRole();
-console.assert( role.users.getEndpoint().rootUrl !== '/api.users' );
-```
-
-<aside class="warning">
-httpRestIO endpoint is not available yet and is planned to be implemented in v2.1
-</aside>
 
 ### obj.toJSON()
 
@@ -255,14 +324,6 @@ If you override `toJSON()`, it usually means that you must override `parse()` as
 Parsing can be controlled on per-attribute level with <b>Type.has.parse()</b> declaration.
 </aside>
 
-## Record's attribute definitions
-
-All aspects of I/O and serialization may be controlled on per-attribute level.
-
-### `attrDef` : Type.has.endpoint( `endpoint` )
-
-Override or define an I/O endpoint for the attribute.
-
 ### `attrDef` : Type.has.toJSON( false )
 
 Do _not_ serialize the specific attribute.
@@ -285,39 +346,6 @@ const MyWeirdBool = Boolean.has
                       .parse( x => x === 1 )
                       .toJSON( x => x ? 1 : 0 );
 ```
-
-### `attrDef` : Record.from( `sourceCollection` )
-
-Serializable reference to the record from the particular collection.
-Initialized as `null` and serialized as `record.id`. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.
-
-Changes in shared record are not detected.
-
-`sourceCollection` may be:
-- the JS variable pointing to the collection singleton;
-- the function returning the collection;
-- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the record's `this`. Following shortcuts may be used in path:
-    - `owner.path` (or `^path`) works as `() => this.getOwner().path`.
-    - `store.path` (or `~path`) works as `() => this.getStore().path`.
-
-```javascript
-    @define class State extends Record {
-        items : Item.Collection,
-        selected : Record.from( 'items' ) // Will resolve to `this.items`
-    }
-```
-
-<aside class="info">It's recommended to use ~paths and stores instead of ^paths.</aside>
-
-### `attrDef` : Collection.subsetOf( `sourceCollection` )
-
-Serializable non-aggregating collection which is the subset of the particular collection. Serialized as an array of record ids. Used to model many-to-many relationships.
-
-The collection itself is recursively created and cloned. However, its records are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.
-
-`sourceCollection` is the same reference as used by `Record.from()`.
-
-## Record
 
 ### `static` create( attrs, options )
 
@@ -354,25 +382,65 @@ May be redefined in the abstract Record base class to make it serializable type.
 }
 ```
 
-### rec.fetch( options? )
+## Normalized data
 
-Asynchronously fetch the record using `endpoint.read()` method. Returns an abortable ES6 promise.
+Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by record id. References are represented as record ids in JSON, and being transparently resolved to record instances on the first access.
 
-An endpoint must be defined for the record in order to use that method.
+`Store` class is the special record class which serves as a placeholder for the set of interlinked collections of normalized records. Id-references are defined as record attributes of the special type representing the serializable reference to the records from the specified master collection.
 
-### rec.save( options? )
+### `attrDef` : Record.from( `sourceCollection` )
 
-Asynchronously save the record using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
+Serializable reference to the record from the particular collection.
+Initialized as `null` and serialized as `record.id`. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.
 
-An endpoint must be defined for the record in order to use that method.
+Changes in shared record are not detected.
 
-### rec.destroy( options? )
+`sourceCollection` may be:
+- the JS variable pointing to the collection singleton;
+- the function returning the collection;
+- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the record's `this`. Following shortcuts may be used in path:
+    - `owner.path` (or `^path`) works as `() => this.getOwner().path`.
+    - `store.path` (or `~path`) works as `() => this.getStore().path`.
 
-Asynchronously destroy the record using `endpoint.destroy()` method. Returns an abortable ES6 promise. The record is removed from the aggregating collection upon the completion of the I/O request.
+```javascript
+    @define class State extends Record {
+        items : Item.Collection,
+        selected : Record.from( 'items' ) // Will resolve to `this.items`
+    }
+```
 
-An endpoint must be defined for the record in order to use that method.
+<aside class="info">It's recommended to use ~paths and stores instead of ^paths.</aside>
 
-## Collection
+### `attrDef` : Collection.subsetOf( `sourceCollection` )
+
+Serializable non-aggregating collection which is the subset of the particular collection. Serialized as an array of record ids. Used to model many-to-many relationships.
+
+The collection itself is recursively created and cloned. However, its records are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.
+
+`sourceCollection` is the same reference as used by `Record.from()`.
+
+```javascript
+@define class Role extends Record {
+    static attributes = {
+        name : String,
+        ...
+    }
+}
+
+@define class User extends Record {
+    static attributes = {
+        name : String,
+        roles : Role.Collection.subsetOf( '~roles' )
+    }
+}
+
+@define class UsersDirectory extends Store {
+    static attributes = {
+        roles : Role.Collection,
+        users : User.Collection // `~roles` references will be resolved against this.roles
+    }
+}
+```
 
 ### collection.createSubset( records?, options? )
 
@@ -382,23 +450,9 @@ Create an instance of `Collection.subsetOf( collection )` type (non-aggregating 
 Records in the collection must have an `id` attribute populated to work properly with subsets.
 </aside>
 
-### col.fetch( options? )
+### `class` Store
 
-Fetch the collection. Returns an abortable promise.
-
-`options` accepts an optional `liveUpdates` parameter. When `true`, collection subscribes for the live updates when I/O is finished.
-
-### col.liveUpdates( true | false )
-
-Subscribe for the live data updates if an I/O endpoint supports it (`subscribe()`/`unsubscribe()` IOEndpoint methods).
-
-<aside class="notice">
-No built-in I/O enpoints support that functionality yet.
-</aside>
-
-## Store
-
-`Store` is the special kind of record which serves as a root for ~references.
+`Store` is the special kind of record which serves as a root for id references.
 
 For all records inside of the store's aggregation tree `~attrName` will resolve to the attribute of the store class found with `record.getStore()` method. If there are no such an attribute in the store, the next available store upper in aggregation tree will be used (as regular records stores can be nested), or the default store if there are no one.
 
@@ -429,45 +483,6 @@ Use the default store for the _globally shared data only_. Each application page
 Store.global = new MyStore();
 
 // Now the reference '~users` will point to users collection from the MyStore.
-```
-
-## id-references
-
-Id-reference is the special Record attribute type representing nested Record or Collection which is represented in JSON as `record.id` or array of ids respectively. The reference to locally available "master" collection must be attached to the type in order to resolve id-references properly.
-
-Master collection reference is the string with an object path which is resolved relative to the record.
-
-Id-references are being resolved to the real Records "lazily", on the moment of first attribute read. Therefore, cross-references can be handled right.
-
-### `attrDef` : Record.from( '~collectionFromStore' )
-
-Serializable reference to the record from the collection taken from the closest store found with `this.getStore()` call.
-
-### `attrDef` : Collection.subsetOf( `~collectionFromStore` )
-
-Serializable collection of references to the records from the collection taken from the closest store found with `this.getStore()` call.
-
-```javascript
-@define class Role extends Record {
-    static attributes = {
-        name : String,
-        ...
-    }
-}
-
-@define class User extends Record {
-    static attributes = {
-        name : String,
-        roles : Role.Collection.subsetOf( '~roles' )
-    }
-}
-
-@define class UsersDirectory extends Store {
-    static attributes = {
-        roles : Role.Collection,
-        users : User.Collection // `~roles` references will be resolved against this.roles
-    }
-}
 ```
 
 ### recordOrCollection.getStore()

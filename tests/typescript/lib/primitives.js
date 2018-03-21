@@ -1,6 +1,6 @@
 import * as tslib_1 from "tslib";
 import "reflect-metadata";
-import { predefine, define, attr, Record, Collection } from '../../../lib';
+import { predefine, define, attr, Record, Collection } from 'type-r';
 import { expect } from 'chai';
 describe('Record', function () {
     it("can be instantiated", function () {

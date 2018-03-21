@@ -274,7 +274,7 @@
                 m.second.on( 'change', spyBottom );
                 m.second.a = 5;
                 expect( spyBottom ).to.be.calledOnce;
-                expect( spyBottom ).to.be.notCalled;
+                expect( spyTop ).to.be.not.called;
             });
         })
     });

@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import { predefine, define, attr, prop, Record, Store, Collection } from '../../../lib'
+import { predefine, define, attr, prop, Record, Store, Collection } from 'type-r'
 import { expect } from 'chai'
 
 describe( 'Record', () =>{

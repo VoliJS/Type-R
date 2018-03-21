@@ -1,6 +1,6 @@
 {
   "name": "type-r",
-  "version": "2.0.7",
+  "version": "2.1.2",
   "description": "Reactive serializable data layer for modern JS applications",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
@@ -18,11 +18,12 @@
   "scripts": {
     "build:lib": "npm run compile:lib && npm run bundle:lib",
     "compile:lib": "node_modules/.bin/tsc",
-    "bundle:lib": "node_modules/.bin/rollup --config && node_modules/.bin/rollup --config endpoints/memory/rollup.config.js && node_modules/.bin/rollup --config endpoints/localStorage/rollup.config.js & node_modules/.bin/rollup --config endpoints/attributes/rollup.config.js",
+    "bundle:lib": "node_modules/.bin/rollup --config",
     "test": "npm run build:test && npm run run:test",
-    "build": "npm run build:lib && npm test",
+    "build": "npm run build:lib && npm run build:endpoints && npm test",
     "docs": "node docs/build.js",
     "run:test": "node_modules/.bin/mocha tests/nestedtypes/functionality && node_modules/.bin/mocha tests/typescript/dist",
+    "build:endpoints": "cd endpoints/attributes && npm run build && cd ../localStorage && npm run build && cd ../memory && npm run build && cd ../restful && npm run build && cd ../proxy && npm run build",
     "build:test": "npm run compile:test && npm run bundle:test",
     "compile:test": "cd tests/typescript && ../../node_modules/.bin/tsc",
     "bundle:test": "cd tests/typescript && ../../node_modules/.bin/rollup --config"
@@ -40,31 +41,40 @@
     "serialization"
   ],
   "author": "Vlad Balin",
+  "contributors": [
+    "Ivan Terpugov <ru.ivan.alexandrovich@gmail.com>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gaperton/TransactionalJS/issues"
   },
   "homepage": "https://github.com/gaperton/TransactionalJS#readme",
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.44",
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.48",
     "@types/sinon-chai": "^2.7.29",
     "chai": "^4.1.2",
+    "chai-as-promised": "*",
     "handlebars": "^4.0.11",
     "highlight.js": "^9.12.0",
-    "marked": "^0.3.6",
+    "isomorphic-fetch": "^2.2.1",
+    "marked": "^0.3.17",
     "mocha": "^3.5.3",
-    "reflect-metadata": "^0.1.10",
+    "nock": "^9.2.3",
+    "reflect-metadata": "^0.1.12",
     "rollup": "^0.50.1",
-    "rollup-plugin-commonjs": "^8.2.6",
-    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.3",
     "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-paths": "*",
     "rollup-plugin-uglify": "^2.0.1",
-    "sinon-chai": "^2.14.0",
+    "sinon": "*",
+    "sinon-chai": "*",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.7.2",
+    "underscore": "*"
   },
   "dependencies": {
-    "tslib": "^1.8.0"
+    "tslib": "^1.9.0"
   }
 }

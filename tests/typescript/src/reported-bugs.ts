@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import { predefine, define, attr, prop, Record, Store, Collection } from '../../../lib'
+import { predefine, define, attr, mixins, prop, Record, Store, type, Collection } from 'type-r'
 import { expect } from 'chai'
 import { MinutesInterval } from './common'
 
@@ -9,14 +9,12 @@ describe( 'Bugs from Volicon Observer', () =>{
             let calls = [];
 
             @define class Base extends Record {
-                @attr( String.has.watcher( x => calls.push( 'inherited' ) ) )
+                @type( String ).watcher( x => calls.push( 'inherited' ) ).as
                 inherited : string;
 
-                @attr( String.has.watcher( 'onNamedWatcher' ) )
-                namedWatcher : string;
+                @type( String ).watcher( 'onNamedWatcher' ).as namedWatcher : string;
 
-                @attr( String.has.watcher( x => calls.push( 'base' ) ) )
-                overriden : string;
+                @type( String ).watcher( x => calls.push( 'base' ) ).as overriden : string;
             }
 
             @define class Subclass extends Base {
@@ -90,7 +88,7 @@ describe( 'Bugs from Volicon Observer', () =>{
             const SubEncoder : any = Record.extend({
                 defaults :{
                     Bitrate: BitrateModel,
-                    HistoryDepth: MinutesInterval.has.value( 43800 ),
+                    HistoryDepth: type( MinutesInterval ).value( 43800 ),
                     BitrateAsString: null,
                     ResolutionHeight: Number,
                     ResolutionWidth: Number,
@@ -135,7 +133,6 @@ describe( 'Bugs from Volicon Observer', () =>{
             const Placeholder = Record.extend({
                 attributes : {
                     subEncoders : SubEncoder.Collection.has.check( function(x){
-                        console.log( 'SubEncoders', this, x );
                         return x.length > 0;
                     },'ccccc')
                 }
@@ -178,7 +175,44 @@ describe( 'Bugs from Volicon Observer', () =>{
             target.assignFrom( source );
     
             expect( target.inner !== source.inner ).to.be.true;
-            console.log( target.inner.cid, source.inner.cid );
+        });
+
+        it( 'assign object of similar shape', () =>{
+            @define class A extends Record {
+                @attr a : string
+            }
+
+            @define class B extends A {
+                @attr b : string
+            }
+
+            const b = new B({ b : "b" }), a = new A({ a : "a" });
+            b.assignFrom( a );
+        });
+    });
+
+    describe( 'Mixins', () => {
+        it( 'can work with overriden atribute', ()=>{
+            @define class Source extends Record {
+                @attr name : string
+
+                get hi(){
+                    return 'hi';
+                }
+            }
+
+            @define
+            @mixins( Source )
+            class Target extends Record {
+                @attr name : number
+                hi : string
+            }
+
+            const t = new Target();
+            t.name = "1" as any;
+
+            expect( t.name ).to.eql( 1 );
+            expect( t.hi ).to.eql( 'hi' );
         });
     });
 } );

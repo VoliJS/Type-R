@@ -3,10 +3,14 @@ import uglify from 'rollup-plugin-uglify';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
-    input : 'lib/endpoints/localStorage.js',
+    input : 'lib/index.js',
+    external : "type-r",
+    globals : {
+        "type-r":"Nested"
+    },
 
     output : {
-        file   : 'endpoints/localStorage/index.js',
+        file   : 'dist/index.js',
         format : 'umd',
         name   : 'localStorageIO'
     },

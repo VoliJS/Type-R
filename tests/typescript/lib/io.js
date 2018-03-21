@@ -1,10 +1,13 @@
 import * as tslib_1 from "tslib";
 import "reflect-metadata";
-import { define, attr, Record, Store } from '../../../lib';
+import "isomorphic-fetch";
+import { define, attr, prop, Record, Store, type, Collection } from 'type-r';
 import { expect } from 'chai';
-import { memoryIO } from '../../../lib/endpoints/memory';
-import { attributesIO } from '../../../lib/endpoints/attributes';
-import { localStorageIO } from '../../../lib/endpoints/localStorage';
+import { memoryIO } from '../../../endpoints/memory';
+import { attributesIO } from '../../../endpoints/attributes';
+import { localStorageIO } from '../../../endpoints/localStorage';
+import { restfulIO, RestfulEndpoint } from '../../../endpoints/restful';
+import nock from 'nock';
 describe('IO', function () {
     describe('memory endpoint', function () {
         var testData = [
@@ -123,9 +126,9 @@ describe('IO', function () {
             }
             TestStore.endpoint = attributesIO();
             TestStore.attributes = {
-                a: NoEndpoint.Collection.has.endpoint(memoryIO([{ id: "777" }])),
+                a: type(NoEndpoint.Collection).endpoint(memoryIO([{ id: "777" }])),
                 b: HasEndpoint.Collection,
-                c: HasEndpoint.Collection.has.endpoint(memoryIO([{ id: "555" }]))
+                c: type(HasEndpoint.Collection).endpoint(memoryIO([{ id: "555" }]))
             };
             TestStore = tslib_1.__decorate([
                 define
@@ -138,6 +141,184 @@ describe('IO', function () {
             expect(s.b.first().id).to.eql(666);
             expect(s.c.first().id).to.eql("555");
             done();
+        });
+    });
+    describe("restful endpoint", function () {
+        describe('Base test', function () {
+            var usersStorage = {
+                models: [],
+                counter: 0
+            };
+            var USER_REGEX = /\/users\/(\w+)/;
+            function getUserId(uri) {
+                return uri.match(USER_REGEX)[1];
+            }
+            function getUser(id) {
+                return usersStorage.models.filter(function (u) { return u.id == id; })[0];
+            }
+            function cloneUser(_a) {
+                var id = _a.id, name = _a.name;
+                return { id: id, name: name };
+            }
+            nock.cleanAll();
+            nock('http://restful.basic')
+                .persist()
+                .get('/users')
+                .reply(200, function () {
+                return usersStorage.models.map(cloneUser);
+            })
+                .get(USER_REGEX)
+                .reply(function (uri) {
+                var user = getUser(getUserId(uri));
+                if (user) {
+                    return [200, cloneUser(user)];
+                }
+                else {
+                    console.warn("GET: NOT FOUND", uri);
+                    return [404];
+                }
+            })
+                .post('/users')
+                .reply(200, function (uri, requestBody) {
+                var id = ++usersStorage.counter, user = tslib_1.__assign({ id: String(id) }, requestBody);
+                usersStorage.models.push(user);
+                return cloneUser(user);
+            })
+                .put(USER_REGEX)
+                .reply(function (uri, requestBody) {
+                var user = getUser(getUserId(uri));
+                if (user) {
+                    user.name = requestBody.name;
+                    return [200, cloneUser(user)];
+                }
+                else {
+                    console.warn("PUT: NOT FOUND", uri);
+                    return [404];
+                }
+            })
+                .delete(USER_REGEX)
+                .reply(function (uri) {
+                var user = getUser(getUserId(uri));
+                if (user) {
+                    var idx = usersStorage.models.indexOf(user);
+                    usersStorage.models.splice(idx, 1);
+                    return [200];
+                }
+                else {
+                    console.warn("DELETE: NOT FOUND", uri);
+                    return [404];
+                }
+            });
+            testEndpoint(restfulIO('http://restful.basic/users'))();
+        });
+        describe('Relative urls', function () {
+            var User = (function (_super) {
+                tslib_1.__extends(User, _super);
+                function User() {
+                    return _super !== null && _super.apply(this, arguments) || this;
+                }
+                User.endpoint = restfulIO('./users');
+                tslib_1.__decorate([
+                    attr,
+                    tslib_1.__metadata("design:type", String)
+                ], User.prototype, "name", void 0);
+                User = tslib_1.__decorate([
+                    define
+                ], User);
+                return User;
+            }(Record));
+            var Store = (function (_super) {
+                tslib_1.__extends(Store, _super);
+                function Store() {
+                    return _super !== null && _super.apply(this, arguments) || this;
+                }
+                Store.endpoint = restfulIO('./store');
+                tslib_1.__decorate([
+                    attr,
+                    tslib_1.__metadata("design:type", String)
+                ], Store.prototype, "name", void 0);
+                tslib_1.__decorate([
+                    prop(User),
+                    tslib_1.__metadata("design:type", User)
+                ], Store.prototype, "user", void 0);
+                Store = tslib_1.__decorate([
+                    define
+                ], Store);
+                return Store;
+            }(Record));
+            var Root = (function (_super) {
+                tslib_1.__extends(Root, _super);
+                function Root() {
+                    return _super !== null && _super.apply(this, arguments) || this;
+                }
+                Root.endpoint = restfulIO('http://restful.relative/');
+                tslib_1.__decorate([
+                    prop(User.Collection),
+                    tslib_1.__metadata("design:type", Collection)
+                ], Root.prototype, "users", void 0);
+                tslib_1.__decorate([
+                    prop(Store),
+                    tslib_1.__metadata("design:type", Store)
+                ], Root.prototype, "store", void 0);
+                Root = tslib_1.__decorate([
+                    define
+                ], Root);
+                return Root;
+            }(Record));
+            var root = new Root();
+            root.store.id = 99;
+            root.store.user.id = 1000;
+            nock('http://restful.relative')
+                .get('/users')
+                .reply(200, [{ id: 10, name: 'John' }, { id: 11, name: 'Jack' }])
+                .get('/store/99')
+                .reply(200, { id: 99, name: 'something' })
+                .get('/store/99/users/1000')
+                .reply(200, { id: 1000, name: 'special' });
+            it('resolves in simple case', function (done) {
+                root.store.fetch().then(function () {
+                    expect(root.store.name).to.eql('something');
+                    done();
+                });
+            });
+            it('resolves for collection', function (done) {
+                root.users.fetch().then(function () {
+                    expect(root.users.map(function (u) { return u.id; })).deep.equal([10, 11]);
+                    done();
+                });
+            });
+            it('nested resolve', function (done) {
+                var user = root.store.user;
+                user.fetch().then(function () {
+                    expect(user.name).to.equal('special');
+                    done();
+                });
+            });
+        });
+        describe("Merging options", function () {
+            RestfulEndpoint.defaultFetchOptions = {
+                cache: "force-cache",
+                credentials: "omit",
+                mode: "navigate",
+                redirect: "manual",
+            };
+            it("uses default options", function () {
+                var io = restfulIO(""), options = io.buildRequestOptions("get");
+                expect(options.cache).to.equal("force-cache");
+                expect(options.credentials).to.equal("omit");
+                expect(options.mode).to.equal("navigate");
+                expect(options.redirect).to.equal("manual");
+            });
+            it("Overrides at ctor", function () {
+                var io = restfulIO("", { credentials: "include", cache: "reload" }), options = io.buildRequestOptions("get");
+                expect(options.cache).to.equal("reload");
+                expect(options.credentials).to.equal("include");
+            });
+            it("Overrides at call", function () {
+                var io = restfulIO("", { credentials: "include", cache: "reload" }), options = io.buildRequestOptions("get", { cache: "no-store", credentials: "same-origin" });
+                expect(options.cache).to.equal("no-store");
+                expect(options.credentials).to.equal("same-origin");
+            });
         });
     });
     if (typeof localStorage !== 'undefined')

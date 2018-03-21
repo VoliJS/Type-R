@@ -164,14 +164,77 @@ May be explicitly assigned in record's definition with custom collection class.
 // Declare the collection class.
 @define class Comments extends Record.Collection {}
 
-@define class Comment extends Record({
+@define class Comment extends Record{
     static Collection = Comments; // Make it the default Comment collection.
 
-    attributes : {
+    static attributes = {
         text : String,
         replies : Comments
     }
-});
+}
+```
+
+### `attrDef` Type.has and type( Type )
+
+Attribute definition can have different metadata attached which affects various aspects of attribute's behavior. Metadata is attached with
+a chain of calls after the `Ctor.has` property or `type( Ctor )` call. Attribute's default value is the most common example of such a metadata and is the single option which can be applied to the constructor function directly.
+
+```javascript
+import { define, type, Record }
+
+@define class Dummy extends Record {
+    static attributes = {
+        a : String.has.value( "a" ), // Same as String.value( "a" )
+        b : type( String ).value( "a" ) // Same as above
+    }
+}
+```
+
+## Definitions in TypeScript
+
+Type-R implements experimental support for TypeScript record definitions.
+
+### `decorator` @attr
+
+The simplest form of attribute definition. Requires `reflect-metadata` npm package and `emitDecoratorMetadata` option set to true in the `tsconfig.json`.
+
+No metadata can be attached.
+
+```javascript
+import { define, attr, Record } from 'type-r'
+
+@define class User extends Record {
+    @attr name : string
+    @attr email : string
+}
+```
+
+### `decorator` @attr( attrDef )
+
+Long form of the attribute definition. Accepts arbitraty Type-R attribute definition as a parameter. Could be used if metadata must be attached to an attributed.
+Doesn't require `reflect-metadata` package.
+
+```javascript
+import { define, attr, Record } from 'type-r'
+
+@define class User extends Record {
+    @attr( String.value( 5 ) ) name : string
+    @attr( String.has.toJSON( false ) ) email : string
+}
+```
+
+### `decorator` @type( Ctor ).as
+
+Attribute definition has `.as` property which converts the definition to the attribute's decorator. Can be used in conjunction with `type()` function to provide an 
+alternative syntax for attribute definitions.
+
+```javascript
+import { define, type, Record } from 'type-r'
+
+@define class User extends Record {
+    @type( String ).value( 5 ).as name : string
+    @type( String ).toJSON( false ).as email : string
+}
 ```
 
 ## Create and dispose

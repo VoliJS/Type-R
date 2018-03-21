@@ -1,9 +1,12 @@
 import "reflect-metadata"
-import { predefine, define, attr, prop, Record, Store, Collection } from '../../../lib'
+import "isomorphic-fetch"
+import { predefine, define, attr, prop, Record, Store, type, Collection } from 'type-r'
 import { expect } from 'chai'
-import { memoryIO } from '../../../lib/endpoints/memory'
-import { attributesIO } from '../../../lib/endpoints/attributes'
-import { localStorageIO } from '../../../lib/endpoints/localStorage'
+import { memoryIO } from '../../../endpoints/memory'
+import { attributesIO } from '../../../endpoints/attributes'
+import { localStorageIO } from '../../../endpoints/localStorage'
+import { restfulIO, RestfulEndpoint } from '../../../endpoints/restful'
+import nock from 'nock'
 
 describe( 'IO', function(){
     describe( 'memory endpoint', () => {
@@ -104,9 +107,9 @@ describe( 'IO', function(){
         @define class TestStore extends Store {
             static endpoint = attributesIO();
             static attributes = {
-                a : NoEndpoint.Collection.has.endpoint( memoryIO([{ id : "777" }]) ),
+                a : type( NoEndpoint.Collection ).endpoint( memoryIO([{ id : "777" }]) ),
                 b : HasEndpoint.Collection,
-                c : HasEndpoint.Collection.has.endpoint( memoryIO([{ id : "555" }]) )
+                c : type( HasEndpoint.Collection ).endpoint( memoryIO([{ id : "555" }]) )
             }
 
             a;
@@ -123,6 +126,178 @@ describe( 'IO', function(){
             done();
         });
     });
+
+
+    describe( "restful endpoint", () => {
+
+        describe( 'Base test', () => {
+            let usersStorage = {
+                models : [],
+                counter: 0
+            }
+
+            const USER_REGEX = /\/users\/(\w+)/;
+
+            function getUserId( uri : string ) {
+                return uri.match( USER_REGEX )[ 1 ]
+            }
+
+            function getUser( id ) {
+                return usersStorage.models.filter( u => u.id == id )[ 0 ]
+            }
+
+            function cloneUser( { id, name } ) {
+                return { id, name }
+            }
+
+            nock.cleanAll()
+            nock( 'http://restful.basic' )
+                .persist()
+                .get( '/users' )
+                .reply( 200, function () {
+                    return usersStorage.models.map( cloneUser );
+                } )
+
+                .get( USER_REGEX )
+                .reply( function ( uri ) {
+                    const user = getUser( getUserId( uri ) );
+                    if( user ) {
+                        return [ 200, cloneUser( user ) ]
+                    }
+                    else {
+                        console.warn( "GET: NOT FOUND", uri )
+                        return [ 404 ]
+                    }
+                } )
+
+                .post( '/users' )
+                .reply( 200, function ( uri, requestBody ) {
+                    let id   = ++usersStorage.counter,
+                        user = {
+                            id: String( id ),
+                            ...requestBody
+                        };
+                    usersStorage.models.push( user );
+                    return cloneUser( user );
+                } )
+
+                .put( USER_REGEX )
+                .reply( function ( uri, requestBody ) {
+                    const user = getUser( getUserId( uri ) );
+
+                    if( user ) {
+                        user.name = requestBody.name
+                        return [ 200, cloneUser( user ) ]
+                    }
+                    else {
+                        console.warn( "PUT: NOT FOUND", uri )
+                        return [ 404 ]
+                    }
+                } )
+
+                .delete( USER_REGEX )
+                .reply( function ( uri ) {
+                    const user = getUser( getUserId( uri ) )
+                    if( user ) {
+                        const idx = usersStorage.models.indexOf( user )
+                        usersStorage.models.splice( idx, 1 );
+                        return [ 200 ]
+                    }
+                    else {
+                        console.warn( "DELETE: NOT FOUND", uri )
+                        return [ 404 ]
+                    }
+                } )
+
+            testEndpoint( restfulIO( 'http://restful.basic/users') )()
+        } )
+
+        describe( 'Relative urls', () => {
+            @define
+            class User extends Record {
+                static endpoint = restfulIO( './users' );
+                @attr name : string
+            }
+
+            @define
+            class Store extends Record {
+                static endpoint = restfulIO( './store' );
+                @attr name : string
+                @prop( User ) user : User
+            }
+
+            @define
+            class Root extends Record {
+                static endpoint = restfulIO( 'http://restful.relative/' );
+                @prop( User.Collection ) users : Collection<User>
+                @prop( Store ) store : Store
+            }
+
+            const root = new Root();
+            root.store.id = 99;
+            root.store.user.id = 1000;
+
+            nock( 'http://restful.relative' )
+                .get( '/users' )
+                .reply( 200, [ {id: 10, name: 'John'}, {id: 11, name: 'Jack'} ] )
+                .get( '/store/99' )
+                .reply( 200, {id: 99, name: 'something'} )
+                .get( '/store/99/users/1000' )
+                .reply( 200, {id: 1000, name: 'special'} )
+
+            it( 'resolves in simple case', done => {
+                root.store.fetch().then( () => {
+                    expect( root.store.name ).to.eql( 'something' )
+                    done()
+                } )
+            } )
+
+            it( 'resolves for collection', done => {
+                root.users.fetch().then( () => {
+                    expect( root.users.map( u => u.id ) ).deep.equal( [ 10, 11 ] )
+                    done()
+                } )
+            } )
+
+            it( 'nested resolve', done => {
+                const {user} = root.store;
+                user.fetch().then( () => {
+                    expect( user.name ).to.equal( 'special' )
+                    done()
+                } )
+            } )
+        } )
+
+        describe( "Merging options", () => {
+            RestfulEndpoint.defaultFetchOptions = {
+                cache: "force-cache",
+                credentials: "omit",
+                mode: "navigate",
+                redirect: "manual",
+            }
+            it("uses default options", () => {
+                let io = restfulIO(""),
+                    options : RequestInit = (io as any).buildRequestOptions("get")
+                expect(options.cache).to.equal("force-cache")
+                expect(options.credentials).to.equal("omit")
+                expect(options.mode).to.equal("navigate")
+                expect(options.redirect).to.equal("manual")
+            })
+
+            it("Overrides at ctor", () => {
+                let io = restfulIO("", {credentials: "include", cache:"reload"}),
+                    options : RequestInit = (io as any).buildRequestOptions("get", )
+                expect(options.cache).to.equal("reload")
+                expect(options.credentials).to.equal("include")
+            })
+            it("Overrides at call", () => {
+                let io = restfulIO("", {credentials: "include", cache:"reload"}),
+                    options : RequestInit = (io as any).buildRequestOptions("get", {cache: "no-store", credentials: "same-origin"} )
+                expect(options.cache).to.equal("no-store")
+                expect(options.credentials).to.equal("same-origin")
+            })
+        })
+    } );
 
     if( typeof localStorage !== 'undefined') describe( 'localStorage endpoint', testEndpoint( localStorageIO( "/test" ) ));
 });

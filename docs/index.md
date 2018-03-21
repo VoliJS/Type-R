@@ -1,5 +1,5 @@
 ---
-title: Type-R 2.0 API Reference
+title: Type-R 2.1 API Reference
 
 toc_footers:
   - <a href="https://github.com/Volicon/Type-R">GitHub repository</a>

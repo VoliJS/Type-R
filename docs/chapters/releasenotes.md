@@ -1,5 +1,13 @@
 # Release Notes
 
+## 2.1.0
+
+This release adds long-awaited HTTP REST endpoint.
+
+- IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.
+- Added HTTP REST endpoint `restfulIO` with relative urls support (https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-).
+- Added proxyIO endpoint for creating endpoints from records on the server side (https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-).
+
 ## 2.0.0
 
 This release brings new features which fixes problems with component's inheritance in React bindings and implements long-awaited generic IO implementation based on ES6 promises.

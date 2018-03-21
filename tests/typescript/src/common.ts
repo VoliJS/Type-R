@@ -1,4 +1,4 @@
-import { Model, Transactional, ChainableAttributeSpec } from '../../../lib'
+import { Model, Transactional, ChainableAttributeSpec } from 'type-r'
 
 export const SecondsInterval = Model.extend({
     units: [
