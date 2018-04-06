@@ -4,6 +4,33 @@ import { define, attr, mixins, Record, type, Collection } from 'type-r';
 import { expect } from 'chai';
 import { MinutesInterval } from './common';
 describe('Bugs from Volicon Observer', function () {
+    describe('Attribute definitions', function () {
+        it('@attr( value ) must work as expected', function () {
+            var Test = (function (_super) {
+                tslib_1.__extends(Test, _super);
+                function Test() {
+                    return _super !== null && _super.apply(this, arguments) || this;
+                }
+                tslib_1.__decorate([
+                    attr(5),
+                    tslib_1.__metadata("design:type", Number)
+                ], Test.prototype, "num", void 0);
+                tslib_1.__decorate([
+                    attr("5"),
+                    tslib_1.__metadata("design:type", String)
+                ], Test.prototype, "str", void 0);
+                Test = tslib_1.__decorate([
+                    define
+                ], Test);
+                return Test;
+            }(Record));
+            var t = new Test();
+            expect(t.num).to.eql(5);
+            expect(t.str).to.eql("5");
+            t.str = 6;
+            expect(t.str).to.eql("6");
+        });
+    });
     describe('Attribute change watcher', function () {
         it('works in base class and subclass', function () {
             var calls = [];

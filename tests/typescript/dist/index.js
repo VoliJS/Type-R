@@ -1631,6 +1631,25 @@ var ChainableAttributeSpec = (function () {
     ChainableAttributeSpec.prototype.value = function (x) {
         return this.metadata({ value: x, hasCustomDefault: true });
     };
+    ChainableAttributeSpec.from = function (spec) {
+        var attrSpec;
+        if (typeof spec === 'function') {
+            attrSpec = spec.has;
+        }
+        else if (spec && spec instanceof ChainableAttributeSpec) {
+            attrSpec = spec;
+        }
+        else {
+            var type_1 = inferType(spec);
+            if (type_1 && type_1.prototype instanceof Transactional) {
+                attrSpec = type_1.shared.value(spec);
+            }
+            else {
+                attrSpec = new ChainableAttributeSpec({ type: type_1, value: spec, hasCustomDefault: true });
+            }
+        }
+        return attrSpec;
+    };
     return ChainableAttributeSpec;
 }());
 function emptyFunction() { }
@@ -1658,25 +1677,6 @@ Object.defineProperty(Function.prototype, 'has', {
     },
     set: function (value) { this._has = value; }
 });
-function toAttributeOptions(spec) {
-    var attrSpec;
-    if (typeof spec === 'function') {
-        attrSpec = spec.has;
-    }
-    else if (spec && spec instanceof ChainableAttributeSpec) {
-        attrSpec = spec;
-    }
-    else {
-        var type_1 = inferType(spec);
-        if (type_1 && type_1.prototype instanceof Transactional) {
-            attrSpec = type_1.shared.value(spec);
-        }
-        else {
-            attrSpec = new ChainableAttributeSpec({ type: type_1, value: spec, hasCustomDefault: true });
-        }
-    }
-    return attrSpec.options;
-}
 function inferType(value) {
     switch (typeof value) {
         case 'number':
@@ -2050,7 +2050,7 @@ var compile = function (attributesDefinition, baseClassAttributes) {
     return __assign({}, ConstructorsMixin, { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }), _toJSON: createToJSON(allAttributes) }, parseMixin(allAttributes), localEventsMixin(myAttributes), { _endpoints: transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
 };
 function createAttribute(spec, name) {
-    return AnyType.create(toAttributeOptions(spec), name);
+    return AnyType.create(ChainableAttributeSpec.from(spec).options, name);
 }
 function parseMixin(attributes) {
     var attrsWithParse = Object.keys(attributes).filter(function (name) { return attributes[name].parse; });
@@ -2134,6 +2134,7 @@ var IORecordMixin = {
             else {
                 _this.dispose();
             }
+            return _this;
         });
     }
 };
@@ -2500,7 +2501,7 @@ function attr(proto, attrName) {
         }
     }
     else {
-        return proto.asProp;
+        return ChainableAttributeSpec.from(proto).asProp;
     }
 }
 function prop(spec) {
@@ -3094,7 +3095,7 @@ var Collection = (function (_super) {
                 },
                 removed: function (id) { return _this.remove(id); }
             };
-            return this.getEndpoint().subscribe(this._liveUpdates, this);
+            return this.getEndpoint().subscribe(this._liveUpdates, this).then(function () { return _this; });
         }
         else {
             if (this._liveUpdates) {
@@ -16057,7 +16058,6 @@ describe('Record', function () {
         it('Supports function type', function () {
             var t = new Test();
             var t2 = t.clone();
-            console.log('!!!', t._attributes);
             chai_1(t.fun).to.eql(t2.fun);
         });
     });
@@ -16197,6 +16197,33 @@ var MinutesInterval = SecondsInterval.extend({
 });
 
 describe('Bugs from Volicon Observer', function () {
+    describe('Attribute definitions', function () {
+        it('@attr( value ) must work as expected', function () {
+            var Test = (function (_super) {
+                __extends(Test, _super);
+                function Test() {
+                    return _super !== null && _super.apply(this, arguments) || this;
+                }
+                __decorate([
+                    attr(5),
+                    __metadata("design:type", Number)
+                ], Test.prototype, "num", void 0);
+                __decorate([
+                    attr("5"),
+                    __metadata("design:type", String)
+                ], Test.prototype, "str", void 0);
+                Test = __decorate([
+                    define
+                ], Test);
+                return Test;
+            }(Record));
+            var t = new Test();
+            chai_1(t.num).to.eql(5);
+            chai_1(t.str).to.eql("5");
+            t.str = 6;
+            chai_1(t.str).to.eql("6");
+        });
+    });
     describe('Attribute change watcher', function () {
         it('works in base class and subclass', function () {
             var calls = [];
@@ -41225,8 +41252,7 @@ describe('IO', function () {
             });
         });
         it('read', function (done) {
-            var x = new User({ id: "1" });
-            x.fetch().then(function () {
+            var x = (new User({ id: "1" })).fetch().then(function (x) {
                 chai_1(x.name).to.eql("test");
                 done();
             });

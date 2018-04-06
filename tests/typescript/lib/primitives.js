@@ -324,7 +324,6 @@ describe('Record', function () {
         it('Supports function type', function () {
             var t = new Test();
             var t2 = t.clone();
-            console.log('!!!', t._attributes);
             expect(t.fun).to.eql(t2.fun);
         });
     });

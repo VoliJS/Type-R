@@ -78,10 +78,10 @@ export class Record extends Transactional implements IORecord, AttributesContain
      _endpoints : { [ name : string ] : IOEndpoint }
 
      // Save record
-     save( options? : object ) : IOPromise<any> { throw new Error( 'Implemented by mixin' ); }
+     save( options? : object ) : IOPromise<this> { throw new Error( 'Implemented by mixin' ); }
 
      // Destroy record
-     destroy( options? : object ) : IOPromise<any> { throw new Error( 'Implemented by mixin' ); }
+     destroy( options? : object ) : IOPromise<this> { throw new Error( 'Implemented by mixin' ); }
 
     /***********************************
      * Core Members

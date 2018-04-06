@@ -1694,6 +1694,25 @@ var ChainableAttributeSpec = (function () {
     ChainableAttributeSpec.prototype.value = function (x) {
         return this.metadata({ value: x, hasCustomDefault: true });
     };
+    ChainableAttributeSpec.from = function (spec) {
+        var attrSpec;
+        if (typeof spec === 'function') {
+            attrSpec = spec.has;
+        }
+        else if (spec && spec instanceof ChainableAttributeSpec) {
+            attrSpec = spec;
+        }
+        else {
+            var type_1 = inferType(spec);
+            if (type_1 && type_1.prototype instanceof Transactional) {
+                attrSpec = type_1.shared.value(spec);
+            }
+            else {
+                attrSpec = new ChainableAttributeSpec({ type: type_1, value: spec, hasCustomDefault: true });
+            }
+        }
+        return attrSpec;
+    };
     return ChainableAttributeSpec;
 }());
 function emptyFunction() { }
@@ -1721,25 +1740,6 @@ Object.defineProperty(Function.prototype, 'has', {
     },
     set: function (value) { this._has = value; }
 });
-function toAttributeOptions(spec) {
-    var attrSpec;
-    if (typeof spec === 'function') {
-        attrSpec = spec.has;
-    }
-    else if (spec && spec instanceof ChainableAttributeSpec) {
-        attrSpec = spec;
-    }
-    else {
-        var type_1 = inferType(spec);
-        if (type_1 && type_1.prototype instanceof Transactional) {
-            attrSpec = type_1.shared.value(spec);
-        }
-        else {
-            attrSpec = new ChainableAttributeSpec({ type: type_1, value: spec, hasCustomDefault: true });
-        }
-    }
-    return attrSpec.options;
-}
 function inferType(value) {
     switch (typeof value) {
         case 'number':
@@ -2113,7 +2113,7 @@ var compile = function (attributesDefinition, baseClassAttributes) {
     return __assign({}, ConstructorsMixin, { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }), _toJSON: createToJSON(allAttributes) }, parseMixin(allAttributes), localEventsMixin(myAttributes), { _endpoints: transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
 };
 function createAttribute(spec, name) {
-    return AnyType.create(toAttributeOptions(spec), name);
+    return AnyType.create(ChainableAttributeSpec.from(spec).options, name);
 }
 function parseMixin(attributes) {
     var attrsWithParse = Object.keys(attributes).filter(function (name) { return attributes[name].parse; });
@@ -2197,6 +2197,7 @@ var IORecordMixin = {
             else {
                 _this.dispose();
             }
+            return _this;
         });
     }
 };
@@ -2563,7 +2564,7 @@ function attr(proto, attrName) {
         }
     }
     else {
-        return proto.asProp;
+        return ChainableAttributeSpec.from(proto).asProp;
     }
 }
 function prop(spec) {
@@ -3157,7 +3158,7 @@ var Collection = (function (_super) {
                 },
                 removed: function (id) { return _this.remove(id); }
             };
-            return this.getEndpoint().subscribe(this._liveUpdates, this);
+            return this.getEndpoint().subscribe(this._liveUpdates, this).then(function () { return _this; });
         }
         else {
             if (this._liveUpdates) {
@@ -3656,7 +3657,6 @@ exports.shouldBeAnObject = shouldBeAnObject;
 exports.RecordTransaction = RecordTransaction;
 exports.ChainableAttributeSpec = ChainableAttributeSpec;
 exports.type = type;
-exports.toAttributeOptions = toAttributeOptions;
 exports.Transactional = Transactional;
 exports.transactionApi = transactionApi;
 exports.getOwnerEndpoint = getOwnerEndpoint$1;

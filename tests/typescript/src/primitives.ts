@@ -255,7 +255,6 @@ describe( 'Record', () =>{
             const t = new Test();
             const t2 = t.clone();
 
-            console.log( '!!!', t._attributes );
             expect( t.fun ).to.eql( t2.fun );
         } );
     });

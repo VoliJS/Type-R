@@ -45,8 +45,7 @@ describe('IO', function () {
             });
         });
         it('read', function (done) {
-            var x = new User({ id: "1" });
-            x.fetch().then(function () {
+            var x = (new User({ id: "1" })).fetch().then(function (x) {
                 expect(x.name).to.eql("test");
                 done();
             });

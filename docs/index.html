@@ -394,6 +394,7 @@ Doesn&#39;t require <code>reflect-metadata</code> package.</p>
 
 @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Record</span> </span>{
     @attr( <span class="hljs-built_in">String</span>.value( <span class="hljs-number">5</span> ) ) name : string
+    @attr( <span class="hljs-string">"5"</span> ) name : string <span class="hljs-comment">// String type is infered from the default value.</span>
     @attr( <span class="hljs-built_in">String</span>.has.toJSON( <span class="hljs-literal">false</span> ) ) email : string
 }
 </code></pre>

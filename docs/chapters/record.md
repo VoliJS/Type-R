@@ -219,6 +219,7 @@ import { define, attr, Record } from 'type-r'
 
 @define class User extends Record {
     @attr( String.value( 5 ) ) name : string
+    @attr( "5" ) name : string // String type is infered from the default value.
     @attr( String.has.toJSON( false ) ) email : string
 }
 ```

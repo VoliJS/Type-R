@@ -4,6 +4,22 @@ import { expect } from 'chai'
 import { MinutesInterval } from './common'
 
 describe( 'Bugs from Volicon Observer', () =>{
+    describe( 'Attribute definitions', () => {
+        it( '@attr( value ) must work as expected', () => {
+            @define class Test extends Record {
+                @attr( 5 ) num : number;
+                @attr( "5" ) str : string;
+            }
+
+            const t = new Test();
+            expect( t.num ).to.eql( 5 );
+            expect( t.str ).to.eql( "5" );
+
+            t.str = 6 as any;
+            expect( t.str ).to.eql( "6" );
+        } );
+    } );
+
     describe( 'Attribute change watcher', () =>{
         it( 'works in base class and subclass', () => {
             let calls = [];

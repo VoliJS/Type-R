@@ -10,7 +10,7 @@ export * from './attrDef'
 
 import { AnyType } from './any'
 import { ConstructorsMixin, constructorsMixin } from './updates'
-import { toAttributeOptions, ChainableAttributeSpec } from './attrDef'
+import { ChainableAttributeSpec } from './attrDef'
 import { CompiledReference } from '../../traversable'
 import { IOEndpoint } from '../../io-tools'
 
@@ -60,7 +60,7 @@ export default function( attributesDefinition : object, baseClassAttributes : At
 
 // Create attribute from the type spec.
 export function createAttribute( spec : any, name : string ) : AnyType {
-    return AnyType.create( toAttributeOptions( spec ), name );
+    return AnyType.create( ChainableAttributeSpec.from( spec ).options, name );
 }
 
 function parseMixin( attributes : AttributeDescriptors ) : ParseMixin {

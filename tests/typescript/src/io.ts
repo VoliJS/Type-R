@@ -39,8 +39,7 @@ describe( 'IO', function(){
         });
     
         it( 'read', done => {
-            const x = new User({ id : "1" });
-            x.fetch().then( () => {
+            const x = ( new User({ id : "1" }) ).fetch().then( x => {
                 expect( x.name ).to.eql( "test" );
                 done();
             });
@@ -78,7 +77,7 @@ describe( 'IO', function(){
             const x = new User({ id : "1" });
             x.destroy()
                 .then( () => {
-                    const users = new User.Collection();
+                    const users : Collection<User> = new User.Collection();
                     return users.fetch();
                 })
                 .then( users => {
