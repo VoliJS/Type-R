@@ -129,6 +129,10 @@ export class ChainableAttributeSpec<F extends Function>{
         });
     }
 
+    properties( props : object ) : this {
+        return this.metadata({properties: props});
+    }
+
     // Creates a copy of the spec.
     get has() : this {
         return this;

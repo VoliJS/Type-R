@@ -22,6 +22,7 @@ export interface AttributeOptions {
 
     parse? : Parse
     toJSON? : AttributeToJSON
+    properties? : Object
    
     getHooks? : GetHook[]
     transforms? : Transform[]
@@ -98,6 +99,8 @@ export class AnyType implements AttributeUpdatePipeline {
         return value && value.toJSON ? value.toJSON( options ) : value;
     }
 
+    properties: Object
+
     createPropertyDescriptor() : PropertyDescriptor | void {
         const { name, getHook } = this;
 
@@ -127,7 +130,7 @@ export class AnyType implements AttributeUpdatePipeline {
     // Used as global default value for the given metatype
     static defaultValue : any;
 
-    type : Function
+    type : any
 
     initialize( name : string, options : TransactionOptions ){}
 
@@ -182,7 +185,7 @@ export class AnyType implements AttributeUpdatePipeline {
         options.changeHandlers = options.changeHandlers.slice();
 
         const {
-                  value, type, parse, toJSON, changeEvents,
+                  value, type, parse, toJSON, changeEvents, properties,
                   validate, getHooks, transforms, changeHandlers
               } = options;
 
@@ -206,6 +209,8 @@ export class AnyType implements AttributeUpdatePipeline {
         this.propagateChanges = changeEvents !== false;
 
         this.toJSON = toJSON === void 0 ? this.toJSON : toJSON;
+
+        this.properties = properties == void 0 ? {} : properties;
 
         this.validate = validate || this.validate;
         

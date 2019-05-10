@@ -1,8 +1,9 @@
 import { Transactional, TransactionOptions } from '../../transactions';
 import { AnyType } from './any';
 import { AttributesContainer, ConstructorOptions } from '../updates';
+import { ChainableAttributeSpec } from '../attrDef';
 export declare class SharedType extends AnyType {
-    type: typeof Transactional;
+    type: typeof Transactional | ChainableAttributeSpec<Function>;
     doInit(value: any, record: AttributesContainer, options: ConstructorOptions): any;
     doUpdate(value: any, record: any, options: any, nested: any[]): boolean;
     clone(value: Transactional, record: AttributesContainer): Transactional;

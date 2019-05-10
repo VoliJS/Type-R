@@ -15,6 +15,7 @@ export interface AttributeOptions {
     hasCustomDefault?: boolean;
     parse?: Parse;
     toJSON?: AttributeToJSON;
+    properties?: Object;
     getHooks?: GetHook[];
     transforms?: Transform[];
     changeHandlers?: ChangeHandler[];
@@ -38,10 +39,11 @@ export declare class AnyType implements AttributeUpdatePipeline {
     dispose(record: AttributesContainer, value: any): void;
     validate(record: AttributesContainer, value: any, key: string): any;
     toJSON(value: any, key: any, options?: object): any;
+    properties: Object;
     createPropertyDescriptor(): PropertyDescriptor | void;
     value: any;
     static defaultValue: any;
-    type: Function;
+    type: any;
     initialize(name: string, options: TransactionOptions): void;
     options: AttributeOptions;
     doInit(value: any, record: AttributesContainer, options: TransactionOptions): any;
