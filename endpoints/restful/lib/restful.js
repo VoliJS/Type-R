@@ -98,7 +98,9 @@ var RestfulEndpoint = (function () {
                 return response.json();
             }
             else {
-                throw new Error(response.statusText);
+                return response.json().then(function (data) {
+                    throw new Error(data.message);
+                });
             }
         });
     };

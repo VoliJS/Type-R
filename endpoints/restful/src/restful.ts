@@ -149,7 +149,9 @@ export class RestfulEndpoint implements IOEndpoint {
                 if( response.ok ) {
                     return response.json()
                 } else {
-                    throw new Error( response.statusText )
+                    return response.json().then((data) => {
+                        throw new Error(data.message);
+                    })
                 }
             } );
     }
