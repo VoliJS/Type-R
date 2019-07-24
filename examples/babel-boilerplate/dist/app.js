@@ -3443,7 +3443,9 @@ var Application = function Application() {
   var items = __WEBPACK_IMPORTED_MODULE_3__type_r_react__["a" /* useCollection */].of(Item);
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
     onClick: function onClick() {
-      return items.add({});
+      return items.add({
+        text: 'edit me'
+      });
     }
   }, "Add"), items.map(function (item) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(ItemView, {

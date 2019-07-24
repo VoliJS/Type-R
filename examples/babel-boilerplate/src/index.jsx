@@ -16,13 +16,13 @@ const Application = () => {
 
     return (
         <div>
-            <button onClick={ () => items.add({}) }>
+            <button onClick={ () => items.add({ text : 'edit me' }) }>
                 Add
             </button>
             
-            { items.map( item => (
+            { items.map( item =>
                 <ItemView key={ item.cid } item={ item } /> 
-            ))}
+            )}
         </div>
     );
 }
