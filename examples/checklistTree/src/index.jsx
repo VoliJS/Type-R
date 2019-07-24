@@ -12,7 +12,7 @@ import { ChecklistItem } from './model'
 // Local counter to help us count top-level renders.
 let _renders = 0;
 
-// React-r state definition.
+// Type-R model for the state.
 @define class AppState extends Model {
     // The state is persisted in localStorage
     static endpoint = localStorageIO( "/@type-r/react/examples" );
@@ -34,8 +34,6 @@ const App = () => {
         await state.fetch();
     });
 
-
-
     return isReady ?
         <div>
             <div>Renders count: { ++_renders }
@@ -48,46 +46,38 @@ const App = () => {
     : "Loading..."
 }
 
-// Simple pure component to render the list of checklist items.
-// They must _not_ be prefixed with @define. No magic here, just raw React.
-const List = 
+const List =
+    // Render the component only if the listed props have changed.
     pureRenderProps({
         items : Collection.of( ChecklistItem )
     },
     ({ items }) =>
         <div className='children'>
-            { items.map( item => ( /* <- collections have 'map' method as an array */
-                /* models have cid - unique client id to be used in 'key' */
+            { items.map( item => (
+                /* models have globally unique cid - client id to be used as 'key' */
                 <Item key={ item.cid } model={ item } />
             ))}
         </div>
 );
 
-const Item = ({ model }) => {
-    // Two way data binding! Using our advanced value links.
-    // First, prepare the links.
-    const model$ = model.$;
-
-    return (
-        <div className='checklist'>
-            <div className='header'>
-                <input type="checkbox"
-                        { ...model$.checked.props /* We use links instead of values... */ }/>
-                <span className="created">
-                    { model.created.toLocaleTimeString() }
-                </span>
-                <input { ...model$.name.props /* ...as if they would be values */ } />
-                <button onClick={ () => model.remove() /* custom model method to remove it from the collection */}>
-                    Delete
-                </button>
-                <button onClick={ () => model.subitems.add({}) }>
-                    Add children
-                </button>
-            </div>
-            <List items={ model.subitems /* Render the nested checklist */ } />
+const Item = ({ model }) => 
+    <div className='checklist'>
+        <div className='header'>
+            <input type="checkbox"
+                    { ...model.$.checked.props /* data binding */ }/>
+            <span className="created">
+                { model.created.toLocaleTimeString() }
+            </span>
+            <input { ...model.$.name.props /* data binding again */ } />
+            <button onClick={ () => model.remove() }>
+                Delete
+            </button>
+            <button onClick={ () => model.subitems.add({}) }>
+                Add children
+            </button>
         </div>
-    );
-}
+        <List items={ model.subitems } />
+    </div>;
 
 // That's really it! Let's render it.
 ReactDOM.render( <App />, document.getElementById( 'app-mount-root' ) );

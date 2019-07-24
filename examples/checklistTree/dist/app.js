@@ -4112,7 +4112,7 @@ var _class, _class2, _temp;
 
  // Local counter to help us count top-level renders.
 
-var _renders = 0; // React-r state definition.
+var _renders = 0; // Type-R model for the state.
 
 var AppState = Object(__WEBPACK_IMPORTED_MODULE_10__type_r_models__["g" /* define */])(_class = (_temp = _class2 =
 /*#__PURE__*/
@@ -4166,11 +4166,10 @@ var App = function App() {
   }, "Add children")), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement(List, {
     items: state.items
   })) : "Loading...";
-}; // Simple pure component to render the list of checklist items.
-// They must _not_ be prefixed with @define. No magic here, just raw React.
+};
 
-
-var List = Object(__WEBPACK_IMPORTED_MODULE_12__type_r_react__["a" /* pureRenderProps */])({
+var List = // Render the component only if the listed props have changed.
+Object(__WEBPACK_IMPORTED_MODULE_12__type_r_react__["a" /* pureRenderProps */])({
   items: __WEBPACK_IMPORTED_MODULE_10__type_r_models__["a" /* Collection */].of(__WEBPACK_IMPORTED_MODULE_13__model__["a" /* ChecklistItem */])
 }, function (_ref2) {
   var items = _ref2.items;
@@ -4178,9 +4177,7 @@ var List = Object(__WEBPACK_IMPORTED_MODULE_12__type_r_react__["a" /* pureRender
     className: "children"
   }, items.map(function (item) {
     return (
-      /* <- collections have 'map' method as an array */
-
-      /* models have cid - unique client id to be used in 'key' */
+      /* models have globally unique cid - client id to be used as 'key' */
       __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement(Item, {
         key: item.cid,
         model: item
@@ -4191,35 +4188,28 @@ var List = Object(__WEBPACK_IMPORTED_MODULE_12__type_r_react__["a" /* pureRender
 
 var Item = function Item(_ref3) {
   var model = _ref3.model;
-  // Two way data binding! Using our advanced value links.
-  // First, prepare the links.
-  var model$ = model.$;
   return __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("div", {
     className: "checklist"
   }, __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("div", {
     className: "header"
   }, __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("input", __WEBPACK_IMPORTED_MODULE_0__babel_runtime_helpers_extends___default()({
     type: "checkbox"
-  }, model$.checked.props
-  /* We use links instead of values... */
+  }, model.$.checked.props
+  /* data binding */
   )), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("span", {
     className: "created"
-  }, model.created.toLocaleTimeString()), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("input", model$.name.props
-  /* ...as if they would be values */
+  }, model.created.toLocaleTimeString()), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("input", model.$.name.props
+  /* data binding again */
   ), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("button", {
     onClick: function onClick() {
       return model.remove();
     }
-    /* custom model method to remove it from the collection */
-
   }, "Delete"), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement("button", {
     onClick: function onClick() {
       return model.subitems.add({});
     }
   }, "Add children")), __WEBPACK_IMPORTED_MODULE_8_react___default.a.createElement(List, {
     items: model.subitems
-    /* Render the nested checklist */
-
   }));
 }; // That's really it! Let's render it.
 
