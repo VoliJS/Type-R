@@ -103,7 +103,8 @@ export class Record extends Transactional implements IORecord, AttributesContain
     _attributes$ : object = void 0
     __Attributes$ : new ( model : Record ) => object
 
-    get $(){
+    /** @internal */
+    get $() : any {
         return this._attributes$ || ( this._attributes$ = new this.__Attributes$( this ) )
     }
 

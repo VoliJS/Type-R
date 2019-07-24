@@ -7,7 +7,9 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "@type-r/models" : "^4.0.0",
+    "@linked/react" : "^3.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.8.23"

@@ -285,6 +285,11 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@linked/react@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@linked/react/-/react-3.0.0.tgz#8652c93d0ddf626803fcac85b0a30f58e8fb0b3d"
+  integrity sha512-BfbJE3iMMkxXeDQHIwvfFb/xlyv5hvj89bvB9+IB7Vanf8i6Jl6YgDwh/IZIRPJ3oy8Q36/NA9uv1g7AJvt/3A==
+
 "@linked/value@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@linked/value/-/value-3.0.0.tgz#15d8c46907ab5c4f309b4d795c15262748f12ada"

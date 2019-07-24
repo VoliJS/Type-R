@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useForceUpdate } from './state';
+import { useEffect, useReducer } from 'react';
 export function useChanges(instance) {
     var forceUpdate = useForceUpdate();
     useEffect(function () {
@@ -8,4 +7,10 @@ export function useChanges(instance) {
     }, emptyArray);
 }
 var emptyArray = [];
+export function useForceUpdate() {
+    return useReducer(transactionalUpdate, null)[1];
+}
+function transactionalUpdate(_changeToken, modelOrCollection) {
+    return modelOrCollection._changeToken;
+}
 //# sourceMappingURL=globalState.js.map

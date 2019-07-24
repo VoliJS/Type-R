@@ -6,8 +6,11 @@ import { attributesIO } from '@type-r/endpoints';
 import { User } from './user'
 import { Model } from '@type-r/models/src';
 
-const Main = exposeStore( MyStore, 
-    ({ store }) => {
+const Main = WrapComponent
+    .state({
+        a : 0,
+    })
+    .render(({ state }) => {
         const users = useCollection.of( User ),
             isReady = useIO( () => users.fetch() );
 

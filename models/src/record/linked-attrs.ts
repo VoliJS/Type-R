@@ -29,15 +29,15 @@ export function addAttributeLinks( Model : typeof Record ){
 }
 
 export type LinkedAttributes<T> = {
-    readonly [ K in keyof T ] : ValueLink<T[K]>
+    readonly [ K in keyof T ] : ModelAttrRef<T[K]>
 }
 
-export class ModelAttrRef extends ValueLink<any> {
+export class ModelAttrRef<T> extends ValueLink<T> {
     constructor( protected model : Record, protected attr : string ){
         super( model[ attr ] );
     }
 
-    set( x : any ){
+    set( x : T ){
         this.model[ this.attr ] = x;
     }
 
@@ -49,5 +49,10 @@ export class ModelAttrRef extends ValueLink<any> {
 
     set error( x : any ){
         this._error = x;
+    }
+
+    // Attribute's descriptor.
+    get descriptor(){
+        return this.model._attributes[ this.attr ];
     }
 }

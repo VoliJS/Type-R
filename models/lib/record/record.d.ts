@@ -38,7 +38,6 @@ export declare class Record extends Transactional implements IORecord, Attribute
     static attributes: AttributesValues;
     _attributes$: object;
     __Attributes$: new (model: Record) => object;
-    readonly $: object;
     previousAttributes(): AttributesValues;
     readonly changed: AttributesValues;
     changedAttributes(diff?: {}): boolean | {};

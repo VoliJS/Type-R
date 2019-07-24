@@ -38,6 +38,13 @@ var ModelAttrRef = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ModelAttrRef.prototype, "descriptor", {
+        get: function () {
+            return this.model._attributes[this.attr];
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ModelAttrRef;
 }(ValueLink));
 export { ModelAttrRef };

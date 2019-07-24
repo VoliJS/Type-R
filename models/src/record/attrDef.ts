@@ -174,14 +174,22 @@ export function shared<C extends Function>( this : void, Constructor : C ) : Cha
 }
 
 // Create attribute metatype inferring the type from the value.
-export function value( this : void, x : any ) : ChainableAttributeSpec<any> {
+export function value<T>( this : void, x : T ) : ChainableAttributeSpec<new ( ...args : any[] ) => T> {
     const Type = inferType( x ),
         // Transactional types inferred from values must have shared type. 
         AttrDef = Type && Type.prototype instanceof Transactional ? shared( Type ) :
                   type( Type );
 
-    return AttrDef.value( x );
+    return AttrDef.value( x ) as any;
 }
+
+/*
+export declare type InferConstructor<T> = 
+    T extends number ? NumberConstructor :
+    T extends string ? StringConstructor :
+    T extends boolean ? BooleanConstructor :
+    T extends Date ? DateConstructor :
+    T extends Transactional ? new ( ...args : any[] ) => */
 
 function inferType( value : any ) : Function {
     switch( typeof value ) {

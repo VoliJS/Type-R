@@ -18,11 +18,15 @@ export const useCollection : CollectionHooks = {
 class Mutable {
     _onChildrenChange : Function = void 0
 
+    getStore(){
+        return ( this.value as any )._defaultStore;
+    }
+
     constructor(
         public value : Transactional
     ){
-        value._owner = this;
-        value._ownerKey || ( value._ownerKey = 'reactState' );
+        (value as any)._owner = this;
+        (value as any)._ownerKey || ( (value as any)._ownerKey = 'reactState' );
     }
 }
 
