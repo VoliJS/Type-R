@@ -1,7 +1,7 @@
 // Data objects are defined in nestedtypes package.
-import { Record, define } from 'type-r'
+import { Model, Collection, define, type } from '@type-r/models'
 
-@define class Checklist extends Record.Collection {
+@define class Checklist extends Collection {
     get checked(){ return this.every( item => item.checked ); }
     set checked( checked ){
         if( checked !== this.checked ){
@@ -11,19 +11,19 @@ import { Record, define } from 'type-r'
 }
 
 @define
-export class ChecklistItem extends Record {
+export class ChecklistItem extends Model {
     static Collection = Checklist;
 
     static attributes = { // <- Here's an attribute spec. Think of it as a type spec.
         name : String,
         created : Date,
-        checked : Boolean.has.watcher( 'checkedWatcher' ),
-        subitems : Checklist.has.watcher( 'subitemsWatcher' )
+        checked : type( Boolean ).watcher( 'onCheckedChange' ),
+        subitems : type( Checklist ).watcher( 'onSubitemsChange' )
     };
 
-    checkedWatcher( checked ){ this.subitems.checked = checked; }
+    onCheckedChange( checked ){ this.subitems.checked = checked; }
 
-    subitemsWatcher( subitems ){
+    onSubitemsChange( subitems ){
         if( subitems.length ){
             this.checked = this.subitems.checked;
         }

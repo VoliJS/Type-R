@@ -2,8 +2,11 @@ import { useEffect, useReducer } from 'react';
 export function useChanges(instance) {
     var forceUpdate = useForceUpdate();
     useEffect(function () {
-        instance.onChanges(forceUpdate);
-        return function () { return instance.offChanges(forceUpdate); };
+        function onChange(x) {
+            forceUpdate(x);
+        }
+        instance.onChanges(onChange);
+        return function () { return instance.offChanges(onChange); };
     }, emptyArray);
 }
 var emptyArray = [];
