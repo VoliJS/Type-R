@@ -3,6 +3,8 @@
   "version": "4.0.0",
   "description": "React bindings for Type-R/models",
   "main": "dist/index.js",
+  "module": "./lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "Vlad Balin",
   "license": "MIT",
   "private": false,

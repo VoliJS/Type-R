@@ -1,7 +1,8 @@
 {
     "private": true,
     "workspaces" : [
-        "mixture", "models", "ext-types", "globals", "endpoints", "react", "tests", "docs"
+        "mixture", "models", "ext-types", "globals", "endpoints", "react", "tests", "docs",
+        "examples/babel-boilerplate"
     ],
 
     "scripts" : {

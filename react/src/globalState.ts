@@ -6,8 +6,12 @@ export function useChanges( instance : Transactional ){
     const forceUpdate = useForceUpdate();
 
     useEffect( () => {
-        instance.onChanges( forceUpdate );
-        return () => instance.offChanges( forceUpdate );
+        function onChange( x ){
+            forceUpdate( x );
+        }
+
+        instance.onChanges( onChange );
+        return () => instance.offChanges( onChange );
     }, emptyArray );
 }
 

@@ -18,14 +18,14 @@ export function addAttributeLinks( Model : typeof Record ){
         Object.defineProperty( AttributeRefs.prototype, name, {
             get : new Function(`
                 var x = this.$${name};
-                return x && x.value === this._parent.${name} ?
+                return x && x.value === this._model.${name} ?
                     x :
-                    ( this.$${name} = new this.__ModelAttrRef( this._model, ${name} ) );
+                    ( this.$${name} = new this.__ModelAttrRef( this._model, '${name}' ) );
             `) as any
         });
     }
 
-    ( prototype as any ).AttributeRefs = AttributeRefs;
+    prototype.__Attributes$ = AttributeRefs as any;
 }
 
 export type LinkedAttributes<T> = {

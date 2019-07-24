@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "dependencies": {
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "*",
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-plugin-add-module-exports": "*",
+    "babel-plugin-transform-class-properties": "*",
+    "babel-plugin-transform-decorators-legacy": "*",
+    "babel-plugin-transform-object-rest-spread": "*",
+    "babel-plugin-transform-react-constant-elements": "*",
+    "babel-plugin-transform-react-inline-elements": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "babel-runtime": "*",
+    "classnames": "*",
+    "css-loader": "*",
+    "prop-types": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-modal": "^3.1.2",
+    "react-mvx": "^2.0.0-rc900",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "*",
+    "type-r": "^2.0.1",
+    "webpack": "^3.8.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node_modules/.bin/webpack",
+    "watch": "node_modules/.bin/webpack --progress --colors --watch"
+  }
+}

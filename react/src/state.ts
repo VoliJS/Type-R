@@ -17,6 +17,7 @@ export const useCollection : CollectionHooks = {
 
 class Mutable {
     _onChildrenChange : Function = void 0
+    _changeToken : object
 
     getStore(){
         return ( this.value as any )._defaultStore;
@@ -25,14 +26,19 @@ class Mutable {
     constructor(
         public value : Transactional
     ){
+        this._changeToken = (value as any)._changeToken;
         (value as any)._owner = this;
         (value as any)._ownerKey || ( (value as any)._ownerKey = 'reactState' );
     }
 }
 
 function mutableReducer( mutable : Mutable ){
+    // Suppress extra change events.
+    if( mutable._changeToken === (mutable.value as any)._changeToken ) return mutable;
+
     const copy = new Mutable( mutable.value );
     copy._onChildrenChange = mutable._onChildrenChange;
+    
     return copy;
 }
 
@@ -44,7 +50,7 @@ function mutableHook( create : ( x : any ) => Mutable ) : any {
         // TODO: mutable.store = useContext( Store )???
     
         useEffect( () => {
-            mutable._onChildrenChange = forceUpdate;
+            mutable._onChildrenChange = obj => forceUpdate( obj );
             return () => mutable.value.dispose();
         }, emptyArray );
     

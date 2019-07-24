@@ -12,10 +12,10 @@ export function addAttributeLinks(Model) {
         var attr = _attributesArray_1[_i];
         var name_1 = attr.name;
         Object.defineProperty(AttributeRefs.prototype, name_1, {
-            get: new Function("\n                var x = this.$" + name_1 + ";\n                return x && x.value === this._parent." + name_1 + " ?\n                    x :\n                    ( this.$" + name_1 + " = new this.__ModelAttrRef( this._model, " + name_1 + " ) );\n            ")
+            get: new Function("\n                var x = this.$" + name_1 + ";\n                return x && x.value === this._model." + name_1 + " ?\n                    x :\n                    ( this.$" + name_1 + " = new this.__ModelAttrRef( this._model, '" + name_1 + "' ) );\n            ")
         });
     }
-    prototype.AttributeRefs = AttributeRefs;
+    prototype.__Attributes$ = AttributeRefs;
 }
 var ModelAttrRef = (function (_super) {
     tslib_1.__extends(ModelAttrRef, _super);
