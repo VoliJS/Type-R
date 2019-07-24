@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 
 import { define, Model, Collection } from '@type-r/models'
 import { localStorageIO } from '@type-r/endpoints'
-import { useModel, useIO } from '@type-r/react'
+import { useModel, useIO, pureRenderProps } from '@type-r/react'
 
 // Import checklist model definition. Think of "model" as of an observable serializable class.
 import { ChecklistItem } from './model'
@@ -50,13 +50,17 @@ const App = () => {
 
 // Simple pure component to render the list of checklist items.
 // They must _not_ be prefixed with @define. No magic here, just raw React.
-const List = ({ items }) => (
-    <div className='children'>
-        { items.map( item => ( /* <- collections have 'map' method as an array */
-            /* models have cid - unique client id to be used in 'key' */
-            <Item key={ item.cid } model={ item } />
-        ))}
-    </div>
+const List = 
+    pureRenderProps({
+        items : Collection.of( ChecklistItem )
+    },
+    ({ items }) =>
+        <div className='children'>
+            { items.map( item => ( /* <- collections have 'map' method as an array */
+                /* models have cid - unique client id to be used in 'key' */
+                <Item key={ item.cid } model={ item } />
+            ))}
+        </div>
 );
 
 const Item = ({ model }) => {
