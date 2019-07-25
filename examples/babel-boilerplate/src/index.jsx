@@ -1,13 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { define, Model } from '@type-r/models'
+import { define, Model, type } from '@type-r/models'
 import { useCollection } from '@type-r/react'
 
 import './styles.css'
 
+const Identifier = type( String ).check( x => x.match( /^\w+$/ ), 'No spaces allowed' );
+
 @define class Item extends Model {
     static attributes = {
-        text : String
+        text : type( Identifier ).required
     }
 }
 
@@ -16,19 +18,23 @@ const Application = () => {
 
     return (
         <div>
-            <button onClick={ () => items.add({ text : 'edit me' }) }>
+            <button onClick={ () => items.add({ text : '' }) }>
                 Add
             </button>
             
             { items.map( item =>
-                <ItemView key={ item.cid } item={ item } /> 
+                <ValidatedInput key={ item.cid } $value={ item.$.text } /> 
             )}
         </div>
     );
 }
 
-const ItemView = ({ item }) => (
-    <input { ...item.$.text.props } /> 
+const ValidatedInput = ({ $value }) => (
+    <div>
+        <input { ...$value.props } /> 
+        <span>{ $value.error || '' }</span>
+    </div>
+    
 );
 
 ReactDOM.render( <Application/>, document.getElementById( 'react-application' ) );
