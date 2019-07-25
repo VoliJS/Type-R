@@ -1,5 +1,6 @@
 {
     "name": "@type-r/ext-types",
+    "description": "Extended attribute types for Type-R models",
     "version": "4.0.0",
     "main": "./dist/index.js",
     "jsnext:main": "./lib/index.js",

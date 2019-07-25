@@ -1,5 +1,6 @@
 {
     "name": "@type-r/endpoints",
+    "description": "I/O endpoint for Type-R models",
     "version":"4.0.0",
     "main": "./dist/index.js",
     "jsnext:main": "./lib/index.js",

@@ -1,7 +1,7 @@
 {
   "name": "@type-r/models",
   "version": "4.0.0",
-  "description": "Serializable and observable classes for JS and TypeScript",
+  "description": "The serializable type system for JS and TypeScript",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
   "module": "./lib/index.js",
