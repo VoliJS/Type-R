@@ -8,13 +8,19 @@ Type-R is a serializable type system for JS and TS. Data structures you describe
 - protected from improper assignments at run-time;
 - deeply observable.
 
+## Features 
+
 Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer's mistakes and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.
 
 Type-R models safeguard both frontend and backend from errors in JSON. Programmer's mistake on a frontend can't affect the JSON sent to the server. Wrong JSON received from the server will be validated, sanitized, and can't cause catastrophic failures on the frontend. Type-R guarantee that the data structures will retain the declared shape and it immediately reports improper assignments to the console.
 
 There are virtually no point in unit-testing Type-R models as they are mostly declarative definitions. They are able to check the structural integrity themselves, and Type-R can be instructed to throw exceptions instead of console logging. It makes the unit tests of the data layer unnecessary, and greately reduces an effort when writing an integration test.
 
+## React integration
+
 Data structures defined with Type-R are deeply observable by default. They can be used to manage the state of React applications right out of box utilizing "unidirectional data flow" with no additional tooling. Type-R data structures support two-way data binding and attribute-level validation rules, making the a complex forms UI a trivial task.
+
+## Example
 
 The main Type-R building block is the `Model` class with attributes types declaration which behaves as a regular JS class. Models and collections of models can be nested indefinitely to define data structures of arbitrary complexity.
 
