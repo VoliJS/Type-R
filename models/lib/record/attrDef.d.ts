@@ -31,5 +31,5 @@ export declare class ChainableAttributeSpec<F extends Function> {
 }
 export declare function type<F extends Function>(this: void, Type: ChainableAttributeSpec<F> | F, value?: any): ChainableAttributeSpec<F>;
 export declare function shared<C extends Function>(this: void, Constructor: C): ChainableAttributeSpec<C>;
-export declare function value(this: void, x: any): ChainableAttributeSpec<any>;
+export declare function value<T>(this: void, x: T): ChainableAttributeSpec<new (...args: any[]) => T>;
 export {};

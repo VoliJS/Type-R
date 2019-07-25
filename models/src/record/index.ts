@@ -4,6 +4,8 @@ import { type } from './attrDef';
 import { createAttributesMixin } from './mixin';
 import { InferAttrs, Record, RecordConstructor, RecordDefinition } from './record';
 
+import { addAttributeLinks } from './linked-attrs'
+
 export * from './attrDef';
 export * from './metatypes';
 export { AttributesMixin, InferAttrs, RecordConstructor } from './record';
@@ -57,7 +59,9 @@ Record.onDefine = function( definition : RecordDefinition, BaseClass : typeof Re
     this.Collection = definition.Collection;
     this.Collection.prototype.model = this;
 
-    if( definition.endpoint ) this.Collection.prototype._endpoint = definition.endpoint;    
+    if( definition.endpoint ) this.Collection.prototype._endpoint = definition.endpoint;
+
+    addAttributeLinks( this );
 }
 
 function getAttributes({ defaults, attributes, idAttribute } : RecordDefinition ) {

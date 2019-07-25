@@ -3,11 +3,15 @@
   "version": "4.0.0",
   "description": "React bindings for Type-R/models",
   "main": "dist/index.js",
+  "module": "./lib/index.js",
+  "types": "lib/index.d.ts",
   "author": "Vlad Balin",
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "@type-r/models" : "^4.0.0",
+    "@linked/react" : "^3.0.4"
   },
   "devDependencies": {
     "@types/react": "^16.8.23"

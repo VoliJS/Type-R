@@ -1,9 +1,8 @@
-/// <reference types="react" />
-import { Model, Collection, Transactional } from '@type-r/models';
-export declare function useModel(Ctor: typeof Model): Model;
-export declare const useCollection: {
+import { Model, Collection } from '@type-r/models';
+export declare const useModel: <M extends typeof Model>(Ctor: M) => InstanceType<M>;
+export interface CollectionHooks {
     of<M extends typeof Model>(Ctor: M): Collection<InstanceType<M>>;
     ofRefs<M extends typeof Model>(Ctor: M): Collection<InstanceType<M>>;
-    subsetOf<C extends Collection<Model>>(collection: C): C;
-};
-export declare function useForceUpdate(): import("react").Dispatch<Transactional>;
+    subsetOf<C extends Collection>(collection: C): C;
+}
+export declare const useCollection: CollectionHooks;

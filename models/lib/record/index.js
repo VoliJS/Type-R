@@ -4,6 +4,7 @@ import { Transactional } from '../transactions';
 import { type } from './attrDef';
 import { createAttributesMixin } from './mixin';
 import { Record } from './record';
+import { addAttributeLinks } from './linked-attrs';
 export * from './attrDef';
 export * from './metatypes';
 export { Record };
@@ -53,6 +54,7 @@ Record.onDefine = function (definition, BaseClass) {
     this.Collection.prototype.model = this;
     if (definition.endpoint)
         this.Collection.prototype._endpoint = definition.endpoint;
+    addAttributeLinks(this);
 };
 function getAttributes(_a) {
     var defaults = _a.defaults, attributes = _a.attributes, idAttribute = _a.idAttribute;

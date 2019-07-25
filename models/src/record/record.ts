@@ -12,6 +12,7 @@ import { Infer, type } from './attrDef';
 import { IORecord, IORecordMixin } from './io-mixin';
 import { AggregatedType, AnyType } from './metatypes';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues, setAttribute, shouldBeAnObject, unknownAttrsWarning, UpdateRecordMixin } from './updates';
+import { LinkedAttributes } from './linked-attrs';
 
 
 const { assign, isEmpty } = tools;
@@ -47,7 +48,7 @@ export type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>
 };
 
-export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']>
+export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']> & { readonly $ : LinkedAttributes<InferAttrs<M['attributes']>>}
 
 @define({
     // Default client id prefix 
@@ -97,6 +98,15 @@ export class Record extends Transactional implements IORecord, AttributesContain
     }
     
     static attributes : AttributesValues
+
+
+    _attributes$ : object = void 0
+    __Attributes$ : new ( model : Record ) => object
+
+    /** @internal */
+    get $() : any {
+        return this._attributes$ || ( this._attributes$ = new this.__Attributes$( this ) )
+    }
 
     /********************
      * IO Methods

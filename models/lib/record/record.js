@@ -11,6 +11,7 @@ var Record = (function (_super) {
     tslib_1.__extends(Record, _super);
     function Record(a_values, a_options) {
         var _this = _super.call(this, _cidCounter++) || this;
+        _this._attributes$ = void 0;
         _this.attributes = {};
         var options = a_options || {}, values = (options.parse ? _this.parse(a_values, options) : a_values) || {};
         isProduction || typeCheck(_this, values, options);
@@ -41,6 +42,13 @@ var Record = (function (_super) {
     Record.defaults = function (attrs) {
         return this.extend({ attributes: attrs });
     };
+    Object.defineProperty(Record.prototype, "$", {
+        get: function () {
+            return this._attributes$ || (this._attributes$ = new this.__Attributes$(this));
+        },
+        enumerable: true,
+        configurable: true
+    });
     Record.prototype.previousAttributes = function () { return new this.AttributesCopy(this._previousAttributes); };
     Object.defineProperty(Record.prototype, "__inner_state__", {
         get: function () { return this.attributes; },

@@ -14,7 +14,12 @@ const StatefulComponent = () => {
         ]
     );
 
-    return isReady ?
+    useEffect( () => {
+        user.fetch();
+        roles.fetch();
+    }, [] )
+
+    return !user.hasPendingIO() && !roles.hasPendingIO() ?
         <ShowModel model={ user } roles={ roles } /> :
         <div> Loading... </div>
 }
@@ -30,4 +35,10 @@ user.$.name
 const user$ = user.$
 ```
 
-!!! Think about moving Link core to separate package and move support to type-r.
+Stores
+```javascript
+const X = () => {
+    const state = useModel( State );
+    useUpperStore( state );
+}
+```

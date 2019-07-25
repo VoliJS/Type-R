@@ -17,7 +17,7 @@ export * from './record';
 export * from './relations';
 export * from './transactions';
 export { Model, Class };
-
+export { ValueLink } from '@linked/value'
 
 export const { on, off, trigger, once, listenTo, stopListening, listenToOnce } = <any>Events;
 
