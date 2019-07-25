@@ -1,6 +1,6 @@
-# Type-R Model Framework
-
 ![overview](docs/images/overview.png)
+
+# Type-R Model Framework
 
 Type-R is a serializable type system for JS and TS. Data structures you describe with Type-R models are automatically and with zero effort:
 
