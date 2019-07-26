@@ -1,4 +1,4 @@
-import { Model, Collection, define } from 'type-r'
+import { Model, Collection, define } from '@type-r/models'
 
 @define class ToDoCollection extends Collection {
 	clearCompleted(){

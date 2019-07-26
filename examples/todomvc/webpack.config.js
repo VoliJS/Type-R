@@ -13,6 +13,8 @@ var config = {
         filename   : '[name].js'
     },
 
+    mode : process.env.NODE_ENV || 'development',
+    
     devtool : 'source-map',
 
     resolve : {

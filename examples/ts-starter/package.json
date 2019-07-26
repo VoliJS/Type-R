@@ -1,15 +1,12 @@
 {
   "private": true,
-  "name": "todomvc",
-  "version": "1.0.0",
+  "name": "ts-starter",
+  "version": "2.0.0",
   "dependencies": {
     "@type-r/models": "^4.0.0",
     "@type-r/react": "^4.0.0",
-    "classnames": "^2.2.6",
     "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "todomvc-app-css": "^2.0.0",
-    "todomvc-common": "^1.0.0"
+    "react-dom": "^16.1.1"
   },
   "devDependencies": {
     "@babel/core": "*",
@@ -26,7 +23,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "watch": "webpack --progress --colors --watch"
+    "build": "node_modules/.bin/webpack",
+    "watch": "node_modules/.bin/webpack --progress --colors --watch"
   }
 }

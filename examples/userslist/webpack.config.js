@@ -15,6 +15,8 @@ var config = {
 
     devtool : 'source-map',
 
+    mode : process.env.NODE_ENV || 'development',
+    
     resolve : {
         modules : [ 'node_modules', 'src' ],
     },

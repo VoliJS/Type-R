@@ -18,10 +18,7 @@ var config = {
     devtool : 'source-map',
 
     resolve : {
-        modules : [ 'node_modules', 'src' ],
-        // alias : { //use `npm run deploy:examples` in main project
-        //     'react-mvx' : path.resolve(__dirname, '../..' )
-        // }
+        modules : [ 'node_modules', 'src' ]
     },
 
     module : {
@@ -33,7 +30,10 @@ var config = {
                         loader: "style-loader"
                     },
                     {
-                        loader: "css-loader"
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
                     }
                 ]
             },
