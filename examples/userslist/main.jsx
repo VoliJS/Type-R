@@ -1,76 +1,74 @@
 import './main.css'
 import ReactDOM from 'react-dom'
 
-import React, { Link } from 'react-mvx'
-import { Record, define } from 'type-r'
-import { localStorageIO } from 'type-r/endpoints/localStorage'
+import React from 'react'
+import { Model, define } from '@type-r/models'
+import { localStorageIO } from '@type-r/endpoints'
 
 import Modal from 'react-modal'
 
-const Email = String.has.check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
+const Email = type( String )
+                .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
 
-@define class User extends Record {
+@define class User extends Model {
     static attributes = {
-        name : String.isRequired
-                    .has.check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
+        name : type( String )
+                    .required
+                    .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
 
-        email : Email.isRequired,
-
+        email : type( Email ).required,
         isActive : true
     }
 
     remove(){ this.collection.remove( this ); }
 }
 
-@define class AppState extends Record {
+@define class AppState extends Model {
     static endpoint = localStorageIO( '/react-mvx/examples' );
 
     static attributes = {
         id : 'users-list',
-        users   : User.Collection, // No comments required, isn't it?
-        editing : User.from( 'users' ), // User from user collection, which is being edited.
-        adding  : User.shared.value( null ) // New user, which is being added.
+        users   : Collection.of( User ), // No comments required, isn't it?
+        editing : User.memberOf( 'users' ), // User from user collection, which is being edited.
+        adding  : refTo( User ) // New user, which is being added.
     }
 }
 
-@define
-export class UsersList extends React.Component {
-    static State = AppState;
 
-    componentWillMount(){
-        this.state.fetch();
-        window.onunload = () => this.state.save();
-    }
+const UsersList = () => {
+    const state = useModel( AppState );
 
-    render(){
-        const { state } = this;
+    useIO( async () => {
+        window.onunload = () => state.save();
 
-        return (
-            <div>
-                <button onClick={ () => state.adding = new User() }>
-                    Add User
-                </button>
+        await state.fetch();
+    });
 
-                <Header/>
+    return (
+        <div>
+            <button onClick={ () => state.adding = new User() }>
+                Add User
+            </button>
 
-                { state.users.map( user => (
-                    <UserRow key={ user.cid }
-                             user={ user }
-                             onEdit={ () => state.editing = user }
-                    />
-                ) )}
+            <Header/>
 
-                <Modal isOpen={ Boolean( state.adding ) }>
-                    <EditUser userLink={ state.linkAt( 'adding' ) }
-                              onSave={ () => state.users.add( state.adding ) }/>
-                </Modal>
+            { state.users.map( user => (
+                <UserRow key={ user.cid }
+                            user={ user }
+                            onEdit={ () => state.editing = user }
+                />
+            ) )}
 
-                <Modal isOpen={ Boolean( state.editing ) }>
-                    <EditUser userLink={ state.linkAt( 'editing' ) } />
-                </Modal>
-            </div>
-        );
-    }
+            <Modal isOpen={ Boolean( state.adding ) }>
+                <EditUser $user={ state.$.adding }
+                            onSave={ () => state.users.add( state.adding ) }/>
+            </Modal>
+
+            <Modal isOpen={ Boolean( state.editing ) }>
+                <EditUser $user={ state.$.editing } />
+            </Modal>
+        </div>
+    );
 }
 
 const Header = () =>(
@@ -95,62 +93,50 @@ const UserRow = ( { user, onEdit } ) =>(
     </div>
 );
 
-@define class EditUser extends React.Component {
-    static props = {
-        userLink    : Link.has.watcher( React.assignToState( 'user' ) ),
-        onSave : Function
-    };
+const EditUser = ({ $user, onSave }) => {
+    const user = useModel( User );
 
-    static state = {
-        user : User
-    };
+    useEffect( () => {
+        user.assignFrom( $user.value );
+    }, [ $user.value ] );
 
     onSubmit =  e => {
         e.preventDefault();
-
-        const { userLink, onSave } = this.props;
-
-        userLink.value.assignFrom( this.state.user );
-        onSave && onSave( userLink.value );
+        $user.value.assignFrom( user );
+        onSave && onSave( $user.value );
         this.onCancel()
     }
 
-    onCancel = () => this.props.userLink.set( null );
+    return (
+        <form onSubmit={ this.onSubmit }>
+            <label>
+                Name: <ValidatedInput type="text" $value={ user.$.name }/>
+            </label>
 
-    render(){
-        const { user } = this.state,
-                linked = user.linkAll();
+            <label>
+                Email: <ValidatedInput type="text" $value={ user.$.email }/>
+            </label>
 
-        return (
-            <form onSubmit={ this.onSubmit }>
-                <label>
-                    Name: <ValidatedInput type="text" valueLink={ linked.name }/>
-                </label>
+            <label>
+                Is active: <input type="checkbox" { ...user.$.isActive.props }/>
+            </label>
 
-                <label>
-                    Email: <ValidatedInput type="text" valueLink={ linked.email }/>
-                </label>
-
-                <label>
-                    Is active: <input type="checkbox" { ...linked.isActive.props }/>
-                </label>
-
-                <button type="submit" disabled={ !user.isValid() }>
-                    Save
-                </button>
-                <button type="button" onClick={ this.onCancel }>
-                    Cancel
-                </button>
-            </form>
-        );
-    }
+            <button type="submit" disabled={ !user.isValid() }>
+                Save
+            </button>
+ 
+            <button type="button" onClick={ () => $user.set( null ) }>
+                Cancel
+            </button>
+        </form>
+    );
 }
 
-const ValidatedInput = ({ valueLink, ...props }) => (
+const ValidatedInput = ({ $value, ...props }) => (
     <div>
-        <input {...valueLink.props} { ...props } />
+        <input {...$value.props} { ...props } />
         <div className="validation-error">
-            { valueLink.error || '' }
+            { $value.error || '' }
         </div>
     </div>
 );
