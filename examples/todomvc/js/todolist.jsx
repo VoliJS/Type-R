@@ -1,33 +1,26 @@
-import React, { define } from 'react-mvx'
+import React from 'react'
+import { Collection } from "@type-r/models"
+import { useLink } from "@type-r/react"
 import cx from 'classnames'
 import { ToDo } from './model'
 
-@define export default
-class TodoList extends React.Component {
-    static props = {
-        todos      : ToDo.Collection,
+export const TodoList = 
+    pureRenderProps({
+        todos      : Collection.of( ToDo ),
         filterDone : Boolean
-    }
-
-    static state = {
-        editing : ToDo.from( '^props.todos' )
-    }
-
-    static pureRender = true
-
-    render(){
-        const { todos, filterDone } = this.props,
-              filtered = filterDone === null ?
+    },
+    ({ todos, filterDone }) => {
+        const $editing = useLink( null ),
+            filtered = filterDone === null ?
                             todos.models :
-                            todos.filter( todo => todo.done === filterDone ),
-              editingLink = this.state.linkAt( 'editing' );
+                            todos.filter( todo => todo.done === filterDone );
 
         return (
             <section className="main">
                 <input type="checkbox"
-                       className="toggle-all"
-                       id="toggle-all"
-                       { ...todos.linkAt( 'allDone' ).props } />
+                    className="toggle-all"
+                    id="toggle-all"
+                    { ...todos.$allDone.props } />
 
                 <label htmlFor="toggle-all">
                     Mark all as complete
@@ -36,21 +29,20 @@ class TodoList extends React.Component {
                 <ul className="todo-list">
                     { filtered.map( todo => (
                         <TodoItem key={ todo.cid }
-                                  todo={ todo }
-                                  editingLink={ editingLink }/>
+                                todo={ todo }
+                                $editing={ $editing }/>
                     ) )}
                 </ul>
             </section>
         );
-    }
-}
+    });
 
 function clearOnEnter( x, e ){
     if( e.keyCode === 13 ) return null;
 }
 
-const TodoItem = ( { todo, editingLink } ) =>{
-    const editing   = editingLink.value === todo,
+const TodoItem = ( { todo, $editing } ) =>{
+    const editing   = $editing.value === todo,
           className = cx( {
               'completed' : todo.done,
               'view'      : !todo.done,
@@ -62,9 +54,9 @@ const TodoItem = ( { todo, editingLink } ) =>{
             <div className="view">
                 <input type="checkbox"
                        className="toggle" 
-                       { ...todo.linkAt( 'done' ).props }/>
+                       { ...todo.$.done.props }/>
 
-                <label onDoubleClick={ editingLink.action( () => todo ) }>
+                <label onDoubleClick={ $editing.action( () => todo ) }>
                     { todo.desc }
                 </label>
 
@@ -73,10 +65,10 @@ const TodoItem = ( { todo, editingLink } ) =>{
             </div>
 
             { editing && <input className="edit"
-                                { ...todo.linkAt( 'desc' ).props }
+                                { ...todo.$.desc.props }
                                 autoFocus={ true }
-                                onBlur={ editingLink.action( () => null ) }
-                                onKeyDown={ editingLink.action( clearOnEnter ) }/> }
+                                onBlur={ $editing.action( () => null ) }
+                                onKeyDown={ $editing.action( clearOnEnter ) }/> }
         </li>
     );
 };

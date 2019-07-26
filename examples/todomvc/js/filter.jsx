@@ -1,21 +1,21 @@
-import React from 'react-mvx'
+import React from 'react'
 
-const Filter = ( { count, filterLink, onClear } ) => (
+export const Filter = ( { count, $filter, onClear } ) => (
     <footer className="footer">
 		<span className="todo-count">
 			<strong>{ count }</strong> item left
 		</span>
 
         <ul className="filters">
-            <Radio checkedLink={ filterLink.equals( null ) }
+            <Radio $checked={ $filter.equals( null ) }
                    href="#/">
                 All
             </Radio>
-            <Radio checkedLink={ filterLink.equals( false ) }
+            <Radio $checked={ $filter.equals( false ) }
                    href="#/active">
                 Active
             </Radio>
-            <Radio checkedLink={ filterLink.equals( true ) }
+            <Radio $checked={ $filter.equals( true ) }
                    href="#/completed">
                 Completed
             </Radio>
@@ -28,12 +28,10 @@ const Filter = ( { count, filterLink, onClear } ) => (
     </footer>
 );
 
-export default Filter;
-
-const Radio = ( { checkedLink, children, ...props } ) => (
+const Radio = ( { $checked, children, ...props } ) => (
     <li>
-        <a className={ checkedLink.value ? 'selected' : '' }
-        onClick={ () => checkedLink.set( true ) }
+        <a className={ $checked.value ? 'selected' : '' }
+        onClick={ () => $checked.set( true ) }
             { ...props }>
             { children }
         </a>
