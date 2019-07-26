@@ -1,3 +1,3 @@
-import { ChainableAttributeSpec, Record } from '../record';
+import { ChainableAttributeSpec, Model } from '../model';
 import { CollectionReference } from './commons';
-export declare function memberOf<R extends typeof Record>(this: void, masterCollection: CollectionReference, T?: R): ChainableAttributeSpec<R>;
+export declare function memberOf<R extends typeof Model>(this: void, masterCollection: CollectionReference, T?: R): ChainableAttributeSpec<R>;

@@ -9,7 +9,7 @@
  */
 
 import { eventsApi } from '@type-r/mixture';
-import { Record } from '../record';
+import { Model } from '../model';
 import { transactionApi, TransactionOptions } from '../transactions';
 import { CollectionCore, CollectionTransaction, free, removeIndex } from './commons';
 
@@ -17,8 +17,8 @@ const { trigger2, trigger3 } = eventsApi,
     { markAsDirty, begin, commit } = transactionApi;
 
 /** @private */
-export function removeOne( collection : CollectionCore, el : Record | {} | string, options : TransactionOptions ) : Record {
-    var model : Record = collection.get( el );
+export function removeOne( collection : CollectionCore, el : Model | {} | string, options : TransactionOptions ) : Model {
+    var model : Model = collection.get( el );
 
     if( model ){
         const isRoot = begin( collection ),

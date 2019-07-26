@@ -2111,7 +2111,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @linked/value */ "../../node_modules/@linked/value/lib/index.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _io_tools__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../io-tools */ "../../models/lib/io-tools.js");
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../record */ "../../models/lib/record/index.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
 /* harmony import */ var _add__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./add */ "../../models/lib/collection/add.js");
 /* harmony import */ var _arrayMethods__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./arrayMethods */ "../../models/lib/collection/arrayMethods.js");
@@ -2138,7 +2138,7 @@ var CollectionRefsType = (function (_super) {
     }
     CollectionRefsType.defaultValue = [];
     return CollectionRefsType;
-}(_record__WEBPACK_IMPORTED_MODULE_4__["SharedType"]));
+}(_model__WEBPACK_IMPORTED_MODULE_4__["SharedType"]));
 ;
 var Collection = (function (_super) {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Collection, _super);
@@ -2474,11 +2474,11 @@ var Collection = (function (_super) {
         return model;
     };
     var Collection_1;
-    Collection._metatype = _record__WEBPACK_IMPORTED_MODULE_4__["AggregatedType"];
+    Collection._metatype = _model__WEBPACK_IMPORTED_MODULE_4__["AggregatedType"];
     Collection = Collection_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["define"])({
             cidPrefix: 'c',
-            model: _record__WEBPACK_IMPORTED_MODULE_4__["Record"],
+            model: _model__WEBPACK_IMPORTED_MODULE_4__["Model"],
             _changeEventName: 'changes',
             _aggregationError: null
         }),
@@ -2496,7 +2496,7 @@ function toElements(collection, elements, options) {
     var parsed = options.parse ? collection.parse(elements, options) : elements;
     return Array.isArray(parsed) ? parsed : [parsed];
 }
-_record__WEBPACK_IMPORTED_MODULE_4__["Record"].Collection = Collection;
+_model__WEBPACK_IMPORTED_MODULE_4__["Model"].Collection = Collection;
 var LinkedIncludes = (function (_super) {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](LinkedIncludes, _super);
     function LinkedIncludes(collection, model) {
@@ -2707,7 +2707,7 @@ function _reallocateEmpty(self, source, options) {
 /*!**********************************************************!*\
   !*** /Users/vladbalin/GitHub/Type-R/models/lib/index.js ***!
   \**********************************************************/
-/*! exports provided: Model, Class, Linked, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, tools, eventsApi, Record, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, type, shared, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*! exports provided: Record, Class, Linked, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, tools, eventsApi, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, type, shared, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2723,8 +2723,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Class", function() { return _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__["Mixable"]; });
 
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./record */ "../../models/lib/record/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["Record"]; });
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./model */ "../../models/lib/model/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Record", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["Model"]; });
 
 /* harmony import */ var _collection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./collection */ "../../models/lib/collection/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Collection", function() { return _collection__WEBPACK_IMPORTED_MODULE_2__["Collection"]; });
@@ -2780,43 +2780,43 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "mixinRules", function() { return _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__["mixinRules"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Record", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["Record"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["Model"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "attributes", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["attributes"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "attributes", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["attributes"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "auto", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["auto"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "auto", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["auto"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChainableAttributeSpec", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChainableAttributeSpec", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "type", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["type"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "type", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["type"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "shared", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["shared"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "shared", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["shared"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["value"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["value"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["getMetatype"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["getMetatype"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["AnyType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["AnyType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ImmutableClassType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["ImmutableClassType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ImmutableClassType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["ImmutableClassType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PrimitiveType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["PrimitiveType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PrimitiveType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["PrimitiveType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NumericType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["NumericType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NumericType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["NumericType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ArrayType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["ArrayType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ArrayType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["ArrayType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObjectType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["ObjectType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObjectType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["ObjectType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doNothing", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["doNothing"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doNothing", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["doNothing"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FunctionType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["FunctionType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FunctionType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["FunctionType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["DateType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["DateType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["AggregatedType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["AggregatedType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedType", function() { return _record__WEBPACK_IMPORTED_MODULE_1__["SharedType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedType", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["SharedType"]; });
 
 /* harmony import */ var _relations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./relations */ "../../models/lib/relations/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "memberOf", function() { return _relations__WEBPACK_IMPORTED_MODULE_4__["memberOf"]; });
@@ -2943,10 +2943,10 @@ function triggerAndBubble(eventSource) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/attrDef.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/attrDef.js ***!
-  \*******************************************************************/
+/***/ "../../models/lib/model/attrDef.js":
+/*!******************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/attrDef.js ***!
+  \******************************************************************/
 /*! exports provided: ChainableAttributeSpec, type, shared, value */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2958,7 +2958,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
-/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/record/metatypes/index.js");
+/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
 
 
 
@@ -3111,11 +3111,11 @@ function inferType(value) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/index.js":
-/*!*****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/index.js ***!
-  \*****************************************************************/
-/*! exports provided: Record, attributes, auto, ChainableAttributeSpec, type, shared, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/***/ "../../models/lib/model/index.js":
+/*!****************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/index.js ***!
+  \****************************************************************/
+/*! exports provided: Model, attributes, auto, ChainableAttributeSpec, type, shared, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3125,12 +3125,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
-/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/record/attrDef.js");
-/* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mixin */ "../../models/lib/record/mixin.js");
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./record */ "../../models/lib/record/record.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Record", function() { return _record__WEBPACK_IMPORTED_MODULE_5__["Record"]; });
+/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/model/attrDef.js");
+/* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mixin */ "../../models/lib/model/mixin.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./model */ "../../models/lib/model/model.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _model__WEBPACK_IMPORTED_MODULE_5__["Model"]; });
 
-/* harmony import */ var _linked_attrs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./linked-attrs */ "../../models/lib/record/linked-attrs.js");
+/* harmony import */ var _linked_attrs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./linked-attrs */ "../../models/lib/model/linked-attrs.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChainableAttributeSpec", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["ChainableAttributeSpec"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "type", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["type"]; });
@@ -3139,7 +3139,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["value"]; });
 
-/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/record/metatypes/index.js");
+/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["getMetatype"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["AnyType"]; });
@@ -3176,20 +3176,20 @@ __webpack_require__.r(__webpack_exports__);
 
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, defaults = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].defaults;
 function attributes(attrDefs) {
-    var DefaultRecord = (function (_super) {
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DefaultRecord, _super);
-        function DefaultRecord() {
+    var DefaultModel = (function (_super) {
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DefaultModel, _super);
+        function DefaultModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        DefaultRecord.attributes = attrDefs;
-        DefaultRecord = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        DefaultModel.attributes = attrDefs;
+        DefaultModel = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
-        ], DefaultRecord);
-        return DefaultRecord;
-    }(_record__WEBPACK_IMPORTED_MODULE_5__["Record"]));
-    return DefaultRecord;
+        ], DefaultModel);
+        return DefaultModel;
+    }(_model__WEBPACK_IMPORTED_MODULE_5__["Model"]));
+    return DefaultModel;
 }
-_record__WEBPACK_IMPORTED_MODULE_5__["Record"].onExtend = function (BaseClass) {
+_model__WEBPACK_IMPORTED_MODULE_5__["Model"].onExtend = function (BaseClass) {
     _transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"].onExtend.call(this, BaseClass);
     var Class = this;
     var DefaultCollection = (function (_super) {
@@ -3208,7 +3208,7 @@ _record__WEBPACK_IMPORTED_MODULE_5__["Record"].onExtend = function (BaseClass) {
         this.Collection = DefaultCollection;
     }
 };
-_record__WEBPACK_IMPORTED_MODULE_5__["Record"].onDefine = function (definition, BaseClass) {
+_model__WEBPACK_IMPORTED_MODULE_5__["Model"].onDefine = function (definition, BaseClass) {
     var baseProto = BaseClass.prototype;
     var _a = Object(_mixin__WEBPACK_IMPORTED_MODULE_4__["createAttributesMixin"])(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"](_a, ["properties", "_localEvents"]);
     assign(this.prototype, dynamicMixin);
@@ -3250,21 +3250,21 @@ function auto(proto, attrName) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/io-mixin.js":
-/*!********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/io-mixin.js ***!
-  \********************************************************************/
-/*! exports provided: IORecordMixin */
+/***/ "../../models/lib/model/io-mixin.js":
+/*!*******************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/io-mixin.js ***!
+  \*******************************************************************/
+/*! exports provided: IOModelMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IORecordMixin", function() { return IORecordMixin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IOModelMixin", function() { return IOModelMixin; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _io_tools__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../io-tools */ "../../models/lib/io-tools.js");
 
 
-var IORecordMixin = {
+var IOModelMixin = {
     save: function (options) {
         var _this = this;
         if (options === void 0) { options = {}; }
@@ -3299,10 +3299,10 @@ var IORecordMixin = {
 
 /***/ }),
 
-/***/ "../../models/lib/record/linked-attrs.js":
-/*!************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/linked-attrs.js ***!
-  \************************************************************************/
+/***/ "../../models/lib/model/linked-attrs.js":
+/*!***********************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/linked-attrs.js ***!
+  \***********************************************************************/
 /*! exports provided: addAttributeLinks, ModelAttrRef */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3314,8 +3314,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @linked/value */ "../../node_modules/@linked/value/lib/index.js");
 
 
-function addAttributeLinks(Model) {
-    var prototype = Model.prototype;
+function addAttributeLinks(Class) {
+    var prototype = Class.prototype;
     var _attributesArray = prototype._attributesArray;
     var AttributeRefs = new Function('model', "\n        this._model = model;\n        " + _attributesArray.map(function (_a) {
         var name = _a.name;
@@ -3366,10 +3366,10 @@ var ModelAttrRef = (function (_super) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/any.js":
-/*!*************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/any.js ***!
-  \*************************************************************************/
+/***/ "../../models/lib/model/metatypes/any.js":
+/*!************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/any.js ***!
+  \************************************************************************/
 /*! exports provided: AnyType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3378,7 +3378,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return AnyType; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
-/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../updates */ "../../models/lib/record/updates.js");
+/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../updates */ "../../models/lib/model/updates.js");
 
 
 
@@ -3519,10 +3519,10 @@ function wrapIsRequired(validate) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/basic.js":
-/*!***************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/basic.js ***!
-  \***************************************************************************/
+/***/ "../../models/lib/model/metatypes/basic.js":
+/*!**************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/basic.js ***!
+  \**************************************************************************/
 /*! exports provided: ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3536,7 +3536,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "doNothing", function() { return doNothing; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FunctionType", function() { return FunctionType; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./any */ "../../models/lib/record/metatypes/any.js");
+/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./any */ "../../models/lib/model/metatypes/any.js");
 
 
 var ImmutableClassType = (function (_super) {
@@ -3669,10 +3669,10 @@ var FunctionType = (function (_super) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/date.js":
-/*!**************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/date.js ***!
-  \**************************************************************************/
+/***/ "../../models/lib/model/metatypes/date.js":
+/*!*************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/date.js ***!
+  \*************************************************************************/
 /*! exports provided: DateType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3680,7 +3680,7 @@ var FunctionType = (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return DateType; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./any */ "../../models/lib/record/metatypes/any.js");
+/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./any */ "../../models/lib/model/metatypes/any.js");
 
 
 var DateType = (function (_super) {
@@ -3760,19 +3760,19 @@ function safeParseDate(date) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/index.js ***!
-  \***************************************************************************/
+/***/ "../../models/lib/model/metatypes/index.js":
+/*!**************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/index.js ***!
+  \**************************************************************************/
 /*! exports provided: getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return getMetatype; });
-/* harmony import */ var _basic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic */ "../../models/lib/record/metatypes/basic.js");
-/* harmony import */ var _date__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./date */ "../../models/lib/record/metatypes/date.js");
-/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./any */ "../../models/lib/record/metatypes/any.js");
+/* harmony import */ var _basic__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./basic */ "../../models/lib/model/metatypes/basic.js");
+/* harmony import */ var _date__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./date */ "../../models/lib/model/metatypes/date.js");
+/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./any */ "../../models/lib/model/metatypes/any.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _any__WEBPACK_IMPORTED_MODULE_2__["AnyType"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ImmutableClassType", function() { return _basic__WEBPACK_IMPORTED_MODULE_0__["ImmutableClassType"]; });
@@ -3791,10 +3791,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return _date__WEBPACK_IMPORTED_MODULE_1__["DateType"]; });
 
-/* harmony import */ var _owned__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./owned */ "../../models/lib/record/metatypes/owned.js");
+/* harmony import */ var _owned__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./owned */ "../../models/lib/model/metatypes/owned.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return _owned__WEBPACK_IMPORTED_MODULE_3__["AggregatedType"]; });
 
-/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared */ "../../models/lib/record/metatypes/shared.js");
+/* harmony import */ var _shared__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./shared */ "../../models/lib/model/metatypes/shared.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedType", function() { return _shared__WEBPACK_IMPORTED_MODULE_4__["SharedType"]; });
 
 
@@ -3821,10 +3821,10 @@ function resolveBuiltins(Ctor) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/owned.js":
-/*!***************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/owned.js ***!
-  \***************************************************************************/
+/***/ "../../models/lib/model/metatypes/owned.js":
+/*!**************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/owned.js ***!
+  \**************************************************************************/
 /*! exports provided: AggregatedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3833,7 +3833,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return AggregatedType; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../transactions */ "../../models/lib/transactions.js");
-/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./any */ "../../models/lib/record/metatypes/any.js");
+/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./any */ "../../models/lib/model/metatypes/any.js");
 
 
 
@@ -3938,10 +3938,10 @@ var AggregatedType = (function (_super) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/metatypes/shared.js":
-/*!****************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/metatypes/shared.js ***!
-  \****************************************************************************/
+/***/ "../../models/lib/model/metatypes/shared.js":
+/*!***************************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/shared.js ***!
+  \***************************************************************************/
 /*! exports provided: SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3951,7 +3951,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../transactions */ "../../models/lib/transactions.js");
-/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./any */ "../../models/lib/record/metatypes/any.js");
+/* harmony import */ var _any__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./any */ "../../models/lib/model/metatypes/any.js");
 
 
 
@@ -4055,10 +4055,10 @@ function ignore() { }
 
 /***/ }),
 
-/***/ "../../models/lib/record/mixin.js":
-/*!*****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/mixin.js ***!
-  \*****************************************************************/
+/***/ "../../models/lib/model/mixin.js":
+/*!****************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/mixin.js ***!
+  \****************************************************************/
 /*! exports provided: createAttribute, createAttributesMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4069,9 +4069,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _traversable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../traversable */ "../../models/lib/traversable.js");
-/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/record/attrDef.js");
-/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/record/metatypes/index.js");
-/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./updates */ "../../models/lib/record/updates.js");
+/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/model/attrDef.js");
+/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
+/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./updates */ "../../models/lib/model/updates.js");
 
 
 
@@ -4118,24 +4118,24 @@ function createWatcherFromRef(ref, key) {
 
 /***/ }),
 
-/***/ "../../models/lib/record/record.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/record.js ***!
-  \******************************************************************/
-/*! exports provided: Record, RecordEntriesIterator */
+/***/ "../../models/lib/model/model.js":
+/*!****************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/model.js ***!
+  \****************************************************************/
+/*! exports provided: Model, ModelEntriesIterator */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Record", function() { return Record; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecordEntriesIterator", function() { return RecordEntriesIterator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return Model; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ModelEntriesIterator", function() { return ModelEntriesIterator; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
-/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/record/attrDef.js");
-/* harmony import */ var _io_mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./io-mixin */ "../../models/lib/record/io-mixin.js");
-/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/record/metatypes/index.js");
-/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./updates */ "../../models/lib/record/updates.js");
+/* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/model/attrDef.js");
+/* harmony import */ var _io_mixin__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./io-mixin */ "../../models/lib/model/io-mixin.js");
+/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
+/* harmony import */ var _updates__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./updates */ "../../models/lib/model/updates.js");
 
 
 
@@ -4145,9 +4145,9 @@ __webpack_require__.r(__webpack_exports__);
 
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, isEmpty = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].isEmpty;
 var _cidCounter = 0;
-var Record = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Record, _super);
-    function Record(a_values, a_options) {
+var Model = (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Model, _super);
+    function Model(a_values, a_options) {
         var _this = _super.call(this, _cidCounter++) || this;
         _this._attributes$ = void 0;
         _this.attributes = {};
@@ -4159,9 +4159,9 @@ var Record = (function (_super) {
             _this._localEvents.subscribe(_this, _this);
         return _this;
     }
-    Record_1 = Record;
-    Record.onDefine = function (definition, BaseClass) { };
-    Object.defineProperty(Record, "ref", {
+    Model_1 = Model;
+    Model.onDefine = function (definition, BaseClass) { };
+    Object.defineProperty(Model, "ref", {
         get: function () {
             var _this = this;
             return Object(_attrDef__WEBPACK_IMPORTED_MODULE_3__["type"])(this)
@@ -4174,26 +4174,26 @@ var Record = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Record.extendAttrs = function (attrs) {
+    Model.extendAttrs = function (attrs) {
         return this.defaults(attrs);
     };
-    Record.defaults = function (attrs) {
+    Model.defaults = function (attrs) {
         return this.extend({ attributes: attrs });
     };
-    Object.defineProperty(Record.prototype, "$", {
+    Object.defineProperty(Model.prototype, "$", {
         get: function () {
             return this._attributes$ || (this._attributes$ = new this.__Attributes$(this));
         },
         enumerable: true,
         configurable: true
     });
-    Record.prototype.previousAttributes = function () { return new this.AttributesCopy(this._previousAttributes); };
-    Object.defineProperty(Record.prototype, "__inner_state__", {
+    Model.prototype.previousAttributes = function () { return new this.AttributesCopy(this._previousAttributes); };
+    Object.defineProperty(Model.prototype, "__inner_state__", {
         get: function () { return this.attributes; },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Record.prototype, "changed", {
+    Object.defineProperty(Model.prototype, "changed", {
         get: function () {
             var changed = this._changedAttributes;
             if (!changed) {
@@ -4214,7 +4214,7 @@ var Record = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Record.prototype.changedAttributes = function (diff) {
+    Model.prototype.changedAttributes = function (diff) {
         if (!diff)
             return this.hasChanged() ? tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this.changed) : false;
         var val, changed = false, old = this._transaction ? this._previousAttributes : this.attributes, attrSpecs = this._attributes;
@@ -4225,7 +4225,7 @@ var Record = (function (_super) {
         }
         return changed;
     };
-    Record.prototype.hasChanged = function (key) {
+    Model.prototype.hasChanged = function (key) {
         var _previousAttributes = this._previousAttributes;
         if (!_previousAttributes)
             return false;
@@ -4233,7 +4233,7 @@ var Record = (function (_super) {
             this._attributes[key].isChanged(this.attributes[key], _previousAttributes[key]) :
             !isEmpty(this.changed);
     };
-    Record.prototype.previous = function (key) {
+    Model.prototype.previous = function (key) {
         if (key) {
             var _previousAttributes = this._previousAttributes;
             if (_previousAttributes)
@@ -4241,19 +4241,19 @@ var Record = (function (_super) {
         }
         return null;
     };
-    Record.prototype.isNew = function () {
+    Model.prototype.isNew = function () {
         return this.id == null;
     };
-    Record.prototype.has = function (key) {
+    Model.prototype.has = function (key) {
         return this[key] != void 0;
     };
-    Record.prototype.unset = function (key, options) {
+    Model.prototype.unset = function (key, options) {
         var _a;
         var value = this[key];
         this.set((_a = {}, _a[key] = void 0, _a), tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ unset: true }, options));
         return value;
     };
-    Record.prototype.clear = function (options) {
+    Model.prototype.clear = function (options) {
         var _this = this;
         var nullify = options && options.nullify;
         this.transaction(function () {
@@ -4261,17 +4261,17 @@ var Record = (function (_super) {
         }, options);
         return this;
     };
-    Record.prototype.getOwner = function () {
+    Model.prototype.getOwner = function () {
         var owner = this._owner;
         return this._ownerKey ? owner : owner && owner._owner;
     };
-    Object.defineProperty(Record.prototype, "id", {
+    Object.defineProperty(Model.prototype, "id", {
         get: function () { return this.attributes[this.idAttribute]; },
         set: function (x) { Object(_updates__WEBPACK_IMPORTED_MODULE_6__["setAttribute"])(this, this.idAttribute, x); },
         enumerable: true,
         configurable: true
     });
-    Record.prototype.defaults = function (values) {
+    Model.prototype.defaults = function (values) {
         if (values === void 0) { values = {}; }
         var defaults = {}, _attributesArray = this._attributesArray;
         for (var _i = 0, _attributesArray_1 = _attributesArray; _i < _attributesArray_1.length; _i++) {
@@ -4281,15 +4281,15 @@ var Record = (function (_super) {
         }
         return defaults;
     };
-    Record.prototype.initialize = function (values, options) { };
-    Record.prototype.clone = function (options) {
+    Model.prototype.initialize = function (values, options) { };
+    Model.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
         var copy = new this.constructor(this.attributes, { clone: true });
         if (options.pinStore)
             copy._defaultStore = this.getStore();
         return copy;
     };
-    Record.prototype._validateNested = function (errors) {
+    Model.prototype._validateNested = function (errors) {
         var length = 0;
         var attributes = this.attributes;
         for (var _i = 0, _a = this._attributesArray; _i < _a.length; _i++) {
@@ -4302,17 +4302,17 @@ var Record = (function (_super) {
         }
         return length;
     };
-    Record.prototype.get = function (key) {
+    Model.prototype.get = function (key) {
         return this[key];
     };
-    Record.prototype.set = function (values, options) {
+    Model.prototype.set = function (values, options) {
         if (values) {
             var transaction = this._createTransaction(values, options);
             transaction && transaction.commit();
         }
         return this;
     };
-    Record.prototype.toJSON = function (options) {
+    Model.prototype.toJSON = function (options) {
         var json = {}, attributes = this.attributes;
         for (var _i = 0, _a = this._attributesArray; _i < _a.length; _i++) {
             var attribute = _a[_i];
@@ -4325,10 +4325,10 @@ var Record = (function (_super) {
         }
         return json;
     };
-    Record.prototype.parse = function (data, options) {
+    Model.prototype.parse = function (data, options) {
         return data;
     };
-    Record.prototype.deepSet = function (name, value, options) {
+    Model.prototype.deepSet = function (name, value, options) {
         var _this = this;
         this.transaction(function () {
             var _a;
@@ -4360,14 +4360,14 @@ var Record = (function (_super) {
         });
         return this;
     };
-    Object.defineProperty(Record.prototype, "collection", {
+    Object.defineProperty(Model.prototype, "collection", {
         get: function () {
             return this._ownerKey ? null : this._owner;
         },
         enumerable: true,
         configurable: true
     });
-    Record.prototype.dispose = function () {
+    Model.prototype.dispose = function () {
         if (this._disposed)
             return;
         var attributes = this.attributes;
@@ -4377,14 +4377,14 @@ var Record = (function (_super) {
         }
         _super.prototype.dispose.call(this);
     };
-    Record.prototype._log = function (level, topic, text, props, a_logger) {
-        (a_logger || _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["logger"]).trigger(level, topic, this.getClassName() + ' ' + text, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, props, { 'Record': this, 'Attributes definition': this._attributes }));
+    Model.prototype._log = function (level, topic, text, props, a_logger) {
+        (a_logger || _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["logger"]).trigger(level, topic, this.getClassName() + ' ' + text, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, props, { 'Model': this, 'Attributes definition': this._attributes }));
     };
-    Record.prototype.getClassName = function () {
-        return _super.prototype.getClassName.call(this) || 'Record';
+    Model.prototype.getClassName = function () {
+        return _super.prototype.getClassName.call(this) || 'Model';
     };
-    Record.prototype._createTransaction = function (values, options) { return void 0; };
-    Record.prototype.forEach = function (iteratee, context) {
+    Model.prototype._createTransaction = function (values, options) { return void 0; };
+    Model.prototype.forEach = function (iteratee, context) {
         var fun = context !== void 0 ? function (v, k) { return iteratee.call(context, v, k); } : iteratee, attributes = this.attributes;
         for (var key in this.attributes) {
             var value = attributes[key];
@@ -4392,25 +4392,25 @@ var Record = (function (_super) {
                 fun(value, key);
         }
     };
-    Record.prototype.mapObject = function (a_fun, context) {
+    Model.prototype.mapObject = function (a_fun, context) {
         var fun = context === void 0 ? a_fun : a_fun.bind(context);
         return _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, this.attributes, fun);
     };
-    Record.prototype[Symbol.iterator] = function () {
-        return new RecordEntriesIterator(this);
+    Model.prototype[Symbol.iterator] = function () {
+        return new ModelEntriesIterator(this);
     };
-    Record.prototype.entries = function () {
-        return new RecordEntriesIterator(this);
+    Model.prototype.entries = function () {
+        return new ModelEntriesIterator(this);
     };
-    Record.prototype.keys = function () {
+    Model.prototype.keys = function () {
         var keys = [];
         this.forEach(function (value, key) { return keys.push(key); });
         return keys;
     };
-    var Record_1;
-    Record._metatype = _metatypes__WEBPACK_IMPORTED_MODULE_5__["AggregatedType"];
-    Record.id = Object(_attrDef__WEBPACK_IMPORTED_MODULE_3__["type"])(String).value(null);
-    Record = Record_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    var Model_1;
+    Model._metatype = _metatypes__WEBPACK_IMPORTED_MODULE_5__["AggregatedType"];
+    Model.id = Object(_attrDef__WEBPACK_IMPORTED_MODULE_3__["type"])(String).value(null);
+    Model = Model_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"])({
             cidPrefix: 'm',
             _changeEventName: 'change',
@@ -4423,29 +4423,29 @@ var Record = (function (_super) {
             Collection: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["mixinRules"].value,
             idAttribute: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["mixinRules"].protoValue
         })
-    ], Record);
-    return Record;
+    ], Model);
+    return Model;
 }(_transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"]));
 
 ;
-assign(Record.prototype, _updates__WEBPACK_IMPORTED_MODULE_6__["UpdateRecordMixin"], _io_mixin__WEBPACK_IMPORTED_MODULE_4__["IORecordMixin"]);
-var BaseRecordAttributes = (function () {
-    function BaseRecordAttributes(record, x, options) {
+assign(Model.prototype, _updates__WEBPACK_IMPORTED_MODULE_6__["UpdateModelMixin"], _io_mixin__WEBPACK_IMPORTED_MODULE_4__["IOModelMixin"]);
+var BaseModelAttributes = (function () {
+    function BaseModelAttributes(record, x, options) {
         this.id = x.id;
     }
-    return BaseRecordAttributes;
+    return BaseModelAttributes;
 }());
-Record.prototype.Attributes = BaseRecordAttributes;
-var BaseRecordAttributesCopy = (function () {
-    function BaseRecordAttributesCopy(x) {
+Model.prototype.Attributes = BaseModelAttributes;
+var BaseModelAttributesCopy = (function () {
+    function BaseModelAttributesCopy(x) {
         this.id = x.id;
     }
-    return BaseRecordAttributesCopy;
+    return BaseModelAttributesCopy;
 }());
-Record.prototype.AttributesCopy = BaseRecordAttributesCopy;
+Model.prototype.AttributesCopy = BaseModelAttributesCopy;
 var IdAttribute = _metatypes__WEBPACK_IMPORTED_MODULE_5__["AnyType"].create({ value: void 0 }, 'id');
-Record.prototype._attributes = { id: IdAttribute };
-Record.prototype._attributesArray = [IdAttribute];
+Model.prototype._attributes = { id: IdAttribute };
+Model.prototype._attributesArray = [IdAttribute];
 function typeCheck(record, values, options) {
     if (Object(_updates__WEBPACK_IMPORTED_MODULE_6__["shouldBeAnObject"])(record, values, options)) {
         var _attributes = record._attributes;
@@ -4461,40 +4461,40 @@ function typeCheck(record, values, options) {
         }
     }
 }
-var RecordEntriesIterator = (function () {
-    function RecordEntriesIterator(record) {
+var ModelEntriesIterator = (function () {
+    function ModelEntriesIterator(record) {
         this.record = record;
         this.idx = 0;
     }
-    RecordEntriesIterator.prototype.next = function () {
+    ModelEntriesIterator.prototype.next = function () {
         var record = this.record, metatype = record._attributesArray[this.idx++];
         return {
             done: !metatype,
             value: metatype ? [metatype.name, record[metatype.name]] : void 0
         };
     };
-    return RecordEntriesIterator;
+    return ModelEntriesIterator;
 }());
 
 
 
 /***/ }),
 
-/***/ "../../models/lib/record/updates.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/record/updates.js ***!
-  \*******************************************************************/
-/*! exports provided: setAttribute, UpdateRecordMixin, unknownAttrsWarning, constructorsMixin, shouldBeAnObject, RecordTransaction */
+/***/ "../../models/lib/model/updates.js":
+/*!******************************************************************!*\
+  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/updates.js ***!
+  \******************************************************************/
+/*! exports provided: setAttribute, UpdateModelMixin, unknownAttrsWarning, constructorsMixin, shouldBeAnObject, ModelTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAttribute", function() { return setAttribute; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdateRecordMixin", function() { return UpdateRecordMixin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdateModelMixin", function() { return UpdateModelMixin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unknownAttrsWarning", function() { return unknownAttrsWarning; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructorsMixin", function() { return constructorsMixin; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shouldBeAnObject", function() { return shouldBeAnObject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecordTransaction", function() { return RecordTransaction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ModelTransaction", function() { return ModelTransaction; });
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
 
@@ -4523,7 +4523,7 @@ function markAsDirty(record, options) {
     }
     return _markAsDirty(record, options);
 }
-var UpdateRecordMixin = {
+var UpdateModelMixin = {
     transaction: function (fun, options) {
         if (options === void 0) { options = {}; }
         var isRoot = begin(this);
@@ -4565,7 +4565,7 @@ var UpdateRecordMixin = {
             }
         }
         if (changes.length && markAsDirty(this, options)) {
-            return new RecordTransaction(this, isRoot, nested, changes);
+            return new ModelTransaction(this, isRoot, nested, changes);
         }
         for (var _i = 0, nested_1 = nested; _i < nested_1.length; _i++) {
             var pendingTransaction = nested_1[_i];
@@ -4591,14 +4591,14 @@ function shouldBeAnObject(record, values, options) {
     record._log('error', 'Type-R:InvalidObject', 'update with non-object is ignored!', { values: values }, options.logger);
     return false;
 }
-var RecordTransaction = (function () {
-    function RecordTransaction(object, isRoot, nested, changes) {
+var ModelTransaction = (function () {
+    function ModelTransaction(object, isRoot, nested, changes) {
         this.object = object;
         this.isRoot = isRoot;
         this.nested = nested;
         this.changes = changes;
     }
-    RecordTransaction.prototype.commit = function (initiator) {
+    ModelTransaction.prototype.commit = function (initiator) {
         var _a = this, nested = _a.nested, object = _a.object, changes = _a.changes;
         for (var _i = 0, nested_2 = nested; _i < nested_2.length; _i++) {
             var transaction = nested_2[_i];
@@ -4611,7 +4611,7 @@ var RecordTransaction = (function () {
         }
         this.isRoot && commit(object, initiator);
     };
-    return RecordTransaction;
+    return ModelTransaction;
 }());
 
 
@@ -4656,34 +4656,34 @@ function parseReference(collectionRef) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memberOf", function() { return memberOf; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../record */ "../../models/lib/record/index.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _commons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./commons */ "../../models/lib/relations/commons.js");
 
 
 
-var RecordRefType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RecordRefType, _super);
-    function RecordRefType() {
+var ModelRefType = (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ModelRefType, _super);
+    function ModelRefType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    RecordRefType.prototype.toJSON = function (value) {
+    ModelRefType.prototype.toJSON = function (value) {
         return value && typeof value === 'object' ? value.id : value;
     };
-    RecordRefType.prototype.clone = function (value) {
+    ModelRefType.prototype.clone = function (value) {
         return value && typeof value === 'object' ? value.id : value;
     };
-    RecordRefType.prototype.isChanged = function (a, b) {
+    ModelRefType.prototype.isChanged = function (a, b) {
         var aId = a && (a.id == null ? a : a.id), bId = b && (b.id == null ? b : b.id);
         return aId !== bId;
     };
-    RecordRefType.prototype.validate = function (model, value, name) { };
-    return RecordRefType;
-}(_record__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
+    ModelRefType.prototype.validate = function (model, value, name) { };
+    return ModelRefType;
+}(_model__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
 function memberOf(masterCollection, T) {
     var getMasterCollection = Object(_commons__WEBPACK_IMPORTED_MODULE_2__["parseReference"])(masterCollection);
-    var typeSpec = new _record__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]({
+    var typeSpec = new _model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]({
         value: null,
-        _metatype: RecordRefType
+        _metatype: ModelRefType
     });
     return typeSpec
         .get(function (objOrId, name) {
@@ -4739,7 +4739,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../record */ "../../models/lib/record/index.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
 
 
@@ -4769,7 +4769,7 @@ var Store = (function (_super) {
         configurable: true
     });
     return Store;
-}(_record__WEBPACK_IMPORTED_MODULE_1__["Record"]));
+}(_model__WEBPACK_IMPORTED_MODULE_1__["Model"]));
 
 Store.global = new Store();
 
@@ -4789,7 +4789,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _collection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../collection */ "../../models/lib/collection/index.js");
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
-/* harmony import */ var _record__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../record */ "../../models/lib/record/index.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
 /* harmony import */ var _commons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./commons */ "../../models/lib/relations/commons.js");
 
@@ -4800,7 +4800,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function subsetOf(masterCollection, T) {
     var CollectionClass = T || _collection__WEBPACK_IMPORTED_MODULE_1__["Collection"], SubsetOf = CollectionClass._SubsetOf || (CollectionClass._SubsetOf = defineSubsetCollection(CollectionClass)), getMasterCollection = Object(_commons__WEBPACK_IMPORTED_MODULE_5__["parseReference"])(masterCollection);
-    return Object(_record__WEBPACK_IMPORTED_MODULE_3__["type"])(SubsetOf).get(function (refs) {
+    return Object(_model__WEBPACK_IMPORTED_MODULE_3__["type"])(SubsetOf).get(function (refs) {
         !refs || refs.resolvedWith || refs.resolve(getMasterCollection(this));
         return refs;
     });
@@ -5775,7 +5775,7 @@ function extractChangeToken(x) {
 /*!******************************************************************************!*\
   !*** /Users/vladbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \******************************************************************************/
-/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32791,7 +32791,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!*********************************************************!*\
   !*** /Users/vladbalin/GitHub/Type-R/react/lib/index.js ***!
   \*********************************************************/
-/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32809,19 +32809,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Link"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["LinkedComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["StateLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
 
@@ -32846,6 +32840,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
 
 /* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_3__["pureRenderProps"]; });

@@ -1,9 +1,9 @@
-import { Record } from '../record';
+import { Model } from '../model';
 import { Transactional } from '../transactions';
 
 let _store : Store = null;
 
-export class Store extends Record {
+export class Store extends Model {
     getStore() : Store { return this; }
  
     // delegate item lookup to owner, and to the global store if undefined

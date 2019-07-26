@@ -1,5 +1,5 @@
 import { eventsApi, Logger } from '@type-r/mixture';
-import { Record } from '../record';
+import { Model } from '../model';
 import { ItemsBehavior, Owner, Transaction, Transactional, transactionApi, TransactionOptions } from '../transactions';
 
 
@@ -12,36 +12,36 @@ export interface CollectionCore extends Transactional, Owner {
     /** @internal */
     _byId : IdIndex
 
-    models : Record[]
-    model : typeof Record
+    models : Model[]
+    model : typeof Model
     idAttribute : string // TODO: Refactor inconsistent idAttribute usage
     
     /** @internal */
     _comparator : Comparator
     
-    get( objOrId : string | Record | Object ) : Record    
+    get( objOrId : string | Model | Object ) : Model    
     
     /** @internal */
     _itemEvents? : eventsApi.EventMap
     /** @internal */
     _shared : number
     /** @internal */
-    _aggregationError : Record[]
+    _aggregationError : Model[]
     /** @internal */
     _log( level : string, topic : string, text : string, value : any, logger : Logger ) : void
 }
 
 // Collection's manipulation methods elements
-export type Elements = ( Object | Record )[];
+export type Elements = ( Object | Model )[];
 
 export interface CollectionOptions extends TransactionOptions {
     sort? : boolean
 }
 
-export type Comparator = ( a : Record, b : Record ) => number;  
+export type Comparator = ( a : Model, b : Model ) => number;  
 
 /** @private */
-export function dispose( collection : CollectionCore ) : Record[]{
+export function dispose( collection : CollectionCore ) : Model[]{
     const { models } = collection;
 
     collection.models = [];
@@ -52,20 +52,20 @@ export function dispose( collection : CollectionCore ) : Record[]{
 }
 
 /** @private */
-export function convertAndAquire( collection : CollectionCore, attrs : {} | Record, options : CollectionOptions ){
+export function convertAndAquire( collection : CollectionCore, attrs : {} | Model, options : CollectionOptions ){
     const { model } = collection;
     
-    let record : Record;
+    let record : Model;
 
     if( collection._shared ){
-        record = attrs instanceof model ? attrs : <Record>model.create( attrs, options );
+        record = attrs instanceof model ? attrs : <Model>model.create( attrs, options );
 
         if( collection._shared & ItemsBehavior.listen ){
             on( record, record._changeEventName, collection._onChildrenChange, collection );
         }
     }
     else{
-        record = attrs instanceof model ? ( options.merge ? attrs.clone() : attrs ) : <Record>model.create( attrs, options );
+        record = attrs instanceof model ? ( options.merge ? attrs.clone() : attrs ) : <Model>model.create( attrs, options );
 
         if( record._owner ){
             if( record._owner !== collection ){
@@ -87,7 +87,7 @@ export function convertAndAquire( collection : CollectionCore, attrs : {} | Reco
 }
 
 /** @private */
-export function free( owner : CollectionCore, child : Record, unset? : boolean ) : void {
+export function free( owner : CollectionCore, child : Model, unset? : boolean ) : void {
     if( owner._shared ){
         if( owner._shared & ItemsBehavior.listen ){
             off( child, child._changeEventName, owner._onChildrenChange, owner );
@@ -103,7 +103,7 @@ export function free( owner : CollectionCore, child : Record, unset? : boolean )
 }
 
 /** @private */
-export function freeAll( collection : CollectionCore, children : Record[] ) : Record[] {
+export function freeAll( collection : CollectionCore, children : Model[] ) : Model[] {
     for( let child of children ){
         free( collection, child );
     }
@@ -130,11 +130,11 @@ export function sortElements( collection : CollectionCore, options : CollectionO
  * @private 
  */
 export interface IdIndex {
-    [ id : string ] : Record
+    [ id : string ] : Model
 }
 
 /** @private Add record */ 
-export function addIndex( index : IdIndex, model : Record ) : void {
+export function addIndex( index : IdIndex, model : Model ) : void {
     index[ model.cid ] = model;
     var id             = model.id;
     
@@ -144,7 +144,7 @@ export function addIndex( index : IdIndex, model : Record ) : void {
 }
 
 /** @private Remove record */ 
-export function removeIndex( index : IdIndex, model : Record ) : void {
+export function removeIndex( index : IdIndex, model : Model ) : void {
     delete index[ model.cid ];
     var id = model.id;
     if( id || ( id as any ) === 0 ){
@@ -152,7 +152,7 @@ export function removeIndex( index : IdIndex, model : Record ) : void {
     }
 }
 
-export function updateIndex( index : IdIndex, model : Record ){
+export function updateIndex( index : IdIndex, model : Model ){
     delete index[ model.previous( model.idAttribute ) ];
 
     const { id } = model;
@@ -178,8 +178,8 @@ export class CollectionTransaction implements Transaction {
     // open transaction
     constructor(    public object : CollectionCore,
                     public isRoot : boolean,
-                    public added : Record[],
-                    public removed : Record[],
+                    public added : Model[],
+                    public removed : Model[],
                     public nested : Transaction[],
                     public sorted : boolean ){}
 

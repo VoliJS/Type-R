@@ -1,29 +1,29 @@
 import * as tslib_1 from "tslib";
-import { AnyType, ChainableAttributeSpec } from '../record';
+import { AnyType, ChainableAttributeSpec } from '../model';
 import { parseReference } from './commons';
-var RecordRefType = (function (_super) {
-    tslib_1.__extends(RecordRefType, _super);
-    function RecordRefType() {
+var ModelRefType = (function (_super) {
+    tslib_1.__extends(ModelRefType, _super);
+    function ModelRefType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    RecordRefType.prototype.toJSON = function (value) {
+    ModelRefType.prototype.toJSON = function (value) {
         return value && typeof value === 'object' ? value.id : value;
     };
-    RecordRefType.prototype.clone = function (value) {
+    ModelRefType.prototype.clone = function (value) {
         return value && typeof value === 'object' ? value.id : value;
     };
-    RecordRefType.prototype.isChanged = function (a, b) {
+    ModelRefType.prototype.isChanged = function (a, b) {
         var aId = a && (a.id == null ? a : a.id), bId = b && (b.id == null ? b : b.id);
         return aId !== bId;
     };
-    RecordRefType.prototype.validate = function (model, value, name) { };
-    return RecordRefType;
+    ModelRefType.prototype.validate = function (model, value, name) { };
+    return ModelRefType;
 }(AnyType));
 export function memberOf(masterCollection, T) {
     var getMasterCollection = parseReference(masterCollection);
     var typeSpec = new ChainableAttributeSpec({
         value: null,
-        _metatype: RecordRefType
+        _metatype: ModelRefType
     });
     return typeSpec
         .get(function (objOrId, name) {

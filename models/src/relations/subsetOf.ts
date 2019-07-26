@@ -1,14 +1,14 @@
 import { Collection, CollectionConstructor, ElementsArg, CollectionOptions } from '../collection';
 import { define, tools } from '@type-r/mixture';
-import { AggregatedType, ChainableAttributeSpec, Record, type } from '../record';
+import { AggregatedType, ChainableAttributeSpec, Model, type } from '../model';
 import { ItemsBehavior, transactionApi } from '../transactions';
 import { CollectionReference, parseReference } from './commons';
 
 
-type RecordsIds = ( string | number )[];
+type ModelsIds = ( string | number )[];
 
 // TODO: Change the last parameter to be the Model constructor. Extract the proper Collection type.
-export function subsetOf<X extends CollectionConstructor<R>, R extends Record>( this : void, masterCollection : CollectionReference, T? : X ) : ChainableAttributeSpec<SubsetCollectionConstructor<R>>{
+export function subsetOf<X extends CollectionConstructor<R>, R extends Model>( this : void, masterCollection : CollectionReference, T? : X ) : ChainableAttributeSpec<SubsetCollectionConstructor<R>>{
     const CollectionClass = T || Collection,
         // Lazily define class for subset collection, if it's not defined already...
         SubsetOf = CollectionClass._SubsetOf || ( CollectionClass._SubsetOf = defineSubsetCollection( CollectionClass as any ) as any ),
@@ -34,7 +34,7 @@ declare module "../collection" {
 ( Collection as any ).subsetOf = subsetOf;
 
 
-Collection.prototype.createSubset = function<M extends Record>( this : Collection<M>, models : any, options ) : SubsetCollection<M> {
+Collection.prototype.createSubset = function<M extends Model>( this : Collection<M>, models : any, options ) : SubsetCollection<M> {
     const SubsetOf = subsetOf( this, this.constructor as any ).options.type,
           subset   = new SubsetOf( models, options );
         
@@ -106,7 +106,7 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
         }
 
         // Serialized as an array of model ids.
-        toJSON() : RecordsIds {
+        toJSON() : ModelsIds {
             return this.refs ?
                 this.refs.map( objOrId => objOrId.id || objOrId ) :
                 this.models.map( model => model.id );
@@ -141,7 +141,7 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
         }
 
         // Clean up the custom parse method possibly defined in the base class.
-        parse( raw : any ) : Record[] {
+        parse( raw : any ) : Model[] {
             return raw;
         }
 
@@ -158,13 +158,13 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
             return this;
         }
 
-        getModelIds() : RecordsIds { return this.toJSON(); }
+        getModelIds() : ModelsIds { return this.toJSON(); }
 
         toggle( modelOrId : any, val : boolean ) : boolean {
             return super.toggle( this.resolvedWith.get( modelOrId ), val );
         }
 
-        addAll() : Record[] {
+        addAll() : Model[] {
             if( this.resolvedWith ){
                 this.set( this.resolvedWith.models );
                 return this.models;
@@ -173,7 +173,7 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
             throw new Error( "Cannot add elemens because the subset collection is not resolved yet." );
         }
 
-        toggleAll() : Record[] {
+        toggleAll() : Model[] {
             return this.length ? this.reset() : this.addAll();
         }
     }
@@ -184,7 +184,7 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
     return SubsetOfCollection;
 }
 
-export interface SubsetCollection<M extends Record> extends Collection<M>{
+export interface SubsetCollection<M extends Model> extends Collection<M>{
     getModelIds() : string[]
     toggle( modelOrId : string | M, val : boolean ) : boolean
     addAll() : M[]
@@ -192,7 +192,7 @@ export interface SubsetCollection<M extends Record> extends Collection<M>{
     resolve( baseCollection : Collection<M> ) : this
 }
 
-export interface SubsetCollectionConstructor<R extends Record = Record > {
+export interface SubsetCollectionConstructor<R extends Model = Model > {
     new ( records? : ElementsArg<R> | string[], options?: CollectionOptions ) : SubsetCollection<R>
     prototype : SubsetCollection<R>
 };

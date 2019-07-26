@@ -2,7 +2,7 @@ import * as tslib_1 from "tslib";
 import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, logger, Mixable, mixinRules, mixins } from '@type-r/mixture';
 import { startIO } from '../io-tools';
-import { AggregatedType, Record, SharedType } from '../record';
+import { AggregatedType, Model, SharedType } from '../model';
 import { ItemsBehavior, Transactional, transactionApi } from '../transactions';
 import { addTransaction } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -358,7 +358,7 @@ var Collection = (function (_super) {
     Collection = Collection_1 = tslib_1.__decorate([
         define({
             cidPrefix: 'c',
-            model: Record,
+            model: Model,
             _changeEventName: 'changes',
             _aggregationError: null
         }),
@@ -376,7 +376,7 @@ function toElements(collection, elements, options) {
     var parsed = options.parse ? collection.parse(elements, options) : elements;
     return Array.isArray(parsed) ? parsed : [parsed];
 }
-Record.Collection = Collection;
+Model.Collection = Collection;
 var LinkedIncludes = (function (_super) {
     tslib_1.__extends(LinkedIncludes, _super);
     function LinkedIncludes(collection, model) {

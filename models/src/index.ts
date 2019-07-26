@@ -5,7 +5,7 @@ if( typeof Symbol === 'undefined' ){
 
 import { Events, Mixable as Class } from '@type-r/mixture';
 // Define synonims for NestedTypes backward compatibility.
-import { Record as Model } from './record';
+import { Model } from './model';
 
 /**
  * Export everything 
@@ -13,10 +13,10 @@ import { Record as Model } from './record';
 export * from './collection';
 export * from './io-tools';
 export * from '@type-r/mixture';
-export * from './record';
+export * from './model';
 export * from './relations';
 export * from './transactions';
-export { Model, Class };
+export { Model as Record, Class };
 export { Linked } from '@linked/value'
 
 export const { on, off, trigger, once, listenTo, stopListening, listenToOnce } = <any>Events;

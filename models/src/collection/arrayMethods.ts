@@ -1,11 +1,11 @@
-import { Record } from '../record'
+import { Model } from '../model'
 
 export type Predicate<R> = ( ( val : R, key? : number ) => boolean ) | Partial<R>;
 
 /**
  * Optimized array methods.
  */
-export abstract class ArrayMixin<R extends Record> {
+export abstract class ArrayMixin<R extends Model> {
     models : R[]
     abstract get( modelOrId : string | Partial<R> ) : R;
 

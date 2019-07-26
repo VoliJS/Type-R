@@ -11,6 +11,6 @@ and core manipulation methods.
          ↖    ↑     ↗
            commons.ts
               ↑
-      ../record/index.ts
+      ../model/index.ts
 
 

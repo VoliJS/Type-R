@@ -1,30 +1,30 @@
 import { Linked } from '@linked/value';
 import { EventMap, EventsDefinition, TheType } from '@type-r/mixture';
 import { IOPromise } from '../io-tools';
-import { Record } from '../record';
+import { Model } from '../model';
 import { CloneOptions, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { AddOptions } from './add';
 import { ArrayMixin } from './arrayMethods';
 import { CollectionCore } from './commons';
-export declare type GenericComparator = string | ((x: Record) => number) | ((a: Record, b: Record) => number);
+export declare type GenericComparator = string | ((x: Model) => number) | ((a: Model, b: Model) => number);
 export interface CollectionOptions extends TransactionOptions {
     comparator?: GenericComparator;
-    model?: typeof Record;
+    model?: typeof Model;
 }
 export interface CollectionDefinition extends TransactionalDefinition {
-    model?: typeof Record;
+    model?: typeof Model;
     itemEvents?: EventsDefinition;
     _itemEvents?: EventMap;
 }
-export interface CollectionConstructor<R extends Record = Record> extends TheType<typeof Collection> {
+export interface CollectionConstructor<R extends Model = Model> extends TheType<typeof Collection> {
     new (records?: ElementsArg<R>, options?: CollectionOptions): Collection<R>;
     prototype: Collection<R>;
     Refs: CollectionConstructor<R>;
 }
-declare type CollectionOf<M extends typeof Record> = M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
-export declare class Collection<R extends Record = Record> extends Transactional implements CollectionCore, Iterable<R> {
-    static of<M extends typeof Record>(Ctor: M): CollectionOf<M>;
-    static ofRefs<M extends typeof Record>(Ctor: M): CollectionOf<M>;
+declare type CollectionOf<M extends typeof Model> = M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
+export declare class Collection<R extends Model = Model> extends Transactional implements CollectionCore, Iterable<R> {
+    static of<M extends typeof Model>(Ctor: M): CollectionOf<M>;
+    static ofRefs<M extends typeof Model>(Ctor: M): CollectionOf<M>;
     static Subset: typeof Collection;
     static Refs: any;
     createSubset(models: ElementsArg<R>, options?: CollectionOptions): Collection<R>;
@@ -39,7 +39,7 @@ export declare class Collection<R extends Record = Record> extends Transactional
     }): R;
     [Symbol.iterator](): IterableIterator<R>;
     updateEach(iteratee: (val: R, key?: number) => void): void;
-    model: typeof Record;
+    model: typeof Model;
     idAttribute: string;
     constructor(records?: ElementsArg<R>, options?: CollectionOptions, shared?: number);
     initialize(): void;
@@ -66,8 +66,8 @@ export declare class Collection<R extends Record = Record> extends Transactional
     unshift(model: ElementsArg<R>, options?: CollectionOptions): any;
     shift(options?: CollectionOptions): R;
 }
-export interface Collection<R extends Record> extends ArrayMixin<R> {
+export interface Collection<R extends Model> extends ArrayMixin<R> {
 }
 export declare type LiveUpdatesOption = boolean | ((x: any) => boolean);
-export declare type ElementsArg<R = Record> = Partial<R> | Partial<R>[];
+export declare type ElementsArg<R = Model> = Partial<R> | Partial<R>[];
 export {};

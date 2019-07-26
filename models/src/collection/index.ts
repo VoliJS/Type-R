@@ -1,7 +1,7 @@
 import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, EventsDefinition, Logger, logger, LogLevel, Mixable, mixinRules, mixins, TheType } from '@type-r/mixture';
 import { IOPromise, startIO } from '../io-tools';
-import { AggregatedType, Record, SharedType } from '../record';
+import { AggregatedType, Model, SharedType } from '../model';
 import { CloneOptions, ItemsBehavior, Transactional, TransactionalDefinition, transactionApi, TransactionOptions } from '../transactions';
 import { AddOptions, addTransaction } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -14,15 +14,15 @@ const { trigger2 } = eventsApi,
 
 let _count = 0;
 
-export type GenericComparator = string | ( ( x : Record ) => number ) | ( ( a : Record, b : Record ) => number ); 
+export type GenericComparator = string | ( ( x : Model ) => number ) | ( ( a : Model, b : Model ) => number ); 
 
 export interface CollectionOptions extends TransactionOptions {
     comparator? : GenericComparator
-    model? : typeof Record
+    model? : typeof Model
 }
 
 export interface CollectionDefinition extends TransactionalDefinition {
-    model? : typeof Record,
+    model? : typeof Model,
     itemEvents? : EventsDefinition
     _itemEvents? : EventMap
 }
@@ -31,18 +31,18 @@ class CollectionRefsType extends SharedType {
     static defaultValue = [];
 }
 
-export interface CollectionConstructor<R extends Record = Record > extends TheType<typeof Collection> {
+export interface CollectionConstructor<R extends Model = Model > extends TheType<typeof Collection> {
     new ( records? : ElementsArg<R>, options?: CollectionOptions ) : Collection<R>
     prototype : Collection<R>
     Refs : CollectionConstructor<R>
 };
 
-type CollectionOf<M extends typeof Record> = M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
+type CollectionOf<M extends typeof Model> = M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
 
 @define({
     // Default client id prefix 
     cidPrefix : 'c',
-    model : Record,
+    model : Model,
     _changeEventName : 'changes',
     _aggregationError : null
 })
@@ -52,7 +52,7 @@ type CollectionOf<M extends typeof Record> = M['Collection'] extends CollectionC
     model : mixinRules.protoValue,
     itemEvents : mixinRules.merge
 })
-export class Collection< R extends Record = Record> extends Transactional implements CollectionCore, Iterable<R> {
+export class Collection< R extends Model = Model> extends Transactional implements CollectionCore, Iterable<R> {
     /** @internal */
     _shared : number
     /** @internal */
@@ -65,7 +65,7 @@ export class Collection< R extends Record = Record> extends Transactional implem
      * 
      * const users = new ( Collection.of( User ) )
      */
-    static of<M extends typeof Record>( Ctor : M ) : CollectionOf<M> {
+    static of<M extends typeof Model>( Ctor : M ) : CollectionOf<M> {
         return Ctor.Collection as any;
     }
 
@@ -76,7 +76,7 @@ export class Collection< R extends Record = Record> extends Transactional implem
      * 
      * const users = new ( Collection.ofRefs( User ) )
      */
-    static ofRefs<M extends typeof Record>( Ctor : M ) : CollectionOf<M> {
+    static ofRefs<M extends typeof Model>( Ctor : M ) : CollectionOf<M> {
         return Ctor.Collection.Refs as any;
     }
 
@@ -243,7 +243,7 @@ export class Collection< R extends Record = Record> extends Transactional implem
         return count;
     }
 
-    model : typeof Record
+    model : typeof Model
 
     // idAttribute extracted from the model type.
     idAttribute : string
@@ -553,24 +553,24 @@ export class Collection< R extends Record = Record> extends Transactional implem
 }
 
 
-export interface Collection<R extends Record> extends ArrayMixin<R>{}
+export interface Collection<R extends Model> extends ArrayMixin<R>{}
 
 export type LiveUpdatesOption = boolean | ( ( x : any ) => boolean );
 
-export type ElementsArg<R = Record> = Partial<R> | Partial<R>[]
+export type ElementsArg<R = Model> = Partial<R> | Partial<R>[]
 
 // TODO: make is safe for parse to return null (?)
-function toElements<R extends Record>( collection : Collection<R>, elements : ElementsArg<R>, options : CollectionOptions ) : Elements {
+function toElements<R extends Model>( collection : Collection<R>, elements : ElementsArg<R>, options : CollectionOptions ) : Elements {
     const parsed = options.parse ? collection.parse( elements, options ) : elements; 
     return Array.isArray( parsed ) ? parsed : [ parsed ];
 }
 
-Record.Collection = Collection;
+Model.Collection = Collection;
 
 class LinkedIncludes extends Linked<boolean> {
     constructor(
         private collection,
-        private model : Record ){
+        private model : Model ){
             super( collection.get( model ) )
     }
 

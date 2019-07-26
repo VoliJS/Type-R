@@ -1,4 +1,4 @@
-import { Record } from '../record';
+import { Model } from '../model';
 import { Transaction, transactionApi } from '../transactions';
 import { addIndex, CollectionCore, CollectionOptions, CollectionTransaction, convertAndAquire, Elements, free, freeAll, IdIndex, logAggregationError, sortElements } from './commons';
 
@@ -60,7 +60,7 @@ export function setTransaction( collection, items, options ){
 // Remove references to all previous elements, which are not present in collection.
 // Returns an array with removed elements.
 /** @private */
-function _garbageCollect( collection : CollectionCore, previous : Record[] ) : Record[]{
+function _garbageCollect( collection : CollectionCore, previous : Model[] ) : Model[]{
     const { _byId }  = collection,
           removed = [];
 
@@ -90,7 +90,7 @@ function _reallocate( collection : CollectionCore, source : any[], nested : Tran
     // for each item in source set...
     for( var i = 0, j = 0; i < source.length; i++ ){
         var item  = source[ i ],
-            model : Record = null;
+            model : Model = null;
 
         if( item ){
             var id  = item[ idAttribute ],

@@ -1,7 +1,7 @@
 import * as tslib_1 from "tslib";
 import { Collection } from '../collection';
 import { define, tools } from '@type-r/mixture';
-import { type } from '../record';
+import { type } from '../model';
 import { ItemsBehavior, transactionApi } from '../transactions';
 import { parseReference } from './commons';
 export function subsetOf(masterCollection, T) {

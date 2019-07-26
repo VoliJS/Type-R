@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { Record } from '../record';
+import { Model } from '../model';
 import { Transactional } from '../transactions';
 var _store = null;
 var Store = (function (_super) {
@@ -26,7 +26,7 @@ var Store = (function (_super) {
         configurable: true
     });
     return Store;
-}(Record));
+}(Model));
 export { Store };
 Store.global = new Store();
 //# sourceMappingURL=store.js.map

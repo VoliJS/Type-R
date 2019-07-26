@@ -1,4 +1,4 @@
-import { AnyType, ChainableAttributeSpec, Record } from '../record';
+import { AnyType, ChainableAttributeSpec, Model } from '../model';
 import { CollectionReference, parseReference } from './commons';
 
 
@@ -12,24 +12,24 @@ import { CollectionReference, parseReference } from './commons';
  */
 
 /** @private */
-type RecordRefValue = Record | string;
+type ModelRefValue = Model | string;
 
 /** @private */
-class RecordRefType extends AnyType {
+class ModelRefType extends AnyType {
     // It is always serialized as an id, whenever it's resolved or not. 
-    toJSON( value : RecordRefValue ){
+    toJSON( value : ModelRefValue ){
         return value && typeof value === 'object' ? value.id : value;
     }
 
     // Wne 
-    clone( value : RecordRefValue ){
+    clone( value : ModelRefValue ){
         return value && typeof value === 'object' ? value.id : value;
     }
 
     // Model refs by id are equal when their ids are equal.
-    isChanged( a : RecordRefValue, b : RecordRefValue){
-        var aId = a && ( (<Record>a).id == null ? a : (<Record>a).id ),
-            bId = b && ( (<Record>b).id == null ? b : (<Record>b).id );
+    isChanged( a : ModelRefValue, b : ModelRefValue){
+        var aId = a && ( (<Model>a).id == null ? a : (<Model>a).id ),
+            bId = b && ( (<Model>b).id == null ? b : (<Model>b).id );
 
         return aId !== bId;
     }
@@ -38,21 +38,21 @@ class RecordRefType extends AnyType {
     validate( model, value, name ){}
 }
 
-export function memberOf<R extends typeof Record>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<R> {
+export function memberOf<R extends typeof Model>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<R> {
     const getMasterCollection = parseReference( masterCollection );
 
     const typeSpec = new ChainableAttributeSpec<R>({
         value : null,
-        _metatype : RecordRefType
+        _metatype : ModelRefType
     });
     
     return typeSpec
-        .get( function( objOrId : RecordRefValue, name : string ) : Record {
+        .get( function( objOrId : ModelRefValue, name : string ) : Model {
             if( typeof objOrId === 'object' ) return objOrId;
 
             // So, we're dealing with an id reference. Resolve it.
             const collection = getMasterCollection( this );
-            let   record : Record = null;
+            let   record : Model = null;
 
             // If master collection exists and is not empty...
             if( collection && collection.length ){

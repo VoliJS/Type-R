@@ -92,7 +92,7 @@ export abstract class Transactional implements Messenger, IONode, Validatable, T
     /** @internal */
     _isDirty  : TransactionOptions = null;
 
-    // Backreference set by owner (Record, Collection, or other object)
+    // Backreference set by owner (Model, Collection, or other object)
     /** @internal */
     _owner : Owner = void 0;
 

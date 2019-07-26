@@ -1,4 +1,4 @@
-import { Record } from '../record';
+import { Model } from '../model';
 import { Transaction, transactionApi } from '../transactions';
 import { addIndex, CollectionCore, CollectionOptions, CollectionTransaction, convertAndAquire, logAggregationError, sortElements, updateIndex } from './commons';
 
@@ -30,7 +30,7 @@ export function addTransaction( collection : CollectionCore, items : any[], opti
 
 // Handle sort or insert at options for add operation. Reurns true if sort happened.
 /** @private */ 
-function sortOrMoveElements( collection : CollectionCore, added : Record[], options : AddOptions ) : boolean {
+function sortOrMoveElements( collection : CollectionCore, added : Model[], options : AddOptions ) : boolean {
     let at = options.at;
 
     // if `at` option is given, it overrides sorting option...
