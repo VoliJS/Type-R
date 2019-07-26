@@ -80,3 +80,18 @@ Install React bindings:
 Install extended data types (Email, URL, IP, Integer, Microsoft date, UNIX Timestamp date):
 
 `npm install @type-r/ext-types`
+
+## Monorepository packages structure
+
+Core packages:
+
+- `models` - Type-R framework core.
+- `endpoints` - Type-R endpoints enabling models and collections I/O API.
+- `react` - Type-R React bindings.
+- `ext-types` - Extended data types.
+
+- `globals` - provides backward compatibility for apps written with Type-R v2.
+
+- `mixture` - Events, Mixins, and log router. Used by `@type-r/models`.
+- `tests` - private package containing all the unit tests.
+- `examples/*` - example `@type-r/react` apps.
