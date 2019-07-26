@@ -7,6 +7,6 @@ export * from './record';
 export * from './relations';
 export * from './transactions';
 export { Model, Class };
-export { ValueLink } from '@linked/value';
+export { Linked } from '@linked/value';
 export declare const on: any, off: any, trigger: any, once: any, listenTo: any, stopListening: any, listenToOnce: any;
 export declare function transaction<F extends Function>(method: F): F;

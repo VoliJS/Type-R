@@ -1,6 +1,6 @@
 import * as tslib_1 from "tslib";
 import React, { Component } from 'react';
-import { attributes, Transactional, ValueLink } from '@type-r/models';
+import { attributes, Transactional, Linked } from '@type-r/models';
 export function pureRenderProps(props, Comp) {
     var prototype = attributes(props).prototype, _attributes = prototype._attributes, keys = Object.keys(props);
     var createVector = new Function("props", "\n        return [\n            " + keys.map(function (key) {
@@ -32,7 +32,7 @@ export function pureRenderProps(props, Comp) {
 function propForType(type, key) {
     return type.prototype instanceof Transactional ? "props." + key + " && props." + key + "._changeToken" :
         type === Date ? "props." + key + " && props." + key + ".getTime()" :
-            type.prototype instanceof ValueLink ? "props." + key + " && props." + key + ".value" :
+            type.prototype instanceof Linked ? "props." + key + " && props." + key + ".value" :
                 "props." + key;
 }
 //# sourceMappingURL=pureRender.js.map

@@ -1,5 +1,5 @@
 import React, { ComponentType, Component } from 'react'
-import { InferAttrs, attributes, Transactional, ValueLink } from '@type-r/models';
+import { InferAttrs, attributes, Transactional, Linked } from '@type-r/models';
 
 /**
  * Create the pure-render version of component
@@ -52,6 +52,6 @@ export function pureRenderProps<T extends object>( props : T, Comp : ComponentTy
 function propForType( type : Function, key : string ) : string {
     return  type.prototype instanceof Transactional ? `props.${key} && props.${key}._changeToken` :
             type === Date ? `props.${key} && props.${key}.getTime()` :
-            type.prototype instanceof ValueLink ? `props.${key} && props.${key}.value` :
+            type.prototype instanceof Linked ? `props.${key} && props.${key}.value` :
             `props.${key}`;
 }

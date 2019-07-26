@@ -740,6 +740,334 @@ if (process.env.NODE_ENV === 'production') {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Linked; });
+/* unused harmony export PropValueLink */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(25);
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__helpers__["b"]; });
+
+/**
+ * Advanced React links for purely functional two-way data binding
+ *
+ * MIT License, (c) 2016 Vlad Balin, Volicon.
+ */
+
+
+/**
+ * `Linked` class is an abstract linked value - the value, the function to update this value, and its validation error.
+ * The enclosed value is considered as immutable.
+ */
+var Linked = /** @class */ (function () {
+    function Linked(value) {
+        this.value = value;
+        /** Validation error. Usually is a string with error text, but can hold any type. */
+        this.error = void 0;
+    }
+    Object.defineProperty(Linked.prototype, "current", {
+        /** EXPERIMENTAL: Support useRef interface. */
+        get: function () { return this.value; },
+        set: function (x) { this.set(x); },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Linked.prototype, "_changeToken", {
+        // Private accessor for whenChanged. Uniform with Type-R models and collections API.
+        get: function () {
+            return this.value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /** Produce the new link executing the given function before the link value will be updated. */
+    Linked.prototype.onChange = function (handler) {
+        var _this = this;
+        return new ClonedValueLink(this, function (x) {
+            handler(x);
+            _this.set(x);
+        });
+    };
+    /** Produce the new link which transform the value before `set` with a given function. */
+    Linked.prototype.pipe = function (handler) {
+        var _this = this;
+        return new ClonedValueLink(this, function (x) {
+            var next = handler(x, _this.value);
+            next === void 0 || _this.set(next);
+        });
+    };
+    Object.defineProperty(Linked.prototype, "props", {
+        /**
+         * Create React component props for the <input> component.
+         *
+         * <input { ...link.props } />
+         */
+        get: function () {
+            var _this = this;
+            return typeof this.value === 'boolean' ? {
+                checked: this.value,
+                onChange: function (e) { return _this.set(Boolean(e.target.checked)); }
+            } : {
+                value: this.value,
+                onChange: function (e) { return _this.set(e.target.value); }
+            };
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /** Update the linked value using given transform function. */
+    Linked.prototype.update = function (transform, e) {
+        var next = transform(this.clone(), e);
+        next === void 0 || this.set(next);
+    };
+    // Create UI event handler function which will update the link with a given transform function.
+    Linked.prototype.action = function (transform) {
+        var _this = this;
+        return function (e) { return _this.update(transform, e); };
+    };
+    Linked.prototype.equals = function (truthyValue) {
+        return new EqualsValueLink(this, truthyValue);
+    };
+    Linked.prototype.enabled = function (defaultValue) {
+        return new EnabledValueLink(this, defaultValue || "");
+    };
+    // Array-only links methods
+    Linked.prototype.contains = function (element) {
+        return new ContainsRef(this, element);
+    };
+    Linked.prototype.push = function () {
+        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
+        Array.prototype.push.apply(array, arguments);
+        this.set(array);
+    };
+    Linked.prototype.unshift = function () {
+        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
+        Array.prototype.unshift.apply(array, arguments);
+        this.set(array);
+    };
+    Linked.prototype.splice = function () {
+        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
+        Array.prototype.splice.apply(array, arguments);
+        this.set(array);
+    };
+    Linked.prototype.map = function (iterator) {
+        return Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(this.value).map(this, iterator);
+    };
+    Linked.prototype.removeAt = function (key) {
+        var value = this.value, _ = Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(value);
+        this.set(_.remove(_.clone(value), key));
+    };
+    Linked.prototype.at = function (key) {
+        return new PropValueLink(this, key);
+    };
+    Linked.prototype.clone = function () {
+        var value = this.value;
+        return Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(value).clone(value);
+    };
+    Linked.prototype.pick = function () {
+        var links = {}, keys = arguments.length ? arguments : Object.keys(this.value);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            links[key] = new PropValueLink(this, key);
+        }
+        return links;
+    };
+    Object.defineProperty(Linked.prototype, "$", {
+        /**
+         * Convert link to object to the object of links.
+         * Memorises the result, subsequent calls are cheap.
+         */
+        get: function () {
+            if (!this._value$) {
+                var links = this._value$ = {}, value = this.value;
+                for (var key in value) {
+                    if (value.hasOwnProperty(key)) {
+                        links[key] = new PropValueLink(this, key);
+                    }
+                }
+            }
+            return this._value$;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Validate link with validness predicate and optional custom error object. Can be chained.
+     */
+    Linked.prototype.check = function (whenValid, error) {
+        if (!this.error && !whenValid(this.value)) {
+            this.error = error || whenValid.error || defaultError;
+        }
+        return this;
+    };
+    return Linked;
+}());
+
+(function (Linked) {
+    /** Create linked value out of its value and the set function */
+    function value(value, set) {
+        return new CustomValueLink(value, set);
+    }
+    Linked.value = value;
+    /**
+    * Unwrap object with links, returning an object of a similar shape filled with link values.
+    */
+    function getValues(links) {
+        return unwrap(links, 'value');
+    }
+    Linked.getValues = getValues;
+    /**
+     * Unwrap object with links, returning an object of a similar shape filled with link errors.
+     */
+    function getErrors(links) {
+        return unwrap(links, 'error');
+    }
+    Linked.getErrors = getErrors;
+    /**
+     * Return true if an object with links contains any errors.
+     */
+    function hasErrors(links) {
+        for (var key in links) {
+            if (links.hasOwnProperty(key) && links[key].error) {
+                return true;
+            }
+        }
+        return false;
+    }
+    Linked.hasErrors = hasErrors;
+    /**
+    * Assing links with values from the source object.
+    */
+    function setValues(links, source) {
+        if (source) {
+            for (var key in links) {
+                var sourceKey = trim(key);
+                if (source.hasOwnProperty(sourceKey)) {
+                    var sourceVal = source[sourceKey];
+                    sourceVal === void 0 || links[key].set(sourceVal);
+                }
+            }
+        }
+    }
+    Linked.setValues = setValues;
+})(Linked || (Linked = {}));
+var CustomValueLink = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](CustomValueLink, _super);
+    function CustomValueLink(value, set) {
+        var _this = _super.call(this, value) || this;
+        _this.set = set;
+        return _this;
+    }
+    CustomValueLink.prototype.set = function (x) { };
+    return CustomValueLink;
+}(Linked));
+var ClonedValueLink = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](ClonedValueLink, _super);
+    function ClonedValueLink(parent, set) {
+        var _this = _super.call(this, parent.value) || this;
+        _this.set = set;
+        var error = parent.error;
+        if (error)
+            _this.error = error;
+        return _this;
+    }
+    ClonedValueLink.prototype.set = function (x) { };
+    return ClonedValueLink;
+}(Linked));
+var EqualsValueLink = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](EqualsValueLink, _super);
+    function EqualsValueLink(parent, truthyValue) {
+        var _this = _super.call(this, parent.value === truthyValue) || this;
+        _this.parent = parent;
+        _this.truthyValue = truthyValue;
+        return _this;
+    }
+    EqualsValueLink.prototype.set = function (x) {
+        this.parent.set(x ? this.truthyValue : null);
+    };
+    return EqualsValueLink;
+}(Linked));
+var EnabledValueLink = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](EnabledValueLink, _super);
+    function EnabledValueLink(parent, defaultValue) {
+        var _this = _super.call(this, parent.value != null) || this;
+        _this.parent = parent;
+        _this.defaultValue = defaultValue;
+        return _this;
+    }
+    EnabledValueLink.prototype.set = function (x) {
+        this.parent.set(x ? this.defaultValue : null);
+    };
+    return EnabledValueLink;
+}(Linked));
+var ContainsRef = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](ContainsRef, _super);
+    function ContainsRef(parent, element) {
+        var _this = _super.call(this, parent.value.indexOf(element) >= 0) || this;
+        _this.parent = parent;
+        _this.element = element;
+        return _this;
+    }
+    ContainsRef.prototype.set = function (x) {
+        var _this = this;
+        var next = Boolean(x);
+        if (this.value !== next) {
+            var arr = this.parent.value, nextValue = x ? arr.concat(this.element) : arr.filter(function (el) { return el !== _this.element; });
+            this.parent.set(nextValue);
+        }
+    };
+    return ContainsRef;
+}(Linked));
+var defaultError = 'Invalid value';
+/**
+ * Link to array or object element enclosed in parent link.
+ * Performs purely functional update of the parent, shallow copying its value on `set`.
+ */
+var PropValueLink = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](PropValueLink, _super);
+    function PropValueLink(parent, key) {
+        var _this = _super.call(this, parent.value[key]) || this;
+        _this.parent = parent;
+        _this.key = key;
+        return _this;
+    }
+    PropValueLink.prototype.remove = function () {
+        this.parent.removeAt(this.key);
+    };
+    // Set new element value to parent array or object, performing purely functional update.
+    PropValueLink.prototype.set = function (x) {
+        var _this = this;
+        if (this.value !== x) {
+            this.parent.update(function (value) {
+                value[_this.key] = x;
+                return value;
+            });
+        }
+    };
+    ;
+    return PropValueLink;
+}(Linked));
+
+function unwrap(links, field) {
+    var values = {};
+    for (var key in links) {
+        if (links.hasOwnProperty(key)) {
+            var value = links[key][field];
+            if (value !== void 0) {
+                values[trim(key)] = value;
+            }
+        }
+    }
+    return values;
+}
+function trim(key) {
+    return key[0] === '$' ? key.slice(1) : key;
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["f"] = attributes;
 /* unused harmony export auto */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
@@ -841,7 +1169,7 @@ function auto(proto, attrName) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -984,320 +1312,6 @@ function wrapIsRequired(validate) {
     return function (record, value, key) {
         return value ? validate.call(this, record, value, key) : 'Required';
     };
-}
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ValueLink; });
-/* unused harmony export CustomValueLink */
-/* unused harmony export ClonedValueLink */
-/* unused harmony export EqualsValueLink */
-/* unused harmony export EnabledValueLink */
-/* unused harmony export ContainsRef */
-/* unused harmony export PropValueLink */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__helpers__ = __webpack_require__(25);
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__helpers__["b"]; });
-
-/**
- * Advanced React links for purely functional two-way data binding
- *
- * MIT License, (c) 2016 Vlad Balin, Volicon.
- */
-
-
-// Main Link class. All links must extend it.
-var ValueLink = /** @class */ (function () {
-    function ValueLink(value) {
-        this.value = value;
-    }
-    // Create custom link to arbitrary value
-    ValueLink.value = function (value, set) {
-        return new CustomValueLink(value, set);
-    };
-    /**
-    * Unwrap object with links, returning an object of a similar shape filled with link values.
-    */
-    ValueLink.getValues = function (links) {
-        return unwrap(links, 'value');
-    };
-    Object.defineProperty(ValueLink.prototype, "current", {
-        // EXPERIMENTAL: Support useRef interface.
-        get: function () { return this.value; },
-        set: function (x) { this.set(x); },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ValueLink.prototype, "_changeToken", {
-        // Private accessor for whenChanged. Uniform with Type-R models and collections API.
-        get: function () {
-            return this.value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    /**
-     * Unwrap object with links, returning an object of a similar shape filled with link errors.
-     */
-    ValueLink.getErrors = function (links) {
-        return unwrap(links, 'error');
-    };
-    /**
-     * Return true if an object with links contains any errors.
-     */
-    ValueLink.hasErrors = function (links) {
-        for (var key in links) {
-            if (links.hasOwnProperty(key) && links[key].error) {
-                return true;
-            }
-        }
-        return false;
-    };
-    /**
-    * Assing links with values from the source object.
-    */
-    ValueLink.setValues = function (links, source) {
-        if (source) {
-            for (var key in links) {
-                var sourceKey = trim(key);
-                if (source.hasOwnProperty(sourceKey)) {
-                    var sourceVal = source[sourceKey];
-                    sourceVal === void 0 || links[key].set(sourceVal);
-                }
-            }
-        }
-    };
-    ValueLink.prototype.onChange = function (handler) {
-        var _this = this;
-        return new ClonedValueLink(this, function (x) {
-            handler(x);
-            _this.set(x);
-        });
-    };
-    Object.defineProperty(ValueLink.prototype, "props", {
-        // <input { ...link.props } />
-        get: function () {
-            var _this = this;
-            return typeof this.value === 'boolean' ? {
-                checked: this.value,
-                onChange: function (e) { return _this.set(Boolean(e.target.checked)); }
-            } : {
-                value: this.value,
-                onChange: function (e) { return _this.set(e.target.value); }
-            };
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // Immediately update the link value using given transform function.
-    ValueLink.prototype.update = function (transform, e) {
-        var next = transform(this.clone(), e);
-        next === void 0 || this.set(next);
-    };
-    // Create new link which applies transform function on set.
-    ValueLink.prototype.pipe = function (handler) {
-        var _this = this;
-        return new ClonedValueLink(this, function (x) {
-            var next = handler(x, _this.value);
-            next === void 0 || _this.set(next);
-        });
-    };
-    // Create UI event handler function which will update the link with a given transform function.
-    ValueLink.prototype.action = function (transform) {
-        var _this = this;
-        return function (e) { return _this.update(transform, e); };
-    };
-    ValueLink.prototype.equals = function (truthyValue) {
-        return new EqualsValueLink(this, truthyValue);
-    };
-    ValueLink.prototype.enabled = function (defaultValue) {
-        return new EnabledValueLink(this, defaultValue || "");
-    };
-    // Array-only links methods
-    ValueLink.prototype.contains = function (element) {
-        return new ContainsRef(this, element);
-    };
-    ValueLink.prototype.push = function () {
-        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
-        Array.prototype.push.apply(array, arguments);
-        this.set(array);
-    };
-    ValueLink.prototype.unshift = function () {
-        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
-        Array.prototype.unshift.apply(array, arguments);
-        this.set(array);
-    };
-    ValueLink.prototype.splice = function () {
-        var array = __WEBPACK_IMPORTED_MODULE_1__helpers__["a" /* arrayHelpers */].clone(this.value);
-        Array.prototype.splice.apply(array, arguments);
-        this.set(array);
-    };
-    ValueLink.prototype.map = function (iterator) {
-        return Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(this.value).map(this, iterator);
-    };
-    ValueLink.prototype.removeAt = function (key) {
-        var value = this.value, _ = Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(value);
-        this.set(_.remove(_.clone(value), key));
-    };
-    ValueLink.prototype.at = function (key) {
-        return new PropValueLink(this, key);
-    };
-    ValueLink.prototype.clone = function () {
-        var value = this.value;
-        return Object(__WEBPACK_IMPORTED_MODULE_1__helpers__["b" /* helpers */])(value).clone(value);
-    };
-    ValueLink.prototype.pick = function () {
-        var links = {}, keys = arguments.length ? arguments : Object.keys(this.value);
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            links[key] = new PropValueLink(this, key);
-        }
-        return links;
-    };
-    /**
-     * Convert link to object to the object of links with $-keys.
-     */
-    ValueLink.prototype.$links = function () {
-        var links = {}, value = this.value;
-        for (var key in value) {
-            if (value.hasOwnProperty(key)) {
-                links['$' + key] = new PropValueLink(this, key);
-            }
-        }
-        return links;
-    };
-    /**
-     * Validate link with validness predicate and optional custom error object. Can be chained.
-     */
-    ValueLink.prototype.check = function (whenValid, error) {
-        if (!this.error && !whenValid(this.value)) {
-            this.error = error || whenValid.error || defaultError;
-        }
-        return this;
-    };
-    return ValueLink;
-}());
-
-var CustomValueLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](CustomValueLink, _super);
-    function CustomValueLink(value, set) {
-        var _this = _super.call(this, value) || this;
-        _this.set = set;
-        return _this;
-    }
-    CustomValueLink.prototype.set = function (x) { };
-    return CustomValueLink;
-}(ValueLink));
-
-var ClonedValueLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](ClonedValueLink, _super);
-    function ClonedValueLink(parent, set) {
-        var _this = _super.call(this, parent.value) || this;
-        _this.set = set;
-        var error = parent.error;
-        if (error)
-            _this.error = error;
-        return _this;
-    }
-    ClonedValueLink.prototype.set = function (x) { };
-    return ClonedValueLink;
-}(ValueLink));
-
-var EqualsValueLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](EqualsValueLink, _super);
-    function EqualsValueLink(parent, truthyValue) {
-        var _this = _super.call(this, parent.value === truthyValue) || this;
-        _this.parent = parent;
-        _this.truthyValue = truthyValue;
-        return _this;
-    }
-    EqualsValueLink.prototype.set = function (x) {
-        this.parent.set(x ? this.truthyValue : null);
-    };
-    return EqualsValueLink;
-}(ValueLink));
-
-var EnabledValueLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](EnabledValueLink, _super);
-    function EnabledValueLink(parent, defaultValue) {
-        var _this = _super.call(this, parent.value != null) || this;
-        _this.parent = parent;
-        _this.defaultValue = defaultValue;
-        return _this;
-    }
-    EnabledValueLink.prototype.set = function (x) {
-        this.parent.set(x ? this.defaultValue : null);
-    };
-    return EnabledValueLink;
-}(ValueLink));
-
-var ContainsRef = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](ContainsRef, _super);
-    function ContainsRef(parent, element) {
-        var _this = _super.call(this, parent.value.indexOf(element) >= 0) || this;
-        _this.parent = parent;
-        _this.element = element;
-        return _this;
-    }
-    ContainsRef.prototype.set = function (x) {
-        var _this = this;
-        var next = Boolean(x);
-        if (this.value !== next) {
-            var arr = this.parent.value, nextValue = x ? arr.concat(this.element) : arr.filter(function (el) { return el !== _this.element; });
-            this.parent.set(nextValue);
-        }
-    };
-    return ContainsRef;
-}(ValueLink));
-
-var defaultError = 'Invalid value';
-/**
- * Link to array or object element enclosed in parent link.
- * Performs purely functional update of the parent, shallow copying its value on `set`.
- */
-var PropValueLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](PropValueLink, _super);
-    function PropValueLink(parent, key) {
-        var _this = _super.call(this, parent.value[key]) || this;
-        _this.parent = parent;
-        _this.key = key;
-        return _this;
-    }
-    PropValueLink.prototype.remove = function () {
-        this.parent.removeAt(this.key);
-    };
-    // Set new element value to parent array or object, performing purely functional update.
-    PropValueLink.prototype.set = function (x) {
-        var _this = this;
-        if (this.value !== x) {
-            this.parent.update(function (value) {
-                value[_this.key] = x;
-                return value;
-            });
-        }
-    };
-    ;
-    return PropValueLink;
-}(ValueLink));
-
-function unwrap(links, field) {
-    var values = {};
-    for (var key in links) {
-        if (links.hasOwnProperty(key)) {
-            var value = links[key][field];
-            if (value !== void 0) {
-                values[trim(key)] = value;
-            }
-        }
-    }
-    return values;
-}
-function trim(key) {
-    return key[0] === '$' ? key.slice(1) : key;
 }
 
 
@@ -1861,7 +1875,7 @@ function inferType(value) {
 /* harmony export (immutable) */ __webpack_exports__["d"] = getMetatype;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__basic__ = __webpack_require__(23);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__date__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__any__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__any__ = __webpack_require__(7);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__any__["a"]; });
 /* unused harmony namespace reexport */
 /* unused harmony namespace reexport */
@@ -2055,7 +2069,7 @@ function logAggregationError(collection, options) {
 /* unused harmony export listenToOnce */
 /* unused harmony export transaction */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type_r_mixture__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__collection__ = __webpack_require__(26);
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__collection__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__io_tools__ = __webpack_require__(10);
@@ -2066,11 +2080,11 @@ function logAggregationError(collection, options) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__relations__ = __webpack_require__(52);
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__transactions__ = __webpack_require__(2);
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_5__transactions__["b"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__record__["d"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_5__transactions__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__record__["d"]; });
 /* unused harmony reexport Class */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__linked_value__ = __webpack_require__(7);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_6__linked_value__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__linked_value__ = __webpack_require__(5);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_6__linked_value__["a"]; });
 var _a;
 if (typeof Symbol === 'undefined') {
     Object.defineProperty(window, 'Symbol', { value: { iterator: 'Symbol.iterator' }, configurable: true });
@@ -3075,7 +3089,7 @@ function addReference(listener, source) {
 /* unused harmony export doNothing */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return FunctionType; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__any__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__any__ = __webpack_require__(7);
 
 
 var ImmutableClassType = (function (_super) {
@@ -3213,7 +3227,7 @@ var FunctionType = (function (_super) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DateType; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__any__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__any__ = __webpack_require__(7);
 
 
 var DateType = (function (_super) {
@@ -3369,15 +3383,16 @@ var arrayHelpers = {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Collection; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__io_tools__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_value__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__record__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__transactions__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__add__ = __webpack_require__(48);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__commons__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__remove__ = __webpack_require__(49);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__set__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__arrayMethods__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__io_tools__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__record__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__transactions__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__add__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__arrayMethods__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__commons__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__remove__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__set__ = __webpack_require__(51);
 
 
 
@@ -3387,7 +3402,9 @@ var arrayHelpers = {
 
 
 
-var trigger2 = __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["h" /* eventsApi */].trigger2, begin = __WEBPACK_IMPORTED_MODULE_4__transactions__["c" /* transactionApi */].begin, commit = __WEBPACK_IMPORTED_MODULE_4__transactions__["c" /* transactionApi */].commit, markAsDirty = __WEBPACK_IMPORTED_MODULE_4__transactions__["c" /* transactionApi */].markAsDirty;
+
+
+var trigger2 = __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["h" /* eventsApi */].trigger2, begin = __WEBPACK_IMPORTED_MODULE_5__transactions__["c" /* transactionApi */].begin, commit = __WEBPACK_IMPORTED_MODULE_5__transactions__["c" /* transactionApi */].commit, markAsDirty = __WEBPACK_IMPORTED_MODULE_5__transactions__["c" /* transactionApi */].markAsDirty;
 var _count = 0;
 var CollectionRefsType = (function (_super) {
     __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](CollectionRefsType, _super);
@@ -3396,7 +3413,7 @@ var CollectionRefsType = (function (_super) {
     }
     CollectionRefsType.defaultValue = [];
     return CollectionRefsType;
-}(__WEBPACK_IMPORTED_MODULE_3__record__["e" /* SharedType */]));
+}(__WEBPACK_IMPORTED_MODULE_4__record__["e" /* SharedType */]));
 ;
 var Collection = (function (_super) {
     __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](Collection, _super);
@@ -3419,7 +3436,7 @@ var Collection = (function (_super) {
         _this._shared = shared || 0;
         if (records) {
             var elements = toElements(_this, records, options);
-            Object(__WEBPACK_IMPORTED_MODULE_8__set__["a" /* emptySetTransaction */])(_this, elements, options, true);
+            Object(__WEBPACK_IMPORTED_MODULE_10__set__["a" /* emptySetTransaction */])(_this, elements, options, true);
         }
         _this.initialize.apply(_this, arguments);
         if (_this._localEvents)
@@ -3440,13 +3457,13 @@ var Collection = (function (_super) {
         var Ctor = this;
         this._SubsetOf = null;
         function RefsCollection(a, b, listen) {
-            Ctor.call(this, a, b, __WEBPACK_IMPORTED_MODULE_4__transactions__["a" /* ItemsBehavior */].share | (listen ? __WEBPACK_IMPORTED_MODULE_4__transactions__["a" /* ItemsBehavior */].listen : 0));
+            Ctor.call(this, a, b, __WEBPACK_IMPORTED_MODULE_5__transactions__["a" /* ItemsBehavior */].share | (listen ? __WEBPACK_IMPORTED_MODULE_5__transactions__["a" /* ItemsBehavior */].listen : 0));
         }
         __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["d" /* Mixable */].mixins.populate(RefsCollection);
         RefsCollection.prototype = this.prototype;
         RefsCollection._metatype = CollectionRefsType;
         this.Refs = this.Subset = RefsCollection;
-        __WEBPACK_IMPORTED_MODULE_4__transactions__["b" /* Transactional */].onExtend.call(this, BaseClass);
+        __WEBPACK_IMPORTED_MODULE_5__transactions__["b" /* Transactional */].onExtend.call(this, BaseClass);
     };
     Collection.onDefine = function (definition, BaseClass) {
         if (definition.itemEvents) {
@@ -3456,7 +3473,7 @@ var Collection = (function (_super) {
         }
         if (definition.comparator !== void 0)
             this.prototype.comparator = definition.comparator;
-        __WEBPACK_IMPORTED_MODULE_4__transactions__["b" /* Transactional */].onDefine.call(this, definition);
+        __WEBPACK_IMPORTED_MODULE_5__transactions__["b" /* Transactional */].onDefine.call(this, definition);
     };
     Object.defineProperty(Collection.prototype, "__inner_state__", {
         get: function () { return this.models; },
@@ -3505,7 +3522,7 @@ var Collection = (function (_super) {
             return;
         var idAttribute = this.idAttribute;
         if (record.hasChanged(idAttribute)) {
-            Object(__WEBPACK_IMPORTED_MODULE_6__commons__["i" /* updateIndex */])(this._byId, record);
+            Object(__WEBPACK_IMPORTED_MODULE_8__commons__["i" /* updateIndex */])(this._byId, record);
         }
         var isRoot = begin(this);
         if (markAsDirty(this, options)) {
@@ -3528,9 +3545,9 @@ var Collection = (function (_super) {
         return this.models[Symbol.iterator]();
     };
     Collection.prototype.updateEach = function (iteratee) {
-        var isRoot = __WEBPACK_IMPORTED_MODULE_4__transactions__["c" /* transactionApi */].begin(this);
+        var isRoot = __WEBPACK_IMPORTED_MODULE_5__transactions__["c" /* transactionApi */].begin(this);
         this.each(iteratee);
-        isRoot && __WEBPACK_IMPORTED_MODULE_4__transactions__["c" /* transactionApi */].commit(this);
+        isRoot && __WEBPACK_IMPORTED_MODULE_5__transactions__["c" /* transactionApi */].commit(this);
     };
     Collection.prototype._validateNested = function (errors) {
         if (this._shared)
@@ -3548,7 +3565,7 @@ var Collection = (function (_super) {
     Collection.prototype.initialize = function () { };
     Collection.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
-        var models = this._shared & __WEBPACK_IMPORTED_MODULE_4__transactions__["a" /* ItemsBehavior */].share ? this.models : this.map(function (model) { return model.clone(); }), copy = new this.constructor(models, { model: this.model, comparator: this.comparator }, this._shared);
+        var models = this._shared & __WEBPACK_IMPORTED_MODULE_5__transactions__["a" /* ItemsBehavior */].share ? this.models : this.map(function (model) { return model.clone(); }), copy = new this.constructor(models, { model: this.model, comparator: this.comparator }, this._shared);
         if (options.pinStore)
             copy._defaultStore = this.getStore();
         return copy;
@@ -3595,7 +3612,7 @@ var Collection = (function (_super) {
         var _this = this;
         if (a_options === void 0) { a_options = {}; }
         var options = __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({ parse: true }, a_options), endpoint = this.getEndpoint();
-        return Object(__WEBPACK_IMPORTED_MODULE_1__io_tools__["b" /* startIO */])(this, endpoint.list(options, this), options, function (json) {
+        return Object(__WEBPACK_IMPORTED_MODULE_3__io_tools__["b" /* startIO */])(this, endpoint.list(options, this), options, function (json) {
             var result = _this.set(json, __WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({ parse: true, ioMethod: 'fetch' }, options));
             if (options.liveUpdates) {
                 result = _this.liveUpdates(options.liveUpdates);
@@ -3609,7 +3626,7 @@ var Collection = (function (_super) {
         var aggregated = !this._shared;
         for (var _i = 0, _a = this.models; _i < _a.length; _i++) {
             var record = _a[_i];
-            Object(__WEBPACK_IMPORTED_MODULE_6__commons__["d" /* free */])(this, record);
+            Object(__WEBPACK_IMPORTED_MODULE_8__commons__["d" /* free */])(this, record);
             if (aggregated)
                 record.dispose();
         }
@@ -3620,7 +3637,7 @@ var Collection = (function (_super) {
         if (options === void 0) { options = {}; }
         var isRoot = begin(this), previousModels = this.models;
         if (a_elements) {
-            Object(__WEBPACK_IMPORTED_MODULE_8__set__["a" /* emptySetTransaction */])(this, toElements(this, a_elements, options), options, true);
+            Object(__WEBPACK_IMPORTED_MODULE_10__set__["a" /* emptySetTransaction */])(this, toElements(this, a_elements, options), options, true);
         }
         else {
             this._byId = {};
@@ -3631,7 +3648,7 @@ var Collection = (function (_super) {
         var _byId = this._byId;
         for (var _i = 0, previousModels_1 = previousModels; _i < previousModels_1.length; _i++) {
             var toDispose = previousModels_1[_i];
-            _byId[toDispose.cid] || Object(__WEBPACK_IMPORTED_MODULE_6__commons__["d" /* free */])(this, toDispose);
+            _byId[toDispose.cid] || Object(__WEBPACK_IMPORTED_MODULE_8__commons__["d" /* free */])(this, toDispose);
         }
         isRoot && commit(this);
         return this.models;
@@ -3639,8 +3656,8 @@ var Collection = (function (_super) {
     Collection.prototype.add = function (a_elements, options) {
         if (options === void 0) { options = {}; }
         var elements = toElements(this, a_elements, options), transaction = this.models.length ?
-            Object(__WEBPACK_IMPORTED_MODULE_5__add__["a" /* addTransaction */])(this, elements, options) :
-            Object(__WEBPACK_IMPORTED_MODULE_8__set__["a" /* emptySetTransaction */])(this, elements, options);
+            Object(__WEBPACK_IMPORTED_MODULE_6__add__["a" /* addTransaction */])(this, elements, options) :
+            Object(__WEBPACK_IMPORTED_MODULE_10__set__["a" /* emptySetTransaction */])(this, elements, options);
         if (transaction) {
             transaction.commit();
             return transaction.added;
@@ -3650,26 +3667,29 @@ var Collection = (function (_super) {
         if (options === void 0) { options = {}; }
         if (recordsOrIds) {
             return Array.isArray(recordsOrIds) ?
-                Object(__WEBPACK_IMPORTED_MODULE_7__remove__["a" /* removeMany */])(this, recordsOrIds, options) :
-                Object(__WEBPACK_IMPORTED_MODULE_7__remove__["b" /* removeOne */])(this, recordsOrIds, options);
+                Object(__WEBPACK_IMPORTED_MODULE_9__remove__["a" /* removeMany */])(this, recordsOrIds, options) :
+                Object(__WEBPACK_IMPORTED_MODULE_9__remove__["b" /* removeOne */])(this, recordsOrIds, options);
         }
         return [];
+    };
+    Collection.prototype.$includes = function (idOrObj) {
+        return new LinkedIncludes(this, idOrObj);
     };
     Collection.prototype._createTransaction = function (a_elements, options) {
         if (options === void 0) { options = {}; }
         var elements = toElements(this, a_elements, options);
         if (this.models.length) {
             return options.remove === false ?
-                Object(__WEBPACK_IMPORTED_MODULE_5__add__["a" /* addTransaction */])(this, elements, options, true) :
-                Object(__WEBPACK_IMPORTED_MODULE_8__set__["b" /* setTransaction */])(this, elements, options);
+                Object(__WEBPACK_IMPORTED_MODULE_6__add__["a" /* addTransaction */])(this, elements, options, true) :
+                Object(__WEBPACK_IMPORTED_MODULE_10__set__["b" /* setTransaction */])(this, elements, options);
         }
         else {
-            return Object(__WEBPACK_IMPORTED_MODULE_8__set__["a" /* emptySetTransaction */])(this, elements, options);
+            return Object(__WEBPACK_IMPORTED_MODULE_10__set__["a" /* emptySetTransaction */])(this, elements, options);
         }
     };
     Collection.prototype.sort = function (options) {
         if (options === void 0) { options = {}; }
-        if (Object(__WEBPACK_IMPORTED_MODULE_6__commons__["h" /* sortElements */])(this, options)) {
+        if (Object(__WEBPACK_IMPORTED_MODULE_8__commons__["h" /* sortElements */])(this, options)) {
             var isRoot = begin(this);
             if (markAsDirty(this, options)) {
                 trigger2(this, 'sort', this, options);
@@ -3729,15 +3749,15 @@ var Collection = (function (_super) {
         return model;
     };
     var Collection_1;
-    Collection._metatype = __WEBPACK_IMPORTED_MODULE_3__record__["a" /* AggregatedType */];
+    Collection._metatype = __WEBPACK_IMPORTED_MODULE_4__record__["a" /* AggregatedType */];
     Collection = Collection_1 = __WEBPACK_IMPORTED_MODULE_0_tslib__["b" /* __decorate */]([
         Object(__WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["e" /* define */])({
             cidPrefix: 'c',
-            model: __WEBPACK_IMPORTED_MODULE_3__record__["d" /* Record */],
+            model: __WEBPACK_IMPORTED_MODULE_4__record__["d" /* Record */],
             _changeEventName: 'changes',
             _aggregationError: null
         }),
-        Object(__WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["l" /* mixins */])(__WEBPACK_IMPORTED_MODULE_9__arrayMethods__["a" /* ArrayMixin */]),
+        Object(__WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["l" /* mixins */])(__WEBPACK_IMPORTED_MODULE_7__arrayMethods__["a" /* ArrayMixin */]),
         Object(__WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["g" /* definitions */])({
             comparator: __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["k" /* mixinRules */].value,
             model: __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__["k" /* mixinRules */].protoValue,
@@ -3745,14 +3765,26 @@ var Collection = (function (_super) {
         })
     ], Collection);
     return Collection;
-}(__WEBPACK_IMPORTED_MODULE_4__transactions__["b" /* Transactional */]));
-
+}(__WEBPACK_IMPORTED_MODULE_5__transactions__["b" /* Transactional */]));
 
 function toElements(collection, elements, options) {
     var parsed = options.parse ? collection.parse(elements, options) : elements;
     return Array.isArray(parsed) ? parsed : [parsed];
 }
-__WEBPACK_IMPORTED_MODULE_3__record__["d" /* Record */].Collection = Collection;
+__WEBPACK_IMPORTED_MODULE_4__record__["d" /* Record */].Collection = Collection;
+var LinkedIncludes = (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](LinkedIncludes, _super);
+    function LinkedIncludes(collection, model) {
+        var _this = _super.call(this, collection.get(model)) || this;
+        _this.collection = collection;
+        _this.model = model;
+        return _this;
+    }
+    LinkedIncludes.prototype.set = function (x) {
+        this.collection.toggle(this.model);
+    };
+    return LinkedIncludes;
+}(__WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */]));
 
 
 /***/ }),
@@ -3827,7 +3859,7 @@ function (_Model) {
   }
 
   return Item;
-}(__WEBPACK_IMPORTED_MODULE_2__type_r_models__["b" /* Model */]), _class2.attributes = {
+}(__WEBPACK_IMPORTED_MODULE_2__type_r_models__["c" /* Model */]), _class2.attributes = {
   text: Object(__WEBPACK_IMPORTED_MODULE_2__type_r_models__["g" /* type */])(Identifier).required
 }, _temp)) || _class;
 
@@ -28750,7 +28782,7 @@ var ValidationError = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AggregatedType; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__transactions__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__any__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__any__ = __webpack_require__(7);
 
 
 
@@ -28862,7 +28894,7 @@ var AggregatedType = (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__type_r_mixture__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__transactions__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__any__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__any__ = __webpack_require__(7);
 
 
 
@@ -29428,7 +29460,7 @@ var IORecordMixin = {
 /* harmony export (immutable) */ __webpack_exports__["a"] = addAttributeLinks;
 /* unused harmony export ModelAttrRef */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_value__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_value__ = __webpack_require__(5);
 
 
 function addAttributeLinks(Model) {
@@ -29477,7 +29509,7 @@ var ModelAttrRef = (function (_super) {
         configurable: true
     });
     return ModelAttrRef;
-}(__WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */]));
+}(__WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */]));
 
 
 
@@ -29560,6 +29592,109 @@ function appendElements(collection, a_items, nested, a_options, forceMerge) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ArrayMixin; });
+var ArrayMixin = (function () {
+    function ArrayMixin() {
+    }
+    ArrayMixin.prototype.map = function (mapFilter, context) {
+        var models = this.models, length = models.length, res = Array(length), fun = context ? mapFilter.bind(context) : mapFilter;
+        for (var i = 0, j = 0; i < length; i++) {
+            var val = fun(models[i], i);
+            val === void 0 || (res[j++] = val);
+        }
+        if (i !== j) {
+            res.length = j;
+        }
+        return res;
+    };
+    ArrayMixin.prototype.each = function (fun, context) {
+        var models = this.models, length = models.length, iteratee = context ? fun.bind(context) : fun;
+        for (var i = 0; i < length; i++) {
+            iteratee(models[i], i);
+        }
+    };
+    ArrayMixin.prototype.firstMatch = function (doWhile, context) {
+        var models = this.models, length = models.length, iteratee = context ? doWhile.bind(context) : doWhile;
+        for (var i = 0; i < length; i++) {
+            var res = iteratee(models[i], i);
+            if (res !== void 0)
+                return res;
+        }
+    };
+    ArrayMixin.prototype.reduce = function (iteratee, init) {
+        return init === void 0 ? this.models.reduce(iteratee) : this.models.reduce(iteratee, init);
+    };
+    ArrayMixin.prototype.slice = function (begin, end) {
+        return this.models.slice(begin, end);
+    };
+    ArrayMixin.prototype.indexOf = function (modelOrId) {
+        return this.models.indexOf(this.get(modelOrId));
+    };
+    ArrayMixin.prototype.includes = function (idOrObj) {
+        return Boolean(this.get(idOrObj));
+    };
+    ArrayMixin.prototype.filter = function (iteratee, context) {
+        var fun = toPredicateFunction(iteratee);
+        return this.map(function (m) { return fun(m) ? m : void 0; }, context);
+    };
+    ArrayMixin.prototype.find = function (iteratee, context) {
+        var fun = toPredicateFunction(iteratee);
+        return this.firstMatch(function (m) { return fun(m) ? m : void 0; }, context);
+    };
+    ArrayMixin.prototype.some = function (iteratee, context) {
+        return Boolean(this.find(iteratee, context));
+    };
+    ArrayMixin.prototype.forEach = function (iteratee, context) {
+        this.each(iteratee, context);
+    };
+    ArrayMixin.prototype.values = function () {
+        return this.models.values();
+    };
+    ArrayMixin.prototype.entries = function () {
+        return this.models.entries();
+    };
+    ArrayMixin.prototype.every = function (iteratee, context) {
+        var fun = toPredicateFunction(iteratee);
+        return this.firstMatch(function (m) { return fun(m) ? void 0 : false; }, context) === void 0;
+    };
+    ArrayMixin.prototype.pluck = function (key) {
+        return this.map(function (model) { return model[key]; });
+    };
+    ArrayMixin.prototype.first = function () { return this.models[0]; };
+    ArrayMixin.prototype.last = function () { return this.models[this.models.length - 1]; };
+    ArrayMixin.prototype.at = function (a_index) {
+        var index = a_index < 0 ? a_index + this.models.length : a_index;
+        return this.models[index];
+    };
+    return ArrayMixin;
+}());
+
+var noOp = function (x) { return x; };
+function toPredicateFunction(iteratee) {
+    if (iteratee == null)
+        return noOp;
+    switch (typeof iteratee) {
+        case 'function': return iteratee;
+        case 'object':
+            var keys_1 = Object.keys(iteratee);
+            return function (x) {
+                for (var _i = 0, keys_2 = keys_1; _i < keys_2.length; _i++) {
+                    var key = keys_2[_i];
+                    if (iteratee[key] !== x[key])
+                        return false;
+                }
+                return true;
+            };
+        default: throw new Error('Invalid iteratee');
+    }
+}
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = removeOne;
 /* harmony export (immutable) */ __webpack_exports__["a"] = removeMany;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type_r_mixture__ = __webpack_require__(1);
@@ -29629,7 +29764,7 @@ function _reallocate(collection, removed) {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29733,109 +29868,6 @@ function _reallocateEmpty(self, source, options) {
 
 
 /***/ }),
-/* 51 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ArrayMixin; });
-var ArrayMixin = (function () {
-    function ArrayMixin() {
-    }
-    ArrayMixin.prototype.map = function (mapFilter, context) {
-        var models = this.models, length = models.length, res = Array(length), fun = context ? mapFilter.bind(context) : mapFilter;
-        for (var i = 0, j = 0; i < length; i++) {
-            var val = fun(models[i], i);
-            val === void 0 || (res[j++] = val);
-        }
-        if (i !== j) {
-            res.length = j;
-        }
-        return res;
-    };
-    ArrayMixin.prototype.each = function (fun, context) {
-        var models = this.models, length = models.length, iteratee = context ? fun.bind(context) : fun;
-        for (var i = 0; i < length; i++) {
-            iteratee(models[i], i);
-        }
-    };
-    ArrayMixin.prototype.firstMatch = function (doWhile, context) {
-        var models = this.models, length = models.length, iteratee = context ? doWhile.bind(context) : doWhile;
-        for (var i = 0; i < length; i++) {
-            var res = iteratee(models[i], i);
-            if (res !== void 0)
-                return res;
-        }
-    };
-    ArrayMixin.prototype.reduce = function (iteratee, init) {
-        return init === void 0 ? this.models.reduce(iteratee) : this.models.reduce(iteratee, init);
-    };
-    ArrayMixin.prototype.slice = function (begin, end) {
-        return this.models.slice(begin, end);
-    };
-    ArrayMixin.prototype.indexOf = function (modelOrId) {
-        return this.models.indexOf(this.get(modelOrId));
-    };
-    ArrayMixin.prototype.includes = function (idOrObj) {
-        return Boolean(this.get(idOrObj));
-    };
-    ArrayMixin.prototype.filter = function (iteratee, context) {
-        var fun = toPredicateFunction(iteratee);
-        return this.map(function (m) { return fun(m) ? m : void 0; }, context);
-    };
-    ArrayMixin.prototype.find = function (iteratee, context) {
-        var fun = toPredicateFunction(iteratee);
-        return this.firstMatch(function (m) { return fun(m) ? m : void 0; }, context);
-    };
-    ArrayMixin.prototype.some = function (iteratee, context) {
-        return Boolean(this.find(iteratee, context));
-    };
-    ArrayMixin.prototype.forEach = function (iteratee, context) {
-        this.each(iteratee, context);
-    };
-    ArrayMixin.prototype.values = function () {
-        return this.models.values();
-    };
-    ArrayMixin.prototype.entries = function () {
-        return this.models.entries();
-    };
-    ArrayMixin.prototype.every = function (iteratee, context) {
-        var fun = toPredicateFunction(iteratee);
-        return this.firstMatch(function (m) { return fun(m) ? void 0 : false; }, context) === void 0;
-    };
-    ArrayMixin.prototype.pluck = function (key) {
-        return this.map(function (model) { return model[key]; });
-    };
-    ArrayMixin.prototype.first = function () { return this.models[0]; };
-    ArrayMixin.prototype.last = function () { return this.models[this.models.length - 1]; };
-    ArrayMixin.prototype.at = function (a_index) {
-        var index = a_index < 0 ? a_index + this.models.length : a_index;
-        return this.models[index];
-    };
-    return ArrayMixin;
-}());
-
-var noOp = function (x) { return x; };
-function toPredicateFunction(iteratee) {
-    if (iteratee == null)
-        return noOp;
-    switch (typeof iteratee) {
-        case 'function': return iteratee;
-        case 'object':
-            var keys_1 = Object.keys(iteratee);
-            return function (x) {
-                for (var _i = 0, keys_2 = keys_1; _i < keys_2.length; _i++) {
-                    var key = keys_2[_i];
-                    if (iteratee[key] !== x[key])
-                        return false;
-                }
-                return true;
-            };
-        default: throw new Error('Invalid iteratee');
-    }
-}
-
-
-/***/ }),
 /* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -29858,7 +29890,7 @@ function toPredicateFunction(iteratee) {
 "use strict";
 /* unused harmony export memberOf */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__commons__ = __webpack_require__(27);
 
 
@@ -29912,7 +29944,7 @@ function memberOf(masterCollection, T) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__collection__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type_r_mixture__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__record__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__record__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__transactions__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__commons__ = __webpack_require__(27);
 
@@ -30071,7 +30103,7 @@ function toArray(elements) {
 "use strict";
 /* unused harmony export Store */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__record__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__transactions__ = __webpack_require__(2);
 
 
@@ -30210,7 +30242,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__linked_value__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__linked_value__ = __webpack_require__(5);
 /* unused harmony reexport Link */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__component__ = __webpack_require__(60);
 /* unused harmony namespace reexport */
@@ -30218,8 +30250,8 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__hooks__ = __webpack_require__(61);
 /* unused harmony namespace reexport */
 
-/* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__linked_value__["a" /* ValueLink */]);
-/** @deprecated, use `ValueLink` instead */
+/* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__linked_value__["a" /* Linked */]);
+/** @deprecated, use `Linked` instead */
 
 
 
@@ -30236,7 +30268,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__linked_value__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__linked_value__ = __webpack_require__(5);
 
 
 
@@ -30293,7 +30325,7 @@ var StateLink = /** @class */ (function (_super) {
         this.component.setState(attrs);
     };
     return StateLink;
-}(__WEBPACK_IMPORTED_MODULE_2__linked_value__["a" /* ValueLink */]));
+}(__WEBPACK_IMPORTED_MODULE_2__linked_value__["a" /* Linked */]));
 
 
 
@@ -30302,12 +30334,11 @@ var StateLink = /** @class */ (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export UseStateLink */
 /* unused harmony export useLink */
-/* unused harmony export useState$ */
-/* unused harmony export useSafeStateRef */
-/* unused harmony export useBoundStateRef */
-/* unused harmony export useSafeBoundStateRef */
+/* unused harmony export useLinked */
+/* unused harmony export useSafeLinked */
+/* unused harmony export useSyncLinked */
+/* unused harmony export useSafeSyncLinked */
 /* unused harmony export useSafeLink */
 /* unused harmony export useIsMountedRef */
 /* unused harmony export useBoundLink */
@@ -30316,22 +30347,22 @@ var StateLink = /** @class */ (function (_super) {
 /* unused harmony export useIO */
 /* unused harmony export whenChanged */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_value__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__linked_value__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
 
 
 
-var UseStateLink = /** @class */ (function (_super) {
-    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](UseStateLink, _super);
-    function UseStateLink(value, set) {
+var LinkedUseState = /** @class */ (function (_super) {
+    __WEBPACK_IMPORTED_MODULE_0_tslib__["c" /* __extends */](LinkedUseState, _super);
+    function LinkedUseState(value, set) {
         var _this = _super.call(this, value) || this;
         _this.set = set;
         return _this;
     }
     // Set the component's state value.
-    UseStateLink.prototype.set = function (x) { };
-    UseStateLink.prototype.update = function (fun, event) {
+    LinkedUseState.prototype.set = function (x) { };
+    LinkedUseState.prototype.update = function (fun, event) {
         // update function must be overriden to use state set
         // ability to delay an update, and to preserve link.update semantic.
         this.set(function (x) {
@@ -30339,15 +30370,14 @@ var UseStateLink = /** @class */ (function (_super) {
             return result === void 0 ? x : result;
         });
     };
-    return UseStateLink;
-}(__WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */]));
-
+    return LinkedUseState;
+}(__WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */]));
 /**
  * Create the ref to the local state.
  */
 function useLink(initialState) {
     var _a = Object(__WEBPACK_IMPORTED_MODULE_2_react__["useState"])(initialState), value = _a[0], set = _a[1];
-    return new UseStateLink(value, set);
+    return new LinkedUseState(value, set);
 }
 
 /**
@@ -30356,7 +30386,7 @@ function useLink(initialState) {
  */
 function useSafeLink(initialState) {
     var _a = Object(__WEBPACK_IMPORTED_MODULE_2_react__["useState"])(initialState), value = _a[0], set = _a[1], isMounted = useIsMountedRef();
-    return new UseStateLink(value, function (x) { return isMounted.current && set(x); });
+    return new LinkedUseState(value, function (x) { return isMounted.current && set(x); });
 }
 /**
  * Returns the ref which is true when component it mounted.
@@ -30371,7 +30401,7 @@ function useIsMountedRef() {
  * value or link in a single direction. When the source changes, the link changes too.
  */
 function useBoundLink(source) {
-    var value = source instanceof __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */] ? source.value : source, link = useLink(value);
+    var value = source instanceof __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */] ? source.value : source, link = useLink(value);
     Object(__WEBPACK_IMPORTED_MODULE_2_react__["useEffect"])(function () { return link.set(value); }, [value]);
     link.action;
     return link;
@@ -30382,7 +30412,7 @@ function useBoundLink(source) {
  * When the source change, the linked state changes too.
  */
 function useSafeBoundLink(source) {
-    var value = source instanceof __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */] ? source.value : source, link = useSafeLink(value);
+    var value = source instanceof __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */] ? source.value : source, link = useSafeLink(value);
     Object(__WEBPACK_IMPORTED_MODULE_2_react__["useEffect"])(function () { return link.set(value); }, [value]);
     return link;
 }
@@ -30398,9 +30428,9 @@ function useLocalStorage(key, state) {
     stateRef.current = state;
     Object(__WEBPACK_IMPORTED_MODULE_2_react__["useEffect"])(function () {
         var savedData = JSON.parse(localStorage.getItem(key) || '{}');
-        __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */].setValues(stateRef.current, savedData);
+        __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */].setValues(stateRef.current, savedData);
         return function () {
-            var dataToSave = __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* ValueLink */].getValues(stateRef.current);
+            var dataToSave = __WEBPACK_IMPORTED_MODULE_1__linked_value__["a" /* Linked */].getValues(stateRef.current);
             localStorage.setItem(key, JSON.stringify(dataToSave));
         };
     }, []);
@@ -30505,9 +30535,9 @@ function pureRenderProps(props, Comp) {
     return PureRenderWrapper;
 }
 function propForType(type, key) {
-    return type.prototype instanceof __WEBPACK_IMPORTED_MODULE_2__type_r_models__["c" /* Transactional */] ? "props." + key + " && props." + key + "._changeToken" :
+    return type.prototype instanceof __WEBPACK_IMPORTED_MODULE_2__type_r_models__["d" /* Transactional */] ? "props." + key + " && props." + key + "._changeToken" :
         type === Date ? "props." + key + " && props." + key + ".getTime()" :
-            type.prototype instanceof __WEBPACK_IMPORTED_MODULE_2__type_r_models__["d" /* ValueLink */] ? "props." + key + " && props." + key + ".value" :
+            type.prototype instanceof __WEBPACK_IMPORTED_MODULE_2__type_r_models__["b" /* Linked */] ? "props." + key + " && props." + key + ".value" :
                 "props." + key;
 }
 

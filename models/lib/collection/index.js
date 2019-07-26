@@ -1,9 +1,11 @@
 import * as tslib_1 from "tslib";
-import { startIO } from '../io-tools';
+import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, logger, Mixable, mixinRules, mixins } from '@type-r/mixture';
+import { startIO } from '../io-tools';
 import { AggregatedType, Record, SharedType } from '../record';
 import { ItemsBehavior, Transactional, transactionApi } from '../transactions';
 import { addTransaction } from './add';
+import { ArrayMixin } from './arrayMethods';
 import { free, sortElements, updateIndex } from './commons';
 import { removeMany, removeOne } from './remove';
 import { emptySetTransaction, setTransaction } from './set';
@@ -275,6 +277,9 @@ var Collection = (function (_super) {
         }
         return [];
     };
+    Collection.prototype.$includes = function (idOrObj) {
+        return new LinkedIncludes(this, idOrObj);
+    };
     Collection.prototype._createTransaction = function (a_elements, options) {
         if (options === void 0) { options = {}; }
         var elements = toElements(this, a_elements, options);
@@ -367,10 +372,22 @@ var Collection = (function (_super) {
     return Collection;
 }(Transactional));
 export { Collection };
-import { ArrayMixin } from './arrayMethods';
 function toElements(collection, elements, options) {
     var parsed = options.parse ? collection.parse(elements, options) : elements;
     return Array.isArray(parsed) ? parsed : [parsed];
 }
 Record.Collection = Collection;
+var LinkedIncludes = (function (_super) {
+    tslib_1.__extends(LinkedIncludes, _super);
+    function LinkedIncludes(collection, model) {
+        var _this = _super.call(this, collection.get(model)) || this;
+        _this.collection = collection;
+        _this.model = model;
+        return _this;
+    }
+    LinkedIncludes.prototype.set = function (x) {
+        this.collection.toggle(this.model);
+    };
+    return LinkedIncludes;
+}(Linked));
 //# sourceMappingURL=index.js.map

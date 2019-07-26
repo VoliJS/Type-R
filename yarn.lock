@@ -903,15 +903,15 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@linked/react@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@linked/react/-/react-3.0.5.tgz#ce36da193bd488dbb566e893690001190d31b01c"
-  integrity sha512-HVNBkw69I7A6ns/ad8i+VGfuEJ+PPOnQKvoQ0E6avHnoyI07UnPG3gxnSu0lF/DB8cZbkumBld0tW5ZgNktv7w==
+"@linked/react@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@linked/react/-/react-3.0.6.tgz#b95659c564e956511263868e2601b77d8b3f3be0"
+  integrity sha512-8Dk2OgfUru78ka9Sl4wdx1NQjG4/0Tg0gFe4aHLy5UEW44JFoaiJdfg65CCtdBgGY11VM+Qvv4p9LloVG5/v7A==
 
-"@linked/value@^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@linked/value/-/value-3.0.1.tgz#9542bd54029c67bd27e73274d3041143d5d2bcb8"
-  integrity sha512-6wAUnLcLCsWAIvLw6Wp91xb95d1OAIIPpo1y95+B4Lwl8Uzx8KcDQoZ+Q+QVtW+m/nBbdhkNZ1XDbEmxGZ5F2g==
+"@linked/value@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@linked/value/-/value-3.0.4.tgz#49e416511e6f8030bc36bb097606e8a856992ed7"
+  integrity sha512-8zNRgP/SeH7Fq8KI0G+P97Fg1UBjjdTxOKDFKmGd1bG2R+2R8lunKqxkc0XTGDO5ObTZbAcF564dKwmffhWyNw==
   dependencies:
     tslib "^1.9.3"
 

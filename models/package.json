@@ -56,6 +56,6 @@
   "dependencies": {
     "tslib": "*",
     "@type-r/mixture" : "^4.0.0",
-    "@linked/value" : "^3.0.0"
+    "@linked/value" : "^3.0.4"
   }
 }

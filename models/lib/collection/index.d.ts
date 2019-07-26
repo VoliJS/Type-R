@@ -1,8 +1,10 @@
-import { IOPromise } from '../io-tools';
+import { Linked } from '@linked/value';
 import { EventMap, EventsDefinition, TheType } from '@type-r/mixture';
+import { IOPromise } from '../io-tools';
 import { Record } from '../record';
 import { CloneOptions, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { AddOptions } from './add';
+import { ArrayMixin } from './arrayMethods';
 import { CollectionCore } from './commons';
 export declare type GenericComparator = string | ((x: Record) => number) | ((a: Record, b: Record) => number);
 export interface CollectionOptions extends TransactionOptions {
@@ -52,6 +54,7 @@ export declare class Collection<R extends Record = Record> extends Transactional
     reset(a_elements?: ElementsArg<R>, options?: TransactionOptions): R[];
     add(a_elements: ElementsArg<R>, options?: AddOptions): any;
     remove(recordsOrIds: any, options?: CollectionOptions): R[] | R;
+    $includes(idOrObj: R): Linked<boolean>;
     sort(options?: TransactionOptions): this;
     unset(modelOrId: R | string, options?: any): R;
     modelId(attrs: {}): any;
@@ -63,7 +66,6 @@ export declare class Collection<R extends Record = Record> extends Transactional
     unshift(model: ElementsArg<R>, options?: CollectionOptions): any;
     shift(options?: CollectionOptions): R;
 }
-import { ArrayMixin } from './arrayMethods';
 export interface Collection<R extends Record> extends ArrayMixin<R> {
 }
 export declare type LiveUpdatesOption = boolean | ((x: any) => boolean);

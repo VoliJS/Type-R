@@ -1,8 +1,10 @@
+import { Linked } from '@linked/value';
+import { define, definitions, EventMap, eventsApi, EventsDefinition, Logger, logger, LogLevel, Mixable, mixinRules, mixins, TheType } from '@type-r/mixture';
 import { IOPromise, startIO } from '../io-tools';
-import { define, definitions, EventMap, eventsApi, EventsDefinition, Logger, logger, LogLevel, Mixable, mixinRules, TheType, tools, mixins } from '@type-r/mixture';
 import { AggregatedType, Record, SharedType } from '../record';
 import { CloneOptions, ItemsBehavior, Transactional, TransactionalDefinition, transactionApi, TransactionOptions } from '../transactions';
 import { AddOptions, addTransaction } from './add';
+import { ArrayMixin } from './arrayMethods';
 import { CollectionCore, CollectionTransaction, Elements, free, sortElements, updateIndex } from './commons';
 import { removeMany, removeOne } from './remove';
 import { emptySetTransaction, setTransaction } from './set';
@@ -438,6 +440,10 @@ export class Collection< R extends Record = Record> extends Transactional implem
         return [];
     }
 
+    $includes( idOrObj : R ) : Linked<boolean> {
+        return new LinkedIncludes( this, idOrObj );
+    }
+
     // Apply bulk object update without any notifications, and return open transaction.
     // Used internally to implement two-phase commit.   
     /** @internal */
@@ -546,7 +552,6 @@ export class Collection< R extends Record = Record> extends Transactional implem
     }
 }
 
-import { ArrayMixin } from './arrayMethods'
 
 export interface Collection<R extends Record> extends ArrayMixin<R>{}
 
@@ -561,3 +566,15 @@ function toElements<R extends Record>( collection : Collection<R>, elements : El
 }
 
 Record.Collection = Collection;
+
+class LinkedIncludes extends Linked<boolean> {
+    constructor(
+        private collection,
+        private model : Record ){
+            super( collection.get( model ) )
+    }
+
+    set( x : boolean ) : void {
+        this.collection.toggle( this.model );
+    }
+}

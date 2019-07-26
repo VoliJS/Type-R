@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { ValueLink } from '@linked/value';
+import { Linked } from '@linked/value';
 export function addAttributeLinks(Model) {
     var prototype = Model.prototype;
     var _attributesArray = prototype._attributesArray;
@@ -46,6 +46,6 @@ var ModelAttrRef = (function (_super) {
         configurable: true
     });
     return ModelAttrRef;
-}(ValueLink));
+}(Linked));
 export { ModelAttrRef };
 //# sourceMappingURL=linked-attrs.js.map
