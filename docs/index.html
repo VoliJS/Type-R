@@ -153,20 +153,11 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <li><code>tests</code> - private package containing all the unit tests.</li>
 <li><code>examples/*</code> - example <code>@type-r/react</code> apps.</li>
 </ul>
-<h1 id="model-transactional-core">Model transactional core</h1>
-<h2 id="dependencies">Dependencies</h2>
-<pre><code>    index.ts 
-↑        ↑       
-|        |       
-|    define.ts   
-|        ↑          basicTypes.ts
-|        |        ↗
-|      attribute.ts → nestedTypes.ts
-|       ↑        /
-|       |       /
-transactions.ts
-
-</code></pre><h1 id="transactional-collections-core-implementation">Transactional collections core implementation</h1>
+<h1 id="models">Models</h1>
+<h2 id="defining-models">Defining models</h2>
+<h3 id="static-attributes-"><code>static</code> attributes = { ... }</h3>
+<h3 id="nested-model-definitions">Nested model definitions</h3>
+<h1 id="transactional-collections-core-implementation">Transactional collections core implementation</h1>
 <p>Collection implements two-phase commit transactions,
 and core manipulation methods.</p>
 <h2 id="folder-structure-and-dependencies">Folder structure and dependencies</h2>
@@ -427,6 +418,339 @@ logger.on( <span class="hljs-string">'error'</span>, ( subject, message, data ) 
     <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'There was an error, you know?'</span> );
 });
 </code></pre>
+<h1 id="release-notes">Release Notes</h1>
+<h2 id="v4-0">v4.0</h2>
+<h3 id="overview">Overview</h3>
+<p>The major goals of this release is to bring the support for writing React applications with React hooks and TypeScript.</p>
+<h3 id="npm-package-names-changes">npm package names changes</h3>
+<p>Renamed npm packages:</p>
+<ul>
+<li><code>type-r</code> -&gt; <code>@type-r/models</code></li>
+<li><code>type-r/ext-types</code> -&gt; <code>@type-r/ext-types</code></li>
+<li><code>type-r/globals</code> -&gt; <code>@type-r/globals</code></li>
+</ul>
+<p>Combined into one package:</p>
+<ul>
+<li><code>type-r/endpoints/*</code> -&gt; <code>@type-r/endpoints</code></li>
+</ul>
+<h3 id="-type-r-models-former-type-r-"><code>@type-r/models</code> (former <code>type-r</code>)</h3>
+<p>The main <code>type-r</code> package.</p>
+<ul>
+<li>More accurate TypeScript typings.</li>
+<li><code>Linked</code> class representing an abstract reference to the value; the foundation of two-way data-binding.</li>
+<li><code>model.$.attrName</code> returns linked attribute used for two-way data binding in React.</li>
+<li><code>AttributesMixin</code> - TypeScript interface to inject attribute types into the Model. Attribute decorators are deprecated and will be removed in v5.</li>
+</ul>
+<h3 id="-type-r-react-new-"><code>@type-r/react</code> (new)</h3>
+<p>New hooks-based React binding based on <code>@linked/react</code>:</p>
+<ul>
+<li>Local component state management with Type-R:<ul>
+<li><code>useModel( ModelClass )</code></li>
+<li><code>useCollection.of( ModelClass )</code></li>
+<li><code>useCollection.ofRefsTo( ModelClass )</code></li>
+<li><code>useCollection.subsetOf( collection )</code></li>
+</ul>
+</li>
+<li><code>pureRenderProps</code> - declarative pure render wrapper working with <code>Date</code>, <code>Linked</code>, type-r models and collections.</li>
+<li><code>useChanges( modelOrCollection )</code> - update React component when global model or collection changes.</li>
+<li><code>useLinked( value )</code> - create linked component state.</li>
+<li><code>useIO( async () =&gt; { ... } )</code> - perform an I/O with async functions.</li>
+</ul>
+<h3 id="-type-r-endpoints-former-type-r-endpoints-"><code>@type-r/endpoints</code> (former <code>type-r/endpoints/*</code>)</h3>
+<ul>
+<li><code>modelFetchIO</code> - read-only endpoint to fetch models.</li>
+<li><code>restfulIO</code> and <code>modelFetchIO</code> supports json data mocking. When <code>mockData</code> option is present, the HTTP is bypassed and I/O is simulated through the <code>memoryIO</code> endpoint. It makes it possible to develop frontend without a test server.</li>
+<li><code>restfulIO</code> and <code>modelFetchIO</code> support for templated URLs.</li>
+</ul>
+<h3 id="-type-r-mixture-new-"><code>@type-r/mixture</code> (new)</h3>
+<p>Type-R mixins, events, logging router, and helper functions factored out to the separate package.</p>
+<h2 id="v3-0">v3.0</h2>
+<h3 id="breaking-changes">Breaking changes</h3>
+<p>Changed semantic which needs to be refactored:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typeless attribute</td>
+<td><code>value(x)</code></td>
+<td><code>type(null).value(x)</code></td>
+</tr>
+<tr>
+<td>Infer type from the value</td>
+<td><code>x</code> (except functions)</td>
+<td><code>value(x)</code>, or <code>x</code> (except functions)</td>
+</tr>
+<tr>
+<td>model.parse() override</td>
+<td><code>model._parse(json)</code></td>
+<td>no such a method, remove it</td>
+</tr>
+<tr>
+<td>model attributes iteration</td>
+<td><code>model.forEachAttr(obj, iteratee)</code></td>
+<td><code>model.forEach(iteratee)</code></td>
+</tr>
+<tr>
+<td>Shared object</td>
+<td><code>User.shared</code></td>
+<td><code>shared( User )</code></td>
+</tr>
+<tr>
+<td>one-to-many relationship</td>
+<td><code>RecordClass.from( ref )</code></td>
+<td><code>memberOf( ref )</code></td>
+</tr>
+<tr>
+<td>many-to-many relationship</td>
+<td><code>CollectionClass.from( ref )</code></td>
+<td><code>subsetOf( ref, CollectionClass? )</code></td>
+</tr>
+<tr>
+<td>construct from object/array</td>
+<td>-</td>
+<td><code>RecordOrCollectionClass.from( json, options? )</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="new-attribute-definition-notation">New attribute definition notation</h3>
+<p>Starting from version 3.X, Type-R does not modify built-in global JS objects. New <code>type(T)</code> attribute definition notation is introduced to replace <code>T.has.</code></p>
+<p>There&#39;s <code>type-r/globals</code> package for compatibility with version 2.x which must be imported once with <code>import &#39;type-r/globals&#39;</code>.
+If this package is not used, the code must be refactored according to the rules below.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNIX Timestamp</td>
+<td><code>Date.timestamp</code></td>
+<td><code>import { Timestamp } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Microsoft date</td>
+<td><code>Date.microsoft</code></td>
+<td><code>import { MicrosoftDate } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Integer</td>
+<td><code>Integer</code> and <code>Number.integer</code></td>
+<td><code>import { Integer } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Create metatype from constructor</td>
+<td><code>Ctor.has</code></td>
+<td><code>type(Ctor)</code></td>
+</tr>
+<tr>
+<td>Typed attribute with default value</td>
+<td><code>Ctor.value(default)</code></td>
+<td><code>type(Ctor).value(default)</code></td>
+</tr>
+<tr>
+<td>Attribute &quot;Required&quot; check</td>
+<td><code>Ctor.isRequired</code></td>
+<td><code>type(Ctor).required</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="first-class-typescript-support">First-class TypeScript support</h3>
+<ul>
+<li><code>Infer&lt;typeof Metatype&gt;</code> infers TypeScript type from the Type-R attribute metatype.</li>
+<li><code>InferAttrs&lt;typeof attributes&gt;</code> infers TypeScript type for the Type-R attributes definitions.</li>
+<li><code>attributes({ attrDefs })</code> returns the properly typed TypeScript Model class.</li>
+</ul>
+<p>TypeScript attributes definitions:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extract Type-R type with Reflect.metadata</td>
+<td><code>@attr name : T</code></td>
+<td><code>@auto name : T</code></td>
+</tr>
+<tr>
+<td>Extract Type-R type &amp; specify the default value</td>
+<td>not possible</td>
+<td><code>@auto(default) name : T</code></td>
+</tr>
+<tr>
+<td>Explicitly specify the type</td>
+<td><code>@attr(T) name : T</code></td>
+<td><code>@type(T).as name : T</code></td>
+</tr>
+<tr>
+<td>Infer Type-R type from default value</td>
+<td><code>@attr(default) name : T</code></td>
+<td><code>@value(default).as name : T</code></td>
+</tr>
+<tr>
+<td>Specify type and default value</td>
+<td><code>@attr(T.value(default)) name : T</code></td>
+<td><code>@type(T).value(default).as name : T</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-improvements">Other improvements</h3>
+<ul>
+<li><code>Collection</code> class now proxies ES6 Array methods</li>
+<li>New logger API which easy to override or turn off.</li>
+<li>Improved error messages.</li>
+<li><code>Type.from( json, options? )</code> method to restore object from JSON with a strict type check and validation.</li>
+</ul>
+<pre><code class="highlight typescript"><span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> User <span class="hljs-keyword">extends</span> Model {
+    <span class="hljs-comment">// There's an HTTP REST enpoint for users.</span>
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+
+    <span class="hljs-meta">@auto</span> name : <span class="hljs-built_in">string</span>
+
+    <span class="hljs-comment">// Collection of Role models represented as an array of role.id in JSON.</span>
+    <span class="hljs-comment">// When the "roles" attribute will be accessed for the first time,</span>
+    <span class="hljs-comment">// User will look-up for a 'roles' attribute of the nearest store to resolve ids to actual Users.</span>
+    <span class="hljs-meta">@subsetOf</span>( <span class="hljs-string">'~roles'</span> ).as roles : Collection&lt;Role&gt;
+}
+
+<span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> Role <span class="hljs-keyword">extends</span> Model {
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    <span class="hljs-meta">@auto</span> name : <span class="hljs-built_in">string</span>
+}
+
+<span class="hljs-comment">// Store is the regular Model, nothing special.</span>
+<span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> UsersDirectory <span class="hljs-keyword">extends</span> Store {
+    <span class="hljs-comment">// When this model is fetched, fetch all the attributes instead.</span>
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+
+    <span class="hljs-comment">// '~roles' references from all aggregated collections</span>
+    <span class="hljs-comment">// will point to here, because this is the nearest store.</span>
+    <span class="hljs-meta">@type</span>( User.Collection ).as users : Collection&lt;User&gt;
+    <span class="hljs-meta">@type</span>( Role.Collection ).as roles : Collection&lt;Role&gt;
+}
+
+<span class="hljs-keyword">const</span> directory = <span class="hljs-keyword">new</span> UsersDirectory();
+<span class="hljs-keyword">await</span> directory.fetch();
+
+<span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> user of directory.users ){
+    assert( user.roles.first().users.first() instanceOf User );
+}
+</code></pre>
+<h2 id="v2-1">v2.1</h2>
+<p>This release adds long-awaited HTTP REST endpoint.</p>
+<ul>
+<li>IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.</li>
+<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
+<li>Added proxyIO endpoint for creating endpoints from models on the server side (<a href="https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
+</ul>
+<h2 id="v2-0">v2.0</h2>
+<p>This release brings new features which fixes problems with component&#39;s inheritance in React bindings and implements long-awaited generic IO implementation based on ES6 promises.</p>
+<p>There shouldn&#39;t be breaking changes <em>unless</em> you&#39;re using custom logger or React bindings (formerly known as React-MVx, with a name changed to React-R in new release).</p>
+<h3 id="generic-io-support">Generic IO support</h3>
+<p>New <a href="">IOEndpoint</a> concept is introduced, making it easy to create IO abstractions. To enable <code>Model</code> and <code>Collection</code> IO API, you need to assign IO endpoint in the class definition.</p>
+<p>Endpoint is the class defining CRUD and list operations on JSON data, as well as the methods to subscribe for the data changes. There are two endpoints included with 2.0 release, <code>memoryIO</code> which is suitable for mock testing and <code>localStorageIO</code> which could be used in demos and prototypes. They can be used as a references as starting points to define your own IO endpoints.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+</code></pre>
+<p>There are three Model IO methods (<code>save()</code>, <code>fetch()</code>, and <code>destroy()</code>) and two collection IO method (<code>fetch()</code> and <code>liveUpdates()</code>) ). All IO methods returns ES6 promises, so you either must have the runtime supporting ES6 or use the ES6 promise polyfill. The promises are modified to be <em>abortable</em> (all of them have <code>abort()</code> method).</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User({ <span class="hljs-attr">name</span> : <span class="hljs-string">'John'</span> });
+user.save().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log( <span class="hljs-string">`new user is added <span class="hljs-subst">${ user.id }</span>`</span> )
+});
+</code></pre>
+<p>There&#39;s the special <code>attributesIO()</code> endpoint to fetch all of attributes independently and return the combined promise. This is the recommended way of fetching the data required by SPA page.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : UserRole.Collection,
+        ...
+    }
+}
+
+<span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> PageStore();
+store.fetch().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>{
+    <span class="hljs-comment">// render your page</span>
+});
+</code></pre>
+<p>It&#39;s possible to define or override the defined endpoint for the nested model or collection using <code>type().endpoint()</code> type-R attribute annotation.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : type( User.Collection ).endpoint( restful( <span class="hljs-string">'/api/users'</span> ) ),
+        <span class="hljs-attr">roles</span> : type( UserRole.Collection ).endpoint( restful( <span class="hljs-string">'/api/userroles'</span> ) ),
+        ...
+    }
+}
+</code></pre>
+<aside class="notice">
+Please note, that `restful` endpoint is not included with 2.0 release but is planned for the future 2.x releases.
+</aside>
+
+<h3 id="new-mixins-engine">New mixins engine</h3>
+<p>Type-R metaprogramming system built on powerful mixins composition with configurable member merge rules. In 2.0 release, mixins engine was rewritten to properly apply merge rules on inheritance. This feature is heavily used in Type-R React&#39;s bindings and is crucial to prevent errors when extending the <code>React.Component</code> subclasses.</p>
+<p>An example illustrating the principle:</p>
+<pre><code class="highlight javascript">@define
+<span class="hljs-comment">// Define the class with </span>
+@mixinRules({
+    <span class="hljs-attr">componentWillMount</span> : mixinRules.classLast,
+    <span class="hljs-attr">componentWillUnmount</span> : mixinRules.classFirst
+})
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Component</span> </span>{
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">1</span> );
+    }
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">3</span> );
+    }
+}
+
+@define
+@mixins({
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">2</span> );
+    },
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">2</span> );
+    }
+})
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBaseComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">3</span> );
+    }
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">1</span> );
+    }
+}
+</code></pre>
+<p>In this example, all of the methods defined in the mixin, base class, and subclass will be called in the order specified in the <code>console.log</code>.</p>
+<h3 id="other-changes">Other changes</h3>
+<ul>
+<li>Update pipeline was rewritten to improve model&#39;s initialization speed (collection&#39;s fetch speed is improved by 30%).</li>
+<li>Fixed bug causing dynamic type checks to be disabled in models constructors.</li>
+<li>New implementation of the <code>Collection.subsetOf</code> which both fixes some edge case bugs and is more efficient.</li>
+<li>New logger handling NODE_ENV variable setting.</li>
+</ul>
         </div>
     </div>
   </body>

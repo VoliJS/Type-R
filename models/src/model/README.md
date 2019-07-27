@@ -1,14 +1,8 @@
-# Model transactional core
+# Models
 
-## Dependencies
+## Defining models
 
-        index.ts 
-    ↑        ↑       
-    |        |       
-    |    define.ts   
-    |        ↑          basicTypes.ts
-    |        |        ↗
-    |      attribute.ts → nestedTypes.ts
-    |       ↑        /
-    |       |       /
-    transactions.ts
+### `static` attributes = { ... }
+
+### Nested model definitions
+
