@@ -18,7 +18,7 @@ There are virtually no point in unit-testing Type-R models as they are mostly de
 
 ## React integration
 
-Data structures defined with Type-R are deeply observable by default. They can be used to manage the state of React applications right out of box utilizing "unidirectional data flow" with no additional tooling. Type-R data structures support two-way data binding and attribute-level validation rules, making the a complex forms UI a trivial task.
+Data structures defined with Type-R are deeply observable by default. They can be used to manage the state of React applications right out of box utilizing "unidirectional data flow" with no additional tooling. Type-R data structures support two-way data binding and attribute-level validation rules, making the a complex forms UI a trivial task. Normally, you don't change your UI code to add validation, just add the validation check to model's attributes.
 
 ## Example
 

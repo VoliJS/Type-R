@@ -125,6 +125,7 @@ export function shared(Constructor) {
         _metatype: SharedType
     });
 }
+export { shared as refTo };
 export function value(x) {
     var Type = inferType(x), AttrDef = Type && Type.prototype instanceof Transactional ? shared(Type) :
         type(Type);

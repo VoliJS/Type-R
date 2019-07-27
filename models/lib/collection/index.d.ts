@@ -1,7 +1,7 @@
 import { Linked } from '@linked/value';
 import { EventMap, EventsDefinition, TheType } from '@type-r/mixture';
 import { IOPromise } from '../io-tools';
-import { Model } from '../model';
+import { Model, shared } from '../model';
 import { CloneOptions, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { AddOptions } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -27,6 +27,7 @@ export declare class Collection<R extends Model = Model> extends Transactional i
     static ofRefs<M extends typeof Model>(Ctor: M): CollectionOf<M>;
     static Subset: typeof Collection;
     static Refs: any;
+    static refsTo: typeof shared;
     createSubset(models: ElementsArg<R>, options?: CollectionOptions): Collection<R>;
     static onExtend(BaseClass: typeof Transactional): void;
     static onDefine(definition: CollectionDefinition, BaseClass: any): void;

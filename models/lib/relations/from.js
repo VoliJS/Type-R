@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { AnyType, ChainableAttributeSpec } from '../model';
+import { AnyType, ChainableAttributeSpec, Model } from '../model';
 import { parseReference } from './commons';
 var ModelRefType = (function (_super) {
     tslib_1.__extends(ModelRefType, _super);
@@ -19,7 +19,7 @@ var ModelRefType = (function (_super) {
     ModelRefType.prototype.validate = function (model, value, name) { };
     return ModelRefType;
 }(AnyType));
-export function memberOf(masterCollection, T) {
+function theMemberOf(masterCollection, T) {
     var getMasterCollection = parseReference(masterCollection);
     var typeSpec = new ChainableAttributeSpec({
         value: null,
@@ -39,4 +39,6 @@ export function memberOf(masterCollection, T) {
         return record;
     });
 }
+export { theMemberOf as memberOf };
+Model.memberOf = theMemberOf;
 //# sourceMappingURL=from.js.map

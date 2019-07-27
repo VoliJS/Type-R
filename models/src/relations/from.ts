@@ -38,7 +38,7 @@ class ModelRefType extends AnyType {
     validate( model, value, name ){}
 }
 
-export function memberOf<R extends typeof Model>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<R> {
+function theMemberOf<R extends typeof Model>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<R> {
     const getMasterCollection = parseReference( masterCollection );
 
     const typeSpec = new ChainableAttributeSpec<R>({
@@ -67,3 +67,13 @@ export function memberOf<R extends typeof Model>( this : void, masterCollection 
             return record;
         });
 }
+
+export { theMemberOf as memberOf }
+
+declare module '../model' {
+    namespace Model {
+        export const memberOf : <R extends typeof Model>( this : R, masterCollection : CollectionReference ) => ChainableAttributeSpec<R>;
+    }
+}
+
+( Model as any ).memberOf = theMemberOf;

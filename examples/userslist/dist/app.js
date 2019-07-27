@@ -87,9 +87,9 @@
 /******/ ({
 
 /***/ "../../endpoints/lib/attributes.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/attributes.js ***!
-  \******************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/attributes.js ***!
+  \****************************************************************/
 /*! exports provided: attributesIO, AttributesEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -132,9 +132,9 @@ var AttributesEndpoint = (function () {
 /***/ }),
 
 /***/ "../../endpoints/lib/fetchModel.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/fetchModel.js ***!
-  \******************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/fetchModel.js ***!
+  \****************************************************************/
 /*! exports provided: fetchModelIO */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -212,9 +212,9 @@ var ModelFetchEndpoint = (function (_super) {
 /***/ }),
 
 /***/ "../../endpoints/lib/index.js":
-/*!*************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/index.js ***!
-  \*************************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/index.js ***!
+  \***********************************************************/
 /*! exports provided: create, restfulIO, RestfulEndpoint, fetchModelIO, memoryIO, MemoryEndpoint, proxyIO, ProxyEndpoint, localStorageIO, LocalStorageEndpoint, attributesIO, AttributesEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -261,9 +261,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../endpoints/lib/localStorage.js":
-/*!********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/localStorage.js ***!
-  \********************************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/localStorage.js ***!
+  \******************************************************************/
 /*! exports provided: localStorageIO, LocalStorageEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -352,9 +352,9 @@ var LocalStorageEndpoint = (function () {
 /***/ }),
 
 /***/ "../../endpoints/lib/memory.js":
-/*!**************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/memory.js ***!
-  \**************************************************************/
+/*!************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/memory.js ***!
+  \************************************************************/
 /*! exports provided: memoryIO, MemoryEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -439,9 +439,9 @@ var MemoryEndpoint = (function () {
 /***/ }),
 
 /***/ "../../endpoints/lib/proxy.js":
-/*!*************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/proxy.js ***!
-  \*************************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/proxy.js ***!
+  \***********************************************************/
 /*! exports provided: proxyIO, ProxyEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -583,9 +583,9 @@ function fillAttrs(res, doc, attrs) {
 /***/ }),
 
 /***/ "../../endpoints/lib/restful.js":
-/*!***************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/endpoints/lib/restful.js ***!
-  \***************************************************************/
+/*!*************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/endpoints/lib/restful.js ***!
+  \*************************************************************/
 /*! exports provided: create, restfulIO, RestfulEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -726,9 +726,9 @@ function simulateIO() {
 /***/ }),
 
 /***/ "../../mixture/lib/events.js":
-/*!************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/events.js ***!
-  \************************************************************/
+/*!**********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/events.js ***!
+  \**********************************************************/
 /*! exports provided: EventMap, Messenger, Events */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -875,9 +875,9 @@ function addReference(listener, source) {
 /***/ }),
 
 /***/ "../../mixture/lib/eventsource.js":
-/*!*****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/eventsource.js ***!
-  \*****************************************************************/
+/*!***************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/eventsource.js ***!
+  \***************************************************************/
 /*! exports provided: EventMap, EventDescriptor, EventHandler, on, once, off, strings, trigger2, trigger3, trigger5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1102,9 +1102,9 @@ function trigger5(self, name, a, b, c, d, e) {
 /***/ }),
 
 /***/ "../../mixture/lib/index.js":
-/*!***********************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/index.js ***!
-  \***********************************************************/
+/*!*********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/index.js ***!
+  \*********************************************************/
 /*! exports provided: tools, eventsApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1165,9 +1165,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../mixture/lib/logging.js":
-/*!*************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/logging.js ***!
-  \*************************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/logging.js ***!
+  \***********************************************************/
 /*! exports provided: isProduction, logEvents, Logger, logger, throwingLogger, log */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1256,9 +1256,9 @@ var log = logger.trigger.bind(logger);
 /***/ }),
 
 /***/ "../../mixture/lib/mixins.js":
-/*!************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/mixins.js ***!
-  \************************************************************/
+/*!**********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/mixins.js ***!
+  \**********************************************************/
 /*! exports provided: Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1524,9 +1524,9 @@ function resolveRule(dest, source, rule) {
 /***/ }),
 
 /***/ "../../mixture/lib/tools.js":
-/*!***********************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/mixture/lib/tools.js ***!
-  \***********************************************************/
+/*!*********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/tools.js ***!
+  \*********************************************************/
 /*! exports provided: defaults, isValidJSON, getBaseClass, assignToClassProto, isEmpty, some, every, getPropertyDescriptor, omit, transform, fastAssign, fastDefaults, assign, keys, once, notEqual, hashMap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1753,9 +1753,9 @@ function hashMap(obj) {
 /***/ }),
 
 /***/ "../../models/lib/collection/add.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/add.js ***!
-  \*******************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/add.js ***!
+  \*****************************************************************/
 /*! exports provided: addTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1833,9 +1833,9 @@ function appendElements(collection, a_items, nested, a_options, forceMerge) {
 /***/ }),
 
 /***/ "../../models/lib/collection/arrayMethods.js":
-/*!****************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/arrayMethods.js ***!
-  \****************************************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/arrayMethods.js ***!
+  \**************************************************************************/
 /*! exports provided: ArrayMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1942,9 +1942,9 @@ function toPredicateFunction(iteratee) {
 /***/ }),
 
 /***/ "../../models/lib/collection/commons.js":
-/*!***********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/commons.js ***!
-  \***********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/commons.js ***!
+  \*********************************************************************/
 /*! exports provided: dispose, convertAndAquire, free, freeAll, sortElements, addIndex, removeIndex, updateIndex, CollectionTransaction, logAggregationError */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2098,9 +2098,9 @@ function logAggregationError(collection, options) {
 /***/ }),
 
 /***/ "../../models/lib/collection/index.js":
-/*!*********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/index.js ***!
-  \*********************************************************************/
+/*!*******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/index.js ***!
+  \*******************************************************************/
 /*! exports provided: Collection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2474,6 +2474,7 @@ var Collection = (function (_super) {
         return model;
     };
     var Collection_1;
+    Collection.refsTo = _model__WEBPACK_IMPORTED_MODULE_4__["shared"];
     Collection._metatype = _model__WEBPACK_IMPORTED_MODULE_4__["AggregatedType"];
     Collection = Collection_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["define"])({
@@ -2515,9 +2516,9 @@ var LinkedIncludes = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/collection/remove.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/remove.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/remove.js ***!
+  \********************************************************************/
 /*! exports provided: removeOne, removeMany */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2594,9 +2595,9 @@ function _reallocate(collection, removed) {
 /***/ }),
 
 /***/ "../../models/lib/collection/set.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/collection/set.js ***!
-  \*******************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/set.js ***!
+  \*****************************************************************/
 /*! exports provided: emptySetTransaction, setTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2704,10 +2705,10 @@ function _reallocateEmpty(self, source, options) {
 /***/ }),
 
 /***/ "../../models/lib/index.js":
-/*!**********************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/index.js ***!
-  \**********************************************************/
-/*! exports provided: Record, Class, Linked, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, tools, eventsApi, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, type, shared, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*!********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/index.js ***!
+  \********************************************************/
+/*! exports provided: Record, Class, Linked, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, tools, eventsApi, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, type, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2792,6 +2793,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "shared", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["shared"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "refTo", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["refTo"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["value"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["getMetatype"]; });
@@ -2869,9 +2872,9 @@ function transaction(method) {
 /***/ }),
 
 /***/ "../../models/lib/io-tools.js":
-/*!*************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/io-tools.js ***!
-  \*************************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/io-tools.js ***!
+  \***********************************************************/
 /*! exports provided: getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2944,10 +2947,10 @@ function triggerAndBubble(eventSource) {
 /***/ }),
 
 /***/ "../../models/lib/model/attrDef.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/attrDef.js ***!
-  \******************************************************************/
-/*! exports provided: ChainableAttributeSpec, type, shared, value */
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/attrDef.js ***!
+  \****************************************************************/
+/*! exports provided: ChainableAttributeSpec, type, shared, refTo, value */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2955,6 +2958,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChainableAttributeSpec", function() { return ChainableAttributeSpec; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "type", function() { return type; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shared", function() { return shared; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "refTo", function() { return shared; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
@@ -3086,6 +3090,7 @@ function shared(Constructor) {
         _metatype: _metatypes__WEBPACK_IMPORTED_MODULE_2__["SharedType"]
     });
 }
+
 function value(x) {
     var Type = inferType(x), AttrDef = Type && Type.prototype instanceof _transactions__WEBPACK_IMPORTED_MODULE_1__["Transactional"] ? shared(Type) :
         type(Type);
@@ -3112,10 +3117,10 @@ function inferType(value) {
 /***/ }),
 
 /***/ "../../models/lib/model/index.js":
-/*!****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/index.js ***!
-  \****************************************************************/
-/*! exports provided: Model, attributes, auto, ChainableAttributeSpec, type, shared, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/index.js ***!
+  \**************************************************************/
+/*! exports provided: Model, attributes, auto, ChainableAttributeSpec, type, shared, refTo, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3136,6 +3141,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "type", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["type"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "shared", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["shared"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "refTo", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["refTo"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["value"]; });
 
@@ -3251,9 +3258,9 @@ function auto(proto, attrName) {
 /***/ }),
 
 /***/ "../../models/lib/model/io-mixin.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/io-mixin.js ***!
-  \*******************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/io-mixin.js ***!
+  \*****************************************************************/
 /*! exports provided: IOModelMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3300,9 +3307,9 @@ var IOModelMixin = {
 /***/ }),
 
 /***/ "../../models/lib/model/linked-attrs.js":
-/*!***********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/linked-attrs.js ***!
-  \***********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/linked-attrs.js ***!
+  \*********************************************************************/
 /*! exports provided: addAttributeLinks, ModelAttrRef */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3367,9 +3374,9 @@ var ModelAttrRef = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/any.js":
-/*!************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/any.js ***!
-  \************************************************************************/
+/*!**********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/any.js ***!
+  \**********************************************************************/
 /*! exports provided: AnyType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3520,9 +3527,9 @@ function wrapIsRequired(validate) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/basic.js":
-/*!**************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/basic.js ***!
-  \**************************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/basic.js ***!
+  \************************************************************************/
 /*! exports provided: ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3670,9 +3677,9 @@ var FunctionType = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/date.js":
-/*!*************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/date.js ***!
-  \*************************************************************************/
+/*!***********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/date.js ***!
+  \***********************************************************************/
 /*! exports provided: DateType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3761,9 +3768,9 @@ function safeParseDate(date) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/index.js":
-/*!**************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/index.js ***!
-  \**************************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/index.js ***!
+  \************************************************************************/
 /*! exports provided: getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3822,9 +3829,9 @@ function resolveBuiltins(Ctor) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/owned.js":
-/*!**************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/owned.js ***!
-  \**************************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/owned.js ***!
+  \************************************************************************/
 /*! exports provided: AggregatedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3939,9 +3946,9 @@ var AggregatedType = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/shared.js":
-/*!***************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/metatypes/shared.js ***!
-  \***************************************************************************/
+/*!*************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/shared.js ***!
+  \*************************************************************************/
 /*! exports provided: SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4056,9 +4063,9 @@ function ignore() { }
 /***/ }),
 
 /***/ "../../models/lib/model/mixin.js":
-/*!****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/mixin.js ***!
-  \****************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/mixin.js ***!
+  \**************************************************************/
 /*! exports provided: createAttribute, createAttributesMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4119,9 +4126,9 @@ function createWatcherFromRef(ref, key) {
 /***/ }),
 
 /***/ "../../models/lib/model/model.js":
-/*!****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/model.js ***!
-  \****************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/model.js ***!
+  \**************************************************************/
 /*! exports provided: Model, ModelEntriesIterator */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4481,9 +4488,9 @@ var ModelEntriesIterator = (function () {
 /***/ }),
 
 /***/ "../../models/lib/model/updates.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/model/updates.js ***!
-  \******************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/updates.js ***!
+  \****************************************************************/
 /*! exports provided: setAttribute, UpdateModelMixin, unknownAttrsWarning, constructorsMixin, shouldBeAnObject, ModelTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4619,9 +4626,9 @@ var ModelTransaction = (function () {
 /***/ }),
 
 /***/ "../../models/lib/relations/commons.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/relations/commons.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/commons.js ***!
+  \********************************************************************/
 /*! exports provided: parseReference */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4646,15 +4653,15 @@ function parseReference(collectionRef) {
 /***/ }),
 
 /***/ "../../models/lib/relations/from.js":
-/*!*******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/relations/from.js ***!
-  \*******************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/from.js ***!
+  \*****************************************************************/
 /*! exports provided: memberOf */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memberOf", function() { return memberOf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memberOf", function() { return theMemberOf; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _commons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./commons */ "../../models/lib/relations/commons.js");
@@ -4679,7 +4686,7 @@ var ModelRefType = (function (_super) {
     ModelRefType.prototype.validate = function (model, value, name) { };
     return ModelRefType;
 }(_model__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
-function memberOf(masterCollection, T) {
+function theMemberOf(masterCollection, T) {
     var getMasterCollection = Object(_commons__WEBPACK_IMPORTED_MODULE_2__["parseReference"])(masterCollection);
     var typeSpec = new _model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]({
         value: null,
@@ -4700,13 +4707,15 @@ function memberOf(masterCollection, T) {
     });
 }
 
+_model__WEBPACK_IMPORTED_MODULE_1__["Model"].memberOf = theMemberOf;
+
 
 /***/ }),
 
 /***/ "../../models/lib/relations/index.js":
-/*!********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/relations/index.js ***!
-  \********************************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/index.js ***!
+  \******************************************************************/
 /*! exports provided: memberOf, subsetOf, Store */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4729,9 +4738,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../models/lib/relations/store.js":
-/*!********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/relations/store.js ***!
-  \********************************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/store.js ***!
+  \******************************************************************/
 /*! exports provided: Store */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4777,9 +4786,9 @@ Store.global = new Store();
 /***/ }),
 
 /***/ "../../models/lib/relations/subsetOf.js":
-/*!***********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/relations/subsetOf.js ***!
-  \***********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/subsetOf.js ***!
+  \*********************************************************************/
 /*! exports provided: subsetOf */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4944,9 +4953,9 @@ function toArray(elements) {
 /***/ }),
 
 /***/ "../../models/lib/transactions.js":
-/*!*****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/transactions.js ***!
-  \*****************************************************************/
+/*!***************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/transactions.js ***!
+  \***************************************************************/
 /*! exports provided: ItemsBehavior, Transactional, transactionApi */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5160,9 +5169,9 @@ function getOwnerEndpoint(self) {
 /***/ }),
 
 /***/ "../../models/lib/traversable.js":
-/*!****************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/traversable.js ***!
-  \****************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/traversable.js ***!
+  \**************************************************************/
 /*! exports provided: CompiledReference, resolveReference */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5216,9 +5225,9 @@ function resolveReference(root, reference, action) {
 /***/ }),
 
 /***/ "../../models/lib/validation.js":
-/*!***************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/models/lib/validation.js ***!
-  \***************************************************************/
+/*!*************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/validation.js ***!
+  \*************************************************************/
 /*! exports provided: ValidationError */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5257,10 +5266,645 @@ var ValidationError = (function () {
 
 /***/ }),
 
-/***/ "../../node_modules/@linked/value/lib/helpers.js":
+/***/ "../../node_modules/@babel/runtime/helpers/assertThisInitialized.js":
+/*!*************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
+  \*************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+module.exports = _assertThisInitialized;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/asyncToGenerator.js":
+/*!********************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+module.exports = _asyncToGenerator;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/classCallCheck.js":
+/*!******************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/classCallCheck.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+module.exports = _classCallCheck;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/createClass.js":
+/*!***************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/createClass.js ***!
+  \***************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+module.exports = _createClass;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/extends.js":
+/*!***********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/extends.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _extends() {
+  module.exports = _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+module.exports = _extends;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/getPrototypeOf.js":
+/*!******************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/inherits.js":
+/*!************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/inherits.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf */ "../../node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inherits;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/objectWithoutProperties.js":
+/*!***************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/objectWithoutProperties.js ***!
+  \***************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var objectWithoutPropertiesLoose = __webpack_require__(/*! ./objectWithoutPropertiesLoose */ "../../node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js");
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+module.exports = _objectWithoutProperties;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js":
+/*!********************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+module.exports = _objectWithoutPropertiesLoose;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js":
+/*!*****************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ../helpers/typeof */ "../../node_modules/@babel/runtime/helpers/typeof.js");
+
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized */ "../../node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return assertThisInitialized(self);
+}
+
+module.exports = _possibleConstructorReturn;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/setPrototypeOf.js":
+/*!******************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
+  \******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/helpers/typeof.js":
+/*!**********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/helpers/typeof.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+
+function _typeof(obj) {
+  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return _typeof2(obj);
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ }),
+
+/***/ "../../node_modules/@babel/runtime/regenerator/index.js":
+/*!*************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@babel/runtime/regenerator/index.js ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ "../../node_modules/regenerator-runtime/runtime.js");
+
+
+/***/ }),
+
+/***/ "../../node_modules/@linked/react/lib/component.js":
 /*!********************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/@linked/value/lib/helpers.js ***!
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/component.js ***!
   \********************************************************************************/
+/*! exports provided: LinkedComponent, StateLink */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return LinkedComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return StateLink; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _linked_value__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/value */ "../../node_modules/@linked/value/lib/index.js");
+
+
+
+var LinkedComponent = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](LinkedComponent, _super);
+    function LinkedComponent() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.links = null;
+        return _this;
+    }
+    // @deprecated use `this.$at( key )`
+    LinkedComponent.prototype.linkAt = function (key) {
+        return this.$at(key);
+    };
+    // Get the link to the state member with the given key.
+    LinkedComponent.prototype.$at = function (key) {
+        var value = this.state[key], cache = this.links || (this.links = {}), cached = cache[key];
+        return cached && cached.value === value ?
+            cached :
+            cache[key] = new StateLink(this, key, value);
+    };
+    LinkedComponent.prototype.linkAll = function () {
+        return this.state$.apply(this, arguments);
+    };
+    LinkedComponent.prototype.state$ = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var state = this.state, cache = this.links || (this.links = {}), keys = args.length ? args : Object.keys(state);
+        for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
+            var key = keys_1[_a];
+            var value = state[key], cached = cache[key];
+            if (!cached || cached.value !== value) {
+                cache[key] = new StateLink(this, key, value);
+            }
+        }
+        return cache;
+    };
+    return LinkedComponent;
+}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]));
+
+var StateLink = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](StateLink, _super);
+    function StateLink(component, key, value) {
+        var _this = _super.call(this, value) || this;
+        _this.component = component;
+        _this.key = key;
+        return _this;
+    }
+    StateLink.prototype.set = function (x) {
+        var attrs = {};
+        attrs[this.key] = x;
+        this.component.setState(attrs);
+    };
+    return StateLink;
+}(_linked_value__WEBPACK_IMPORTED_MODULE_2__["Linked"]));
+
+
+
+/***/ }),
+
+/***/ "../../node_modules/@linked/react/lib/hooks.js":
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/hooks.js ***!
+  \****************************************************************************/
+/*! exports provided: useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return useLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLinked", function() { return useLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSafeLinked", function() { return useSafeLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSyncLinked", function() { return useBoundLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSafeSyncLinked", function() { return useSafeBoundLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSafeLink", function() { return useSafeLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useIsMountedRef", function() { return useIsMountedRef; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useBoundLink", function() { return useBoundLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSafeBoundLink", function() { return useSafeBoundLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLocalStorage", function() { return useLocalStorage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return useIO; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return whenChanged; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _linked_value__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @linked/value */ "../../node_modules/@linked/value/lib/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+var LinkedUseState = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](LinkedUseState, _super);
+    function LinkedUseState(value, set) {
+        var _this = _super.call(this, value) || this;
+        _this.set = set;
+        return _this;
+    }
+    // Set the component's state value.
+    LinkedUseState.prototype.set = function (x) { };
+    LinkedUseState.prototype.update = function (fun, event) {
+        // update function must be overriden to use state set
+        // ability to delay an update, and to preserve link.update semantic.
+        this.set(function (x) {
+            var value = Object(_linked_value__WEBPACK_IMPORTED_MODULE_1__["helpers"])(x).clone(x), result = fun(value, event);
+            return result === void 0 ? x : result;
+        });
+    };
+    return LinkedUseState;
+}(_linked_value__WEBPACK_IMPORTED_MODULE_1__["Linked"]));
+/**
+ * Create the ref to the local state.
+ */
+function useLink(initialState) {
+    var _a = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(initialState), value = _a[0], set = _a[1];
+    return new LinkedUseState(value, set);
+}
+
+/**
+ * Create the link to the local state which is safe to set when component is unmounted.
+ * Use this for the state which is set when async I/O is completed.
+ */
+function useSafeLink(initialState) {
+    var _a = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(initialState), value = _a[0], set = _a[1], isMounted = useIsMountedRef();
+    return new LinkedUseState(value, function (x) { return isMounted.current && set(x); });
+}
+/**
+ * Returns the ref which is true when component it mounted.
+ */
+function useIsMountedRef() {
+    var isMounted = Object(react__WEBPACK_IMPORTED_MODULE_2__["useRef"])(true);
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () { return (function () { return isMounted.current = false; }); }, []);
+    return isMounted;
+}
+/**
+ * Create the link to the local state which is bound to another
+ * value or link in a single direction. When the source changes, the link changes too.
+ */
+function useBoundLink(source) {
+    var value = source instanceof _linked_value__WEBPACK_IMPORTED_MODULE_1__["Linked"] ? source.value : source, link = useLink(value);
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () { return link.set(value); }, [value]);
+    link.action;
+    return link;
+}
+/**
+ * Create the safe link to the local state which is synchronized with another
+ * value or link in a single direction.
+ * When the source change, the linked state changes too.
+ */
+function useSafeBoundLink(source) {
+    var value = source instanceof _linked_value__WEBPACK_IMPORTED_MODULE_1__["Linked"] ? source.value : source, link = useSafeLink(value);
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () { return link.set(value); }, [value]);
+    return link;
+}
+/**
+ * Persists links in local storage under the given key.
+ * Links will be loaded on component's mount, and saved on unmount.
+ * @param key - string key for the localStorage entry.
+ * @param state - links to persist wrapped in an object `{ lnk1, lnk2, ... }`
+ */
+function useLocalStorage(key, state) {
+    // save state to use on unmount...
+    var stateRef = Object(react__WEBPACK_IMPORTED_MODULE_2__["useRef"])();
+    stateRef.current = state;
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+        var savedData = JSON.parse(localStorage.getItem(key) || '{}');
+        _linked_value__WEBPACK_IMPORTED_MODULE_1__["Linked"].setValues(stateRef.current, savedData);
+        return function () {
+            var dataToSave = _linked_value__WEBPACK_IMPORTED_MODULE_1__["Linked"].getValues(stateRef.current);
+            localStorage.setItem(key, JSON.stringify(dataToSave));
+        };
+    }, []);
+}
+/**
+ * Wait for the promise (or async function) completion.
+ * Execute operation once when mounted, returning:
+ * - `false` while the I/O operation is pending;
+ * - `true` if I/O is complete without exception;
+ * - `exception` object if I/O promise failed.
+ *
+ * const isReady = useIO( async () => {
+ *      const data = await fetchData();
+ *      link.set( data );
+ * });
+ */
+function useIO(fun, condition) {
+    if (condition === void 0) { condition = []; }
+    // Counter of open I/O requests. If it's 0, I/O is completed.
+    // Counter is needed to handle the situation when the next request
+    // is issued before the previous one was completed.
+    var $isReady = useSafeLink(null);
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+        // function in set instead of value to avoid race conditions with counter increment.
+        $isReady.set(function (state) {
+            var _a = state || [0, null], x = _a[0], res = _a[1];
+            return [x + 1, res];
+        });
+        fun()
+            .catch(function (e) { $isReady.set(function (_a) {
+            var x = _a[0], res = _a[1];
+            return [x - 1, e];
+        }); })
+            .then(function () { $isReady.set(function (_a) {
+            var x = _a[0], res = _a[1];
+            return [x - 1, null];
+        }); });
+    }, condition);
+    // `null` is used to detect the first render when no requests issued yet,
+    // but the I/O is not completed.
+    var value = $isReady.value;
+    return value === null || value[0] ? false : (value[1] || true);
+}
+function whenChanged(a, b, c, d) {
+    var length = arguments.length;
+    switch (length) {
+        case 1: return [extractChangeToken(a)];
+        case 2: return [extractChangeToken(a), extractChangeToken(b)];
+        case 3: return [extractChangeToken(a), extractChangeToken(b), extractChangeToken(c)];
+        default:
+            var array = [extractChangeToken(a), extractChangeToken(b), extractChangeToken(c), extractChangeToken(d)];
+            for (var i = 4; i < length; i++) {
+                array.push(extractChangeToken(arguments[i]));
+            }
+            return array;
+    }
+}
+function extractChangeToken(x) {
+    return x && x._changeToken !== void 0 ? x._changeToken : x;
+}
+
+
+/***/ }),
+
+/***/ "../../node_modules/@linked/react/lib/index.js":
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
+  \****************************************************************************/
+/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _linked_value__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @linked/value */ "../../node_modules/@linked/value/lib/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["Linked"]; });
+
+/* harmony import */ var _component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./component */ "../../node_modules/@linked/react/lib/component.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _component__WEBPACK_IMPORTED_MODULE_1__["LinkedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _component__WEBPACK_IMPORTED_MODULE_1__["StateLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["Linked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["PropValueLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_value__WEBPACK_IMPORTED_MODULE_0__["arrayHelpers"]; });
+
+/* harmony import */ var _hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hooks */ "../../node_modules/@linked/react/lib/hooks.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLinked", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLinked", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useSafeLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSyncLinked", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useSyncLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeSyncLinked", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useSafeSyncLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLink", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useSafeLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIsMountedRef", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useIsMountedRef"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useBoundLink", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useBoundLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeBoundLink", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useSafeBoundLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLocalStorage", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useLocalStorage"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _hooks__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_linked_value__WEBPACK_IMPORTED_MODULE_0__["Linked"]);
+/** @deprecated, use `Linked` instead */
+
+
+
+
+
+
+/***/ }),
+
+/***/ "../../node_modules/@linked/value/lib/helpers.js":
+/*!******************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/value/lib/helpers.js ***!
+  \******************************************************************************/
 /*! exports provided: helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5335,9 +5979,9 @@ var arrayHelpers = {
 /***/ }),
 
 /***/ "../../node_modules/@linked/value/lib/index.js":
-/*!******************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/@linked/value/lib/index.js ***!
-  \******************************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/value/lib/index.js ***!
+  \****************************************************************************/
 /*! exports provided: Linked, PropValueLink, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5674,15 +6318,15 @@ function trim(key) {
 /***/ }),
 
 /***/ "../../node_modules/css-loader/dist/cjs.js?!./main.css":
-/*!***********************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/css-loader/dist/cjs.js??ref--4-1!./main.css ***!
-  \***********************************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/css-loader/dist/cjs.js??ref--4-1!./main.css ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "../../node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "._1SFvqoNx9RJdNRxoUFso8B {\n    border-color: red;\n}\n\n._1SFvqoNx9RJdNRxoUFso8B._5HOZUmk_9l5RmkYhefCW8 {\n    border-color: yellow;\n}\n\n._5GjoZmKJfq9nxtAr0sHS-,._14NxhHXr0XHh5rUZmHfGoi {\n    margin: 3px;\n    display: inline-block;\n    width: 10px;\n    height : 10px;\n    border: solid;\n    border-width: 1px;\n}\n\n._2qNUZPUYGvlxcWOnzO58zZ {\n    background-color: black;\n}\n\nlabel {\n    display: block;\n    margin: 5px;\n}\n\ninput {\n    margin: 3px;\n}\n\n\n.Mf4aWf60SfgoaOvfb69eO>div {\n    display: inline-block;\n    width : 15em;\n}\n\n._2gxb2sM-m5XhU0gdrEtWLP {\n    display: inline-block;\n    color: red;\n}\n\nlabel>div {\n    display: inline-block;\n}\n", ""]);
+exports.push([module.i, "._1SFvqoNx9RJdNRxoUFso8B {\r\n    border-color: red;\r\n}\r\n\r\n._1SFvqoNx9RJdNRxoUFso8B._5HOZUmk_9l5RmkYhefCW8 {\r\n    border-color: yellow;\r\n}\r\n\r\n._5GjoZmKJfq9nxtAr0sHS-,._14NxhHXr0XHh5rUZmHfGoi {\r\n    margin: 3px;\r\n    display: inline-block;\r\n    width: 10px;\r\n    height : 10px;\r\n    border: solid;\r\n    border-width: 1px;\r\n}\r\n\r\n._2qNUZPUYGvlxcWOnzO58zZ {\r\n    background-color: black;\r\n}\r\n\r\nlabel {\r\n    display: block;\r\n    margin: 5px;\r\n}\r\n\r\ninput {\r\n    margin: 3px;\r\n}\r\n\r\n\r\n.Mf4aWf60SfgoaOvfb69eO>div {\r\n    display: inline-block;\r\n    width : 15em;\r\n}\r\n\r\n._2gxb2sM-m5XhU0gdrEtWLP {\r\n    display: inline-block;\r\n    color: red;\r\n}\r\n\r\nlabel>div {\r\n    display: inline-block;\r\n}\r\n", ""]);
 // Exports
 exports.locals = {
 	"invalid": "_1SFvqoNx9RJdNRxoUFso8B",
@@ -5697,9 +6341,9 @@ exports.locals = {
 /***/ }),
 
 /***/ "../../node_modules/css-loader/dist/runtime/api.js":
-/*!**********************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/css-loader/dist/runtime/api.js ***!
-  \**********************************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/css-loader/dist/runtime/api.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5798,9 +6442,9 @@ function toComment(sourceMap) {
 /***/ }),
 
 /***/ "../../node_modules/exenv/index.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/exenv/index.js ***!
-  \******************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/exenv/index.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5846,9 +6490,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ }),
 
 /***/ "../../node_modules/object-assign/index.js":
-/*!**************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/object-assign/index.js ***!
-  \**************************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/object-assign/index.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5948,9 +6592,9 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /***/ }),
 
 /***/ "../../node_modules/process/browser.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/process/browser.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/process/browser.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -6143,9 +6787,9 @@ process.umask = function() { return 0; };
 /***/ }),
 
 /***/ "../../node_modules/prop-types/checkPropTypes.js":
-/*!********************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/prop-types/checkPropTypes.js ***!
-  \********************************************************************************/
+/*!******************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/checkPropTypes.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6257,9 +6901,9 @@ module.exports = checkPropTypes;
 /***/ }),
 
 /***/ "../../node_modules/prop-types/factoryWithTypeCheckers.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/prop-types/factoryWithTypeCheckers.js ***!
-  \*****************************************************************************************/
+/*!***************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/factoryWithTypeCheckers.js ***!
+  \***************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6860,9 +7504,9 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 /***/ }),
 
 /***/ "../../node_modules/prop-types/index.js":
-/*!***********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/prop-types/index.js ***!
-  \***********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/index.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6886,9 +7530,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../node_modules/prop-types/lib/ReactPropTypesSecret.js":
-/*!******************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
-  \******************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6910,9 +7554,9 @@ module.exports = ReactPropTypesSecret;
 /***/ }),
 
 /***/ "../../node_modules/react-dom/cjs/react-dom.development.js":
-/*!******************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-dom/cjs/react-dom.development.js ***!
-  \******************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-dom/cjs/react-dom.development.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28200,9 +28844,9 @@ module.exports = reactDom;
 /***/ }),
 
 /***/ "../../node_modules/react-dom/index.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-dom/index.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-dom/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28245,9 +28889,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/react-is/cjs/react-is.development.js":
-/*!****************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-is/cjs/react-is.development.js ***!
-  \****************************************************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-is/cjs/react-is.development.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28484,9 +29128,9 @@ exports.isSuspense = isSuspense;
 /***/ }),
 
 /***/ "../../node_modules/react-is/index.js":
-/*!*********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-is/index.js ***!
-  \*********************************************************************/
+/*!*******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-is/index.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28501,9 +29145,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js":
-/*!*********************************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js ***!
-  \*********************************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js ***!
+  \*******************************************************************************************************/
 /*! exports provided: polyfill */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -28673,9 +29317,9 @@ function polyfill(Component) {
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/components/Modal.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/components/Modal.js ***!
-  \***************************************************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/components/Modal.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28950,9 +29594,9 @@ exports.default = Modal;
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/components/ModalPortal.js":
-/*!*********************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/components/ModalPortal.js ***!
-  \*********************************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/components/ModalPortal.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29369,9 +30013,9 @@ module.exports = exports["default"];
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/ariaAppHider.js":
-/*!*******************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/ariaAppHider.js ***!
-  \*******************************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/ariaAppHider.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29449,9 +30093,9 @@ function resetForTesting() {
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/classList.js":
-/*!****************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/classList.js ***!
-  \****************************************************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/classList.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29567,9 +30211,9 @@ var remove = exports.remove = function remove(element, classString) {
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/focusManager.js":
-/*!*******************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/focusManager.js ***!
-  \*******************************************************************************************/
+/*!*****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/focusManager.js ***!
+  \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29672,9 +30316,9 @@ function teardownScopedFocus() {
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/safeHTMLElement.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/safeHTMLElement.js ***!
-  \**********************************************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/safeHTMLElement.js ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29703,9 +30347,9 @@ exports.default = SafeHTMLElement;
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/scopeTab.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/scopeTab.js ***!
-  \***************************************************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/scopeTab.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29800,9 +30444,9 @@ module.exports = exports["default"];
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/helpers/tabbable.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/helpers/tabbable.js ***!
-  \***************************************************************************************/
+/*!*************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/helpers/tabbable.js ***!
+  \*************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29869,9 +30513,9 @@ module.exports = exports["default"];
 /***/ }),
 
 /***/ "../../node_modules/react-modal/lib/index.js":
-/*!****************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react-modal/lib/index.js ***!
-  \****************************************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-modal/lib/index.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -29894,9 +30538,9 @@ module.exports = exports["default"];
 /***/ }),
 
 /***/ "../../node_modules/react/cjs/react.development.js":
-/*!**********************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react/cjs/react.development.js ***!
-  \**********************************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react/cjs/react.development.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31807,9 +32451,9 @@ module.exports = react;
 /***/ }),
 
 /***/ "../../node_modules/react/index.js":
-/*!******************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/react/index.js ***!
-  \******************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react/index.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31823,10 +32467,747 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "../../node_modules/regenerator-runtime/runtime.js":
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/regenerator-runtime/runtime.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var runtime = (function (exports) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  exports.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      prototype[method] = function(arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  exports.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  exports.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  exports.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return Promise.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return Promise.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration.
+          result.value = unwrapped;
+          resolve(result);
+        }, function(error) {
+          // If a rejected Promise was yielded, throw the rejection back
+          // into the async generator function so it can be handled there.
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new Promise(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    return this;
+  };
+  exports.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  exports.async = function(innerFn, outerFn, self, tryLocsList) {
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList)
+    );
+
+    return exports.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        // Note: ["return"] must be used for ES3 parsing compatibility.
+        if (delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  Gp[iteratorSymbol] = function() {
+    return this;
+  };
+
+  Gp.toString = function() {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  exports.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  exports.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+
+  // Regardless of whether this script is executing as a CommonJS module
+  // or not, return the runtime object so that we can declare the variable
+  // regeneratorRuntime in the outer scope, which allows this module to be
+  // injected easily by `bin/regenerator --include-runtime script.js`.
+  return exports;
+
+}(
+  // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+   true ? module.exports : undefined
+));
+
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  // This module should not be running in strict mode, so the above
+  // assignment should always work unless something is misconfigured. Just
+  // in case runtime.js accidentally runs in strict mode, we can escape
+  // strict mode using a global Function call. This could conceivably fail
+  // if a Content Security Policy forbids using Function, but in that case
+  // the proper solution is to fix the accidental strict mode problem. If
+  // you've misconfigured your bundler to force strict mode and applied a
+  // CSP to forbid Function, and you're not willing to fix either of those
+  // problems, please detail your unique predicament in a GitHub issue.
+  Function("r", "regeneratorRuntime = r")(runtime);
+}
+
+
+/***/ }),
+
 /***/ "../../node_modules/scheduler/cjs/scheduler-tracing.development.js":
-/*!**************************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/scheduler/cjs/scheduler-tracing.development.js ***!
-  \**************************************************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/cjs/scheduler-tracing.development.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32259,9 +33640,9 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 /***/ }),
 
 /***/ "../../node_modules/scheduler/cjs/scheduler.development.js":
-/*!******************************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/scheduler/cjs/scheduler.development.js ***!
-  \******************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/cjs/scheduler.development.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32971,9 +34352,9 @@ exports.unstable_getFirstCallbackNode = unstable_getFirstCallbackNode;
 /***/ }),
 
 /***/ "../../node_modules/scheduler/index.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/scheduler/index.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32988,9 +34369,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/scheduler/tracing.js":
-/*!************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/scheduler/tracing.js ***!
-  \************************************************************************/
+/*!**********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/tracing.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33005,9 +34386,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/style-loader/lib/addStyles.js":
-/*!*********************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/style-loader/lib/addStyles.js ***!
-  \*********************************************************************************/
+/*!*******************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/style-loader/lib/addStyles.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33414,9 +34795,9 @@ function updateLink (link, options, obj) {
 /***/ }),
 
 /***/ "../../node_modules/style-loader/lib/urls.js":
-/*!****************************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/style-loader/lib/urls.js ***!
-  \****************************************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/style-loader/lib/urls.js ***!
+  \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -33514,9 +34895,9 @@ module.exports = function (css) {
 /***/ }),
 
 /***/ "../../node_modules/tslib/tslib.es6.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/tslib/tslib.es6.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/tslib/tslib.es6.js ***!
+  \********************************************************************/
 /*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -33743,9 +35124,9 @@ function __importDefault(mod) {
 /***/ }),
 
 /***/ "../../node_modules/warning/warning.js":
-/*!**********************************************************************!*\
-  !*** /Users/vladbalin/GitHub/Type-R/node_modules/warning/warning.js ***!
-  \**********************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/warning/warning.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33847,6 +35228,224 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "../../react/lib/globalState.js":
+/*!*************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/globalState.js ***!
+  \*************************************************************/
+/*! exports provided: useChanges, useForceUpdate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return useChanges; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return useForceUpdate; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+function useChanges(instance) {
+    var forceUpdate = useForceUpdate();
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        function onChange(x) {
+            forceUpdate(x);
+        }
+        instance.onChanges(onChange);
+        return function () { return instance.offChanges(onChange); };
+    }, emptyArray);
+}
+var emptyArray = [];
+function useForceUpdate() {
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(transactionalUpdate, null)[1];
+}
+function transactionalUpdate(_changeToken, modelOrCollection) {
+    return modelOrCollection._changeToken;
+}
+
+
+/***/ }),
+
+/***/ "../../react/lib/index.js":
+/*!*******************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/index.js ***!
+  \*******************************************************/
+/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "../../react/lib/state.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_0__["useModel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_0__["useCollection"]; });
+
+/* harmony import */ var _globalState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globalState */ "../../react/lib/globalState.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return _globalState__WEBPACK_IMPORTED_MODULE_1__["useChanges"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return _globalState__WEBPACK_IMPORTED_MODULE_1__["useForceUpdate"]; });
+
+/* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Link"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["LinkedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["StateLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSyncLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeSyncLinked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIsMountedRef", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIsMountedRef"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useBoundLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeBoundLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLocalStorage", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLocalStorage"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
+
+/* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_3__["pureRenderProps"]; });
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "../../react/lib/pureRender.js":
+/*!************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/pureRender.js ***!
+  \************************************************************/
+/*! exports provided: pureRenderProps */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return pureRenderProps; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
+
+
+
+function pureRenderProps(props, Comp) {
+    var prototype = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_2__["attributes"])(props).prototype, _attributes = prototype._attributes, keys = Object.keys(props);
+    var createVector = new Function("props", "\n        return [\n            " + keys.map(function (key) {
+        return propForType(_attributes[key].type, key);
+    }).join(', ') + "\n        ]\n    ");
+    var compareVector = new Function("props", "vector", "\n        return " + keys.map(function (key, idx) {
+        return "vector[" + idx + "] !== ( " + propForType(_attributes[key].type, key) + " )";
+    }).join(' || ') + ";\n    ");
+    var PureRenderWrapper = (function (_super) {
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](PureRenderWrapper, _super);
+        function PureRenderWrapper(props) {
+            var _this = _super.call(this, props) || this;
+            _this._vector = createVector(_this.props);
+            return _this;
+        }
+        PureRenderWrapper.prototype.shouldComponentUpdate = function (nextProps) {
+            return compareVector(nextProps, this._vector);
+        };
+        PureRenderWrapper.prototype.componentDidUpdate = function () {
+            this._vector = createVector(this.props);
+        };
+        PureRenderWrapper.prototype.render = function () {
+            return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Comp, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this.props));
+        };
+        return PureRenderWrapper;
+    }(react__WEBPACK_IMPORTED_MODULE_1__["Component"]));
+    return PureRenderWrapper;
+}
+function propForType(type, key) {
+    return type.prototype instanceof _type_r_models__WEBPACK_IMPORTED_MODULE_2__["Transactional"] ? "props." + key + " && props." + key + "._changeToken" :
+        type === Date ? "props." + key + " && props." + key + ".getTime()" :
+            type.prototype instanceof _type_r_models__WEBPACK_IMPORTED_MODULE_2__["Linked"] ? "props." + key + " && props." + key + ".value" :
+                "props." + key;
+}
+
+
+/***/ }),
+
+/***/ "../../react/lib/state.js":
+/*!*******************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/state.js ***!
+  \*******************************************************/
+/*! exports provided: useModel, useCollection */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return useModel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return useCollection; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
+
+
+var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
+var useCollection = {
+    of: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].of(Model))()); }),
+    ofRefs: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].ofRefs(Model))()); }),
+    subsetOf: mutableHook(function (collection) { return new Mutable(collection.createSubset([])); })
+};
+var Mutable = (function () {
+    function Mutable(value) {
+        this.value = value;
+        this._onChildrenChange = void 0;
+        this._changeToken = value._changeToken;
+        value._owner = this;
+        value._ownerKey || (value._ownerKey = 'reactState');
+    }
+    Mutable.prototype.getStore = function () {
+        return this.value._defaultStore;
+    };
+    return Mutable;
+}());
+function mutableReducer(mutable) {
+    if (mutable._changeToken === mutable.value._changeToken)
+        return mutable;
+    var copy = new Mutable(mutable.value);
+    copy._onChildrenChange = mutable._onChildrenChange;
+    return copy;
+}
+function mutableHook(create) {
+    return function (init) {
+        var _a = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(mutableReducer, init, create), mutable = _a[0], forceUpdate = _a[1];
+        Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+            mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
+            return function () { return mutable.value.dispose(); };
+        }, emptyArray);
+        return mutable.value;
+    };
+}
+var emptyArray = [];
+
+
+/***/ }),
+
 /***/ "./main.css":
 /*!******************!*\
   !*** ./main.css ***!
@@ -33886,51 +35485,35 @@ if(false) {}
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./main.css */ "./main.css");
-/* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_main_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../../node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
-/* harmony import */ var _type_r_endpoints__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @type-r/endpoints */ "../../endpoints/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-modal */ "../../node_modules/react-modal/lib/index.js");
-/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_5__);
-var _class,
-    _class2,
-    _temp,
-    _class3,
-    _class4,
-    _temp2,
-    _this = undefined;
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "../../node_modules/@babel/runtime/helpers/objectWithoutProperties.js");
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "../../node_modules/@babel/runtime/helpers/extends.js");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "../../node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../../node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "../../node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "../../node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "../../node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "../../node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "../../node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./main.css */ "./main.css");
+/* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_main_css__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-dom */ "../../node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
+/* harmony import */ var _type_r_react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @type-r/react */ "../../react/lib/index.js");
+/* harmony import */ var _type_r_endpoints__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @type-r/endpoints */ "../../endpoints/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! react-modal */ "../../node_modules/react-modal/lib/index.js");
+/* harmony import */ var react_modal__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(react_modal__WEBPACK_IMPORTED_MODULE_15__);
 
 
 
@@ -33938,22 +35521,34 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var Email = type(String).check(function (x) {
+
+
+
+var _class, _class2, _temp, _class3, _class4, _temp2;
+
+
+
+
+
+
+
+
+var Email = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["type"])(String).check(function (x) {
   return !x || x.indexOf('@') >= 0;
 }, 'Must be valid e-mail');
 
-var User = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_3__["define"])(_class = (_temp = _class2 =
+var User = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["define"])(_class = (_temp = _class2 =
 /*#__PURE__*/
 function (_Model) {
-  _inherits(User, _Model);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(User, _Model);
 
   function User() {
-    _classCallCheck(this, User);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, User);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(User).apply(this, arguments));
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(User).apply(this, arguments));
   }
 
-  _createClass(User, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default()(User, [{
     key: "remove",
     value: function remove() {
       this.collection.remove(this);
@@ -33961,44 +35556,44 @@ function (_Model) {
   }]);
 
   return User;
-}(_type_r_models__WEBPACK_IMPORTED_MODULE_3__["Model"]), _class2.attributes = {
-  name: type(String).required.check(function (x) {
+}(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["Model"]), _class2.attributes = {
+  name: Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["type"])(String).required.check(function (x) {
     return x.indexOf(' ') < 0;
   }, 'Spaces are not allowed'),
-  email: type(Email).required,
+  email: Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["type"])(Email).required,
   isActive: true
 }, _temp)) || _class;
 
-var AppState = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_3__["define"])(_class3 = (_temp2 = _class4 =
+var AppState = Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["define"])(_class3 = (_temp2 = _class4 =
 /*#__PURE__*/
 function (_Model2) {
-  _inherits(AppState, _Model2);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(AppState, _Model2);
 
   function AppState() {
-    _classCallCheck(this, AppState);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, AppState);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(AppState).apply(this, arguments));
+    return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(AppState).apply(this, arguments));
   }
 
   return AppState;
-}(_type_r_models__WEBPACK_IMPORTED_MODULE_3__["Model"]), _class4.endpoint = Object(_type_r_endpoints__WEBPACK_IMPORTED_MODULE_4__["localStorageIO"])('/react-mvx/examples'), _class4.attributes = {
+}(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["Model"]), _class4.endpoint = Object(_type_r_endpoints__WEBPACK_IMPORTED_MODULE_14__["localStorageIO"])('/react-mvx/examples'), _class4.attributes = {
   id: 'users-list',
-  users: Collection.of(User),
+  users: _type_r_models__WEBPACK_IMPORTED_MODULE_12__["Collection"].of(User),
   // No comments required, isn't it?
   editing: User.memberOf('users'),
   // User from user collection, which is being edited.
-  adding: refTo(User) // New user, which is being added.
+  adding: Object(_type_r_models__WEBPACK_IMPORTED_MODULE_12__["refTo"])(User) // New user, which is being added.
 
 }, _temp2)) || _class3;
 
 var UsersList = function UsersList() {
-  var state = useModel(AppState);
-  useIO(
+  var state = Object(_type_r_react__WEBPACK_IMPORTED_MODULE_13__["useModel"])(AppState);
+  Object(_type_r_react__WEBPACK_IMPORTED_MODULE_13__["useIO"])(
   /*#__PURE__*/
-  _asyncToGenerator(
+  _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee() {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+  _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -34016,51 +35611,51 @@ var UsersList = function UsersList() {
       }
     }, _callee);
   })));
-  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("button", {
+  return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("button", {
     onClick: function onClick() {
       return state.adding = new User();
     }
-  }, "Add User"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Header, null), state.users.map(function (user) {
-    return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(UserRow, {
+  }, "Add User"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(Header, null), state.users.map(function (user) {
+    return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(UserRow, {
       key: user.cid,
       user: user,
       onEdit: function onEdit() {
         return state.editing = user;
       }
     });
-  }), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_5___default.a, {
-    isOpen: Boolean(state.adding)
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(EditUser, {
+  }), state.adding && react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_15___default.a, {
+    isOpen: true
+  }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(EditUser, {
     $user: state.$.adding,
     onSave: function onSave() {
       return state.users.add(state.adding);
     }
-  })), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_5___default.a, {
-    isOpen: Boolean(state.editing)
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(EditUser, {
+  })), state.editing && react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(react_modal__WEBPACK_IMPORTED_MODULE_15___default.a, {
+    isOpen: true
+  }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(EditUser, {
     $user: state.$.editing
   })));
 };
 
 var Header = function Header() {
-  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", {
     className: "users-row"
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, "Name"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, "Email"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, "Is Active"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null));
+  }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, "Name"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, "Email"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, "Is Active"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null));
 };
 
 var UserRow = function UserRow(_ref2) {
   var user = _ref2.user,
       onEdit = _ref2.onEdit;
-  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", {
     className: "users-row",
     onDoubleClick: onEdit
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, user.name), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, user.email), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+  }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, user.name), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, user.email), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", {
     onClick: function onClick() {
       return user.isActive = !user.isActive;
     }
-  }, user.isActive ? 'Yes' : 'No'), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("button", {
+  }, user.isActive ? 'Yes' : 'No'), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("button", {
     onClick: onEdit
-  }, "Edit"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("button", {
+  }, "Edit"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("button", {
     onClick: function onClick() {
       return user.remove();
     }
@@ -34070,33 +35665,32 @@ var UserRow = function UserRow(_ref2) {
 var EditUser = function EditUser(_ref3) {
   var $user = _ref3.$user,
       onSave = _ref3.onSave;
-  var user = useModel(User);
-  useEffect(function () {
+  var user = Object(_type_r_react__WEBPACK_IMPORTED_MODULE_13__["useModel"])(User);
+  Object(react__WEBPACK_IMPORTED_MODULE_11__["useEffect"])(function () {
     user.assignFrom($user.value);
   }, [$user.value]);
 
-  onSubmit = function onSubmit(e) {
+  var onSubmit = function onSubmit(e) {
     e.preventDefault();
     $user.value.assignFrom(user);
     onSave && onSave($user.value);
-
-    _this.onCancel();
+    $user.set(null);
   };
 
-  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("form", {
-    onSubmit: _this.onSubmit
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("label", null, "Name: ", react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(ValidatedInput, {
+  return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("form", {
+    onSubmit: onSubmit
+  }, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("label", null, "Name: ", react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(ValidatedInput, {
     type: "text",
     $value: user.$.name
-  })), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("label", null, "Email: ", react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(ValidatedInput, {
+  })), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("label", null, "Email: ", react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(ValidatedInput, {
     type: "text",
     $value: user.$.email
-  })), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("label", null, "Is active: ", react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("input", _extends({
+  })), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("label", null, "Is active: ", react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("input", _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({
     type: "checkbox"
-  }, user.$.isActive.props))), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("button", {
+  }, user.$.isActive.props))), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("button", {
     type: "submit",
     disabled: !user.isValid()
-  }, "Save"), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("button", {
+  }, "Save"), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("button", {
     type: "button",
     onClick: function onClick() {
       return $user.set(null);
@@ -34106,14 +35700,14 @@ var EditUser = function EditUser(_ref3) {
 
 var ValidatedInput = function ValidatedInput(_ref4) {
   var $value = _ref4.$value,
-      props = _objectWithoutProperties(_ref4, ["$value"]);
+      props = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default()(_ref4, ["$value"]);
 
-  return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("input", _extends({}, $value.props, props)), react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("input", _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_1___default()({}, $value.props, props)), react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement("div", {
     className: "validation-error"
   }, $value.error || ''));
 };
 
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(UsersList, null), document.getElementById('app-mount-root'));
+react_dom__WEBPACK_IMPORTED_MODULE_10___default.a.render(react__WEBPACK_IMPORTED_MODULE_11___default.a.createElement(UsersList, null), document.getElementById('app-mount-root'));
 
 /***/ })
 

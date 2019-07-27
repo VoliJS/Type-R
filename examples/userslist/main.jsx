@@ -1,8 +1,9 @@
 import './main.css'
 import ReactDOM from 'react-dom'
 
-import React from 'react'
-import { Model, define } from '@type-r/models'
+import React, { useEffect } from 'react'
+import { Model, define, type, refTo, Collection } from '@type-r/models'
+import { useModel, useIO } from '@type-r/react'
 import { localStorageIO } from '@type-r/endpoints'
 
 import Modal from 'react-modal'
@@ -59,14 +60,18 @@ const UsersList = () => {
                 />
             ) )}
 
-            <Modal isOpen={ Boolean( state.adding ) }>
-                <EditUser $user={ state.$.adding }
+            { state.adding &&
+                <Modal isOpen={true}>
+                    <EditUser $user={ state.$.adding }
                             onSave={ () => state.users.add( state.adding ) }/>
-            </Modal>
+                </Modal>
+            }
 
-            <Modal isOpen={ Boolean( state.editing ) }>
-                <EditUser $user={ state.$.editing } />
-            </Modal>
+            { state.editing &&
+                <Modal isOpen={true}>
+                    <EditUser $user={ state.$.editing } />
+                </Modal>
+            }
         </div>
     );
 }
@@ -100,15 +105,15 @@ const EditUser = ({ $user, onSave }) => {
         user.assignFrom( $user.value );
     }, [ $user.value ] );
 
-    onSubmit =  e => {
+    const onSubmit = e => {
         e.preventDefault();
         $user.value.assignFrom( user );
         onSave && onSave( $user.value );
-        this.onCancel()
+        $user.set( null );
     }
 
     return (
-        <form onSubmit={ this.onSubmit }>
+        <form onSubmit={ onSubmit }>
             <label>
                 Name: <ValidatedInput type="text" $value={ user.$.name }/>
             </label>

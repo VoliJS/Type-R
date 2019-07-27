@@ -173,6 +173,8 @@ export function shared<C extends Function>( this : void, Constructor : C ) : Cha
     });
 }
 
+export { shared as refTo }
+
 // Create attribute metatype inferring the type from the value.
 export function value<T>( this : void, x : T ) : ChainableAttributeSpec<new ( ...args : any[] ) => T> {
     const Type = inferType( x ),

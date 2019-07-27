@@ -2,7 +2,7 @@ import * as tslib_1 from "tslib";
 import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, logger, Mixable, mixinRules, mixins } from '@type-r/mixture';
 import { startIO } from '../io-tools';
-import { AggregatedType, Model, SharedType } from '../model';
+import { AggregatedType, Model, SharedType, shared } from '../model';
 import { ItemsBehavior, Transactional, transactionApi } from '../transactions';
 import { addTransaction } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -354,6 +354,7 @@ var Collection = (function (_super) {
         return model;
     };
     var Collection_1;
+    Collection.refsTo = shared;
     Collection._metatype = AggregatedType;
     Collection = Collection_1 = tslib_1.__decorate([
         define({
