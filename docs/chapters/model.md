@@ -1,25 +1,50 @@
-# Core Data Structires
-## Overview
+# Model
 
-## Aggregation Tree
+Model is an optionally persistent class having the predefined set of attributes. Each attribute is the property of known type which is protected from improper assigments at run-time, is serializable to JSON by default, has deeply observable changes, and may have custom validation rules attached.
 
-## Definitions
+Records may have other models and collections of models stored in its attributes describing an application state of an arbitrary complexity. These nested models and collections are considered to be an integral part of the parent model forming an *aggregation tree* which can be serialized to JSON, cloned, and disposed of as a whole.
 
-Model definition must:
-
-- be the class extending the `Model`;
-- be preceded with the `@define` decorator;
-- have `static attributes` definition.
-
-### `decorator` @define
-
-_Must_ be placed before model class definition.
+All aspects of an attribute behavior are controlled with attribute metadata, which (taken together with its type) is called *attribite metatype*. Metatypes can be declared separately and reused across multiple models definitions.
 
 ```javascript
-import { define, Model } from 'type-r'
+import { define, type, Model } from 'type-r'
 
-@define class X extends Model {
-    ...    
+// ⤹ required to make magic work  
+@define class User extends Model {
+    // ⤹ attribute's declaration
+    static attributes = {
+        firstName : '', // ⟵ String type is inferred from the default value
+        lastName  : String, // ⟵ Or you can just mention its constructor
+        email     : type(String).value(null), //⟵ Or you can provide both
+        createdAt : Date, // ⟵ And it works for any constructor.
+        // And you can attach ⤹ metadata to fine-tune attribute's behavior
+        lastLogin : type(Date).value(null).toJSON(false) // ⟵ not serializable
+    }
+}
+
+const user = new User();
+console.log( user.createdAt ); // ⟵ this is an instance of Date created for you.
+
+const users = new User.Collection(); // ⟵ Collections are defined automatically.
+users.on( 'changes', () => updateUI( users ) ); // ⟵ listen to the changes.
+
+users.set( json, { parse : true } ); // ⟵ parse raw JSON from the server.
+users.updateEach( user => user.firstName = '' ); // ⟵ bulk update triggering 'changes' once
+```
+
+## Definition
+
+Model definition is ES6 class extending `Model` preceeded by `@define` class decorator. 
+
+Unlike in the majority of the JS state management framework, Model is <b>not the key-value hash</b>. Model has typed attributes with metadata controlling different aspects of attribute beavior. Therefore, developer needs to create the Model subclass to describe the data structure of specific shape, in a similar way as it's done in statically typed languages. The combination of an attribute type and metadata is called *metatype* and can be reused across model definitions.
+
+The minimal model definition looks like this:
+
+```javascript
+@define class MyRecord extends Model {
+    static attributes = {
+        name : ''
+    }
 }
 ```
 
@@ -59,15 +84,15 @@ const cake = new Meal({ _id: 1, name: "Cake" });
 alert("Cake id: " + cake.id);
 ```
 
-### `metatype` Type
+### Constructor
 
-When the function is used as `metatype`, it's treated as the constructor function. Any constructor function which behaves as _converting constructor_ (like `new Date( msecs )`) may be used as an attribute type.
+Constructor function is the simplest form of attribute definition. Any constructor function which behaves as _converting constructor_ (like `new Date( msecs )`) may be used as an attribute type.
 
 ```javascript
 @define class Person extends Model {
     static attributes = {
-        name : String // String attribute which is "" by default.
-        createdAt : Date // Date attribute
+        name : String, // String attribute which is "" by default.
+        createdAt : Date, // Date attribute
         ...
     }
 }
@@ -75,23 +100,24 @@ When the function is used as `metatype`, it's treated as the constructor functio
 
 ### `metatype` defaultValue
 
-When value of other type than function is used as `metatype` it's treated as attribute's default value. Attribute's type is being inferred from the value.
+Any non-function value used as attribute definition is treated as an attribute's default value. Attribute's type is being inferred from the value.
 
-Use the general form of attribute definition for attributes of `Function` type: `type( Function ).value( theFunction )`.
+Type cannot be properly inferred from the `null` values and functions.
+Use the general form of attribute definition in such cases: `value( theFunction )`, `type( Boolean ).value( null )`.
 
 ```javascript
 @define class GridColumn extends Model {
     static attributes = {
         name : '', // String attribute which is '' by default.
-        render : type( Function ).value( x => x ),
+        render : value( x => x ), // Infer Function type from the default value.
         ...
     }
 }
 ```
 
-### `metatype` type( Type ).value( defaultValue )
+### `metatype` type(Constructor).value(defaultValue)
 
-Declare attribute with custom default value.
+Declare an attribute with type T having the custom `defaultValue`.
 
 ```javascript
 @define class Person extends Model {
@@ -102,15 +128,16 @@ Declare attribute with custom default value.
 }
 ```
 
-The model is _recursive_ if it's uses the type of itself in its attribute definition.
+If model needs to reference itself in its attributes definition, `@predefine` decorator with subsequent `MyRecord.define()` needs to be used.
 
 ### `metatype` Date
 
-Date attribute initialized as `new Date()`. Represented in JSON as string or number depending on the type:
+Date attribute initialized as `new Date()`, and represented in JSON as UTC ISO string.
 
-* `Date` - as ISO date string.
-* `Date.microsoft` - as Microsoft's `"/Date(msecs)/"` string.
-* `Date.timestamp` - as UNIX integer timestamp.
+There are other popular Date serialization options available in `type-r/ext-types` package.
+
+* `MicrosoftDate` - Date serialized as Microsoft's `"/Date(msecs)/"` string.
+* `Timestamp` - Date serializaed as UNIX integer timestamp (`date.getTime()`).
 
 ### `static` Collection
 
@@ -122,17 +149,36 @@ May be explicitly assigned in model's definition with custom collection class.
 // Declare the collection class.
 @define class Comments extends Model.Collection {}
 
-@define class Comment extends Model({
+@define class Comment extends Model{
     static Collection = Comments; // Make it the default Comment collection.
 
-    attributes : {
+    static attributes = {
         text : String,
         replies : Comments
     }
-});
+}
 ```
 
-## Model
+### `metatype` type(Type)
+
+Attribute definition can have different metadata attached which affects various aspects of attribute's behavior. Metadata is attached with
+a chain of calls after the `type( Ctor )` call. Attribute's default value is the most common example of such a metadata and is the single option which can be applied to the constructor function directly.
+
+```javascript
+import { define, type, Model }
+
+@define class Dummy extends Model {
+    static attributes = {
+        a : type( String ).value( "a" )
+    }
+}
+```
+
+## Definitions in TypeScript
+
+Type-R supports several options to define model attributes.
+
+## Create and dispose
 
 Model behaves as regular ES6 class with attributes accessible as properties.
 
@@ -142,7 +188,7 @@ Create an instance of the model with default attribute values taken from the att
 
 When no default value is explicitly provided for an attribute, it's initialized as `new Type()` (just `Type()` for primitives). When the default value is provided and it's not compatible with the attribute type, it's converted with `new Type( defaultValue )` call.
 
-### new Model({ attrName : value, ... }, options? )
+### new Model({ attrName : value, ... }, options?)
 
 When creating an instance of a model, you can pass in the initial attribute values to override the defaults.
 
@@ -168,7 +214,7 @@ const book = new Book({
 
 Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.
 
-### `callback` model.initialize( attrs?, options? )
+### `callback` model.initialize(attrs?, options?)
 
 Called at the end of the `Model` constructor when all attributes are assigned and the model's inner state is properly initialized. Takes the same arguments as
 a constructor.
@@ -178,6 +224,8 @@ a constructor.
 Recursively dispose the model and its aggregated members. "Dispose" means that elements of the aggregation tree will unsubscribe from all event sources. It's crucial to prevent memory leaks in SPA.
 
 The whole aggregation tree will be recursively disposed, shared members won't.
+
+## Read and Update
 
 ### model.cid
 
@@ -243,7 +291,7 @@ myBook.publishedAt = '1678-10-15 12:00'; // new Date( '1678-10-15 12:00' )
 myBook.available = some && weird || condition; // Will always be Boolean. Or null.
 ```
 
-### model.set( { attrName : value, ... }, options? : `options` )
+### model.set({ attrName : value, ... }, options? : `options`)
 
 Bulk assign model's attributes, possibly taking options.
 
@@ -258,17 +306,36 @@ Model triggers events after all changes are applied:
 1. `change:attrName` *( model, val, options )* for any changed attribute.
 2. `change` *(model, options)*, if there were changed attributes.
 
-### model.assignFrom( otherRecord )
+
+### RecordClass.from(attrs, options?)
+
+Create `RecordClass` from attributes. Similar to direct model creation, but supports additional option for strict data validation.
+If `{ strict : true }` option is passed the validation will be performed and an exception will be thrown in case of an error.
+
+Please note, that Type-R always perform type checks on assignments, convert types, and reject improper updates reporting it as error. It won't, however, execute custom validation
+rules on every updates as they are evaluated lazily. `strict` option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.
+
+```javascript
+// Fetch model with a given id.
+const book = await Book.from({ id : 5 }).fetch();
+
+// Validate the body of an incoming HTTP request.
+// Throw an exception if validation fails.
+const body = MyRequestBody.from( ctx.request.body, { parse : true, strict : true });
+```
+
+### model.assignFrom(otherRecord)
 
 Makes an existing `model` to be the full clone of `otherRecord`, recursively assigning all attributes.
+In contracts to `model.clone()`, the model is updated in place.
 
 ```javascript
 // Another way of doing the bestSeller.clone()
 const book = new Book();
-book.assignFrom( bestSeller );
+book.assignFrom(bestSeller);
 ```
 
-### model.transaction( fun )
+### model.transaction(fun)
 
 Execute the all changes made to the model in `fun` as single transaction triggering the single `change` event.
 
@@ -286,17 +353,15 @@ some.model.transaction( model => {
 
 Manual transactions with attribute assignments are superior to `model.set()` in terms of both performance and flexibility.
 
-### `metatype` type( Type ).get( `hook` )
+### `metatype` type(Type).get(`hook`)
 
 Attach get hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value _before it will be read_. Hook is executed in the context of the model.
 
-### `metatype` type( Type ).set( `hook` )
+### `metatype` type(Type).set(`hook`)
 
 Attach the set hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value _before it will be assigned_. Hook is executed in the context of the model.
 
 If set hook will return `undefined`, it will cancel attribute update.
-
-## Collection
 
 ## Nested models and collections
 
@@ -329,6 +394,8 @@ All nested models and collections are *aggregated* by default and behave as inte
 - They are validated as part of the model.
 - They are serialized as nested JSON.
 
+The nature of aggregation relationship in OO is explained in this [article](https://medium.com/@gaperton/nestedtypes-2-0-meet-an-aggregation-and-the-rest-of-oo-animals-a9fca7c36ecf).
+
 ### `metatype` RecordOrCollection
 
 Aggregated model or collection. Represented as nested object or array in model's JSON. Aggregated members are owned by the model and treated as its _integral part_ (recursively created, cloned, serialized, validated, and disposed).
@@ -346,7 +413,7 @@ Due to the nature of _aggregation_, an object may have one and only one owner.
 
 Return the collection which aggregates the model, or `null` if there are no one.
 
-### `metatype` shared( RecordOrCollection )
+### `metatype` refTo( Record_or_Collection )
 
 Non-serializable reference to the model or collection possibly from the different aggregation tree. Initialized with `null`. Is not recursively cloned, serialized, validated, or disposed.
 
@@ -358,14 +425,14 @@ All changes in shared models or collections are detected and cause change events
 @define class UsersListState extends Model {
     static attributes = {
         users : User.Collection,
-        selected : shared( User ) // Can be assigned with the user from this.users
+        selected : refTo( User ) // Can be assigned with the user from this.users
     }
 }
 ```
 
-### `metatype` Collection.Refs
+### `constructor` Collection.ofRefsTo( ModelClass )
 
-Non-aggregating collection. Collection of references to shared models which itself is _aggregated_ by the model, but _does not aggregate_ its elements. In contrast to the `shared( Collection )`, `Collection.Refs` creates an instance of collection which _is the part the parent record_.
+Non-aggregating collection. Collection of references to shared models which itself is _aggregated_ by the model, but _does not aggregate_ its elements. In contrast to the `refTo( Collection.of( Model ) )`, `Collection.ofRefsTo( Model )` is an actual constructor and creates an instance of collection which _is the part the parent record_.
 
 The collection itself is recursively created and cloned. However, its models are not aggregated by the collection thus they are not recursively cloned, validated, serialized, or disposed.
 
@@ -376,8 +443,9 @@ All changes in the collection and its elements are detected and cause change eve
 ```javascript
     @define class MyRecord extends Model {
         static attributes = {
-            notCloned : shared( SomeCollection ), // Reference to the _shared collection_ object.
-            cloned : SomeCollection.Refs // _Aggregated_ collection of references to the _shared models_.
+            notCloned : refTo( Collection.of( SomeModel ) ), // Reference to the _shared collection_ object.
+            cloned : Collection.ofRefsTo( SomeModel ) // _Aggregated_ collection of references to the _shared models_.
+        }
     }
 ```
 
@@ -387,7 +455,7 @@ Make forward declaration for the model to define its attributes later with `Reco
 
 Creates the default `RecordClass.Collection` type which can be referenced in attribute definitions.
 
-### `static` define({ attributes : { name : `metatype`, ... } })
+### `static` define({ attributes : { name : `metatype`, ... }})
 
 May be called to define attributes in conjunction with `@predefine` decorator to make recursive model definitions.
 

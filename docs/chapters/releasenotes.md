@@ -10,8 +10,8 @@ Changed semantic which needs to be refactored:
  -|-|-
 Typeless attribute | `value(x)` | `type(null).value(x)`
 Infer type from the value | `x` (except functions) | `value(x)`, or `x` (except functions)
-record.parse() override | `record._parse(json)` | no such a method, remove it
-record attributes iteration | `record.forEachAttr(obj, iteratee)` | `record.forEach(iteratee)`
+model.parse() override | `model._parse(json)` | no such a method, remove it
+model attributes iteration | `model.forEachAttr(obj, iteratee)` | `model.forEach(iteratee)`
 Shared object | `User.shared` | `shared( User )`
 one-to-many relationship | `RecordClass.from( ref )` | `memberOf( ref )`
 many-to-many relationship | `CollectionClass.from( ref )` | `subsetOf( ref, CollectionClass? )`
@@ -37,7 +37,7 @@ Attribute "Required" check | `Ctor.isRequired` | `type(Ctor).required`
 
 - `Infer<typeof Metatype>` infers TypeScript type from the Type-R attribute metatype.
 - `InferAttrs<typeof attributes>` infers TypeScript type for the Type-R attributes definitions.
-- `attributes({ attrDefs })` returns the properly typed TypeScript Record class.
+- `attributes({ attrDefs })` returns the properly typed TypeScript Model class.
 
 TypeScript attributes definitions:
 
@@ -57,26 +57,26 @@ Specify type and default value | `@attr(T.value(default)) name : T` | `@type(T).
 - `Type.from( json, options? )` method to restore object from JSON with a strict type check and validation.
 
 ```typescript
-@define class User extends Record {
+@define class User extends Model {
     // There's an HTTP REST enpoint for users.
     static endpoint = restfulIO( '/api/users' );
 
     @auto name : string
 
-    // Collection of Role records represented as an array of role.id in JSON.
+    // Collection of Role models represented as an array of role.id in JSON.
     // When the "roles" attribute will be accessed for the first time,
     // User will look-up for a 'roles' attribute of the nearest store to resolve ids to actual Users.
     @subsetOf( '~roles' ).as roles : Collection<Role>
 }
 
-@define class Role extends Record {
+@define class Role extends Model {
     static endpoint = restfulIO( '/api/roles' );
     @auto name : string
 }
 
-// Store is the regular Record, nothing special.
+// Store is the regular Model, nothing special.
 @define class UsersDirectory extends Store {
-    // When this record is fetched, fetch all the attributes instead.
+    // When this model is fetched, fetch all the attributes instead.
     static endpoint = attributesIO();
 
     // '~roles' references from all aggregated collections
@@ -99,7 +99,7 @@ This release adds long-awaited HTTP REST endpoint.
 
 - IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.
 - Added HTTP REST endpoint `restfulIO` with relative urls support (https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-).
-- Added proxyIO endpoint for creating endpoints from records on the server side (https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-).
+- Added proxyIO endpoint for creating endpoints from models on the server side (https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-).
 
 ## 2.0.0
 
@@ -109,12 +109,12 @@ There shouldn't be breaking changes _unless_ you're using custom logger or React
 
 ### Generic IO support
 
-New [IOEndpoint]() concept is introduced, making it easy to create IO abstractions. To enable `Record` and `Collection` IO API, you need to assign IO endpoint in the class definition.
+New [IOEndpoint]() concept is introduced, making it easy to create IO abstractions. To enable `Model` and `Collection` IO API, you need to assign IO endpoint in the class definition.
 
 Endpoint is the class defining CRUD and list operations on JSON data, as well as the methods to subscribe for the data changes. There are two endpoints included with 2.0 release, `memoryIO` which is suitable for mock testing and `localStorageIO` which could be used in demos and prototypes. They can be used as a references as starting points to define your own IO endpoints.
 
 ```javascript
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = memoryIO();
     static attributes = {
         name : String,
@@ -123,7 +123,7 @@ Endpoint is the class defining CRUD and list operations on JSON data, as well as
 }
 ```
 
-There are three Record IO methods (`save()`, `fetch()`, and `destroy()`) and two collection IO method (`fetch()` and `liveUpdates()`) ). All IO methods returns ES6 promises, so you either must have the runtime supporting ES6 or use the ES6 promise polyfill. The promises are modified to be _abortable_ (all of them have `abort()` method).
+There are three Model IO methods (`save()`, `fetch()`, and `destroy()`) and two collection IO method (`fetch()` and `liveUpdates()`) ). All IO methods returns ES6 promises, so you either must have the runtime supporting ES6 or use the ES6 promise polyfill. The promises are modified to be _abortable_ (all of them have `abort()` method).
 
 ```javascript
 const user = new User({ name : 'John' });
@@ -215,7 +215,7 @@ In this example, all of the methods defined in the mixin, base class, and subcla
 
 ### Other changes
 
-- Update pipeline was rewritten to improve record's initialization speed (collection's fetch speed is improved by 30%).
-- Fixed bug causing dynamic type checks to be disabled in records constructors.
+- Update pipeline was rewritten to improve model's initialization speed (collection's fetch speed is improved by 30%).
+- Fixed bug causing dynamic type checks to be disabled in models constructors.
 - New implementation of the `Collection.subsetOf` which both fixes some edge case bugs and is more efficient.
 - New logger handling NODE_ENV variable setting.

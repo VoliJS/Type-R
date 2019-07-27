@@ -93,7 +93,7 @@ fs.readFile('./index.md', 'utf8', function (err, content) {
     // create partials
     for (var i = 0; i < data.includes.length; i++) {
       var includeFileName = data.includes[i]
-      var includeFilePath = path.resolve(__dirname, './chapters', includeFileName + '.md')
+      var includeFilePath = path.resolve(__dirname, '..', includeFileName + '.md')
       var includeContent = fs.readFileSync(includeFilePath, {encoding: 'utf8'})
       var markedInclude = marked(includeContent)
       Handlebars.registerPartial(includeFileName, markedInclude)

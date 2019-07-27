@@ -2,13 +2,13 @@
 
 ## Overview
 
-Type-R implements generalized IO on top of the `IOEndpoint` interface,  with JSON serialization handled by Record and Collection classes.
+Type-R implements generalized IO on top of the `IOEndpoint` interface,  with JSON serialization handled by Model and Collection classes.
 
 IOEndpoint defines the set of CRUD + list methods operating on raw JSON.
-Attachment of an endpoint to the record or collection enables I/O API.  There are few endpoints bundled with Type-R, for instance `memoryIO()` which can be used for mock testing.
+Attachment of an endpoint to the model or collection enables I/O API.  There are few endpoints bundled with Type-R, for instance `memoryIO()` which can be used for mock testing.
 
 ```javascript
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = memoryIO();
 
     static attributes = {
@@ -28,25 +28,25 @@ users
 
 ### `static` endpoint
 
-I/O endpoint declaration which should be used in Record or Collection definition to enable I/O API.
+I/O endpoint declaration which should be used in Model or Collection definition to enable I/O API.
 
 If an endpoint is defined for the `MyRecord`, it's automatically defined for the corresponding `MyRecord.Collection` as well.
 
-### `attrDef` : type( Type ).endpoint( `endpoint` )
+### `metatype` type( Type ).endpoint( `endpoint` )
 
-Override or define an I/O endpoint for the specific record's attribute.
+Override or define an I/O endpoint for the specific model's attribute.
 
 ### obj.getEndpoint()
 
-Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's record using `type( Type ).endpoint( ... )` attribute declaration.
+Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's model using `type( Type ).endpoint( ... )` attribute declaration.
 
 ```javascript
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = restfulIO( '/api/users' );
     ...
 }
 
-@define class UserRole extends Record {
+@define class UserRole extends Model {
     static endpoint = restfulIO( '/api/roles' );
     static attributes = {
         // Use the relative path '/api/roles/:id/users'
@@ -56,23 +56,23 @@ Returns an object's IO endpoint. Normally, this is an endpoint which is defined 
 }
 ```
 
-### record.fetch( options? )
+### model.fetch( options? )
 
-Asynchronously fetch the record using `endpoint.read()` method. Returns an abortable ES6 promise.
+Asynchronously fetch the model using `endpoint.read()` method. Returns an abortable ES6 promise.
 
-An endpoint must be defined for the record in order to use that method.
+An endpoint must be defined for the model in order to use that method.
 
-### record.save( options? )
+### model.save( options? )
 
-Asynchronously save the record using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
+Asynchronously save the model using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
 
-An endpoint must be defined for the record in order to use that method.
+An endpoint must be defined for the model in order to use that method.
 
-### record.destroy( options? )
+### model.destroy( options? )
 
-Asynchronously destroy the record using `endpoint.destroy()` method. Returns an abortable ES6 promise. The record is removed from the aggregating collection upon the completion of the I/O request.
+Asynchronously destroy the model using `endpoint.destroy()` method. Returns an abortable ES6 promise. The model is removed from the aggregating collection upon the completion of the I/O request.
 
-An endpoint must be defined for the record in order to use that method.
+An endpoint must be defined for the model in order to use that method.
 
 ### collection.fetch( options? )
 
@@ -107,23 +107,23 @@ HTTP REST client endpoint. Requires `window.fetch` available natively or through
 
 All I/O methods append an optional `options.params` object to the URL parameters translating them to string with `JSON.stringify()`.
 
-- `record.save()` makes:
+- `model.save()` makes:
     - `POST url`, if the model has no id. Expects to receive `{ id : recordId }`.
     - `PUT url/:id`, if the model has an id.
 - `collection.fetch()` makes `GET url`.
-- `record.destroy()` makes `DELETE url`.
+- `model.destroy()` makes `DELETE url`.
 
 Supports URI relative to owner (`./relative/url` resolves as `/owner/:id/relative/url/:id` ).
 
 ```javascript
 import { restfulIO } from 'type-r/endpoints/restful'
 
-@define class Role extends Record {
+@define class Role extends Model {
     static endpoint = restfulIO( '/api/roles' );
     ...
 }
 
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = restfulIO( '/api/users' );
     
     static attributes = {
@@ -141,7 +141,7 @@ Endpoint for mock testing. Takes optional array with mock data, and optional `de
 ```javascript
 import { memoryIO } from 'type-r/endpoints/memory'
 
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = memoryIO();
     ...
 }
@@ -149,12 +149,12 @@ import { memoryIO } from 'type-r/endpoints/memory'
 
 ### localStorageIO( key )
 
-Endpoint for localStorage. Takes `key` parameter which must be unique for the persistent record's collection.
+Endpoint for localStorage. Takes `key` parameter which must be unique for the persistent model's collection.
 
 ```javascript
 import { localStorageIO } from 'type-r/endpoints/localStorage'
 
-@define class User extends Record {
+@define class User extends Model {
     static endpoint = localStorageIO( '/users' );
     ...
 }
@@ -162,7 +162,7 @@ import { localStorageIO } from 'type-r/endpoints/localStorage'
 
 ### attributesIO()
 
-Endpoint for I/O composition. Redirects record's `fetch()` request to its attributes and returns the combined abortable promise. Does not enable any other I/O methods and can be used with `record.fetch()` only.
+Endpoint for I/O composition. Redirects model's `fetch()` request to its attributes and returns the combined abortable promise. Does not enable any other I/O methods and can be used with `model.fetch()` only.
 
 It's common pattern to use attributesIO endpoint in conjunction with Store to fetch all the data required by SPA page.
 
@@ -183,10 +183,10 @@ store.fetch().then( () => renderUI() );
 
 ### proxyIO( RecordCtor )
 
-Create IO endpoint from the Record class. This endpoint is designed for use on the server side with a data layer managed by Type-R.
+Create IO endpoint from the Model class. This endpoint is designed for use on the server side with a data layer managed by Type-R.
 
-Assuming that you have Type-R records with endpoints working with the database, you can create an endpoint which will use
-an existing Record subclass as a transport. This endpoint can be connected to the RESTful endpoint API on the server side which will serve JSON to the restfulIO endpoint on the client.
+Assuming that you have Type-R models with endpoints working with the database, you can create an endpoint which will use
+an existing Model subclass as a transport. This endpoint can be connected to the RESTful endpoint API on the server side which will serve JSON to the restfulIO endpoint on the client.
 
 An advantage of this approach is that JSON schema will be transparently validated on the server side by the Type-R.
 
@@ -200,27 +200,27 @@ An advantage of this approach is that JSON schema will be transparently validate
 
 ## IOEndpoint Interface
 
-An IO endpoint is an "plug-in" abstraction representing the persistent collection of JSON objects, which is required to enable records and collections I/O API. There are several pre-defined endpoints included in Type-R package which can be used for HTTP REST I/O, mock testing, working with localStorage, and IO composition.
+An IO endpoint is an "plug-in" abstraction representing the persistent collection of JSON objects, which is required to enable models and collections I/O API. There are several pre-defined endpoints included in Type-R package which can be used for HTTP REST I/O, mock testing, working with localStorage, and IO composition.
 
 You will need to define custom endpoint if you would like to implement or customize serialization transport for Type-R objects. Use built-in endpoints as an example and the starting boilerplate.
 
 All IOEndpoint methods might return standard Promises or abortable promises (created with `createIOPromise()`). An IOEndpoint instance is shared by all of the class instances it's attached to and therefore it's normally *must be stateless*.
 
-### endpoint.read( id, options, record )
+### endpoint.read( id, options, model )
 
-Reads an object with a given id. Used by `record.fetch()` method. Must return JSON wrapped in abortable promise.
+Reads an object with a given id. Used by `model.fetch()` method. Must return JSON wrapped in abortable promise.
 
-### endpoint.update( id, json, options, record )
+### endpoint.update( id, json, options, model )
 
-Updates or creates an object with a given id. Used by `record.save()` method when record *already has* an id. Must return abortable promise.
+Updates or creates an object with a given id. Used by `model.save()` method when model *already has* an id. Must return abortable promise.
 
-### endpoint.create( json, options, record )
+### endpoint.create( json, options, model )
 
-Creates an object. Used by `record.save()` method when record *does not* have an id. Must return abortable promise.
+Creates an object. Used by `model.save()` method when model *does not* have an id. Must return abortable promise.
 
-### endpoint.destroy( id, options, record )
+### endpoint.destroy( id, options, model )
 
-Destroys the object with the given id. Used by `record.destroy()` method. Must return abortable promise.
+Destroys the object with the given id. Used by `model.destroy()` method. Must return abortable promise.
 
 ### endpoint.list( options, collection )
 
@@ -265,13 +265,13 @@ const abortablePromise = createIOPromise( ( resolve, reject, onAbort ) =>{
 
 ## Serialization
 
-Record and Collection has a portion of common API related to the I/O and serialization.
+Model and Collection has a portion of common API related to the I/O and serialization.
 
 ### obj.toJSON( options? )
 
-Serialize record or collection to JSON. Used internally by `save()` I/O method (`options.ioMethod === 'save'` when called from within `save()`). Can be overridden to customize serialization.
+Serialize model or collection to JSON. Used internally by `save()` I/O method (`options.ioMethod === 'save'` when called from within `save()`). Can be overridden to customize serialization.
 
-Produces the JSON for the given record or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Record corresponds to an object in JSON, while the collection is represented as an array of objects.
+Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.
 
 If you override `toJSON()`, it usually means that you must override `parse()` as well, and vice versa.
 
@@ -280,13 +280,13 @@ Serialization can be controlled on per-attribute level with <b>type( Type ).toJS
 </aside>
 
 ```javascript
-@define class Comment extends Record {
+@define class Comment extends Model {
     static attributes = {
         body : ''
     }
 }
 
-@define class BlogPost extends Record {
+@define class BlogPost extends Model {
     static attributes = {
         title : '',
         body : '',
@@ -316,7 +316,7 @@ book.set( bestSeller.toJSON(), { parse : true } );
 
 ### `callback` obj.parse( json, options? )
 
-Optional hook called to transform the JSON when it's passes to the record or collection with `set( json, { parse : true })` call. Used internally by I/O methods (`options.ioMethod` is either "save" or "fetch" when called from I/O method).
+Optional hook called to transform the JSON when it's passes to the model or collection with `set( json, { parse : true })` call. Used internally by I/O methods (`options.ioMethod` is either "save" or "fetch" when called from I/O method).
 
 If you override `toJSON()`, it usually means that you must override `parse()` as well, and vice versa.
 
@@ -324,19 +324,19 @@ If you override `toJSON()`, it usually means that you must override `parse()` as
 Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
 </aside>
 
-### `attrDef` : type( Type ).toJSON( false )
+### `metatype` type( Type ).toJSON( false )
 
 Do _not_ serialize the specific attribute.
 
-### `attrDef` : type( Type ).toJSON( ( value, name, options ) => json )
+### `metatype` type( Type ).toJSON( ( value, name, options ) => json )
 
-Override the default serialization for the specific record's attribute.
+Override the default serialization for the specific model's attribute.
 
 Attribute is not serialized when the function return `undefined`.
 
-### `attrDef` : type( Type ).parse( ( json, name ) => value )
+### `metatype` type( Type ).parse( ( json, name ) => value )
 
-Transform the data before it will be assigned to the record's attribute.
+Transform the data before it will be assigned to the model's attribute.
 
 Invoked when the `{ parse : true }` option is set.
 
@@ -349,12 +349,12 @@ const MyWeirdBool = type( Boolean )
 
 ### `static` create( attrs, options )
 
-Static factory function used internally by Type-R to create instances of the record.
+Static factory function used internally by Type-R to create instances of the model.
 
-May be redefined in the abstract Record base class to make it serializable type.
+May be redefined in the abstract Model base class to make it serializable type.
 
 ```javascript
-@define class Widget extends Record {
+@define class Widget extends Model {
     static attributes = {
         type : String
     }
@@ -384,26 +384,26 @@ May be redefined in the abstract Record base class to make it serializable type.
 
 ## Normalized data
 
-Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by record id. References are represented as record ids in JSON, and being transparently resolved to record instances on the first access.
+Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by model id. References are represented as model ids in JSON, and being transparently resolved to model instances on the first access.
 
-`Store` class is the special record class which serves as a placeholder for the set of interlinked collections of normalized records. Id-references are defined as record attributes of the special type representing the serializable reference to the records from the specified master collection.
+`Store` class is the special model class which serves as a placeholder for the set of interlinked collections of normalized models. Id-references are defined as model attributes of the special type representing the serializable reference to the models from the specified master collection.
 
-### `attrDef` : memberOf( `sourceCollection` )
+### `metatype` memberOf( `sourceCollection` )
 
-Serializable reference to the record from the particular collection.
-Initialized as `null` and serialized as `record.id`. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.
+Serializable reference to the model from the particular collection.
+Initialized as `null` and serialized as `model.id`. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.
 
-Changes in shared record are not detected.
+Changes in shared model are not detected.
 
 `sourceCollection` may be:
 - the JS variable pointing to the collection singleton;
 - the function returning the collection;
-- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the record's `this`. Following shortcuts may be used in path:
+- the string with the dot-separated _relative object path_ to the collection. It is resolved dynamically relative to the model's `this`. Following shortcuts may be used in path:
     - `owner.path` (or `^path`) works as `() => this.getOwner().path`.
     - `store.path` (or `~path`) works as `() => this.getStore().path`.
 
 ```javascript
-    @define class State extends Record {
+    @define class State extends Model {
         static attributes = {
             items : Item.Collection,
             selected : memberOf( 'items' ) // Will resolve to `this.items`
@@ -411,32 +411,25 @@ Changes in shared record are not detected.
     }
 ```
 
-```typescript
-    @define class State extends Record {
-        @type( Item.Collection ).as items : Collection<Item>;
-        @memberOf( 'items' ).as selected : Item
-    }
-```
-
 <aside class="info">It's recommended to use ~paths and stores instead of ^paths.</aside>
 
-### `attrDef` : subsetOf( `sourceCollection`, CollectionCtor? )
+### `metatype` subsetOf( `sourceCollection`, CollectionCtor? )
 
-Serializable non-aggregating collection which is the subset of the existing collection. Serialized as an array of record ids. Used to model many-to-many relationships. `CollectionCtor` argument may be omitted unless you need it to be a sublass of the particular collection type.
+Serializable non-aggregating collection which is the subset of the existing collection. Serialized as an array of model ids. Used to model many-to-many relationships. `CollectionCtor` argument may be omitted unless you need it to be a sublass of the particular collection type.
 
-The collection object itself is recursively created and cloned. However, its records are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.
+The collection object itself is recursively created and cloned. However, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.
 
 `sourceCollection` is the same reference as used by `memberOf( sourceCollection )`.
 
 ```javascript
-@define class Role extends Record {
+@define class Role extends Model {
     static attributes = {
         name : String,
         ...
     }
 }
 
-@define class User extends Record {
+@define class User extends Model {
     static attributes = {
         name : String,
         roles : subsetOf( '~roles', Role.Collection )
@@ -451,7 +444,7 @@ The collection object itself is recursively created and cloned. However, its rec
 }
 ```
 
-### sourceCollection.createSubset( records?, options? )
+### sourceCollection.createSubset( models?, options? )
 
 Create an instance of `subsetOf( sourceCollection, CollectionCtor )` type (non-aggregating serializable collection) which is the subset of the given collection. Takes the same arguments as the collection's constructor.
 
@@ -461,13 +454,13 @@ Records in the collection must have an `id` attribute populated to work properly
 
 ### `class` Store
 
-`Store` is the special kind of record which serves as a root for id references.
+`Store` is the special kind of model which serves as a root for id references.
 
-For all records inside of the store's aggregation tree `~attrName` will resolve to the attribute of the store class found with `record.getStore()` method. If there are no such an attribute in the store, the next available store upper in aggregation tree will be used (as regular records stores can be nested), or the default store if there are no one.
+For all models inside of the store's aggregation tree `~attrName` will resolve to the attribute of the store class found with `model.getStore()` method. If there are no such an attribute in the store, the next available store upper in aggregation tree will be used (as regular models stores can be nested), or the default store if there are no one.
 
 <aside class="notice">Stores in Type-R is _very different_ to stores in other framework. Pay attention.</aside>
 
-Store is the subclass of the Record. It's defined extending the `Store` abstract base class. It behaves as a regular record in most aspects.
+Store is the subclass of the Model. It's defined extending the `Store` abstract base class. It behaves as a regular model in most aspects.
 
 ### store._defaultStore
 

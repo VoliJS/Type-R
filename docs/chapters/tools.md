@@ -1,4 +1,6 @@
-# Tools
+# Mixture
+
+`@type-r/mixture` is the library with foundations the Type-R models are built upon. Mixins, Events, logging.
 
 ## Logging
 
@@ -162,21 +164,21 @@ All Type-R class definitions must be precedeed with the `@define` (or `@predefin
 @definitions({
     attributes : mixinRules.merge
 })
-class Record {
+class Model {
     static onDefine( definitions, BaseClass ){
         definitions.attributes && console.log( JSON.stringify( definitions.attributes ) );
     }
 }
 
 // Will print "{ "a" : 1 }"
-@define class A extends Record {
+@define class A extends Model {
     static attributes = {
         a : 1
     }
 }
 
 // Will print "{ "b" : 1 }"
-@define class B extends Record {
+@define class B extends Model {
     static attributes = {
         b : 1
     }

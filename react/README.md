@@ -1,6 +1,10 @@
-# React bindings for Type-r models.
+# React bindings
 
-## Use Type-R model as local component state
+## Local component state
+
+### `hook` useModel( ModelClass )
+
+### `hook` useCollection.of( ModelClass )
 
 ```javascript
 class State = attributes({
@@ -17,8 +21,6 @@ const StatefulComponent = () => {
     );
 }
 ```
-
-## Use Type-r collections as local component state
 
 ```javascript
 class Counter = attributes({
@@ -40,13 +42,52 @@ const StatefulComponent = () => {
 
 ## Data binding
 
-Genious.
+### `class` Linked
+
+### `hook` useLinked( value )
 
 ```javascript
-user.$.name
+const StatefulDataBound = () => {
+    // Obtain linked local state.
+    const $name = useLinked( '' );
 
-const user$ = user.$
+    return (
+        <div>
+            <input {...$name.props} />
+        </div>
+    )
+}
+ 
 ```
+
+### model.$
+
+```javascript
+@define class Book extends Model {
+    static attributes = {
+        name : '',
+        author : ''
+    }
+}
+
+const EditBook = ({ book }) => {
+    // Obtain linked model attributes.
+    const { name, author } = book.$;
+
+    return (
+        <div>
+            <input {...name.props} />
+            <input {...author.props} />
+        </div>
+    )
+}
+```
+
+### collection.$includes( model )
+
+
+
+### `static` Linked.value( value, set )
 
 ## Normalized data and stores
 

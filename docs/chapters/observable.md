@@ -2,18 +2,18 @@
 
 ## Overview
 
-Type-R implements *deeply observable changes* on the object graph constructed of records and collection.
+Type-R implements *deeply observable changes* on the object graph constructed of models and collection.
 
-All of the record and collection updates happens in a scope of the transaction followed by the change event. Every record or collection update operation opens _implicit_ transaction. Several update operations can be groped to the single _explicit_ transaction if executed in the scope of the `obj.transaction()` or `col.updateEach()` call.
+All of the model and collection updates happens in a scope of the transaction followed by the change event. Every model or collection update operation opens _implicit_ transaction. Several update operations can be groped to the single _explicit_ transaction if executed in the scope of the `obj.transaction()` or `col.updateEach()` call.
 
 ```javascript
-@define class Author extends Record {
+@define class Author extends Model {
     static attributes = {
         name : ''
     }
 }
 
-@define class Book extends Record {
+@define class Book extends Model {
     static attributes = {
         name : '',
         datePublished : Date,
@@ -28,26 +28,26 @@ book.on( 'change', () => console.log( 'Book is changed') );
 book.author.name = 'John Smith';
 ```
 
-## Record
+## Model
 
 ### Events mixin methods (7)
 
-Record implements [Events](#events-mixin) mixin.
+Model implements [Events](#events-mixin) mixin.
 
-### `event` "change" ( record )
+### `event` "change" ( model )
 
-Triggered by the record at the end of the attributes update transaction in case if there were any changes applied.
+Triggered by the model at the end of the attributes update transaction in case if there were any changes applied.
 
-### `event` "change:attrName" ( record, value )
+### `event` "change:attrName" ( model, value )
 
-Triggered by the record during the attributes update transaction for every changed attribute.
+Triggered by the model during the attributes update transaction for every changed attribute.
 
-### `attrDef` : type( Type ).watcher( watcher )
+### `metatype` type( Type ).watcher( watcher )
 
-Attach `change:attr` event listener to the particular record's attribute. `watcher` can either be the record's method name or the function `( newValue, attr ) => void`. Watcher is always executed in the context of the record.
+Attach `change:attr` event listener to the particular model's attribute. `watcher` can either be the model's method name or the function `( newValue, attr ) => void`. Watcher is always executed in the context of the model.
 
 ```javascript
-@define class User extends Record {
+@define class User extends Model {
     static attributes = {
         name : type( String ).watcher( 'onNameChange' ),
         isAdmin : Boolean,
@@ -60,36 +60,36 @@ Attach `change:attr` event listener to the particular record's attribute. `watch
 }
 ```
 
-### `attrDef` : type( Type ).changeEvents( false )
+### `metatype` type( Type ).changeEvents( false )
 
-Turn off changes observation for nested records or collections.
+Turn off changes observation for nested models or collections.
 
-Record automatically listens to change events of all nested records and collections, triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.
+Model automatically listens to change events of all nested models and collections, triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.
 
-### `attrDef` : type( Type ).events({ eventName : handler, ... })
+### `metatype` type( Type ).events({ eventName : handler, ... })
 
 Automatically manage custom event subscription for the attribute. `handler` is either the method name or the handler function.
 
-### record.changed
+### model.changed
 
 The `changed` property is the internal hash containing all the attributes that have changed during its last transaction.
 Please do not update `changed` directly since its state is internally maintained by `set()`.
 A copy of `changed` can be acquired from `changedAttributes()`.
 
-### record.changedAttributes( attrs? )
+### model.changedAttributes( attrs? )
 
-Retrieve a hash of only the record's attributes that have changed during the last transaction,
+Retrieve a hash of only the model's attributes that have changed during the last transaction,
 or false if there are none. Optionally, an external attributes hash can be passed in,
-returning the attributes in that hash which differ from the record.
+returning the attributes in that hash which differ from the model.
 This can be used to figure out which portions of a view should be updated,
 or what calls need to be made to sync the changes to the server.
 
-### record.previous( attr )
+### model.previous( attr )
 
 During a "change" event, this method can be used to get the previous value of a changed attribute.
 
 ```javascript
-@define class Person extends Record{
+@define class Person extends Model{
     static attributes = {
         name: ''
     }
@@ -99,20 +99,20 @@ const bill = new Person({
   name: "Bill Smith"
 });
 
-bill.on("change:name", ( record, name ) => {
+bill.on("change:name", ( model, name ) => {
   alert( `Changed name from ${ bill.previous('name') } to ${ name }`);
 });
 
 bill.name = "Bill Jones";
 ```
 
-### record.previousAttributes()
+### model.previousAttributes()
 
-Return a copy of the record's previous attributes. Useful for getting a diff between versions of a record, or getting back to a valid state after an error occurs.
+Return a copy of the model's previous attributes. Useful for getting a diff between versions of a model, or getting back to a valid state after an error occurs.
 
 ## Collection
 
-All changes in the records cause change events in the collections they are contained in.
+All changes in the models cause change events in the collections they are contained in.
 
 Subset collections is an exception; they don't observe changes of its elements by default.
 
@@ -129,13 +129,13 @@ All collection updates occurs in the scope of transactions. Transaction is the s
 Transaction can be opened either manually or implicitly with calling any of collection update methods.
 Any additional changes made to the collection or its items in event handlers will be executed in the scope of the original transaction, and won't trigger an additional `changes` events.
 
-### collection.updateEach( iteratee : ( val : Record, index ) => void, context? )
+### collection.updateEach( iteratee : ( val : Model, index ) => void, context? )
 
-Similar to the `collection.each`, but wraps an iteration in a transaction. The single `changes` event will be emitted for the group of changes to the records made in `updateEach`.
+Similar to the `collection.each`, but wraps an iteration in a transaction. The single `changes` event will be emitted for the group of changes to the models made in `updateEach`.
 
 ### `static` itemEvents = { eventName : `handler`, ... }
 
-Subscribe for events from records. The `hander` is either the collection's method name, the handler function, or `true`.
+Subscribe for events from models. The `hander` is either the collection's method name, the handler function, or `true`.
 
 When `true` is passed as a handler, the corresponding event will be triggered on the collection.
 
@@ -149,23 +149,23 @@ When the collection's entire contents have been reset (`reset()` method was call
 
 ### `event` "update" (collection, options)
 
-Single event triggered after any number of records have been added or removed from a collection.
+Single event triggered after any number of models have been added or removed from a collection.
 
 ### `event` "sort" (collection, options)
 
 When the collection has been re-sorted.
 
-### `event` "add" (record, collection, options)
+### `event` "add" (model, collection, options)
 
-When a record is added to a collection.
+When a model is added to a collection.
 
-### `event` "remove" (record, collection, options)
+### `event` "remove" (model, collection, options)
 
-When a record is removed from a collection.
+When a model is removed from a collection.
 
-### `event` "change" (record, options)
+### `event` "change" (model, options)
 
-When a record inside of the collection is changed.
+When a model inside of the collection is changed.
 
 ## Events mixin
 
@@ -194,7 +194,7 @@ Trigger callbacks for the given event, or space-delimited list of events. Subseq
 Tell an object to listen to a particular event on an other object. The advantage of using this form, instead of other.on(event, callback, object), is that listenTo allows the object to keep track of the events, and they can be removed all at once later on. The callback will always be called with object as context.
 
 ```javascript
-    view.listenTo(record, 'change', view.render );
+    view.listenTo(model, 'change', view.render );
 ```
 
 <aside class="success">Subscriptions made with <code>listenTo()</code> will be stopped automatically if an object is properly disposed (<code>dispose()</code> method is called).</aside>
@@ -206,10 +206,10 @@ Tell an object to stop listening to events. Either call stopListening with no ar
 ```javascript
     view.stopListening(); // Unsubscribe from all events
 
-    view.stopListening(record); // Unsubscribe from all events from the record
+    view.stopListening(model); // Unsubscribe from all events from the model
 ```
 
-<aside class="notice">Messenger, Record, Collection, and Store execute <code>this.stopListening()</code> from their <code>dispose()</code> method. You don't have to unsubscribe from events explicitly if you are using <code>listenTo()</code> method and disposing your objects properly.</aside>
+<aside class="notice">Messenger, Model, Collection, and Store execute <code>this.stopListening()</code> from their <code>dispose()</code> method. You don't have to unsubscribe from events explicitly if you are using <code>listenTo()</code> method and disposing your objects properly.</aside>
 
 ### listener.listenToOnce(source, event, callback)
 
@@ -241,7 +241,7 @@ All event methods also support an event map syntax, as an alternative to positio
     });
 ```
 
-To supply a context value for this when the callback is invoked, pass the optional last argument: `record.on('change', this.render, this)` or `record.on({change: this.render}, this)`.
+To supply a context value for this when the callback is invoked, pass the optional last argument: `model.on('change', this.render, this)` or `model.on({change: this.render}, this)`.
 
 <aside class="warning">Event subscription with <code>source.on()</code> may create memory leaks if it's not stopped properly with <code>source.off()</code></aside>
 
@@ -266,7 +266,7 @@ Remove a previously bound callback function from an object. If no context is spe
     object.off();
 ```
 
-Note that calling `record.off()`, for example, will indeed remove all events on the record — including events that Backbone uses for internal bookkeeping.
+Note that calling `model.off()`, for example, will indeed remove all events on the model — including events that Backbone uses for internal bookkeeping.
 
 ### source.once(event, callback, [context])
 Just like `on()`, but causes the bound callback to fire only once before being removed. Handy for saying "the next time that X happens, do this". When multiple events are passed in using the space separated syntax, the event will fire once for every event you passed in, not once for a combination of all events
@@ -275,12 +275,12 @@ Just like `on()`, but causes the bound callback to fire only once before being r
 
 All Type-R objects implement Events mixin and use events to notify listeners on changes.
 
-Record and Store change events:
+Model and Store change events:
 
 Event name | Handler arguments | When triggered
 -------|-------------------|------------
-change | (record, options) | At the end of any changes.
-change:attrName | (record, value, options) | The record's attribute has been changed.
+change | (model, options) | At the end of any changes.
+change:attrName | (model, value, options) | The model's attribute has been changed.
 
 Collection change events:
 
@@ -288,11 +288,11 @@ Event name | Handler arguments | When triggered
 -------|-------------------|------------
 changes | (collection, options) | At the end of any changes.
 reset | (collection, options) | `reset()` method was called.
-update | (collection, options) | Any records added or removed.
-sort | (collection, options) | Order of records is changed. 
-add | (record, collection, options) | The record is added to a collection.
-remove | (record, collection, options) | The record is removed from a collection.
-change | (record, options) | The record is changed inside of collection.
+update | (collection, options) | Any models added or removed.
+sort | (collection, options) | Order of models is changed. 
+add | (model, collection, options) | The model is added to a collection.
+remove | (model, collection, options) | The model is removed from a collection.
+change | (model, options) | The model is changed inside of collection.
 
 ## Messenger class
 

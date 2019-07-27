@@ -1,14 +1,16 @@
-# Type-R Mixture
+# Mixture
+
+## Getting started
 
 Type-R Mixture is the toolkit combining React-style mixins, Backbone-style events, and minimal set of Underscore-style object manipulation functions.
 
 Written in TypeScript, works with ES5, ES6, and TypeScript.
 
-## Installation
+### Installation
 
 `npm install @type-r/mixture`
 
-## Features
+### Features
 
 - `Mixable`, React-style mixins.
     - Fine-grained control over member merge rules.

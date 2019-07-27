@@ -1,17 +1,17 @@
 # Type Safety and Validation
 
-Type-R records and collections are _dynamically type safe_. It's guaranteed that Type-R data structures will always conform to the declared shape.
+Type-R models and collections are _dynamically type safe_. It's guaranteed that Type-R data structures will always conform to the declared shape.
 Records and collections convert values to the declared types on assignment, and reject an update (logging an error in a console) if it cannot be done.
 
-In addition to that, Type-R supports validation API allowing developer to attach custom validation rules to attributes, records, and collections. Type-R validation mechanics based on following principles:
+In addition to that, Type-R supports validation API allowing developer to attach custom validation rules to attributes, models, and collections. Type-R validation mechanics based on following principles:
 
 - Validation happens transparently on the first access to the validation error. There's no special API to trigger the validation.
-- Validation is performed recursively on the aggregation tree formed by nested records and collections. If an element at the bottom of the tree is not valid, the whole object tree is not valid.
+- Validation is performed recursively on the aggregation tree formed by nested models and collections. If an element at the bottom of the tree is not valid, the whole object tree is not valid.
 - Validation results are cached across the aggregation tree, thus consequent validation error reads are cheap. Only changed parts of aggregation tree will be revalidated when necessary.
 
 ## Attribute-level checks
 
-### `attrDef` : type( Type ).check( predicate, errorMsg? )
+### `metatype` type( Type ).check( predicate, errorMsg? )
 
 Attribute-level validator.
 
@@ -39,7 +39,7 @@ const Age = type( Number )
 
 const Word = type( String ).check( x => indexOf( ' ' ) < 0, 'No spaces allowed' );
 
-@define class Person extends Record {
+@define class Person extends Model {
     static attributes = {
         firstName : Word,
         lastName : Word,
@@ -48,25 +48,25 @@ const Word = type( String ).check( x => indexOf( ' ' ) < 0, 'No spaces allowed' 
 }
 ```
 
-### `attrDef` : type( Type ).required
+### `metatype` type( Type ).required
 
 The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, `"Required"` is used as validation error.
 
 `isRequired` is the first validator to check, no matter in which order validators were attached.
 
-## Record
+## Model
 
 ### rec.isValid( attrName )
 
-Returns `true` if the specified record's attribute is valid.
+Returns `true` if the specified model's attribute is valid.
 
 ### rec.getValidationError( attrName )
 
 Return the validation error for the given attribute or `null` if it's valid.
 
-## Record and Collection
+## Model and Collection
 
-Record and Collection share the same validation API. `key` is the attribute name for the record and record's id/cid for the collection.
+Model and Collection share the same validation API. `key` is the attribute name for the model and model's id/cid for the collection.
 
 ### `callback` obj.validate()
 
@@ -80,7 +80,7 @@ Returns `true` if the object is valid. Has same effect as `!object.validationErr
 
 ### obj.isValid( key )
 
-Returns `true` if the specified record's attribute or collection element is valid. `key` is an attribute's name for the record or record's id/cid for the collection.
+Returns `true` if the specified model's attribute or collection element is valid. `key` is an attribute's name for the model or model's id/cid for the collection.
 
 ### obj.validationError
 
@@ -94,7 +94,7 @@ ValidationError object has following shape:
 
     // Members validation errors.
     nested : {
-        // key is an attrName for the record, and record.cid for the collcation
+        // key is an attrName for the model, and model.cid for the collcation
         key : validationError,
         ...
     }
@@ -104,7 +104,7 @@ ValidationError object has following shape:
 ### obj.getValidationError( key )
 
 Return the validation error for the given attribute or collection's item.
-`key` is an attribute's name for the record or record's id/cid for the collection.
+`key` is an attribute's name for the model or model's id/cid for the collection.
 
 ### obj.eachValidationError( iteratee : ( error, key, obj ) => void )
 
