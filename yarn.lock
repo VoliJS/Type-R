@@ -903,10 +903,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@linked/react@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@linked/react/-/react-3.0.6.tgz#b95659c564e956511263868e2601b77d8b3f3be0"
-  integrity sha512-8Dk2OgfUru78ka9Sl4wdx1NQjG4/0Tg0gFe4aHLy5UEW44JFoaiJdfg65CCtdBgGY11VM+Qvv4p9LloVG5/v7A==
+"@linked/react@^3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@linked/react/-/react-3.0.8.tgz#69eb9bc9c848162ee3f717e799d6474faa09bc37"
+  integrity sha512-gG092twreyJnsrzPt15f2wepiSU+PpyfBKTRFF6YWva6E4OWi9sQdlHwgZ02AXUoPMqUOm89h0KbOSrflRWz8Q==
 
 "@linked/value@^3.0.4":
   version "3.0.4"
