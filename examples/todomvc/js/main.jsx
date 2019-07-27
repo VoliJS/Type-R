@@ -24,7 +24,7 @@ import { localStorageIO } from '@type-r/endpoints'
 const App = () => {
     const state = useModel( AppState );
 
-    useIO( async () => {
+    const isFinished = useIO( async () => {
         window.onunload = () => state.save();
 
         await state.fetch();
@@ -33,7 +33,7 @@ const App = () => {
     const { todos, filterDone } = state,
             hasTodos = Boolean( todos.length );
 
-    return (
+    return isFinished ?
         <div>
             <section className="todoapp">
                 <AddTodo onEnter={ desc => todos.add({ desc : desc }) }/>
@@ -54,7 +54,7 @@ const App = () => {
                 <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
             </footer>
         </div>
-    );
+    : <h1>Loading...</h1>
 }
 
 ReactDOM.render( <App />, document.getElementById( 'app-mount-root' ) );
