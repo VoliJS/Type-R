@@ -7,7 +7,7 @@ export const AddTodo = ({ onEnter = () => {} }) => {
     function onKeyDown( { keyCode } ){
         if( keyCode === 13 ){
             $desc.value && onEnter( $desc.value );
-            desc.set( "" );
+            $desc.set( "" );
         }
     }
 

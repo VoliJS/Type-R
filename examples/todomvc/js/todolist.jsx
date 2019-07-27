@@ -1,6 +1,6 @@
 import React from 'react'
 import { Collection } from "@type-r/models"
-import { useLink } from "@type-r/react"
+import { useLink, pureRenderProps } from "@type-r/react"
 import cx from 'classnames'
 import { ToDo } from './model'
 

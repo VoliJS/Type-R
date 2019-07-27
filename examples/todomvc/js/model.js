@@ -1,4 +1,4 @@
-import { Model, Collection, define } from '@type-r/models'
+import { Model, Collection, define, Linked } from '@type-r/models'
 
 @define class ToDoCollection extends Collection {
 	clearCompleted(){
@@ -6,7 +6,7 @@ import { Model, Collection, define } from '@type-r/models'
 	}
 
 	get $allDone(){
-		return Link.value(
+		return Linked.value(
 			this.every( todo => todo.done ),
 			x => this.updateEach( todo => todo.done = x )
 		);
