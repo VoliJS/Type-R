@@ -102,7 +102,7 @@ const EditUser = ({ $user, onSave }) => {
     const user = useModel( User );
 
     useEffect( () => {
-        user.assignFrom( $user.value );
+        user.assignFrom( $user );
     }, [ $user.value ] );
 
     const onSubmit = e => {

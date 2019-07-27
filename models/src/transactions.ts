@@ -2,6 +2,7 @@ import { abortIO, IOEndpoint, IONode, IOPromise } from './io-tools';
 import { EventCallbacks, define, definitions, eventsApi, Logger, LogLevel, Messenger, MessengerDefinition, MessengersByCid, mixinRules, mixins, MixinsState, throwingLogger } from '@type-r/mixture';
 import { resolveReference, Traversable } from './traversable';
 import { ChildrenErrors, Validatable, ValidationError } from './validation';
+import { Linked } from '@linked/value/lib';
 
 const { trigger3, on, off } = eventsApi;
 /***
@@ -142,10 +143,13 @@ export abstract class Transactional implements Messenger, IONode, Validatable, T
     }
 
     // Assign transactional object "by value", copying aggregated items.
-    assignFrom( source : Transactional | Object ) : this {
-        // Need to delay change events until change token willl by synced.
+    assignFrom( a_source : Transactional | Object | Linked<Transactional> ) : this {
+        // Unpack linked value.
+        const source = a_source instanceof Linked ? a_source.value : a_source;
+
+        // Need to delay change events until change token will by synced.
         this.transaction( () =>{
-            this.set( ( <any>source ).__inner_state__ || source, { merge : true } );
+            this.set( ( source as any).__inner_state__ || source, { merge : true } );
 
             // Synchronize change tokens
             const { _changeToken } = source as any;

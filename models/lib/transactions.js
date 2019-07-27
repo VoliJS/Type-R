@@ -3,6 +3,7 @@ import { abortIO } from './io-tools';
 import { define, definitions, eventsApi, Messenger, mixinRules, mixins, throwingLogger } from '@type-r/mixture';
 import { resolveReference } from './traversable';
 import { ValidationError } from './validation';
+import { Linked } from '@linked/value/lib';
 var trigger3 = eventsApi.trigger3, on = eventsApi.on, off = eventsApi.off;
 export var ItemsBehavior;
 (function (ItemsBehavior) {
@@ -61,8 +62,9 @@ var Transactional = (function () {
         update && this.set(update);
         isRoot && transactionApi.commit(this);
     };
-    Transactional.prototype.assignFrom = function (source) {
+    Transactional.prototype.assignFrom = function (a_source) {
         var _this = this;
+        var source = a_source instanceof Linked ? a_source.value : a_source;
         this.transaction(function () {
             _this.set(source.__inner_state__ || source, { merge: true });
             var _changeToken = source._changeToken;

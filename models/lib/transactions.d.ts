@@ -2,6 +2,7 @@ import { IOEndpoint, IONode, IOPromise } from './io-tools';
 import { Logger, Messenger, MessengerDefinition, MixinsState } from '@type-r/mixture';
 import { Traversable } from './traversable';
 import { Validatable, ValidationError } from './validation';
+import { Linked } from '@linked/value/lib';
 export interface TransactionalDefinition extends MessengerDefinition {
     endpoint?: IOEndpoint;
 }
@@ -28,7 +29,7 @@ export declare abstract class Transactional implements Messenger, IONode, Valida
     constructor(cid: string | number);
     abstract clone(options?: CloneOptions): this;
     transaction(fun: (self: this) => void, options?: TransactionOptions): void;
-    assignFrom(source: Transactional | Object): this;
+    assignFrom(a_source: Transactional | Object | Linked<Transactional>): this;
     static from<T extends new (a?: any, b?: any) => Transactional>(this: T, json: any, { strict, ...options }?: {
         strict?: boolean;
     } & TransactionOptions): InstanceType<T>;

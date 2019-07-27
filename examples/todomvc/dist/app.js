@@ -4969,6 +4969,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _traversable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./traversable */ "../../models/lib/traversable.js");
 /* harmony import */ var _validation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./validation */ "../../models/lib/validation.js");
+/* harmony import */ var _linked_value_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @linked/value/lib */ "../../node_modules/@linked/value/lib/index.js");
+
 
 
 
@@ -5032,8 +5034,9 @@ var Transactional = (function () {
         update && this.set(update);
         isRoot && transactionApi.commit(this);
     };
-    Transactional.prototype.assignFrom = function (source) {
+    Transactional.prototype.assignFrom = function (a_source) {
         var _this = this;
+        var source = a_source instanceof _linked_value_lib__WEBPACK_IMPORTED_MODULE_5__["Linked"] ? a_source.value : a_source;
         this.transaction(function () {
             _this.set(source.__inner_state__ || source, { merge: true });
             var _changeToken = source._changeToken;
