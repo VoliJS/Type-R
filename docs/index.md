@@ -1,10 +1,10 @@
 ---
-title: Type-R 4.0 API Reference
+title: Type-R v4.0 API Reference
 
 language_tabs:
   - javascript
 
-logoTitle: Type-R 4.0
+logoTitle: Type-R v4.0
 
 toc_footers:
   - <a href="https://github.com/VoliJS/Type-R">GitHub repository</a>
