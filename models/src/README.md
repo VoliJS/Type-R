@@ -1,4 +1,4 @@
-# Model definitions
+# Defining the model
 
 ## Overview
 
@@ -341,7 +341,7 @@ static attributes = {
 
 ### `attribute` : type(Type)
 
-In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the defferent models and projects. Such an object is called *attribute metatype*.
+In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the different models and projects. Such an object is called *attribute metatype*.
 
 Metadata is attached through a chain of calls after the `type( Ctor )` call. Attribute's default value is the most common example of such a metadata.
 

@@ -153,7 +153,7 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <li><code>tests</code> - private package containing all the unit tests.</li>
 <li><code>examples/*</code> - example <code>@type-r/react</code> apps.</li>
 </ul>
-<h1 id="model-definitions">Model definitions</h1>
+<h1 id="defining-the-model">Defining the model</h1>
 <h2 id="overview">Overview</h2>
 <p>The <code>Model</code> class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.</p>
 <p>There are four sorts of model attributes:</p>
@@ -402,7 +402,7 @@ Stores are used as root models holding the collections of other models with seri
 </code></pre>
 <h2 id="attribute-metadata">Attribute metadata</h2>
 <h3 id="attribute-type-type-"><code>attribute</code> : type(Type)</h3>
-<p>In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the defferent models and projects. Such an object is called <em>attribute metatype</em>.</p>
+<p>In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the different models and projects. Such an object is called <em>attribute metatype</em>.</p>
 <p>Metadata is attached through a chain of calls after the <code>type( Ctor )</code> call. Attribute&#39;s default value is the most common example of such a metadata.</p>
 <pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
 
@@ -507,6 +507,22 @@ It can be used to define reusable attribute types as demonstrated below:</p>
 <p>Both <code>Model</code> and <code>Collection</code> includes <code>Messenger</code> as a mixin.</p>
 <h3 id="metatype-type-type-endpoint-endpoint-"><code>metatype</code> type( Type ).endpoint( <code>endpoint</code> )</h3>
 <p>Override or define an I/O endpoint for the specific model&#39;s attribute.</p>
+<h2 id="custom-attribute-metatypes">Custom attribute metatypes</h2>
+<p>&quot;Attribute metatype&quot; is the Type-R attribute type descriptor with metadata attached.
+Metatype is created by assigning the result of <code>type( T )</code> expression to some variable.</p>
+<p>The following attribute types are available from <code>@type-r/ext-types</code> package.</p>
+<h3 id="attribute-microsoftdate"><code>attribute</code> : MicrosoftDate</h3>
+<p><code>Date</code> attribute represented in JSON as Microsoft date (represented in JSON as string <code>/Date(timestamp)</code>)</p>
+<h3 id="attribute-timestamp"><code>attribute</code> : Timestamp</h3>
+<p><code>Date</code> attribute represented in JSON as UNIX timestamp (the result of <code>date.getTime()</code>).</p>
+<h3 id="attribute-integer"><code>attribute</code> : Integer</h3>
+<p><code>Number</code> attribute converting value to integer on assignment. Can be called as function.</p>
+<h3 id="attribute-email"><code>attribute</code> : Email</h3>
+<p><code>String</code> attribute with email validation check.</p>
+<h3 id="attribute-ipaddress"><code>attribute</code> : IPAddress</h3>
+<p><code>String</code> attribute with IP address validation check.</p>
+<h3 id="attribute-url"><code>attribute</code> : Url</h3>
+<p><code>String</code> attribute with URL validation check.</p>
 <h1 id="model-api">Model API</h1>
 <h2 id="create-and-dispose">Create and dispose</h2>
 <h3 id="new-model-attrs-options-">new Model( attrs?, options?)</h3>
@@ -738,7 +754,7 @@ bill.name = <span class="hljs-string">"Bill Jones"</span>;
 If the model is a member of an <code>Collection.of( ModelType )</code>, the collection will be bypassed and the owner of the collection will be returned.</p>
 <h3 id="model-collection">model.collection</h3>
 <p>If the model is a member of a some <code>Collection.of( ModelType )</code> return this collection or <code>null</code> otherwise.</p>
-<h1 id="collections">Collections</h1>
+<h1 id="collection-api">Collection API</h1>
 <h2 id="overview">Overview</h2>
 <p>Collection is an ordered sets of models represented in JSON as an array of objects. In run time, it&#39;s encapsulates JS Array of models (<code>collection.models</code>) and an object hashmap by the model&#39;s <code>id</code>/<code>cid</code> for a fast O(1) look-ups. Collections expose ES6 Array and BackboneJS Collection API.</p>
 <p>Collections are deeply observable. They emit the full set of Backbone Collection events (add, remove, change, etc) having the same semantic plus &quot;changes&quot; event triggered once when the processing of other change events is finished.</p>
@@ -1033,7 +1049,7 @@ Any additional changes made to the collection or its items in event handlers wil
 <p>When a model is removed from a collection.</p>
 <h3 id="event-change-model-options-"><code>event</code> &quot;change&quot; (model, options)</h3>
 <p>When a model inside of the collection is changed.</p>
-<h1 id="doing-i-o">Doing I/O</h1>
+<h1 id="i-o-and-endpoints">I/O and endpoints</h1>
 <h2 id="overview">Overview</h2>
 <p>Type-R uses IO abstraction represented by <code>IOEndpoint</code> interface, with JSON serialization handled by Model and Collection classes.</p>
 <p>IOEndpoint defines the set of CRUD + list methods operating on raw JSON.
@@ -1448,9 +1464,12 @@ so its children can opt to use this context store for id resolutions in their lo
 <h3 id="editable-users-list">Editable users list</h3>
 <h3 id="todomvc">TodoMVC</h3>
 <h1 id="mixins-events-logging">Mixins, events, logging</h1>
-<h2 id="-type-r-mixture-package"><code>@type-r/mixture</code> package</h2>
+<h2 id="overview">Overview</h2>
 <p>Type-R Mixture is the toolkit combining React-style mixins, Backbone-style events, and minimal set of Underscore-style object manipulation functions.</p>
-<p>Written in TypeScript, works with ES5, ES6, and TypeScript.</p>
+<p><code>Events</code> is an object with pub-sub events API which can be mixed into your classes manually or with <code>@mixins</code> decorator.
+Alternatively, you can extend <code>Messenger</code> class having <code>Events</code> pre-mixed. Or, you can use <code>Messenger</code> as a mixin with <code>@mixins</code> decorator. <code>@mixins</code> can mix both plain objects and classes.</p>
+<p><code>log</code> is a small function triggering the log event on <code>logger</code> object. Then, you can easily attach your custom loggers from anywhere subscribing for log events. And it you don&#39;t, there&#39;s a default log listener writing everything to the console.</p>
+<p>Written in TypeScript, works with ES5 and ES6.</p>
 <h3 id="installation">Installation</h3>
 <p><code>npm install @type-r/mixture</code></p>
 <h3 id="features">Features</h3>

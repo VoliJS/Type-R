@@ -15,13 +15,12 @@ includes:
   - README
   - models/README
   - models/src/README
+  - ext-types/README
   - models/src/model/README
   - models/src/collection/README
   - endpoints/README
   - react/README
   - examples/README
-  - models/src/Observable
-  - ext-types/README
   - mixture/README
   - ReleaseNotes
 

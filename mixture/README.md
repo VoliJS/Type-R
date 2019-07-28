@@ -1,10 +1,15 @@
 # Mixins, events, logging
 
-## `@type-r/mixture` package
+## Overview
 
 Type-R Mixture is the toolkit combining React-style mixins, Backbone-style events, and minimal set of Underscore-style object manipulation functions.
 
-Written in TypeScript, works with ES5, ES6, and TypeScript.
+`Events` is an object with pub-sub events API which can be mixed into your classes manually or with `@mixins` decorator.
+Alternatively, you can extend `Messenger` class having `Events` pre-mixed. Or, you can use `Messenger` as a mixin with `@mixins` decorator. `@mixins` can mix both plain objects and classes.
+
+`log` is a small function triggering the log event on `logger` object. Then, you can easily attach your custom loggers from anywhere subscribing for log events. And it you don't, there's a default log listener writing everything to the console.
+
+Written in TypeScript, works with ES5 and ES6.
 
 ### Installation
 
