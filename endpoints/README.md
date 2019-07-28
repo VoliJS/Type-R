@@ -24,34 +24,6 @@ users
     .then( () => console.log( user.id );
 ```
 
-## I/O API
-
-
-### collection.fetch( options? )
-
-Fetch the collection. Returns an abortable promise.
-
-`options` accepts an optional `liveUpdates` parameter. When `true`, collection subscribes for the live updates when I/O is finished.
-
-### collection.liveUpdates( true | false )
-
-Subscribe for the live data updates if an I/O endpoint supports it (`subscribe()`/`unsubscribe()` IOEndpoint methods).
-
-<aside class="notice">
-No built-in I/O enpoints support that functionality yet.
-</aside>
-
-### obj.hasPendingIO()
-
-Returns an abortable promise if there's any I/O pending with the object, or `null` otherwise.
-
-Can be used to check for active I/O in progress or to abort pending I/O operation. Please note, that all pending I/O is aborted automatically when new I/O operation is started or an object is disposed. When I/O is aborted, the promise is rejected.
-
-```javascript
-const promise = users.hasPendingIO();
-if( promise && promise.abort ) promise.abort();
-```
-
 ## I/O endpoints
 
 ### restfulIO( url, options? )

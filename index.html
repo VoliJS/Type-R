@@ -227,7 +227,22 @@ firstUser.isActive = <span class="hljs-literal">true</span>; <span class="hljs-c
 <pre><code>nullStringAttr : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-literal">null</span> )
 
 
-</code></pre><h3 id="static-endpoint"><code>static</code> endpoint</h3>
+</code></pre><h3 id="static-idattribute-attrname-"><code>static</code> idAttribute = &#39;attrName&#39;</h3>
+<p>A model&#39;s unique identifier is stored under the pre-defined <code>id</code> attribute.
+If you&#39;re directly communicating with a backend (CouchDB, MongoDB) that uses a different unique key, you may set a Model&#39;s <code>idAttribute</code> to transparently map from that key to id.</p>
+<p>Model&#39;s <code>id</code> property will still be linked to Model&#39;s id, no matter which value <code>idAttribute</code> has.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Meal</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+  <span class="hljs-keyword">static</span> idAttribute =  <span class="hljs-string">"_id"</span>;
+  <span class="hljs-keyword">static</span> attributes = {
+      <span class="hljs-attr">_id</span> : <span class="hljs-built_in">Number</span>,
+      <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>
+  }
+}
+
+<span class="hljs-keyword">const</span> cake = <span class="hljs-keyword">new</span> Meal({ <span class="hljs-attr">_id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"Cake"</span> });
+alert(<span class="hljs-string">"Cake id: "</span> + cake.id);
+</code></pre>
+<h3 id="static-endpoint"><code>static</code> endpoint</h3>
 <p>Enable model&#39;s I/O API by specifying an I/O endpoint. There are the list of endpoints in <code>@type-r/enpoints</code> package to work with browsers local storage, REST, and mock data.</p>
 <h2 id="primitive-attributes">Primitive attributes</h2>
 <p>Primitive attribute types are directly mapped to their values in JSON.
@@ -769,30 +784,10 @@ If the model is a member of an <code>Collection.of( ModelType )</code>, the coll
 <span class="hljs-comment">// Access an implicitly defined collection.</span>
 <span class="hljs-keyword">const</span> books = Collection.of( Book ).create();
 </code></pre>
-<h2 id="defining-custom-collections">Defining custom collections</h2>
-<p>You can define custom collection classes extending <code>Model.Collection</code> or any other collection class. It can either replace the default Collection type</p>
-<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom collection class.</span>
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Library</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span>.<span class="hljs-title">Collection</span> </span>{
-    doSomething(){ ... }
-}
-
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-comment">// Override the default collection.</span>
-    <span class="hljs-keyword">static</span> Collection = Library;
-}
-
-<span class="hljs-comment">// Define another custom collection class.</span>
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherLibrary</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span>.<span class="hljs-title">Collection</span> </span>{
-    <span class="hljs-comment">// Specify the model so the collection will be able to restore itself from JSON.</span>
-    <span class="hljs-keyword">static</span> model = Book; 
-}
-</code></pre>
-<aside class="notice">
-The collection must know the type of its models to restore its elements from JSON properly. When the `model` is not specified, the collection can hold any Model subclass but it cannot deserialize itself.
-</aside>
-
-<h2 id="collection-types">Collection types</h2>
-<h3 id="constructor-collectionclass-models-options-"><code>constructor</code> CollectionClass( models?, options? )</h3>
+<h2 id="create-and-dispose">Create and dispose</h2>
+<h3 id="callback-collection-initialize-models-options-"><code>callback</code> collection.initialize( models?, options? )</h3>
+<p>Initialization function which is called at the end of the constructor.</p>
+<h3 id="constructor-collection-of-modelclass-"><code>constructor</code> Collection.of( ModelClass )</h3>
 <p>The most common collection type is an <strong>aggregating serializable collection</strong>. By default, collection aggregates its elements which are treated as an integral part of the collection (serialized, cloned, disposed, and validated recursively). An aggregation means the <em>single owner</em>, as the single object cannot be an integral part of two distinct things. The collection will take ownership on its models and will put an error in the console if it can&#39;t.</p>
 <p>When creating a Collection, you may choose to pass in the initial array of models.</p>
 <pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
@@ -803,10 +798,34 @@ The collection must know the type of its models to restore its elements from JSO
 
 <span class="hljs-keyword">const</span> roles = <span class="hljs-keyword">new</span> Role.Collection( json, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
 </code></pre>
-<h3 id="constructor-collectionclass-refs-models-options-"><code>constructor</code> CollectionClass.Refs( models?, options? )</h3>
+<h3 id="constructor-collection-ofrefsto-modelclass-"><code>constructor</code> Collection.ofRefsTo( ModelClass )</h3>
 <p>Collection of model references is a <strong>non-aggregating non-serializable collection</strong>. <code>Collection.Refs</code> doesn&#39;t aggregate its elements, which means that containing models are not considered as an integral part of the enclosing collection and not being validated, cloned, disposed, and serialized recursively.</p>
 <p>It is useful for a local non-persistent application state.</p>
-<h3 id="metatype-subsetof-masterref-collectionclass-"><code>metatype</code> subsetOf(masterRef, CollectionClass?)</h3>
+<h3 id="new-collectionclass-models-options-">new CollectionClass( models?, options? )</h3>
+<h3 id="collectionclass-create-models-options-">CollectionClass.create( models?, options? )</h3>
+<h3 id="collection-clone-">collection.clone()</h3>
+<p>Clone the collection. An aggregating collection will be recursively cloned, non-aggregated collections will be shallow cloned.</p>
+<h3 id="collectionclass-from-models-options-">CollectionClass.from( models, options? )</h3>
+<p>Create <code>CollectionClass</code> from the array of models. Similar to direct collection creation, but supports additional option for strict data validation.
+If <code>{ strict : true }</code> option is passed the validation will be performed and an exception will be thrown in case of an error.</p>
+<p>Please note, that Type-R always performs type checks on assignments, convert types, and reject improper updates reporting it as an error. It won&#39;t, however, execute custom validation
+rules on every update as they are evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
+<span class="hljs-comment">// Throw an exception if validation fails.</span>
+<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
+</code></pre>
+<h3 id="collection-dispose-">collection.dispose()</h3>
+<p>Dispose of the collection. An aggregating collection will recursively dispose of its models.</p>
+<p>All changes in the models cause change events in the collections they are contained in.</p>
+<p>Subset collections is an exception; they don&#39;t observe changes of its elements by default.</p>
+<h3 id="collection-createsubset-models-options-">collection.createSubset( models?, options? )</h3>
+<p>Creates a collection which is an instance of <code>Collection.subsetOf( sourceCollection )</code> attribute type.
+ Takes the same arguments as the collection&#39;s constructor.</p>
+<p>Subset collections are serializable as an array of model ids. Create the collection which is a subset of a source collection.</p>
+<aside class="notice">
+Records in the collection must have an `id` attribute populated to work properly with subsets.
+</aside>
+
 <p>The subset of other collections are <strong>non-aggregating serializable collection</strong>. Subset-of collection is serialized as an array of model ids and used to model many-to-many relationships. The collection object itself is recursively created and cloned, however, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed. <code>CollectionClass</code> argument may be omitted unless you need the model&#39;s attribute to be an instance of the particular collection class.</p>
 <aside class="notice">
 <b>subsetOf</b> collections are not deeply observable.
@@ -847,46 +866,15 @@ Since its an attribute <i>metatype</i> (combination of type and attribute metada
     }
 }
 </code></pre>
-<h2 id="array-api">Array API</h2>
-<p>A collection class is an array-like object implementing ES6 Array methods and properties.</p>
-<h3 id="collection-length">collection.length</h3>
-<p>Like an array, a Collection maintains a length property, counting the number of models it contains.</p>
-<h3 id="collection-slice-begin-end-">collection.slice( begin, end )</h3>
-<p>Return a shallow copy of the <code>collection.models</code>, using the same options as native Array#slice.</p>
-<h3 id="collection-indexof-recordorid-any-number">collection.indexOf( recordOrId : any ) : number</h3>
-<p>Return an index of the model in the collection, and -1 if there is no such a model in the collection.</p>
-<p>Can take the model itself as an argument, <code>id</code>, or <code>cid</code> of the model.</p>
-<h3 id="collection-foreach-iteratee-val-model-index-void-context-">collection.forEach( iteratee : ( val : Model, index ) =&gt; void, context? )</h3>
-<p>Iterate through the elements of the collection.</p>
-<aside class="notice">Use <code>collection.updateEach( iteratee, index )</code> method to update models in a loop.</aside>
-
-<h3 id="collection-map-iteratee-val-model-index-t-context-">collection.map( iteratee : ( val : Model, index ) =&gt; T, context? )</h3>
-<p>Map elements of the collection. Similar to <code>Array.map</code>.</p>
-<h3 id="collection-filter-iteratee-predicate-context-">collection.filter( iteratee : Predicate, context? )</h3>
-<p>Return the filtered array of models matching the predicate.</p>
-<p>The predicate is either the iteratee function returning boolean, or an object with attribute values used to match with model&#39;s attributes.</p>
-<h3 id="collection-every-iteratee-predicate-context-boolean">collection.every( iteratee : Predicate, context? ) : boolean</h3>
-<p>Return <code>true</code> if all models match the predicate.</p>
-<h3 id="collection-some-iteratee-predicate-context-boolean">collection.some( iteratee : Predicate, context? ) : boolean</h3>
-<p>Return <code>true</code> if at least one model matches the predicated.</p>
-<h3 id="collection-push-model-options-">collection.push( model, options? )</h3>
-<p>Add a model at the end of a collection. Takes the same options as <code>add()</code>.</p>
-<h3 id="collection-pop-options-">collection.pop( options? )</h3>
-<p>Remove and return the last model from a collection. Takes the same options as <code>remove()</code>.</p>
-<h3 id="collection-unshift-model-options-">collection.unshift( model, options? )</h3>
-<p>Add a model at the beginning of a collection. Takes the same options as <code>add()</code>.</p>
-<h3 id="collection-shift-options-">collection.shift( options? )</h3>
-<p>Remove and return the first model from a collection. Takes the same options as <code>remove()</code>.</p>
-<h2 id="backbone-api">Backbone API</h2>
+<h2 id="read-and-update">Read and update</h2>
 <p>Common options used by Backbone API methods:</p>
 <ul>
 <li><code>{ sort : false }</code> - do not sort the collection.</li>
 <li><code>{ parse : true }</code> - parse raw JSON (used to set collection with data from the server).</li>
 </ul>
-<h3 id="callback-collection-initialize-models-options-"><code>callback</code> collection.initialize( models?, options? )</h3>
-<p>Initialization function which is called at the end of the constructor.</p>
-<h3 id="collection-clone-">collection.clone()</h3>
-<p>Clone the collection. An aggregating collection will be recursively cloned, non-aggregated collections will be shallow cloned.</p>
+<h3 id="collection-assignfrom-othercollection-">collection.assignFrom( otherCollection )</h3>
+<p>Synchronize the state of the collection and its aggregation tree with other collection of the same type. Updates existing objects in place. Model in the collection is considered to be &quot;existing&quot; if it has the same <code>id</code>.</p>
+<p>Equivalent to <code>collection.set( otherCollection.models, { merge : true } )</code> and triggers similar events on change.</p>
 <h3 id="collection-models">collection.models</h3>
 <p>Raw access to the JavaScript array of models inside of the collection. Usually, you&#39;ll want to use <code>get</code>, <code>at</code>, or the other methods to access model objects, but occasionally a direct reference to the array is desired.</p>
 <h3 id="collection-get-id-">collection.get( id )</h3>
@@ -965,6 +953,36 @@ vanHalen.set([ eddie, alex, stone, hagar ]);
 
 alert(<span class="hljs-built_in">JSON</span>.stringify(names));
 </code></pre>
+<h2 id="array-api">Array API</h2>
+<p>A collection class is an array-like object implementing ES6 Array methods and properties.</p>
+<h3 id="collection-length">collection.length</h3>
+<p>Like an array, a Collection maintains a length property, counting the number of models it contains.</p>
+<h3 id="collection-slice-begin-end-">collection.slice( begin, end )</h3>
+<p>Return a shallow copy of the <code>collection.models</code>, using the same options as native Array#slice.</p>
+<h3 id="collection-indexof-recordorid-any-number">collection.indexOf( recordOrId : any ) : number</h3>
+<p>Return an index of the model in the collection, and -1 if there is no such a model in the collection.</p>
+<p>Can take the model itself as an argument, <code>id</code>, or <code>cid</code> of the model.</p>
+<h3 id="collection-foreach-iteratee-val-model-index-void-context-">collection.forEach( iteratee : ( val : Model, index ) =&gt; void, context? )</h3>
+<p>Iterate through the elements of the collection.</p>
+<aside class="notice">Use <code>collection.updateEach( iteratee, index )</code> method to update models in a loop.</aside>
+
+<h3 id="collection-map-iteratee-val-model-index-t-context-">collection.map( iteratee : ( val : Model, index ) =&gt; T, context? )</h3>
+<p>Map elements of the collection. Similar to <code>Array.map</code>.</p>
+<h3 id="collection-filter-iteratee-predicate-context-">collection.filter( iteratee : Predicate, context? )</h3>
+<p>Return the filtered array of models matching the predicate.</p>
+<p>The predicate is either the iteratee function returning boolean, or an object with attribute values used to match with model&#39;s attributes.</p>
+<h3 id="collection-every-iteratee-predicate-context-boolean">collection.every( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if all models match the predicate.</p>
+<h3 id="collection-some-iteratee-predicate-context-boolean">collection.some( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if at least one model matches the predicated.</p>
+<h3 id="collection-push-model-options-">collection.push( model, options? )</h3>
+<p>Add a model at the end of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-pop-options-">collection.pop( options? )</h3>
+<p>Remove and return the last model from a collection. Takes the same options as <code>remove()</code>.</p>
+<h3 id="collection-unshift-model-options-">collection.unshift( model, options? )</h3>
+<p>Add a model at the beginning of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-shift-options-">collection.shift( options? )</h3>
+<p>Remove and return the first model from a collection. Takes the same options as <code>remove()</code>.</p>
 <h2 id="sorting">Sorting</h2>
 <p>Type-R implements BackboneJS Collection sorting API with some extensions.</p>
 <h3 id="collection-sort-options-">collection.sort(options?)</h3>
@@ -998,30 +1016,24 @@ chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">1</
 
 alert(chapters.map( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.title ));
 </code></pre>
-<h2 id="other-methods">Other methods</h2>
-<h3 id="collectionclass-from-models-options-">CollectionClass.from( models, options? )</h3>
-<p>Create <code>CollectionClass</code> from the array of models. Similar to direct collection creation, but supports additional option for strict data validation.
-If <code>{ strict : true }</code> option is passed the validation will be performed and an exception will be thrown in case of an error.</p>
-<p>Please note, that Type-R always performs type checks on assignments, convert types, and reject improper updates reporting it as an error. It won&#39;t, however, execute custom validation
-rules on every update as they are evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
-<pre><code class="highlight javascript"><span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
-<span class="hljs-comment">// Throw an exception if validation fails.</span>
-<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
-</code></pre>
-<h3 id="collection-createsubset-models-options-">collection.createSubset( models?, options? )</h3>
-<p>Create the collection which is a subset of a source collection serializable as an array of model ids. Takes the same arguments as the collection&#39;s constructor.</p>
-<p>The created collection is an instance of <code>subsetOf( sourceCollection, CollectionCtor )</code> attribute type (non-aggregating serializable collection). </p>
+<h2 id="validation">Validation</h2>
+<p>Collection implements the same validation API as the model, excepts that it uses model ids instead of the attribute names.</p>
+<h2 id="i-o">I/O</h2>
+<h3 id="async-collection-fetch-options-"><code>async</code> collection.fetch( options? )</h3>
+<p>Fetch the collection. Returns an abortable promise.</p>
+<p><code>options</code> accepts an optional <code>liveUpdates</code> parameter. When <code>true</code>, collection subscribes for the live updates when I/O is finished.</p>
+<h3 id="collection-liveupdates-true-false-">collection.liveUpdates( true | false )</h3>
+<p>Subscribe for the live data updates if an I/O endpoint supports it (<code>subscribe()</code>/<code>unsubscribe()</code> IOEndpoint methods).</p>
 <aside class="notice">
-Records in the collection must have an `id` attribute populated to work properly with subsets.
+No built-in I/O enpoints support that functionality yet.
 </aside>
 
-<h3 id="collection-assignfrom-othercollection-">collection.assignFrom( otherCollection )</h3>
-<p>Synchronize the state of the collection and its aggregation tree with other collection of the same type. Updates existing objects in place. Model in the collection is considered to be &quot;existing&quot; if it has the same <code>id</code>.</p>
-<p>Equivalent to <code>collection.set( otherCollection.models, { merge : true } )</code> and triggers similar events on change.</p>
-<h3 id="collection-dispose-">collection.dispose()</h3>
-<p>Dispose of the collection. An aggregating collection will recursively dispose of its models.</p>
-<p>All changes in the models cause change events in the collections they are contained in.</p>
-<p>Subset collections is an exception; they don&#39;t observe changes of its elements by default.</p>
+<h3 id="collection-haspendingio-">collection.hasPendingIO()</h3>
+<p>Returns a promise if there&#39;s any I/O pending with the object, or <code>null</code> otherwise.
+Can be used to check for active I/O in progress.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> promise = users.hasPendingIO();
+<span class="hljs-keyword">if</span>( promise &amp;&amp; promise.abort ) promise.abort();
+</code></pre>
 <h2 id="change-events">Change events</h2>
 <h3 id="events-mixin-methods-7-">Events mixin methods (7)</h3>
 <p>Collection implements <a href="#events-mixin">Events</a> mixin.</p>
@@ -1049,6 +1061,29 @@ Any additional changes made to the collection or its items in event handlers wil
 <p>When a model is removed from a collection.</p>
 <h3 id="event-change-model-options-"><code>event</code> &quot;change&quot; (model, options)</h3>
 <p>When a model inside of the collection is changed.</p>
+<h2 id="defining-custom-collections">Defining custom collections</h2>
+<p>You can define custom collection classes extending <code>Collection</code> or any other collection class.</p>
+<aside class="notice">
+The collection must know the type of its models to restore its elements from JSON properly. When the `model` is not specified, the collection can hold any Model subclass but it cannot restore itself from JSON.
+</aside>
+
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Library</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{
+    doSomething(){ ... }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-comment">// Make it a default collection class for Book model,</span>
+    <span class="hljs-comment">// which is retrievable by the `Collection.of( Book )`</span>
+    <span class="hljs-keyword">static</span> Collection = Library;
+}
+
+<span class="hljs-comment">// Define another custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherLibrary</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{
+    <span class="hljs-comment">// Specify the model so the collection will be able to restore itself from JSON.</span>
+    <span class="hljs-keyword">static</span> model = Book; 
+}
+</code></pre>
 <h1 id="i-o-and-endpoints">I/O and endpoints</h1>
 <h2 id="overview">Overview</h2>
 <p>Type-R uses IO abstraction represented by <code>IOEndpoint</code> interface, with JSON serialization handled by Model and Collection classes.</p>
@@ -1068,22 +1103,6 @@ users
     .add({ <span class="hljs-attr">name</span> : <span class="hljs-string">'John'</span> })
     .save()
     .then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( user.id );
-</code></pre>
-<h2 id="i-o-api">I/O API</h2>
-<h3 id="collection-fetch-options-">collection.fetch( options? )</h3>
-<p>Fetch the collection. Returns an abortable promise.</p>
-<p><code>options</code> accepts an optional <code>liveUpdates</code> parameter. When <code>true</code>, collection subscribes for the live updates when I/O is finished.</p>
-<h3 id="collection-liveupdates-true-false-">collection.liveUpdates( true | false )</h3>
-<p>Subscribe for the live data updates if an I/O endpoint supports it (<code>subscribe()</code>/<code>unsubscribe()</code> IOEndpoint methods).</p>
-<aside class="notice">
-No built-in I/O enpoints support that functionality yet.
-</aside>
-
-<h3 id="obj-haspendingio-">obj.hasPendingIO()</h3>
-<p>Returns an abortable promise if there&#39;s any I/O pending with the object, or <code>null</code> otherwise.</p>
-<p>Can be used to check for active I/O in progress or to abort pending I/O operation. Please note, that all pending I/O is aborted automatically when new I/O operation is started or an object is disposed. When I/O is aborted, the promise is rejected.</p>
-<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> promise = users.hasPendingIO();
-<span class="hljs-keyword">if</span>( promise &amp;&amp; promise.abort ) promise.abort();
 </code></pre>
 <h2 id="i-o-endpoints">I/O endpoints</h2>
 <h3 id="restfulio-url-options-">restfulIO( url, options? )</h3>

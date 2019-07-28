@@ -64,25 +64,6 @@ Model's attributes definition. Lists attribute names along with their types, def
 
 The Model guarantee that _every attribute will retain the value of the declared type_. Whenever an attribute is being assigned with the value which is not compatible with its declared type, the type is being converted with an invocation of the constructor: `new Type( value )` (primitive types are treated specially).
 
-### `static` idAttribute = 'attrName'
-
-A model's unique identifier is stored under the pre-defined `id` attribute.
-If you're directly communicating with a backend (CouchDB, MongoDB) that uses a different unique key, you may set a Model's `idAttribute` to transparently map from that key to id.
-
-Model's `id` property will still be linked to Model's id, no matter which value `idAttribute` has.
-
-```javascript
-@define class Meal extends Model {
-  static idAttribute =  "_id";
-  static attributes = {
-      _id : Number,
-      name : ''
-  }
-}
-
-const cake = new Meal({ _id: 1, name: "Cake" });
-alert("Cake id: " + cake.id);
-```
 
 ### Constructor
 

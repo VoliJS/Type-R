@@ -87,6 +87,26 @@ To assign `null` as a default value both attribute type and value need to be spe
 
     nullStringAttr : type( String ).value( null )
 
+### `static` idAttribute = 'attrName'
+
+A model's unique identifier is stored under the pre-defined `id` attribute.
+If you're directly communicating with a backend (CouchDB, MongoDB) that uses a different unique key, you may set a Model's `idAttribute` to transparently map from that key to id.
+
+Model's `id` property will still be linked to Model's id, no matter which value `idAttribute` has.
+
+```javascript
+@define class Meal extends Model {
+  static idAttribute =  "_id";
+  static attributes = {
+      _id : Number,
+      name : ''
+  }
+}
+
+const cake = new Meal({ _id: 1, name: "Cake" });
+alert("Cake id: " + cake.id);
+```
+
 ### `static` endpoint
 
 Enable model's I/O API by specifying an I/O endpoint. There are the list of endpoints in `@type-r/enpoints` package to work with browsers local storage, REST, and mock data.
