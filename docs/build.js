@@ -114,7 +114,7 @@ fs.readFile('./index.md', 'utf8', function (err, content) {
     var template = Handlebars.compile(source)
     data['content'] = marked(content.slice(2).join(''))
 
-    fs.writeFile('./index.html', template(data), function (err) {
+    fs.writeFile('../index.html', template(data), function (err) {
       if (err){
         console.log(err);
       }
