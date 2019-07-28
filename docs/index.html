@@ -383,9 +383,12 @@ Stores are used as root models holding the collections of other models with seri
 <p>Metadata is attached through a chain of calls after the <code>type( Ctor )</code> call. Attribute&#39;s default value is the most common example of such a metadata.</p>
 <pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
 
+<span class="hljs-keyword">const</span> AString = type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"a"</span> );
+
 @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
     <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">a</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"a"</span> )
+        <span class="hljs-attr">a</span> : AString,
+        <span class="hljs-attr">b</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"b"</span> )
     }
 }
 </code></pre>

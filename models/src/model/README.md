@@ -311,9 +311,12 @@ Metadata is attached through a chain of calls after the `type( Ctor )` call. Att
 ```javascript
 import { define, type, Model }
 
+const AString = type( String ).value( "a" );
+
 @define class Dummy extends Model {
     static attributes = {
-        a : type( String ).value( "a" )
+        a : AString,
+        b : type( String ).value( "b" )
     }
 }
 ```
