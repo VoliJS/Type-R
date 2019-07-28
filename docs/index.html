@@ -378,9 +378,272 @@ Stores are used as root models holding the collections of other models with seri
 }
 </code></pre>
 <h2 id="model-class-api">Model class API</h2>
-<h1 id="collection">Collection</h1>
+<h1 id="collections">Collections</h1>
 <h2 id="overview">Overview</h2>
-<h2 id="proxied-array-methods">proxied Array methods</h2>
+<p>Collection is an ordered sets of models represented in JSON as an array of objects. In run time, it&#39;s encapsulates JS Array of models (<code>collection.models</code>) and an object hashmap by the model&#39;s <code>id</code>/<code>cid</code> for a fast O(1) look-ups. Collections expose ES6 Array and BackboneJS Collection API.</p>
+<p>Collections are deeply observable. They emit the full set of Backbone Collection events (add, remove, change, etc) having the same semantic plus &quot;changes&quot; event triggered once when the processing of other change events is finished.</p>
+<p>In most cases you don&#39;t need to define collection class manually, although you may. Every <code>Model</code> class has an implicitly defined <code>Collection</code>.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>
+        author : Author
+    }
+}
+
+<span class="hljs-comment">// Access an implicitly defined collection.</span>
+<span class="hljs-keyword">const</span> books = Collection.of( Book ).create();
+</code></pre>
+<h2 id="defining-custom-collections">Defining custom collections</h2>
+<p>You can define custom collection classes extending <code>Model.Collection</code> or any other collection class. It can either replace the default Collection type</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Library</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span>.<span class="hljs-title">Collection</span> </span>{
+    doSomething(){ ... }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-comment">// Override the default collection.</span>
+    <span class="hljs-keyword">static</span> Collection = Library;
+}
+
+<span class="hljs-comment">// Define another custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherLibrary</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span>.<span class="hljs-title">Collection</span> </span>{
+    <span class="hljs-comment">// Specify the model so the collection will be able to restore itself from JSON.</span>
+    <span class="hljs-keyword">static</span> model = Book; 
+}
+</code></pre>
+<aside class="notice">
+The collection must know the type of its models to restore its elements from JSON properly. When the `model` is not specified, the collection can hold any Model subclass but it cannot deserialize itself.
+</aside>
+
+<h2 id="collection-types">Collection types</h2>
+<h3 id="constructor-collectionclass-models-options-"><code>constructor</code> CollectionClass( models?, options? )</h3>
+<p>The most common collection type is an <strong>aggregating serializable collection</strong>. By default, collection aggregates its elements which are treated as an integral part of the collection (serialized, cloned, disposed, and validated recursively). An aggregation means the <em>single owner</em>, as the single object cannot be an integral part of two distinct things. The collection will take ownership on its models and will put an error in the console if it can&#39;t.</p>
+<p>When creating a Collection, you may choose to pass in the initial array of models.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> roles = <span class="hljs-keyword">new</span> Role.Collection( json, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
+</code></pre>
+<h3 id="constructor-collectionclass-refs-models-options-"><code>constructor</code> CollectionClass.Refs( models?, options? )</h3>
+<p>Collection of model references is a <strong>non-aggregating non-serializable collection</strong>. <code>Collection.Refs</code> doesn&#39;t aggregate its elements, which means that containing models are not considered as an integral part of the enclosing collection and not being validated, cloned, disposed, and serialized recursively.</p>
+<p>It is useful for a local non-persistent application state.</p>
+<h3 id="metatype-subsetof-masterref-collectionclass-"><code>metatype</code> subsetOf(masterRef, CollectionClass?)</h3>
+<p>The subset of other collections are <strong>non-aggregating serializable collection</strong>. Subset-of collection is serialized as an array of model ids and used to model many-to-many relationships. The collection object itself is recursively created and cloned, however, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed. <code>CollectionClass</code> argument may be omitted unless you need the model&#39;s attribute to be an instance of the particular collection class.</p>
+<aside class="notice">
+<b>subsetOf</b> collections are not deeply observable.
+</aside>
+
+<aside class="notice">
+Since its an attribute <i>metatype</i> (combination of type and attribute metadata), it's not a real constructor and cannot be used with <b>new</b>. Use <b>collection.createSubset()</b> method to create subset-of collection instances.
+</aside>
+
+<p>Must have a reference to the master collection which is used to resolve model ids to models. <code>masterRef</code> may be:</p>
+<ul>
+<li>direct reference to a singleton collection.</li>
+<li>function, returning the reference to the collection.</li>
+<li>symbolic dot-separated path to the master collection resolved relative to the model&#39;s <code>this</code>. You may use <code>owner</code> and <code>store</code> macro in path:<ul>
+<li><code>owner</code> is the reference to the model&#39;s owner. <code>owner.some.path</code> works as <code>() =&gt; this.getOwner().some.path</code>.</li>
+<li><code>store</code> is the reference to the closes store. <code>store.some.path</code> works as <code>() =&gt; this.getStore().some.path</code>.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : subsetOf( <span class="hljs-string">'owner.roles'</span>, Role.Collection )
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UsersDirectory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">roles</span> : Role.Collection,
+        <span class="hljs-attr">users</span> : User.Collection <span class="hljs-comment">// `~roles` references will be resolved against this.roles</span>
+    }
+}
+</code></pre>
+<h2 id="array-api">Array API</h2>
+<p>A collection class is an array-like object implementing ES6 Array methods and properties.</p>
+<h3 id="collection-length">collection.length</h3>
+<p>Like an array, a Collection maintains a length property, counting the number of models it contains.</p>
+<h3 id="collection-slice-begin-end-">collection.slice( begin, end )</h3>
+<p>Return a shallow copy of the <code>collection.models</code>, using the same options as native Array#slice.</p>
+<h3 id="collection-indexof-recordorid-any-number">collection.indexOf( recordOrId : any ) : number</h3>
+<p>Return an index of the model in the collection, and -1 if there is no such a model in the collection.</p>
+<p>Can take the model itself as an argument, <code>id</code>, or <code>cid</code> of the model.</p>
+<h3 id="collection-foreach-iteratee-val-model-index-void-context-">collection.forEach( iteratee : ( val : Model, index ) =&gt; void, context? )</h3>
+<p>Iterate through the elements of the collection.</p>
+<aside class="notice">Use <code>collection.updateEach( iteratee, index )</code> method to update models in a loop.</aside>
+
+<h3 id="collection-map-iteratee-val-model-index-t-context-">collection.map( iteratee : ( val : Model, index ) =&gt; T, context? )</h3>
+<p>Map elements of the collection. Similar to <code>Array.map</code>.</p>
+<h3 id="collection-filter-iteratee-predicate-context-">collection.filter( iteratee : Predicate, context? )</h3>
+<p>Return the filtered array of models matching the predicate.</p>
+<p>The predicate is either the iteratee function returning boolean, or an object with attribute values used to match with model&#39;s attributes.</p>
+<h3 id="collection-every-iteratee-predicate-context-boolean">collection.every( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if all models match the predicate.</p>
+<h3 id="collection-some-iteratee-predicate-context-boolean">collection.some( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if at least one model matches the predicated.</p>
+<h3 id="collection-push-model-options-">collection.push( model, options? )</h3>
+<p>Add a model at the end of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-pop-options-">collection.pop( options? )</h3>
+<p>Remove and return the last model from a collection. Takes the same options as <code>remove()</code>.</p>
+<h3 id="collection-unshift-model-options-">collection.unshift( model, options? )</h3>
+<p>Add a model at the beginning of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-shift-options-">collection.shift( options? )</h3>
+<p>Remove and return the first model from a collection. Takes the same options as <code>remove()</code>.</p>
+<h2 id="backbone-api">Backbone API</h2>
+<p>Common options used by Backbone API methods:</p>
+<ul>
+<li><code>{ sort : false }</code> - do not sort the collection.</li>
+<li><code>{ parse : true }</code> - parse raw JSON (used to set collection with data from the server).</li>
+</ul>
+<h3 id="callback-collection-initialize-models-options-"><code>callback</code> collection.initialize( models?, options? )</h3>
+<p>Initialization function which is called at the end of the constructor.</p>
+<h3 id="collection-clone-">collection.clone()</h3>
+<p>Clone the collection. An aggregating collection will be recursively cloned, non-aggregated collections will be shallow cloned.</p>
+<h3 id="collection-models">collection.models</h3>
+<p>Raw access to the JavaScript array of models inside of the collection. Usually, you&#39;ll want to use <code>get</code>, <code>at</code>, or the other methods to access model objects, but occasionally a direct reference to the array is desired.</p>
+<h3 id="collection-get-id-">collection.get( id )</h3>
+<p>Get a model from a collection, specified by an <code>id</code>, a <code>cid</code>, or by passing in a model.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> book = library.get(<span class="hljs-number">110</span>);
+</code></pre>
+<h3 id="collection-at-index-">collection.at( index )</h3>
+<p>Get a model from a collection, specified by index. Useful if your collection is sorted, and if your collection isn&#39;t sorted, at will still retrieve models in insertion order. When passed a negative index, it will retrieve the model from the back of the collection.</p>
+<h3 id="collection-add-models-options-">collection.add( models, options? )</h3>
+<p>Add a model (or an array of models) to the collection. If this is the <code>Model.Collection</code>, you may also pass raw attributes objects, and have them be vivified as instances of the <code>Model</code>. Returns the added (or preexisting, if duplicate) models.</p>
+<p>Pass <code>{at: index}</code> to splice the model into the collection at the specified index. If you&#39;re adding models to the collection that are already in the collection, they&#39;ll be ignored, unless you pass <code>{merge: true}</code>, in which case their attributes will be merged into the corresponding models.</p>
+<ol>
+<li>Trigger the one event per model:<ul>
+<li><code>add</code>(model, collection, options) for each model added.</li>
+<li><code>change</code>(model, options) for each model changed (if the <code>{merge: true}</code> option is passed).</li>
+</ul>
+</li>
+<li>Trigger the single event:<ul>
+<li><code>update</code>(collection, options) if any models were added.</li>
+<li><code>sort</code>(collection, options) if an order of models was changed.</li>
+</ul>
+</li>
+<li>Trigger <code>changes</code> event in case if any changes were made to the collection and objects inside.</li>
+</ol>
+<h3 id="collection-remove-models-options-">collection.remove( models, options? )</h3>
+<p>Remove a model (or an array of models) from the collection, and return them. Each model can be a model instance, an id string or a JS object, any value acceptable as the id argument of collection.get.</p>
+<ol>
+<li>Trigger <code>remove</code>(model, collection, options) for each model removed.</li>
+<li>If any models were removed, trigger:<ul>
+<li><code>update</code>(collection, options)</li>
+<li><code>changes</code>(collection, options).</li>
+</ul>
+</li>
+</ol>
+<h3 id="collection-set-models-options-">collection.set( models, options? )</h3>
+<p>The set method performs a &quot;smart&quot; update of the collection with the passed list of models. If a model in the list isn&#39;t yet in the collection it will be added; if the model is already in the collection its attributes will be merged; and if the collection contains any models that aren&#39;t present in the list, they&#39;ll be removed. All of the appropriate &quot;add&quot;, &quot;remove&quot;, and &quot;change&quot; events are fired as this happens. Returns the touched models in the collection. If you&#39;d like to customize the behavior, you can disable it with options: <code>{remove: false}</code>, or <code>{merge: false}</code>.</p>
+<h4 id="events">Events</h4>
+<ol>
+<li>Trigger the one event per model:<ul>
+<li><code>add</code>(model, collection, options) for each model added.</li>
+<li><code>remove</code>(model, collection, options) for each model removed.</li>
+<li><code>change</code>(model, options) for each model changed.</li>
+</ul>
+</li>
+<li>Trigger the single event:<ul>
+<li><code>update</code>(collection, options) if any models were added.</li>
+<li><code>sort</code>(collection, options) if an order of models was changed.</li>
+</ul>
+</li>
+<li>Trigger <code>changes</code> event in case if any changes were made to the collection and objects inside.</li>
+</ol>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> vanHalen = <span class="hljs-keyword">new</span> Man.Collection([ eddie, alex, stone, roth ]);
+
+vanHalen.set([ eddie, alex, stone, hagar ]);
+
+<span class="hljs-comment">// Fires a "remove" event for roth, and an "add" event for hagar.</span>
+<span class="hljs-comment">// Updates any of stone, alex, and eddie's attributes that may have</span>
+<span class="hljs-comment">// changed over the years.</span>
+</code></pre>
+<h3 id="collection-reset-models-options-">collection.reset(models, options?)</h3>
+<p>Replace the collection&#39;s content with the new models. More efficient than <code>collection.set</code>, but does not send model-level events.</p>
+<p>Calling <code>collection.reset()</code> without passing any models as arguments will empty the entire collection.</p>
+<ol>
+<li>Trigger event <code>reset</code>(collection, options).</li>
+<li>Trigger event <code>changes</code>(collection, options).</li>
+</ol>
+<h3 id="collection-pluck-attribute-">collection.pluck(attribute)</h3>
+<p>Pluck an attribute from each model in the collection. Equivalent to calling map and returning a single attribute from the iterator.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> users = <span class="hljs-keyword">new</span> UserCollection([
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Curly"</span>},
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Larry"</span>},
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Moe"</span>}
+]);
+
+<span class="hljs-keyword">const</span> names = users.pluck(<span class="hljs-string">"name"</span>);
+
+alert(<span class="hljs-built_in">JSON</span>.stringify(names));
+</code></pre>
+<h2 id="sorting">Sorting</h2>
+<p>Type-R implements BackboneJS Collection sorting API with some extensions.</p>
+<h3 id="collection-sort-options-">collection.sort(options?)</h3>
+<p>Force a collection to re-sort itself. You don&#39;t need to call this under normal circumstances, as a collection with a comparator will sort itself whenever a model is added. To disable sorting when adding a model, pass <code>{sort: false}</code> to add. Calling sort triggers a &quot;sort&quot; event on the collection.</p>
+<p>By default, there is no comparator for a collection. If you define a comparator, it will be used to maintain the collection in sorted order. This means that as models are added, they are inserted at the correct index in <code>collection.models</code>.</p>
+<p>Note that Type-R depends on the arity of your comparator function to determine between the two styles, so be careful if your comparator function is bound.</p>
+<p>Collections with a comparator will not automatically re-sort if you later change model attributes, so you may wish to call sort after changing model attributes that would affect the order.</p>
+<h3 id="static-comparator-attrname-"><code>static</code> comparator = &#39;attrName&#39;</h3>
+<p>Maintain the collection in sorted order by the given model&#39;s attribute.</p>
+<h3 id="static-comparator-x-number-string"><code>static</code> comparator = x =&gt; number | string</h3>
+<p>Maintain the collection in sorted order according to the &quot;sortBy&quot; comparator function.</p>
+<p>&quot;sortBy&quot; comparator functions take a model and return a numeric or string value by which the model should be ordered relative to others.</p>
+<h3 id="static-comparator-x-y-1-0-1"><code>static</code> comparator = (x, y) =&gt; -1 | 0 | 1</h3>
+<p>Maintain the collection in sorted order according to the &quot;sort&quot; comparator function.</p>
+<p>&quot;sort&quot; comparator functions take two models and return -1 if the first model should come before the second, 0 if they are of the same rank and 1 if the first model should come after.</p>
+<p>Note how even though all of the chapters in this example are added backward, they come out in the proper order:</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Chapter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">page</span> : <span class="hljs-built_in">Number</span>,
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>
+    }
+}
+
+<span class="hljs-keyword">var</span> chapters = <span class="hljs-keyword">new</span> Chapter.Collection();
+
+chapters.comparator = <span class="hljs-string">'page'</span>;
+
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The End"</span>});
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The Middle"</span>});
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The Beginning"</span>});
+
+alert(chapters.map( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.title ));
+</code></pre>
+<h2 id="other-methods">Other methods</h2>
+<h3 id="collectionclass-from-models-options-">CollectionClass.from( models, options? )</h3>
+<p>Create <code>CollectionClass</code> from the array of models. Similar to direct collection creation, but supports additional option for strict data validation.
+If <code>{ strict : true }</code> option is passed the validation will be performed and an exception will be thrown in case of an error.</p>
+<p>Please note, that Type-R always performs type checks on assignments, convert types, and reject improper updates reporting it as an error. It won&#39;t, however, execute custom validation
+rules on every update as they are evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
+<span class="hljs-comment">// Throw an exception if validation fails.</span>
+<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
+</code></pre>
+<h3 id="collection-createsubset-models-options-">collection.createSubset( models?, options? )</h3>
+<p>Create the collection which is a subset of a source collection serializable as an array of model ids. Takes the same arguments as the collection&#39;s constructor.</p>
+<p>The created collection is an instance of <code>subsetOf( sourceCollection, CollectionCtor )</code> attribute type (non-aggregating serializable collection). </p>
+<aside class="notice">
+Records in the collection must have an `id` attribute populated to work properly with subsets.
+</aside>
+
+<h3 id="collection-assignfrom-othercollection-">collection.assignFrom( otherCollection )</h3>
+<p>Synchronize the state of the collection and its aggregation tree with other collection of the same type. Updates existing objects in place. Model in the collection is considered to be &quot;existing&quot; if it has the same <code>id</code>.</p>
+<p>Equivalent to <code>collection.set( otherCollection.models, { merge : true } )</code> and triggers similar events on change.</p>
+<h3 id="collection-dispose-">collection.dispose()</h3>
+<p>Dispose of the collection. An aggregating collection will recursively dispose of its models.</p>
 <h1 id="validation">Validation</h1>
 <p>Type-R models and collections are <em>dynamically type safe</em>. It&#39;s guaranteed that Type-R data structures will always conform to the declared shape.
 Records and collections convert values to the declared types on assignment, and reject an update (logging an error in a console) if it cannot be done.</p>
@@ -461,10 +724,360 @@ It can be used to define reusable attribute types as demonstrated below:</p>
 <code>obj</code> is the reference to the current object.</p>
 <h1 id="doing-i-o">Doing I/O</h1>
 <h2 id="overview">Overview</h2>
-<h2 id="i-o-methods">I/O methods</h2>
-<h2 id="rest-i-o">REST I/O</h2>
-<h2 id="testing-and-mocking">Testing and mocking</h2>
-<h2 id="other-endpoints">Other endpoints</h2>
+<p>Type-R uses IO abstraction represented by <code>IOEndpoint</code> interface, with JSON serialization handled by Model and Collection classes.</p>
+<p>IOEndpoint defines the set of CRUD + list methods operating on raw JSON.
+Attachment of an endpoint to the model or collection enables I/O API.  There are few endpoints bundled with Type-R, for instance <code>memoryIO()</code> which can be used for mock testing.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> users = <span class="hljs-keyword">new</span> User.Collection();
+users
+    .add({ <span class="hljs-attr">name</span> : <span class="hljs-string">'John'</span> })
+    .save()
+    .then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( user.id );
+</code></pre>
+<h2 id="i-o-api">I/O API</h2>
+<h3 id="static-endpoint"><code>static</code> endpoint</h3>
+<p>I/O endpoint declaration which should be used in Model or Collection definition to enable I/O API.</p>
+<p>If an endpoint is defined for the <code>MyRecord</code>, it&#39;s automatically defined for the corresponding <code>MyRecord.Collection</code> as well.</p>
+<h3 id="metatype-type-type-endpoint-endpoint-"><code>metatype</code> type( Type ).endpoint( <code>endpoint</code> )</h3>
+<p>Override or define an I/O endpoint for the specific model&#39;s attribute.</p>
+<h3 id="obj-getendpoint-">obj.getEndpoint()</h3>
+<p>Returns an object&#39;s IO endpoint. Normally, this is an endpoint which is defined in object&#39;s <code>static endpoint = ...</code> declaration, but it might be overridden by the parent&#39;s model using <code>type( Type ).endpoint( ... )</code> attribute declaration.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+    ...
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRole</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-comment">// Use the relative path '/api/roles/:id/users'</span>
+        users : type( User.Collection ).endpoint( restfulIO( <span class="hljs-string">'./users'</span> ) ),
+        ...
+    }
+}
+</code></pre>
+<h3 id="model-fetch-options-">model.fetch( options? )</h3>
+<p>Asynchronously fetch the model using <code>endpoint.read()</code> method. Returns an abortable ES6 promise.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="model-save-options-">model.save( options? )</h3>
+<p>Asynchronously save the model using <code>endpoint.create()</code> (if there are no id) or <code>endpoint.update()</code> (if id is present) method. Returns an abortable ES6 promise.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="model-destroy-options-">model.destroy( options? )</h3>
+<p>Asynchronously destroy the model using <code>endpoint.destroy()</code> method. Returns an abortable ES6 promise. The model is removed from the aggregating collection upon the completion of the I/O request.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="collection-fetch-options-">collection.fetch( options? )</h3>
+<p>Fetch the collection. Returns an abortable promise.</p>
+<p><code>options</code> accepts an optional <code>liveUpdates</code> parameter. When <code>true</code>, collection subscribes for the live updates when I/O is finished.</p>
+<h3 id="collection-liveupdates-true-false-">collection.liveUpdates( true | false )</h3>
+<p>Subscribe for the live data updates if an I/O endpoint supports it (<code>subscribe()</code>/<code>unsubscribe()</code> IOEndpoint methods).</p>
+<aside class="notice">
+No built-in I/O enpoints support that functionality yet.
+</aside>
+
+<h3 id="obj-haspendingio-">obj.hasPendingIO()</h3>
+<p>Returns an abortable promise if there&#39;s any I/O pending with the object, or <code>null</code> otherwise.</p>
+<p>Can be used to check for active I/O in progress or to abort pending I/O operation. Please note, that all pending I/O is aborted automatically when new I/O operation is started or an object is disposed. When I/O is aborted, the promise is rejected.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> promise = users.hasPendingIO();
+<span class="hljs-keyword">if</span>( promise &amp;&amp; promise.abort ) promise.abort();
+</code></pre>
+<h2 id="i-o-endpoints">I/O endpoints</h2>
+<h3 id="restfulio-url-options-">restfulIO( url, options? )</h3>
+<p>HTTP REST client endpoint. Requires <code>window.fetch</code> available natively or through the polyfill. Implements standard BackboneJS REST semantic.</p>
+<p>All I/O methods append an optional <code>options.params</code> object to the URL parameters translating them to string with <code>JSON.stringify()</code>.</p>
+<ul>
+<li><code>model.save()</code> makes:<ul>
+<li><code>POST url</code>, if the model has no id. Expects to receive <code>{ id : recordId }</code>.</li>
+<li><code>PUT url/:id</code>, if the model has an id.</li>
+</ul>
+</li>
+<li><code>collection.fetch()</code> makes <code>GET url</code>.</li>
+<li><code>model.destroy()</code> makes <code>DELETE url</code>.</li>
+</ul>
+<p>Supports URI relative to owner (<code>./relative/url</code> resolves as <code>/owner/:id/relative/url/:id</code> ).</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/restful'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    ...
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-comment">// Roles collection here has relative url /api/users/:user_id/roles/</span>
+        roles : type( Role.Collection ).endpoint( restfulIO( <span class="hljs-string">'./roles'</span> ) ), 
+        ...
+    }
+}
+</code></pre>
+<h3 id="memoryio-mockdata-delay-">memoryIO( mockData?, delay? )</h3>
+<p>Endpoint for mock testing. Takes optional array with mock data, and optional <code>delay</code> parameter which is the simulated I/O delay in milliseconds.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { memoryIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/memory'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+    ...
+}
+</code></pre>
+<h3 id="localstorageio-key-">localStorageIO( key )</h3>
+<p>Endpoint for localStorage. Takes <code>key</code> parameter which must be unique for the persistent model&#39;s collection.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { localStorageIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/localStorage'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = localStorageIO( <span class="hljs-string">'/users'</span> );
+    ...
+}
+</code></pre>
+<h3 id="attributesio-">attributesIO()</h3>
+<p>Endpoint for I/O composition. Redirects model&#39;s <code>fetch()</code> request to its attributes and returns the combined abortable promise. Does not enable any other I/O methods and can be used with <code>model.fetch()</code> only.</p>
+<p>It&#39;s common pattern to use attributesIO endpoint in conjunction with Store to fetch all the data required by SPA page.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { localStorageIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/attributes'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : UserRole.Collection,
+    }
+}
+...
+const store = <span class="hljs-keyword">new</span> PageStore();
+store.fetch().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> renderUI() );
+</code></pre>
+<h3 id="proxyio-recordctor-">proxyIO( RecordCtor )</h3>
+<p>Create IO endpoint from the Model class. This endpoint is designed for use on the server side with a data layer managed by Type-R.</p>
+<p>Assuming that you have Type-R models with endpoints working with the database, you can create an endpoint which will use
+an existing Model subclass as a transport. This endpoint can be connected to the RESTful endpoint API on the server side which will serve JSON to the restfulIO endpoint on the client.</p>
+<p>An advantage of this approach is that JSON schema will be transparently validated on the server side by the Type-R.</p>
+<pre><code class="highlight javascript">    <span class="hljs-keyword">import</span> { proxyIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoint/proxy'</span>
+
+    ...
+
+    const usersIO = proxyIO( User );
+</code></pre>
+<h2 id="ioendpoint-interface">IOEndpoint Interface</h2>
+<p>An IO endpoint is an &quot;plug-in&quot; abstraction representing the persistent collection of JSON objects, which is required to enable models and collections I/O API. There are several pre-defined endpoints included in Type-R package which can be used for HTTP REST I/O, mock testing, working with localStorage, and IO composition.</p>
+<p>You will need to define custom endpoint if you would like to implement or customize serialization transport for Type-R objects. Use built-in endpoints as an example and the starting boilerplate.</p>
+<p>All IOEndpoint methods might return standard Promises or abortable promises (created with <code>createIOPromise()</code>). An IOEndpoint instance is shared by all of the class instances it&#39;s attached to and therefore it&#39;s normally <em>must be stateless</em>.</p>
+<h3 id="endpoint-read-id-options-model-">endpoint.read( id, options, model )</h3>
+<p>Reads an object with a given id. Used by <code>model.fetch()</code> method. Must return JSON wrapped in abortable promise.</p>
+<h3 id="endpoint-update-id-json-options-model-">endpoint.update( id, json, options, model )</h3>
+<p>Updates or creates an object with a given id. Used by <code>model.save()</code> method when model <em>already has</em> an id. Must return abortable promise.</p>
+<h3 id="endpoint-create-json-options-model-">endpoint.create( json, options, model )</h3>
+<p>Creates an object. Used by <code>model.save()</code> method when model <em>does not</em> have an id. Must return abortable promise.</p>
+<h3 id="endpoint-destroy-id-options-model-">endpoint.destroy( id, options, model )</h3>
+<p>Destroys the object with the given id. Used by <code>model.destroy()</code> method. Must return abortable promise.</p>
+<h3 id="endpoint-list-options-collection-">endpoint.list( options, collection )</h3>
+<p>Fetch an array of objects. Used by <code>collection.fetch()</code> method. Must returns abortable promise.</p>
+<h3 id="endpoint-subscribe-callbacks-collection-">endpoint.subscribe( <code>callbacks</code>, collection )</h3>
+<p>Optional method to enable the live updates subscription. Used by <code>collection.liveUpdates( true )</code> method. Must returns abortable promise.</p>
+<p>Method <code>callbacks</code> argument is an object of the following shape:</p>
+<pre><code class="highlight javascript">{
+    <span class="hljs-comment">// Endpoint must call it when an object is created or updated.</span>
+    updated( json ){}
+
+    <span class="hljs-comment">// Endpoint must call it when an object is removed.</span>
+    removed( json ){}
+}
+</code></pre>
+<h3 id="endpoint-unsubscribe-callbacks-collection-">endpoint.unsubscribe( <code>callbacks</code>, collection )</h3>
+<p>Unsubscribe from the live updates. Used by <code>collection.liveUpdates( false )</code> method. Takes the same <code>callbacks</code> object as <code>subscribe()</code>.</p>
+<h3 id="createiopromise-init-">createIOPromise( init )</h3>
+<p>Service function to create an abortable version of ES6 promise (with <code>promise.abort()</code> which meant to stop pending I/O and reject the promise).</p>
+<p><code>init</code> function takes the third <code>onAbort</code> argument to register an optional abort handler. If no handler is registered, the default implementation of <code>promise.abort()</code> will just reject the promise.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { createIOPromise } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r'</span>
+
+<span class="hljs-keyword">const</span> abortablePromise = createIOPromise( <span class="hljs-function">(<span class="hljs-params"> resolve, reject, onAbort </span>) =&gt;</span>{
+    ...
+    onAbort( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        reject( <span class="hljs-string">'I/O Aborted'</span> );
+    });
+});
+</code></pre>
+<h2 id="serialization">Serialization</h2>
+<p>Model and Collection has a portion of common API related to the I/O and serialization.</p>
+<h3 id="obj-tojson-options-">obj.toJSON( options? )</h3>
+<p>Serialize model or collection to JSON. Used internally by <code>save()</code> I/O method (<code>options.ioMethod === &#39;save&#39;</code> when called from within <code>save()</code>). Can be overridden to customize serialization.</p>
+<p>Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Serialization can be controlled on per-attribute level with <b>type( Type ).toJSON()</b> declaration.
+</aside>
+
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">comments</span> : Comment.Collection
+    }
+}
+
+<span class="hljs-keyword">const</span> post = <span class="hljs-keyword">new</span> BlogPost({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"Type-R is cool!"</span>,
+    <span class="hljs-attr">comments</span> : [ { <span class="hljs-attr">body</span> : <span class="hljs-string">"Agree"</span> }]
+});
+
+<span class="hljs-keyword">const</span> rawJSON = post.toJSON()
+<span class="hljs-comment">// { title : "Type-R is cool!", body : "", comments : [{ body : "Agree" }] }</span>
+</code></pre>
+<h3 id="option-parse-true-"><code>option</code> { parse : true }</h3>
+<p><code>obj.set()</code> and constructor&#39;s option to force parsing of the raw JSON. Is used internally by I/O methods to parse the data received from the server.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
+<span class="hljs-comment">// Amazingly, this is guaranteed to work by default.</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.set( bestSeller.toJSON(), { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
+</code></pre>
+<h3 id="callback-obj-parse-json-options-"><code>callback</code> obj.parse( json, options? )</h3>
+<p>Optional hook called to transform the JSON when it&#39;s passes to the model or collection with <code>set( json, { parse : true })</code> call. Used internally by I/O methods (<code>options.ioMethod</code> is either &quot;save&quot; or &quot;fetch&quot; when called from I/O method).</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
+</aside>
+
+<h3 id="metatype-type-type-tojson-false-"><code>metatype</code> type( Type ).toJSON( false )</h3>
+<p>Do <em>not</em> serialize the specific attribute.</p>
+<h3 id="metatype-type-type-tojson-value-name-options-json-"><code>metatype</code> type( Type ).toJSON( ( value, name, options ) =&gt; json )</h3>
+<p>Override the default serialization for the specific model&#39;s attribute.</p>
+<p>Attribute is not serialized when the function return <code>undefined</code>.</p>
+<h3 id="metatype-type-type-parse-json-name-value-"><code>metatype</code> type( Type ).parse( ( json, name ) =&gt; value )</h3>
+<p>Transform the data before it will be assigned to the model&#39;s attribute.</p>
+<p>Invoked when the <code>{ parse : true }</code> option is set.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom boolean attribute type which is serialized as 0 or 1.</span>
+<span class="hljs-keyword">const</span> MyWeirdBool = type( <span class="hljs-built_in">Boolean</span> )
+                      .parse( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-number">1</span> )
+                      .toJSON( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span> );
+</code></pre>
+<h3 id="static-create-attrs-options-"><code>static</code> create( attrs, options )</h3>
+<p>Static factory function used internally by Type-R to create instances of the model.</p>
+<p>May be redefined in the abstract Model base class to make it serializable type.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-built_in">String</span>
+    }
+
+    <span class="hljs-keyword">static</span> create( attrs, options ){
+        <span class="hljs-keyword">switch</span>( attrs.type ){
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeA"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeA( attrs, options );
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeB"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeB( attrs, options );
+        }
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeA"</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeB</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeB"</span>,
+        ...
+    }
+}
+</code></pre>
+<h2 id="normalized-data">Normalized data</h2>
+<p>Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by model id. References are represented as model ids in JSON, and being transparently resolved to model instances on the first access.</p>
+<p><code>Store</code> class is the special model class which serves as a placeholder for the set of interlinked collections of normalized models. Id-references are defined as model attributes of the special type representing the serializable reference to the models from the specified master collection.</p>
+<h3 id="metatype-memberof-sourcecollection-"><code>metatype</code> memberOf( <code>sourceCollection</code> )</h3>
+<p>Serializable reference to the model from the particular collection.
+Initialized as <code>null</code> and serialized as <code>model.id</code>. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.</p>
+<p>Changes in shared model are not detected.</p>
+<p><code>sourceCollection</code> may be:</p>
+<ul>
+<li>the JS variable pointing to the collection singleton;</li>
+<li>the function returning the collection;</li>
+<li>the string with the dot-separated <em>relative object path</em> to the collection. It is resolved dynamically relative to the model&#39;s <code>this</code>. Following shortcuts may be used in path:<ul>
+<li><code>owner.path</code> (or <code>^path</code>) works as <code>() =&gt; this.getOwner().path</code>.</li>
+<li><code>store.path</code> (or <code>~path</code>) works as <code>() =&gt; this.getStore().path</code>.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="highlight javascript">    @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+        <span class="hljs-keyword">static</span> attributes = {
+            <span class="hljs-attr">items</span> : Item.Collection,
+            <span class="hljs-attr">selected</span> : memberOf( <span class="hljs-string">'items'</span> ) <span class="hljs-comment">// Will resolve to `this.items`</span>
+        }
+    }
+</code></pre>
+<aside class="info">It's recommended to use ~paths and stores instead of ^paths.</aside>
+
+<h3 id="metatype-subsetof-sourcecollection-collectionctor-"><code>metatype</code> subsetOf( <code>sourceCollection</code>, CollectionCtor? )</h3>
+<p>Serializable non-aggregating collection which is the subset of the existing collection. Serialized as an array of model ids. Used to model many-to-many relationships. <code>CollectionCtor</code> argument may be omitted unless you need it to be a sublass of the particular collection type.</p>
+<p>The collection object itself is recursively created and cloned. However, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.</p>
+<p><code>sourceCollection</code> is the same reference as used by <code>memberOf( sourceCollection )</code>.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : subsetOf( <span class="hljs-string">'~roles'</span>, Role.Collection )
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UsersDirectory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">roles</span> : Role.Collection,
+        <span class="hljs-attr">users</span> : User.Collection <span class="hljs-comment">// `~roles` references will be resolved against this.roles</span>
+    }
+}
+</code></pre>
+<h3 id="sourcecollection-createsubset-models-options-">sourceCollection.createSubset( models?, options? )</h3>
+<p>Create an instance of <code>subsetOf( sourceCollection, CollectionCtor )</code> type (non-aggregating serializable collection) which is the subset of the given collection. Takes the same arguments as the collection&#39;s constructor.</p>
+<aside class="notice">
+Records in the collection must have an `id` attribute populated to work properly with subsets.
+</aside>
+
+<h3 id="class-store"><code>class</code> Store</h3>
+<p><code>Store</code> is the special kind of model which serves as a root for id references.</p>
+<p>For all models inside of the store&#39;s aggregation tree <code>~attrName</code> will resolve to the attribute of the store class found with <code>model.getStore()</code> method. If there are no such an attribute in the store, the next available store upper in aggregation tree will be used (as regular models stores can be nested), or the default store if there are no one.</p>
+<aside class="notice">Stores in Type-R is _very different_ to stores in other framework. Pay attention.</aside>
+
+<p>Store is the subclass of the Model. It&#39;s defined extending the <code>Store</code> abstract base class. It behaves as a regular model in most aspects.</p>
+<h3 id="store-_defaultstore">store._defaultStore</h3>
+<p>Reference to the master store used for lookups if the current store doesn&#39;t have the required attribute and there are no other store found upper in the ownership chain.</p>
+<p>Defaults to the <code>Store.global</code>. May be explicitly defined to create custom store lookup chains across the ownership hierarchy.</p>
+<h3 id="static-store-global"><code>static</code> Store.global</h3>
+<p>The default singleton store class. Is always the last store to lookup when resolving ~reference.</p>
+<p>Use the default store for the <em>globally shared data only</em>. Each application page must have its local store.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : Role.Collection
+    }
+}
+
+Store.global = <span class="hljs-keyword">new</span> MyStore();
+
+<span class="hljs-comment">// Now the reference '~users` will point to users collection from the MyStore.</span>
+</code></pre>
+<h3 id="recordorcollection-getstore-">recordOrCollection.getStore()</h3>
+<p>Return the closest store. Used internally to resolve symbolic <code>~reference</code> relative to the store.</p>
+<p>Method looks for the <code>Store</code> subclass traversing the ownership chain of current aggregation tree upwards. If there are no store found this way, default Store from <code>Store.global</code> is returned.</p>
+<h3 id="recordorcollection-clone-pinstore-true-">recordOrCollection.clone({ pinStore : true })</h3>
+<p>Make the cloned object to preserve the reference to its original store.</p>
+<p>Cloned objects don&#39;t have an owner by default, thus they loose the reference to their store as no ownership chain can be traversed. <code>pinStore</code> option should be used in such a cases.</p>
 <h1 id="using-with-react">Using with React</h1>
 <h2 id="local-component-state">Local component state</h2>
 <h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>
