@@ -14,10 +14,9 @@ toc_footers:
 includes:
   - README
   - models/README
+  - models/src/README
   - models/src/model/README
-  - models/src/model/API
   - models/src/collection/README
-  - models/src/Validation
   - endpoints/README
   - react/README
   - examples/README

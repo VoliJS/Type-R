@@ -96,26 +96,189 @@ class EventedComponent extends React.Component {
 }
 ```
 
-## Events
+## `mixin` Events
 
-Mixture is an alternative implementation of [Backbone API for Events](http://backbonejs.org/#Events) heavily optimized for modern JIT engines. Here's the results of the typical
-run of the [performance tests](https://github.com/Volicon/mixturejs/tree/master/tests).
+Type-R uses an efficient synchronous events implementation which is backward compatible with [Backbone Events API](http://backbonejs.org/#Events) but is about twice faster in all major browsers. It comes in form of `Events` mixin and the `Messenger` base class.
 
 ![performance](https://raw.githubusercontent.com/Volicon/mixturejs/master/perf-chart.jpg)
 
-Mixture Events implements the complete semantic and API of [Backbone 1.1.x Events](http://backbonejs.org/#Events), with the following exceptions:
+The complete semantic if Backbone v1.1.x Events is supported with the following exceptions:
 
 - `source.trigger( 'ev1 ev2 ev3' )` is not supported. Use `source.trigger( 'ev1' ).trigger( 'ev2' ).trigger( 'ev3' )` instead.
 - `source.trigger( 'ev', a, b, ... )` doesn't support more than 5 event parameters.
 - `source.on( 'ev', callback )` - callback will _not_ be called in the context of `source` by default.
 
-Events passes the BackboneJS tests suite.
+`Events` is a [mixin](#mixins) giving the object the ability to bind and trigger custom named events.
 
-## Logger
+```javascript
+import { mixins, Events } from 'type-r'
 
-`Logger` doesn't compete with your logging libraries, it helps you to utilize them. It works like that.
+@mixins( Events )
+class EventfulClass {
+    ...
 
-You write to the logs as shown below:
+    doSomething(){
+        ...
+        this.trigger( 'doneSomething', here, are, results );
+    }
+}
+
+const ec = new EventfulClass();
+ec.on( 'doneSomething', ( here, are, results ) => console.log( 'unbelievable' ) );
+```
+
+<aside class="notice">There's the <code>Messenger</code> abstract base class with Events mixed in.</aside>
+
+### source.trigger(event, arg1, arg2, ... )
+
+Trigger callbacks for the given event, or space-delimited list of events. Subsequent arguments to trigger will be passed along to the event callbacks.
+
+### listener.listenTo(source, event, callback)
+Tell an object to listen to a particular event on an other object. The advantage of using this form, instead of other.on(event, callback, object), is that listenTo allows the object to keep track of the events, and they can be removed all at once later on. The callback will always be called with object as context.
+
+```javascript
+    view.listenTo(model, 'change', view.render );
+```
+
+<aside class="success">Subscriptions made with <code>listenTo()</code> will be stopped automatically if an object is properly disposed (<code>dispose()</code> method is called).</aside>
+
+### listener.stopListening([source], [event], [callback])
+
+Tell an object to stop listening to events. Either call stopListening with no arguments to have the object remove all of its registered callbacks ... or be more precise by telling it to remove just the events it's listening to on a specific object, or a specific event, or just a specific callback.
+
+```javascript
+    view.stopListening(); // Unsubscribe from all events
+
+    view.stopListening(model); // Unsubscribe from all events from the model
+```
+
+<aside class="notice">Messenger, Model, Collection, and Store execute <code>this.stopListening()</code> from their <code>dispose()</code> method. You don't have to unsubscribe from events explicitly if you are using <code>listenTo()</code> method and disposing your objects properly.</aside>
+
+### listener.listenToOnce(source, event, callback)
+
+Just like `listenTo()`, but causes the bound callback to fire only once before being automatically removed.
+
+### source.on(event, callback, [context])
+
+Bind a callback function to an object. The callback will be invoked whenever the event is fired. If you have a large number of different events on a page, the convention is to use colons to namespace them: `poll:start`, or `change:selection`. The event string may also be a space-delimited list of several events...
+
+```javascript
+    book.on("change:title change:author", ...);
+```
+
+Callbacks bound to the special "all" event will be triggered when any event occurs, and are passed the name of the event as the first argument. For example, to proxy all events from one object to another:
+
+```javascript
+    proxy.on("all", function(eventName) {
+        object.trigger(eventName);
+    });
+```
+
+All event methods also support an event map syntax, as an alternative to positional arguments:
+
+```javascript
+    book.on({
+        "change:author": authorPane.update,
+        "change:title change:subtitle": titleView.update,
+        "destroy": bookView.remove
+    });
+```
+
+To supply a context value for this when the callback is invoked, pass the optional last argument: `model.on('change', this.render, this)` or `model.on({change: this.render}, this)`.
+
+<aside class="warning">Event subscription with <code>source.on()</code> may create memory leaks if it's not stopped properly with <code>source.off()</code></aside>
+
+### source.off([event], [callback], [context])
+
+Remove a previously bound callback function from an object. If no context is specified, all of the versions of the callback with different contexts will be removed. If no callback is specified, all callbacks for the event will be removed. If no event is specified, callbacks for all events will be removed.
+
+```javascript
+    // Removes just the `onChange` callback.
+    object.off("change", onChange);
+
+    // Removes all "change" callbacks.
+    object.off("change");
+
+    // Removes the `onChange` callback for all events.
+    object.off(null, onChange);
+
+    // Removes all callbacks for `context` for all events.
+    object.off(null, null, context);
+
+    // Removes all callbacks on `object`.
+    object.off();
+```
+
+Note that calling `model.off()`, for example, will indeed remove all events on the model — including events that Backbone uses for internal bookkeeping.
+
+### source.once(event, callback, [context])
+Just like `on()`, but causes the bound callback to fire only once before being removed. Handy for saying "the next time that X happens, do this". When multiple events are passed in using the space separated syntax, the event will fire once for every event you passed in, not once for a combination of all events
+
+### Type-R events list
+
+All Type-R objects implement Events mixin and use events to notify listeners on changes.
+
+Model and Store change events:
+
+Event name | Handler arguments | When triggered
+-------|-------------------|------------
+change | (model, options) | At the end of any changes.
+change:attrName | (model, value, options) | The model's attribute has been changed.
+
+Collection change events:
+
+Event name | Handler arguments | When triggered
+-------|-------------------|------------
+changes | (collection, options) | At the end of any changes.
+reset | (collection, options) | `reset()` method was called.
+update | (collection, options) | Any models added or removed.
+sort | (collection, options) | Order of models is changed. 
+add | (model, collection, options) | The model is added to a collection.
+remove | (model, collection, options) | The model is removed from a collection.
+change | (model, options) | The model is changed inside of collection.
+
+## `class` Messenger
+
+Messenger is an abstract base class implementing Events mixin and some convenience methods.
+
+```javascript
+import { define, Messenger } from 'type-r'
+
+class MyMessenger extends Messenger {
+
+}
+```
+
+### Events mixin methods (7)
+
+Messenger implements [Events](#events-mixin) mixin.
+ 
+### messenger.cid
+
+Unique run-time only messenger instance id (string).
+
+### `callback` messenger.initialize()
+
+Callback which is called at the end of the constructor.
+
+### messenger.dispose()
+
+Executes `messenger.stopListening()` and `messenger.off()`.
+
+Objects must be disposed to prevent memory leaks caused by subscribing for events from singletons.
+
+## Logging
+
+Logging in Type-R is done through Events. `Logger` doesn't compete with your logging libraries, it helps you to utilize them.
+
+### log( level, topic, message, context? )
+
+Write to the log. Arguments:
+
+- `level` is a string corresponding to the `console` log methods: 'error', 'warn', 'info', 'log', 'debug'.
+- `topic` is an arbitrary string reflecting the feature area.
+- `message` is a log message.
+- `context` is an optional JS object with additional information on the context of logging event.
 
 ```javascript
 import { log } from '@type-r/mixture'
@@ -125,7 +288,11 @@ import { log } from '@type-r/mixture'
 log( 'info', 'feature:and:topic', textMessage, { someRelatedData, someOtherData, ... });
 ```
 
-What really happens there is that you're sending an event. There's a singlton `logger` acting as a router for log events. There could be many listeners to the log events, and the one which is listening by default is the console listener, so you get pretty standard logging out of box.
+### `singleton` logger
+
+Singlton acting as a router for log events.
+
+What really happens when the `log` is called is an event being sent. There could be many listeners to the log events, and the one which is listening by default is the console listener, so you get pretty standard logging out of box.
 
 However, here's the list of things you can do which you can't do with a standard console logging:
 

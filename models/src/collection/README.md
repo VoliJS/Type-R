@@ -357,3 +357,60 @@ Equivalent to `collection.set( otherCollection.models, { merge : true } )` and t
 ### collection.dispose()
 
 Dispose of the collection. An aggregating collection will recursively dispose of its models.
+
+All changes in the models cause change events in the collections they are contained in.
+
+Subset collections is an exception; they don't observe changes of its elements by default.
+
+## Change events
+
+### Events mixin methods (7)
+
+Collection implements [Events](#events-mixin) mixin.
+
+### collection.transaction( fun )
+
+Execute the sequence of updates in `fun` function in the scope of the transaction.
+
+All collection updates occurs in the scope of transactions. Transaction is the sequence of changes which results in a single `changes` event.
+
+Transaction can be opened either manually or implicitly with calling any of collection update methods.
+Any additional changes made to the collection or its items in event handlers will be executed in the scope of the original transaction, and won't trigger an additional `changes` events.
+
+### collection.updateEach( iteratee : ( val : Model, index ) => void, context? )
+
+Similar to the `collection.each`, but wraps an iteration in a transaction. The single `changes` event will be emitted for the group of changes to the models made in `updateEach`.
+
+### `static` itemEvents = { eventName : `handler`, ... }
+
+Subscribe for events from models. The `hander` is either the collection's method name, the handler function, or `true`.
+
+When `true` is passed as a handler, the corresponding event will be triggered on the collection.
+
+### `event` "changes" (collection, options)
+
+When collection has changed. Single event triggered when the collection has been changed.
+
+### `event` "reset" (collection, options)
+
+When the collection's entire contents have been reset (`reset()` method was called).
+
+### `event` "update" (collection, options)
+
+Single event triggered after any number of models have been added or removed from a collection.
+
+### `event` "sort" (collection, options)
+
+When the collection has been re-sorted.
+
+### `event` "add" (model, collection, options)
+
+When a model is added to a collection.
+
+### `event` "remove" (model, collection, options)
+
+When a model is removed from a collection.
+
+### `event` "change" (model, options)
+
+When a model inside of the collection is changed.

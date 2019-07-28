@@ -26,49 +26,6 @@ users
 
 ## I/O API
 
-### `static` endpoint
-
-I/O endpoint declaration which should be used in Model or Collection definition to enable I/O API.
-
-If an endpoint is defined for the `MyRecord`, it's automatically defined for the corresponding `MyRecord.Collection` as well.
-
-### obj.getEndpoint()
-
-Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's model using `type( Type ).endpoint( ... )` attribute declaration.
-
-```javascript
-@define class User extends Model {
-    static endpoint = restfulIO( '/api/users' );
-    ...
-}
-
-@define class UserRole extends Model {
-    static endpoint = restfulIO( '/api/roles' );
-    static attributes = {
-        // Use the relative path '/api/roles/:id/users'
-        users : type( User.Collection ).endpoint( restfulIO( './users' ) ),
-        ...
-    }
-}
-```
-
-### model.fetch( options? )
-
-Asynchronously fetch the model using `endpoint.read()` method. Returns an abortable ES6 promise.
-
-An endpoint must be defined for the model in order to use that method.
-
-### model.save( options? )
-
-Asynchronously save the model using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
-
-An endpoint must be defined for the model in order to use that method.
-
-### model.destroy( options? )
-
-Asynchronously destroy the model using `endpoint.destroy()` method. Returns an abortable ES6 promise. The model is removed from the aggregating collection upon the completion of the I/O request.
-
-An endpoint must be defined for the model in order to use that method.
 
 ### collection.fetch( options? )
 

@@ -1,459 +1,330 @@
-# Models
+# Model API
 
-## Overview
+## Create and dispose
 
-The `Model` class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.
+### new Model( attrs?, options?)
 
-There are four sorts of model attributes:
+Create the model. If no `attrs` is supplied, initialize it with defaults taken from the attributes definition.
 
-- **Primitive** types (Number, String, Boolen) mapped to JSON directly.
-- **Immutable** types (Date, Array, Object, or custom immutable class).
-- **Aggregated** models and collections represented as nested objects and arrays of objects in JSON.
-- **References** to models and collections. References can be either:
-    - **serializable** to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;
-    - **observable**, which is a non-persistent run-time only reference, used to model temporary application state.
+When no default value is explicitly provided for an attribute, it's initialized as `new AttributeType()` (just `AttributeType()` for primitives). When the default value is provided and it's not compatible with the attribute type, the value is converted to the proper type with `new Type( defaultValue )` call.
 
-Model is an observable state container efficiently detecting changes in all of its attributes, including the deep changes in aggregated and observable reference attributes. Type-R models follow BackboneJS change events model which makes it a straightforward task to integrate with virtually any view layer.
-
-Model attribute definitions have extended metadata to control all aspects of model behavior on the particular attribute's level, making it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
-
-Type-R models are almost as easy to use as plain JS objects, and much easier when more complex data types and serialization scenarios are involved. 
+If `{parse: true}` option is set the `attrs` is assumed to be the JSON. In this case, `model.parse( attr )` and attribute's `parse` hooks will be called to give you an option to transform the JSON.
 
 ```javascript
-// We have `/api/users` endpoint on the server. Lets describe what it is with a model.
-import { define, Model, Collection, value, type } from '@type-r/models'
-import { restfulIO } from '@type-r/endpoints'
-import { Role } from './roles' // <- That's another model definition.
-
-@define class User extends Model {
-    // Tell this model that it has a REST endpoint on the server to enable I/O API.
-    static endpoint = restfulIO( '/api/users' );
-
+@define class Book extends Model {
     static attributes = {
-        name : '', // type is inferred from the default value as String
-        email : '', // String
-        isActive : false, // Boolean
-
-        // nested array of objects in JSON, collection of Role models in JS
-        roles : Collection.of( Role ) 
-
-        // Add metadata to a Number attribute.
-        // Receive it from the server, but don't send it back on save.
-        failedLoginCount : value( 0 ).toJSON( false ), // Number
-
-        // ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it.
-        createdAt : type( Date ).toJSON( false ), // Date
+        title  : '',
+        author : ''
     }
 }
 
-// Somewhere in other code...
-
-// Fetch the users list from the server...
-const users = await Collection.of( User ).create().fetch();
-
-// Subscribe for the changes...
-users.onChanges( () => console.log( 'changes!' ) );
-
-// ...and make the first user active.
-const firstUser = users.first();
-firstUser.isActive = true; // Here we'll got the 'changes!' log message
-await firstUser.save();
+const book = new Book({
+  title: "One Thousand and One Nights",
+  author: "Scheherazade"
+});
 ```
 
-## Primitive attributes
+### ModelClass.from(attrs, options?)
 
-Primitive attribute types are directly mapped to their values in JSON.
-Assigned value is being converted to the declared attribute type at run time. I.e. if an email is declared to be a string, it's guaranteed that it will always remain a string.
+Create `RecordClass` from attributes. Similar to direct model creation, but supports additional option for strict data validation.
+If `{ strict : true }` option is passed the model validation will be performed immediately and an exception will be thrown in case of an error.
+
+Type-R always perform type checks on assignments, convert types, and reject improper updates reporting it as error. It won't, however, execute custom validation
+rules on every updates as validation is evaluated lazily. `strict` option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.
 
 ```javascript
-@define class User extends Model {
-    static attributes = {
-        name : '',
-        email : String, // ''
-        isActive : Boolean, // false
-        failedLoginCount : Number // 0
-    }
-}
+// Fetch model with a given id.
+const book = await Book.from({ id : 5 }).fetch();
+
+// Validate the body of an incoming HTTP request.
+// Throw an exception if validation fails.
+const body = MyRequestBody.from( ctx.request.body, { parse : true, strict : true });
 ```
 
-### `attribute` : Number
+### model.clone()
 
-JS `number` primitive type. Assigned value (except `null`) is automatically converted to `number` with a constructor call `Number( value )`.
+Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.
 
-If something other than `null`, number, or a proper string representation of number is being assigned, the result of the convertion is `NaN` and the warning
-will be displayed in the console. Models with `NaN` in their `Number` attributes will fail the validation check.
+### `callback` model.initialize(attrs?, options?)
 
-### `attribute` : Boolean
+Called at the end of the `Model` constructor when all attributes are assigned and the model's inner state is properly initialized. Takes the same arguments as
+a constructor.
 
-JS `boolean` primitive type. Assigned value (except `null`) is automatically converted to `true` or `false` with a constructor call `Boolean( value )`.
+### model.dispose()
 
-This attribute type is always valid.
+Recursively dispose the model and its aggregated members. "Dispose" means that elements of the aggregation tree will unsubscribe from all event sources. It's crucial to prevent memory leaks in SPA.
 
-### `attribute` : String
+The whole aggregation tree will be recursively disposed, shared members won't.
 
-JS `string` primitive type. Assigned value (except `null`) is automatically converted to `string` with a constructor call `String( value )`.
+## Read and update
 
-This attribute type is always valid.
+### model.cid
 
-## Immutable attributes
+Read-only client-side model's identifier. Generated upon creation of the model and is unique for every model's instance. Cloned models will have different `cid`.
 
-### `attribute` : Date
+### model.id
 
-JS `Date` type represented as ISO UTC date string in JSON. If assigned value is not a `Date` or `null`, it is automatically converted to `Date` with a constructor call `new Date( value )`.
+Predefined model's attribute, the `id` is an arbitrary string (integer id or UUID). `id` is typically generated by the server. It is used in JSON for id-references.
 
-If something other than the integer timestamp or the proper string representation of date is being assigned, the result of the convertion is `Invalid Date` and the warning
-will be displayed in the console. Models with `Invalid Date` in their `Date` attributes will fail the validation check.
+Records can be retrieved by `id` from collections, and there can be just one instance of the model with the same `id` in the particular collection.
 
-Note that the changes to a `Date` attribute are not observable; dates are treated as immutables and need to be replaced for the model to notice the change.
+### model.attrName
 
-```javascript
-@define class User extends Model {
-    static attributes = {
-        name : '',
-        email : String, // ''
-        createdAt : Date
-    }
-}
-```
+Model's attributes can be directly accessed with their names as a regular class properties.
 
-### `attribute` : Array
+If the value is not compatible with attribute's type from the declaration on assignment, it is converted with `Type( value )` call for primitive types, and with `new Type( value )` for other types.
 
-Immutable JS Array mapped to JSON as is. Type-R assumes that an Array attribute contains a raw JSON with no complex data types in it. 
+There is an important exception in type convertion logic for models and collections. Instead of applying a contructor, Type-R will try to update existing model and collection instances in place calling their `set()` method instead. This logic keeps the model and collection references stable and safe to pass around.
 
-`Array` type is primarily used to represent a list of primitives. It's recommended to use aggregated collections of models for the array of objects in JSON.
+Model triggers events on changes:
+- `change:attrName` *( model, value )*.
+- `change` *( model )*.
 
-If an assigned value is not an `Array`, the assignment will be ignored and a warning will be displayed in the console.
-Array attributes are always valid.
-
-Note that the changes to an `Array` attribute are not observable; arrays need to be replaced with an updated copy for the model to notice the change. Type-R uses `Linked` class proxying popular array methods from `@linked/value` package to simplify manipulations with immutable arrays.
+<aside class="warning">Please note, that you *have to declare all attributes* in `static attributes` declaration.</aside>
 
 ```javascript
-@define class User extends Model {
+@define class Book extends Model {
     static attributes = {
-        name : String,
-        roles : [ 'admin' ]
+        title : String,
+        author : String
+        price : Number,
+        publishedAt : Date,
+        available : Boolean
     }
 }
 
-user.$.roles.push( 'user' );
+const myBook = new Book({ title : "State management with Type-R" });
+myBook.author = 'Vlad'; // That works.
+myBook.price = 'Too much'; // Converted with Number( 'Too much' ), resulting in NaN.
+myBook.price = '123'; // = Number( '123' ).
+myBook.publishedAt = new Date(); // Type is compatible, no conversion.
+myBook.publishedAt = '1678-10-15 12:00'; // new Date( '1678-10-15 12:00' )
+myBook.available = some && weird || condition; // Will always be Boolean. Or null.
 ```
 
-### `attribute` : Object
+### model.set({ attrName : value, ... }, options? : `options`)
 
-Immutable JS Object mapped to JSON as is. Type-R assumes that an Object attribute contains a raw JSON with no complex data types in it. 
+Bulk assign model's attributes using the same logic as attribute's assignment.
 
-Plain JSON object type primarily used to represent dynamic hashmaps of primitives. It's recommended to use aggregated models for the complex nested objects in JSON.
+Model will trigger `change:attrName` *( model, value )* event per changed attribute and a single `change` *( model )* event at the end.
 
-If an assigned value is not a plain object, the assignment will be ignored and the warning will be displayed in the console. Object attributes are always valid.
+### model.transaction(fun)
 
-Changes in Object attribute are not observable, object needs to be copied for the Type-R to notice the change. Type-R uses `Linked` class from `@linked/value` package to simplify manipulations with immutable objects.
+Execute the all changes made to the model in `fun` as single transaction triggering the single `change` event at the end.
+
+All model updates occurs in the scope of transactions. Transaction is the sequence of changes which results in a single `change` event.
+Transaction can be opened either manually or implicitly with calling `set()` or assigning an attribute.
+Any additional changes made to the model in `change:attr` event handler will be executed in the scope of the original transaction, and won't trigger additional `change` events.
 
 ```javascript
-@define class User extends Model {
-    static attributes = {
-        name : String,
-        roles : { admin : true }
-    }
-}
-
-user.$.roles.at( 'user' ).set( false );
+some.model.transaction( model => {
+    model.a = 1; // `change:a` event is triggered.
+    model.b = 2; // `change:b` event is triggered.
+}); // `change` event is triggered.
 ```
 
-### `attribute` : ClassConstructor
+Manual transactions with attribute assignments are superior to `model.set()` in terms of both performance and flexibility.
 
-If the class constructor used as an attribute type and it's not a model or collection subclass, it is considered to be an **immutable attribute**. Type-R has following assumptions on immutable attributes class:
+### model.assignFrom(otherRecord)
 
-- It has `toJSON()`
-- Its constructor can take JSON as a single argument.
-
-Changes in immutable attributes *are not observable*, object needs to be replaced with its updated copy for the model to notice the change. The class itself doesn't need to be immutable, though, as Type-R makes no other assumptions.
-
-## Aggregated models
-
-Aggregated models are the part of the model represented in JSON as nested objects. Aggregated models **will** be copied, destroyed, and validated together with the parent.
-
-Model has an exclusive ownership rights on its aggregated attributes. Aggregated models can't be assigned to another model's attribute unless the source attribute is cleared or the target attribute is a reference.
-
-Aggregated models are deeply observable. A change of the aggregated model's attributute will trigger the `change` event on its parent.
-
-### `attribute` : ModelClass
-
-Model attribute containing another model. Describes an attribute represented in JSON as an object.
-
-- Attribute **is** serializable as `{ attr1 : value1, attr2 : value2, ... }`
-- Changes of enclosed model's attributes **will not** trigger change of the model.
+Makes an existing `model` to be the full clone of `otherRecord`, recursively assigning all attributes.
+In contracts to `model.clone()`, the model is updated in place.
 
 ```javascript
-static attributes = {
-    users : Collection.of( User ),
-    selectedUser : memberOf( 'users' )
-}
+// Another way of doing the bestSeller.clone()
+const book = new Book();
+book.assignFrom(bestSeller);
 ```
 
-### `attribute` : Collection.of( ModelClass )
+## Validation
 
-Collection containing models. The most popular collection type describing JSON array of objects.
+### Overview
 
-- Collection **is** serializable as `[ { ...user1 }, { ...user2 }, ... ]`
-- All changes to enclosed model's attributes are treated as a change of the collection.
+Type-R supports validation API allowing developer to attach custom validation rules to attributes, models, and collections. Type-R validation mechanics based on following principles:
 
-```javascript
-static attributes = {
-    users : Collection.of( User )
-}
-```
+- Validation happens transparently on the first access to the validation error. There's no special API to trigger the validation.
+- Validation is performed recursively on the aggregated models. If a model at the bottom of the model tree is not valid all its owners are not valid as well.
+- Validation results are cached across the models and collections, thus consequent validation error reads are cheap. Only changed models and collections will be validated again when necessary.
 
-## Serializable model references
+### model.isValid( attr? )
 
-Model attribute with reference to existing models or collections. Referenced objects **will not** be copied, destroyed, or validated as a part of the model.
+When called without arguments, returns `true` if the model is valid having the same effect as `!model.getValidationError()`.
 
-References can be either deeply observable **or** serializable.
+When attr name is specified, returns `true` if the particular attribute is valid having the same effect as `!model.getValidationError( attrName )`
 
-Serializable id-references is a Type-R way to describe many-to-one and many-to-many relashionship in JSON. Models must have an id to have serializable references. Serializable id-references are not observable.
+### model.getValidationError( attrName? )
 
-Id references represented as model ids in JSON and appears as regular models at run time. Ids are being resolved to actual model instances with lookup in the base collection **on first attribute access**, which allows the definition of a complex serializable object graphs consisting of multiple collections of cross-referenced models fetched asynchronously.
+Return the validation error object for the model or the given attribute, or return `null` if there's no error.
 
-### baseCollection parameter
-
-`baseCollection` argument could be:
-
-- a direct reference to the singleton collection object
-- a function returning the collection which is called in a context of the model
-- a symbolic path, which is a string with a dot-separated path resolved relative to the model's `this`.
-
-### `attribute` : ModelClass.memberOf( baseCollection )
-
-Model attribute holding serializable id-reference to a model from the base collection. Used to describe one-to-may relashioship with a model attribute represented in JSON as a model id.
-
-- Attribute **is** serializable as `model.id`
-- Changes of enclosed model's attributes **will not** trigger the change of the attribute.
-
-Attribute can be assigned with either the model from the base collection or the model id. If there are no such a model in the base collection **on the moment of first attribute access**, the attribute value will be `null`.
+When called without arguments and when the attribute is another model or collection the `ValidationError` object is returned which is an internal Type-R validation cache. It has the following shape:
 
 ```javascript
-static attributes = {
-    // Nested collection of users.
-    users : Collection.of( User ),
+{
+    error : /* as returned from collection.validate() */,
 
-    // Model from `users` serializable as `user.id`
-    selectedUser : memberOf( 'users' )
-}
-```
-
-### `attribute` : Collection.subsetOf( baseCollection )
-
-Collection of id-references to models from base collection. Used to describe many-to-many relationship with a collection of models represented in JSON as an array of model ids. The subset collection itself **will be** be copied, destroyed, and validated as a part of the owner model, but not the models in it.
-
-- Collection **is** serializable as `[ user1.id, user2.id, ... ]`.
-- Changes of enclosed model's attributes **will not** trigger change of the collection.
-
-If some models are missing in the base collection **on the moment of first attribute access**, such a models will be removed from a subset collection.
-
-```javascript
-static attributes = {
-    // Nested collection of users.
-    users : Collection.of( User ),
-
-    // Collection with a subset of `users` serializable as an array of `user.id`
-    selectedUsers : Collection.subsetOf( 'users' ) // 'users' == function(){ return this.users }
-}
-```
-
-### `class` Store
-
-In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as `store`.
-Stores are used as root models holding the collections of other models with serializable references.
-
-When a symbolic path to the base collection starts with `store`, store is being resolved as follows:
-
-TODO
-
-## Observable references
-
-Non-serializable run time reference to models or collections. Used to describe a temporary observable application state.
-
-### `attribute` : refTo( ModelOrCollection )
-
-Model attribute holding a reference to a model or collection.
-
-- Attribute **is not** serializable.
-- Changes of enclosed model's attributes **will** trigger change of the model.
-
-```javascript
-static attributes = {
-    users : refTo( Collection.of( User ) ),
-    selectedUser : refTo( User )
-}
-```
-
-### `attribute` : Collection.ofRefsTo( User )
-
-Collection of references to models. The collection itself **will be** be copied, destroyed, and validated as a part of the model, but not the models in it.
-
-- Collection **is not** serializable.
-- Changes of enclosed model's attributes **will** trigger change of the collection.
-
-```javascript
-static attributes = {
-    users : Collection.of( User ),
-    selectedUsers : Collection.ofRefsTo( User )
-}
-```
-
-## Attribute metadata
-
-### `attribute` : type(Type)
-
-In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the defferent models and projects. Such an object is called *attribute metatype*.
-
-Metadata is attached through a chain of calls after the `type( Ctor )` call. Attribute's default value is the most common example of such a metadata.
-
-```javascript
-import { define, type, Model }
-
-const AString = type( String ).value( "a" );
-
-@define class Dummy extends Model {
-    static attributes = {
-        a : AString,
-        b : type( String ).value( "b" )
-    }
-}
-```
-
-### `attribute` : type(Constructor).value(defaultValue)
-
-Declare an attribute with type Constructor having the custom `defaultValue`. Normally, all attributes are initialized with a default constructor call.
-
-```javascript
-@define class Person extends Model {
-    static attributes = {
-        phone : type( String ).value( null ) // String attribute which is null by default.
+    // Members validation errors.
+    nested : {
+        // key is an attrName for the model, and model.cid for the collcation
+        key : validationError,
         ...
     }
 }
 ```
 
-### `attribute` : value( defaultValue )
+### `callback` model.validate()
 
-Similar to `type( T ).value( x )`, but infers the type from the default value. So, for instance, `type( String )` is equivalent to `value("")`.
+Override this method to define model-level validation rules. Whatever is returned from `validate()` is treated as validation error.
 
-```javascript
-import { define, type, Model }
+<aside class="notice">Do not call this method directly, that's not the way how validation works.</aside>
 
-@define class Dummy extends Model {
-    static attributes = {
-        a : value( "a" )
-    }
-}
-```
+### model.eachValidationError( iteratee : ( error, key, obj ) => void )
 
-### `metatype` type( Type ).check( predicate, errorMsg? )
+Recursively traverse validation errors in all aggregated models.
 
-Attribute-level validator.
+`iteratee` is a function taking following arguments:
 
-- `predicate : value => boolean` is the function taking attribute's value and returning `true` whenever the value is valid.
-- optional `errorMsg` is the error message which will be passed in case if the validation fail.
+- `error` is the value of the error as specified at `type( T ).check( validator, error )` or returned by `validate()` callback.
+- `obj` is the reference to the current model or collection having an error.
+- `key` is:
+    - an attribute name for a model.
+    - model.id for collection.
+    - `null` for the object-level validation error returned by `validate()`.
 
-If `errorMsg` is omitted, error message will be taken from `predicate.error`. It makes possible to define reusable validation functions.
+## I/O
 
-```javascript
-function isAge( years ){
-    return years >= 0 && years < 200;
-}
+### model.isNew()
 
-isAge.error = "Age must be between 0 and 200";
-```
+Has this model been saved to the server yet? If the model does not yet have an `id`, it is considered to be new.
 
-Attribute may have any number of checks attached which are being executed in a sequence. Validation stops when first check in sequence fails.
-It can be used to define reusable attribute types as demonstrated below:
+### `async` model.fetch( options? )
 
-```javascript
-// Define new attribute metatypes encapsulating validation checks.
-const Age = type( Number )
-                .check( x => x == null || x >= 0, 'I guess you are a bit older' )
-                .check( x => x == null || x < 200, 'No way man can be that old' );
+Asynchronously fetch the model using `endpoint.read()` method. Returns an abortable ES6 promise.
 
-const Word = type( String ).check( x => indexOf( ' ' ) < 0, 'No spaces allowed' );
+An endpoint must be defined for the model in order to use that method.
 
-@define class Person extends Model {
-    static attributes = {
-        firstName : Word,
-        lastName : Word,
-        age : Age
-    }
-}
-```
+### `async` model.save( options? )
 
-### `metatype` type( Type ).required
+Asynchronously save the model using `endpoint.create()` (if there are no id) or `endpoint.update()` (if id is present) method. Returns an abortable ES6 promise.
 
-The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, `"Required"` is used as validation error.
+An endpoint must be defined for the model in order to use that method.
 
-`isRequired` is the first validator to check, no matter in which order validators were attached.
+### `async` model.destroy( options? )
 
-### `attribute` : type(Type).get(`hook`)
+Asynchronously destroy the model using `endpoint.destroy()` method. Returns an abortable ES6 promise. The model is removed from the aggregating collection upon the completion of the I/O request.
 
-Attach get hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value right _before it will be read_. Hook is executed in the context of the model.
+An endpoint must be defined for the model in order to use that method.
 
-### `attribute` : type(Type).set(`hook`)
+### model.hasPendingIO()
 
-Attach the set hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value _before it will be assigned_. Hook is executed in the context of the model.
+Returns an promise if there's any I/O pending with the object, or `null` otherwise. Can be used to check for active I/O in progress.
 
-If set hook will return `undefined`, it will cancel attribute update.
+### model.getEndpoint()
 
-### `metatype` type( Type ).toJSON( false )
-
-Do _not_ serialize the specific attribute.
-
-### `metatype` type( Type ).toJSON( ( value, name, options ) => json )
-
-Override the default serialization for the specific model's attribute.
-
-Attribute is not serialized when the function return `undefined`.
-
-### `metatype` type( Type ).parse( ( json, name ) => value )
-
-Transform the data before it will be assigned to the model's attribute.
-
-Invoked when the `{ parse : true }` option is set.
-
-```javascript
-// Define custom boolean attribute type which is serialized as 0 or 1.
-const MyWeirdBool = type( Boolean )
-                      .parse( x => x === 1 )
-                      .toJSON( x => x ? 1 : 0 );
-```
-
-### `metatype` type( Type ).watcher( watcher )
-
-Attach custom reaction on attribute change. `watcher` can either be the model's method name or the function `( newValue, attr ) => void`. Watcher is executed in the context of the model.
+Returns an model's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's model using `type( Type ).endpoint( ... )` attribute declaration.
 
 ```javascript
 @define class User extends Model {
-    static attributes = {
-        name : type( String ).watcher( 'onNameChange' ),
-        isAdmin : Boolean,
-    }
+    static endpoint = restfulIO( '/api/users' );
+    ...
+}
 
-    onNameChange(){
-        // Cruel. But we need it for the purpose of the example.
-        this.isAdmin = this.name.indexOf( 'Admin' ) >= 0;
+@define class UserRole extends Model {
+    static endpoint = restfulIO( '/api/roles' );
+    static attributes = {
+        // Use the relative path '/api/roles/:id/users'
+        users : type( User.Collection ).endpoint( restfulIO( './users' ) ),
+        ...
     }
 }
 ```
 
-### `metatype` type( ModelOrCollection ).changeEvents( false )
+## Change events
 
-Turn off observable changes for the attribute.
+Type-R implements *deeply observable changes* on the object graph constructed of models and collection.
 
-Model automatically listens to change events of all nested models and collections triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.
+All of the model and collection updates happens in a scope of the transaction followed by the change event. Every model or collection update operation opens _implicit_ transaction. Several update operations can be groped to the single _explicit_ transaction if executed in the scope of the `obj.transaction()` or `col.updateEach()` call.
 
-### `metatype` type( Type ).events({ eventName : handler, ... })
+```javascript
+@define class Author extends Model {
+    static attributes = {
+        name : ''
+    }
+}
 
-Automatically manage custom event subscription for the attribute. `handler` is either the method name or the handler function. `Type` needs to be a `Messenger` subclass from `@type-r/mixture` or include it as a mixin.
+@define class Book extends Model {
+    static attributes = {
+        name : '',
+        datePublished : Date,
+        author : Author
+    }
+}
 
-Both `Model` and `Collection` includes `Messenger` as a mixin.
+const book = new Book();
+book.on( 'change', () => console.log( 'Book is changed') );
 
-### `metatype` type( Type ).endpoint( `endpoint` )
+// Implicit transaction, prints to the console
+book.author.name = 'John Smith';
+```
 
-Override or define an I/O endpoint for the specific model's attribute.
+### Events mixin methods (7)
+
+Model implements [Events](#events-mixin) mixin.
+
+### `event` "change" ( model )
+
+Triggered by the model at the end of the attributes update transaction in case if there were any changes applied.
+
+### `event` "change:attrName" ( model, value )
+
+Triggered by the model during the attributes update transaction for every changed attribute.
+
+### model.changed
+
+The `changed` property is the internal hash containing all the attributes that have changed during its last transaction.
+Please do not update `changed` directly since its state is internally maintained by `set()`.
+A copy of `changed` can be acquired from `changedAttributes()`.
+
+### model.changedAttributes( attrs? )
+
+Retrieve a hash of only the model's attributes that have changed during the last transaction,
+or false if there are none. Optionally, an external attributes hash can be passed in,
+returning the attributes in that hash which differ from the model.
+This can be used to figure out which portions of a view should be updated,
+or what calls need to be made to sync the changes to the server.
+
+### model.previous( attr )
+
+During a "change" event, this method can be used to get the previous value of a changed attribute.
+
+```javascript
+@define class Person extends Model{
+    static attributes = {
+        name: ''
+    }
+}
+
+const bill = new Person({
+  name: "Bill Smith"
+});
+
+bill.on("change:name", ( model, name ) => {
+  alert( `Changed name from ${ bill.previous('name') } to ${ name }`);
+});
+
+bill.name = "Bill Jones";
+```
+
+### model.previousAttributes()
+
+Return a copy of the model's previous attributes. Useful for getting a diff between versions of a model, or getting back to a valid state after an error occurs.
+
+## Other
+
+### model.getOwner()
+
+If the model is an nested in an aggregated attribute return the owner model or `null` otherwise.
+If the model is a member of an `Collection.of( ModelType )`, the collection will be bypassed and the owner of the collection will be returned.
+
+### model.collection
+
+If the model is a member of a some `Collection.of( ModelType )` return this collection or `null` otherwise.
