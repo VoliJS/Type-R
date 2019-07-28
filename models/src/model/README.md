@@ -1,8 +1,303 @@
 # Models
 
-## Defining models
+## Overview
 
-### `static` attributes = { ... }
+The `Model` class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.
 
-### Nested model definitions
+There are four sorts of model attributes:
 
+- **Primitive** types (Number, String, Boolen) mapped to JSON directly.
+- **Immutable** types (Date, Array, Object, or custom immutable class).
+- **Aggregated** models and collections represented as nested objects and arrays of objects in JSON.
+- **References** to models and collections. References can be either:
+    - **serializable** to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;
+    - **observable**, which is a non-persistent run-time only reference, used to model temporary application state.
+
+Model is an observable state container efficiently detecting changes in all of its attributes, including the deep changes in aggregated and observable reference attributes. Type-R models follow BackboneJS change events model which makes it a straightforward task to integrate with virtually any view layer.
+
+Model attribute definitions have extended metadata to control all aspects of model behavior on the particular attribute's level, making it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
+
+Type-R models are almost as easy to use as plain JS objects, and much easier when more complex data types and serialization scenarios are involved. 
+
+```javascript
+// We have `/api/users` endpoint on the server. Lets describe what it is with a model.
+import { define, Model, Collection, value, type } from '@type-r/models'
+import { restfulIO } from '@type-r/endpoints'
+import { Role } from './roles' // <- That's another model definition.
+
+@define class User extends Model {
+    // Tell this model that it has a REST endpoint on the server to enable I/O API.
+    static endpoint = restfulIO( '/api/users' );
+
+    static attributes = {
+        name : '', // type is inferred from the default value as String
+        email : '', // String
+        isActive : false, // Boolean
+
+        // nested array of objects in JSON, collection of Role models in JS
+        roles : Collection.of( Role ) 
+
+        // Add metadata to a Number attribute.
+        // Receive it from the server, but don't send it back on save.
+        failedLoginCount : value( 0 ).toJSON( false ), // Number
+
+        // ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it.
+        createdAt : type( Date ).toJSON( false ), // Date
+    }
+}
+
+// Somewhere in other code...
+
+// Fetch the users list from the server...
+const users = await Collection.of( User ).create().fetch();
+
+// Subscribe for the changes...
+users.onChanges( () => console.log( 'changes!' ) );
+
+// ...and make the first user active.
+const firstUser = users.first();
+firstUser.isActive = true; // Here we'll got the 'changes!' log message
+await firstUser.save();
+```
+
+## Primitive attributes
+
+Primitive attribute types are directly mapped to their values in JSON.
+Assigned value is being converted to the declared attribute type at run time. I.e. if an email is declared to be a string, it's guaranteed that it will always remain a string.
+
+```javascript
+@define class User extends Model {
+    static attributes = {
+        name : '',
+        email : String, // ''
+        isActive : Boolean, // false
+        failedLoginCount : Number // 0
+    }
+}
+```
+
+### `attribute` : Number
+
+JS `number` primitive type. Assigned value (except `null`) is automatically converted to `number` with a constructor call `Number( value )`.
+
+If something other than `null`, number, or a proper string representation of number is being assigned, the result of the convertion is `NaN` and the warning
+will be displayed in the console. Models with `NaN` in their `Number` attributes will fail the validation check.
+
+### `attribute` : Boolean
+
+JS `boolean` primitive type. Assigned value (except `null`) is automatically converted to `true` or `false` with a constructor call `Boolean( value )`.
+
+This attribute type is always valid.
+
+### `attribute` : String
+
+JS `string` primitive type. Assigned value (except `null`) is automatically converted to `string` with a constructor call `String( value )`.
+
+This attribute type is always valid.
+
+## Immutable attributes
+
+### `attribute` : Date
+
+JS `Date` type represented as ISO UTC date string in JSON. If assigned value is not a `Date` or `null`, it is automatically converted to `Date` with a constructor call `new Date( value )`.
+
+If something other than the integer timestamp or the proper string representation of date is being assigned, the result of the convertion is `Invalid Date` and the warning
+will be displayed in the console. Models with `Invalid Date` in their `Date` attributes will fail the validation check.
+
+Note that the changes to a `Date` attribute are not observable; dates are treated as immutables and need to be replaced for the model to notice the change.
+
+```javascript
+@define class User extends Model {
+    static attributes = {
+        name : '',
+        email : String, // ''
+        createdAt : Date
+    }
+}
+```
+
+### `attribute` : Array
+
+Immutable JS Array mapped to JSON as is. Type-R assumes that an Array attribute contains a raw JSON with no complex data types in it. 
+
+`Array` type is primarily used to represent a list of primitives. It's recommended to use aggregated collections of models for the array of objects in JSON.
+
+If an assigned value is not an `Array`, the assignment will be ignored and a warning will be displayed in the console.
+Array attributes are always valid.
+
+Note that the changes to an `Array` attribute are not observable; arrays need to be replaced with an updated copy for the model to notice the change. Type-R uses `Linked` class proxying popular array methods from `@linked/value` package to simplify manipulations with immutable arrays.
+
+```javascript
+@define class User extends Model {
+    static attributes = {
+        name : String,
+        roles : [ 'admin' ]
+    }
+}
+
+user.$.roles.push( 'user' );
+```
+
+### `attribute` : Object
+
+Immutable JS Object mapped to JSON as is. Type-R assumes that an Object attribute contains a raw JSON with no complex data types in it. 
+
+Plain JSON object type primarily used to represent dynamic hashmaps of primitives. It's recommended to use aggregated models for the complex nested objects in JSON.
+
+If an assigned value is not a plain object, the assignment will be ignored and the warning will be displayed in the console. Object attributes are always valid.
+
+Changes in Object attribute are not observable, object needs to be copied for the Type-R to notice the change. Type-R uses `Linked` class from `@linked/value` package to simplify manipulations with immutable objects.
+
+```javascript
+@define class User extends Model {
+    static attributes = {
+        name : String,
+        roles : { admin : true }
+    }
+}
+
+user.$.roles.at( 'user' ).set( false );
+```
+
+### `attribute` : ClassConstructor
+
+If the class constructor used as an attribute type and it's not a model or collection subclass, it is considered to be an **immutable attribute**. Type-R has following assumptions on immutable attributes class:
+
+- It has `toJSON()`
+- Its constructor can take JSON as a single argument.
+
+Changes in immutable attributes *are not observable*, object needs to be replaced with its updated copy for the model to notice the change. The class itself doesn't need to be immutable, though, as Type-R makes no other assumptions.
+
+## Aggregated models
+
+Aggregated models are the part of the model represented in JSON as nested objects. Aggregated models **will** be copied, destroyed, and validated together with the parent.
+
+Model has an exclusive ownership rights on its aggregated attributes. Aggregated models can't be assigned to another model's attribute unless the source attribute is cleared or the target attribute is a reference.
+
+Aggregated models are deeply observable. A change of the aggregated model's attributute will trigger the `change` event on its parent.
+
+### `attribute` : ModelClass
+
+Model attribute containing another model. Describes an attribute represented in JSON as an object.
+
+- Attribute **is** serializable as `{ attr1 : value1, attr2 : value2, ... }`
+- Changes of enclosed model's attributes **will not** trigger change of the model.
+
+```javascript
+static attributes = {
+    users : Collection.of( User ),
+    selectedUser : memberOf( 'users' )
+}
+```
+
+### `attribute` : Collection.of( ModelClass )
+
+Collection containing models. The most popular collection type describing JSON array of objects.
+
+- Collection **is** serializable as `[ { ...user1 }, { ...user2 }, ... ]`
+- All changes to enclosed model's attributes are treated as a change of the collection.
+
+```javascript
+static attributes = {
+    users : Collection.of( User )
+}
+```
+
+## Serializable model references
+
+Model attribute with reference to existing models or collections. Referenced objects **will not** be copied, destroyed, or validated as a part of the model.
+
+References can be either deeply observable **or** serializable.
+
+Serializable id-references is a Type-R way to describe many-to-one and many-to-many relashionship in JSON. Models must have an id to have serializable references. Serializable id-references are not observable.
+
+Id references represented as model ids in JSON and appears as regular models at run time. Ids are being resolved to actual model instances with lookup in the base collection **on first attribute access**, which allows the definition of a complex serializable object graphs consisting of multiple collections of cross-referenced models fetched asynchronously.
+
+### baseCollection parameter
+
+`baseCollection` argument could be:
+
+- a direct reference to the singleton collection object
+- a function returning the collection which is called in a context of the model
+- a symbolic path, which is a string with a dot-separated path resolved relative to the model's `this`.
+
+### `attribute` : ModelClass.memberOf( baseCollection )
+
+Model attribute holding serializable id-reference to a model from the base collection. Used to describe one-to-may relashioship with a model attribute represented in JSON as a model id.
+
+- Attribute **is** serializable as `model.id`
+- Changes of enclosed model's attributes **will not** trigger the change of the attribute.
+
+Attribute can be assigned with either the model from the base collection or the model id. If there are no such a model in the base collection **on the moment of first attribute access**, the attribute value will be `null`.
+
+```javascript
+static attributes = {
+    // Nested collection of users.
+    users : Collection.of( User ),
+
+    // Model from `users` serializable as `user.id`
+    selectedUser : memberOf( 'users' )
+}
+```
+
+### `attribute` : Collection.subsetOf( baseCollection )
+
+Collection of id-references to models from base collection. Used to describe many-to-many relationship with a collection of models represented in JSON as an array of model ids. The subset collection itself **will be** be copied, destroyed, and validated as a part of the owner model, but not the models in it.
+
+- Collection **is** serializable as `[ user1.id, user2.id, ... ]`.
+- Changes of enclosed model's attributes **will not** trigger change of the collection.
+
+If some models are missing in the base collection **on the moment of first attribute access**, such a models will be removed from a subset collection.
+
+```javascript
+static attributes = {
+    // Nested collection of users.
+    users : Collection.of( User ),
+
+    // Collection with a subset of `users` serializable as an array of `user.id`
+    selectedUsers : Collection.subsetOf( 'users' ) // 'users' == function(){ return this.users }
+}
+```
+
+### `class` Store
+
+In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as `store`.
+Stores are used as root models holding the collections of other models with serializable references.
+
+When a symbolic path to the base collection starts with `store`, store is being resolved as follows:
+
+TODO
+
+## Observable references
+
+Non-serializable run time reference to models or collections. Used to describe a temporary observable application state.
+
+### `attribute` : refTo( ModelOrCollection )
+
+Model attribute holding a reference to a model or collection.
+
+- Attribute **is not** serializable.
+- Changes of enclosed model's attributes **will** trigger change of the model.
+
+```javascript
+static attributes = {
+    users : refTo( Collection.of( User ) ),
+    selectedUser : refTo( User )
+}
+```
+
+### `attribute` : Collection.ofRefsTo( User )
+
+Collection of references to models. The collection itself **will be** be copied, destroyed, and validated as a part of the model, but not the models in it.
+
+- Collection **is not** serializable.
+- Changes of enclosed model's attributes **will** trigger change of the collection.
+
+```javascript
+static attributes = {
+    users : Collection.of( User ),
+    selectedUsers : Collection.ofRefsTo( User )
+}
+```
+
+## Model class API

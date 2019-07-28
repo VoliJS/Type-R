@@ -16,10 +16,11 @@ includes:
   - models/README
   - models/src/model/README
   - models/src/collection/README
-  - models/src/relations/README
+  - models/src/Validation
   - endpoints/README
   - react/README
   - examples/README
+  - models/src/Observable
   - ext-types/README
   - mixture/README
   - ReleaseNotes

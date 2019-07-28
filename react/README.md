@@ -1,4 +1,4 @@
-# React bindings
+# Using with React
 
 ## Local component state
 

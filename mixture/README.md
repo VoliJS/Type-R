@@ -1,6 +1,6 @@
-# Mixture
+# Mixins, events, logging
 
-## Getting started
+## `@type-r/mixture` package
 
 Type-R Mixture is the toolkit combining React-style mixins, Backbone-style events, and minimal set of Underscore-style object manipulation functions.
 

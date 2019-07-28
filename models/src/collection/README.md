@@ -1,16 +1,5 @@
-# Transactional collections core implementation
+# Collection
 
-Collection implements two-phase commit transactions,
-and core manipulation methods.
+## Overview
 
-## Folder structure and dependencies
-
-           index.ts
-         ↗    ↑     ↖ 
-    add.ts remove.ts set.ts
-         ↖    ↑     ↗
-           commons.ts
-              ↑
-      ../model/index.ts
-
-
+## proxied Array methods
