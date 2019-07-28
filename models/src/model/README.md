@@ -300,4 +300,157 @@ static attributes = {
 }
 ```
 
-## Model class API
+## Attribute metadata
+
+### `attribute` : type(Type)
+
+In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the defferent models and projects. Such an object is called *attribute metatype*.
+
+Metadata is attached through a chain of calls after the `type( Ctor )` call. Attribute's default value is the most common example of such a metadata.
+
+```javascript
+import { define, type, Model }
+
+@define class Dummy extends Model {
+    static attributes = {
+        a : type( String ).value( "a" )
+    }
+}
+```
+
+### `attribute` : type(Constructor).value(defaultValue)
+
+Declare an attribute with type Constructor having the custom `defaultValue`. Normally, all attributes are initialized with a default constructor call.
+
+```javascript
+@define class Person extends Model {
+    static attributes = {
+        phone : type( String ).value( null ) // String attribute which is null by default.
+        ...
+    }
+}
+```
+
+### `attribute` : value( defaultValue )
+
+Similar to `type( T ).value( x )`, but infers the type from the default value. So, for instance, `type( String )` is equivalent to `value("")`.
+
+```javascript
+import { define, type, Model }
+
+@define class Dummy extends Model {
+    static attributes = {
+        a : value( "a" )
+    }
+}
+```
+
+### `metatype` type( Type ).check( predicate, errorMsg? )
+
+Attribute-level validator.
+
+- `predicate : value => boolean` is the function taking attribute's value and returning `true` whenever the value is valid.
+- optional `errorMsg` is the error message which will be passed in case if the validation fail.
+
+If `errorMsg` is omitted, error message will be taken from `predicate.error`. It makes possible to define reusable validation functions.
+
+```javascript
+function isAge( years ){
+    return years >= 0 && years < 200;
+}
+
+isAge.error = "Age must be between 0 and 200";
+```
+
+Attribute may have any number of checks attached which are being executed in a sequence. Validation stops when first check in sequence fails.
+It can be used to define reusable attribute types as demonstrated below:
+
+```javascript
+// Define new attribute metatypes encapsulating validation checks.
+const Age = type( Number )
+                .check( x => x == null || x >= 0, 'I guess you are a bit older' )
+                .check( x => x == null || x < 200, 'No way man can be that old' );
+
+const Word = type( String ).check( x => indexOf( ' ' ) < 0, 'No spaces allowed' );
+
+@define class Person extends Model {
+    static attributes = {
+        firstName : Word,
+        lastName : Word,
+        age : Age
+    }
+}
+```
+
+### `metatype` type( Type ).required
+
+The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, `"Required"` is used as validation error.
+
+`isRequired` is the first validator to check, no matter in which order validators were attached.
+
+### `attribute` : type(Type).get(`hook`)
+
+Attach get hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value right _before it will be read_. Hook is executed in the context of the model.
+
+### `attribute` : type(Type).set(`hook`)
+
+Attach the set hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value _before it will be assigned_. Hook is executed in the context of the model.
+
+If set hook will return `undefined`, it will cancel attribute update.
+
+### `metatype` type( Type ).toJSON( false )
+
+Do _not_ serialize the specific attribute.
+
+### `metatype` type( Type ).toJSON( ( value, name, options ) => json )
+
+Override the default serialization for the specific model's attribute.
+
+Attribute is not serialized when the function return `undefined`.
+
+### `metatype` type( Type ).parse( ( json, name ) => value )
+
+Transform the data before it will be assigned to the model's attribute.
+
+Invoked when the `{ parse : true }` option is set.
+
+```javascript
+// Define custom boolean attribute type which is serialized as 0 or 1.
+const MyWeirdBool = type( Boolean )
+                      .parse( x => x === 1 )
+                      .toJSON( x => x ? 1 : 0 );
+```
+
+### `metatype` type( Type ).watcher( watcher )
+
+Attach custom reaction on attribute change. `watcher` can either be the model's method name or the function `( newValue, attr ) => void`. Watcher is executed in the context of the model.
+
+```javascript
+@define class User extends Model {
+    static attributes = {
+        name : type( String ).watcher( 'onNameChange' ),
+        isAdmin : Boolean,
+    }
+
+    onNameChange(){
+        // Cruel. But we need it for the purpose of the example.
+        this.isAdmin = this.name.indexOf( 'Admin' ) >= 0;
+    }
+}
+```
+
+### `metatype` type( ModelOrCollection ).changeEvents( false )
+
+Turn off observable changes for the attribute.
+
+Model automatically listens to change events of all nested models and collections triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.
+
+### `metatype` type( Type ).events({ eventName : handler, ... })
+
+Automatically manage custom event subscription for the attribute. `handler` is either the method name or the handler function. `Type` needs to be a `Messenger` subclass from `@type-r/mixture` or include it as a mixin.
+
+Both `Model` and `Collection` includes `Messenger` as a mixin.
+
+### `metatype` type( Type ).endpoint( `endpoint` )
+
+Override or define an I/O endpoint for the specific model's attribute.

@@ -377,7 +377,209 @@ Stores are used as root models holding the collections of other models with seri
     <span class="hljs-attr">selectedUsers</span> : Collection.ofRefsTo( User )
 }
 </code></pre>
+<h2 id="attribute-metadata">Attribute metadata</h2>
+<h3 id="attribute-type-type-"><code>attribute</code> : type(Type)</h3>
+<p>In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the defferent models and projects. Such an object is called <em>attribute metatype</em>.</p>
+<p>Metadata is attached through a chain of calls after the <code>type( Ctor )</code> call. Attribute&#39;s default value is the most common example of such a metadata.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">a</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"a"</span> )
+    }
+}
+</code></pre>
+<h3 id="attribute-type-constructor-value-defaultvalue-"><code>attribute</code> : type(Constructor).value(defaultValue)</h3>
+<p>Declare an attribute with type Constructor having the custom <code>defaultValue</code>. Normally, all attributes are initialized with a default constructor call.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">phone</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-literal">null</span> ) <span class="hljs-comment">// String attribute which is null by default.</span>
+        ...
+    }
+}
+</code></pre>
+<h3 id="attribute-value-defaultvalue-"><code>attribute</code> : value( defaultValue )</h3>
+<p>Similar to <code>type( T ).value( x )</code>, but infers the type from the default value. So, for instance, <code>type( String )</code> is equivalent to <code>value(&quot;&quot;)</code>.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">a</span> : value( <span class="hljs-string">"a"</span> )
+    }
+}
+</code></pre>
+<h3 id="metatype-type-type-check-predicate-errormsg-"><code>metatype</code> type( Type ).check( predicate, errorMsg? )</h3>
+<p>Attribute-level validator.</p>
+<ul>
+<li><code>predicate : value =&gt; boolean</code> is the function taking attribute&#39;s value and returning <code>true</code> whenever the value is valid.</li>
+<li>optional <code>errorMsg</code> is the error message which will be passed in case if the validation fail.</li>
+</ul>
+<p>If <code>errorMsg</code> is omitted, error message will be taken from <code>predicate.error</code>. It makes possible to define reusable validation functions.</p>
+<pre><code class="highlight javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isAge</span>(<span class="hljs-params"> years </span>)</span>{
+    <span class="hljs-keyword">return</span> years &gt;= <span class="hljs-number">0</span> &amp;&amp; years &lt; <span class="hljs-number">200</span>;
+}
+
+isAge.error = <span class="hljs-string">"Age must be between 0 and 200"</span>;
+</code></pre>
+<p>Attribute may have any number of checks attached which are being executed in a sequence. Validation stops when first check in sequence fails.
+It can be used to define reusable attribute types as demonstrated below:</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define new attribute metatypes encapsulating validation checks.</span>
+<span class="hljs-keyword">const</span> Age = type( <span class="hljs-built_in">Number</span> )
+                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &gt;= <span class="hljs-number">0</span>, <span class="hljs-string">'I guess you are a bit older'</span> )
+                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &lt; <span class="hljs-number">200</span>, <span class="hljs-string">'No way man can be that old'</span> );
+
+<span class="hljs-keyword">const</span> Word = type( <span class="hljs-built_in">String</span> ).check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> indexOf( <span class="hljs-string">' '</span> ) &lt; <span class="hljs-number">0</span>, <span class="hljs-string">'No spaces allowed'</span> );
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">firstName</span> : Word,
+        <span class="hljs-attr">lastName</span> : Word,
+        <span class="hljs-attr">age</span> : Age
+    }
+}
+</code></pre>
+<h3 id="metatype-type-type-required"><code>metatype</code> type( Type ).required</h3>
+<p>The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, <code>&quot;Required&quot;</code> is used as validation error.</p>
+<p><code>isRequired</code> is the first validator to check, no matter in which order validators were attached.</p>
+<h3 id="attribute-type-type-get-hook-"><code>attribute</code> : type(Type).get(<code>hook</code>)</h3>
+<p>Attach get hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value right <em>before it will be read</em>. Hook is executed in the context of the model.</p>
+<h3 id="attribute-type-type-set-hook-"><code>attribute</code> : type(Type).set(<code>hook</code>)</h3>
+<p>Attach the set hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value <em>before it will be assigned</em>. Hook is executed in the context of the model.</p>
+<p>If set hook will return <code>undefined</code>, it will cancel attribute update.</p>
+<h3 id="metatype-type-type-tojson-false-"><code>metatype</code> type( Type ).toJSON( false )</h3>
+<p>Do <em>not</em> serialize the specific attribute.</p>
+<h3 id="metatype-type-type-tojson-value-name-options-json-"><code>metatype</code> type( Type ).toJSON( ( value, name, options ) =&gt; json )</h3>
+<p>Override the default serialization for the specific model&#39;s attribute.</p>
+<p>Attribute is not serialized when the function return <code>undefined</code>.</p>
+<h3 id="metatype-type-type-parse-json-name-value-"><code>metatype</code> type( Type ).parse( ( json, name ) =&gt; value )</h3>
+<p>Transform the data before it will be assigned to the model&#39;s attribute.</p>
+<p>Invoked when the <code>{ parse : true }</code> option is set.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom boolean attribute type which is serialized as 0 or 1.</span>
+<span class="hljs-keyword">const</span> MyWeirdBool = type( <span class="hljs-built_in">Boolean</span> )
+                      .parse( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-number">1</span> )
+                      .toJSON( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span> );
+</code></pre>
+<h3 id="metatype-type-type-watcher-watcher-"><code>metatype</code> type( Type ).watcher( watcher )</h3>
+<p>Attach custom reaction on attribute change. <code>watcher</code> can either be the model&#39;s method name or the function <code>( newValue, attr ) =&gt; void</code>. Watcher is executed in the context of the model.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : type( <span class="hljs-built_in">String</span> ).watcher( <span class="hljs-string">'onNameChange'</span> ),
+        <span class="hljs-attr">isAdmin</span> : <span class="hljs-built_in">Boolean</span>,
+    }
+
+    onNameChange(){
+        <span class="hljs-comment">// Cruel. But we need it for the purpose of the example.</span>
+        <span class="hljs-keyword">this</span>.isAdmin = <span class="hljs-keyword">this</span>.name.indexOf( <span class="hljs-string">'Admin'</span> ) &gt;= <span class="hljs-number">0</span>;
+    }
+}
+</code></pre>
+<h3 id="metatype-type-modelorcollection-changeevents-false-"><code>metatype</code> type( ModelOrCollection ).changeEvents( false )</h3>
+<p>Turn off observable changes for the attribute.</p>
+<p>Model automatically listens to change events of all nested models and collections triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.</p>
+<h3 id="metatype-type-type-events-eventname-handler-"><code>metatype</code> type( Type ).events({ eventName : handler, ... })</h3>
+<p>Automatically manage custom event subscription for the attribute. <code>handler</code> is either the method name or the handler function. <code>Type</code> needs to be a <code>Messenger</code> subclass from <code>@type-r/mixture</code> or include it as a mixin.</p>
+<p>Both <code>Model</code> and <code>Collection</code> includes <code>Messenger</code> as a mixin.</p>
+<h3 id="metatype-type-type-endpoint-endpoint-"><code>metatype</code> type( Type ).endpoint( <code>endpoint</code> )</h3>
+<p>Override or define an I/O endpoint for the specific model&#39;s attribute.</p>
 <h2 id="model-class-api">Model class API</h2>
+<h3 id="new-model-attrs-options-">new Model( attrs?, options?)</h3>
+<p>Create the model. If no <code>attrs</code> is supplied, initialize it with defaults taken from the attributes definition.</p>
+<p>When no default value is explicitly provided for an attribute, it&#39;s initialized as <code>new AttributeType()</code> (just <code>AttributeType()</code> for primitives). When the default value is provided and it&#39;s not compatible with the attribute type, the value is converted to the proper type with <code>new Type( defaultValue )</code> call.</p>
+<p>If <code>{parse: true}</code> option is set the <code>attrs</code> is assumed to be the JSON. In this case, <code>model.parse( attr )</code> and attribute&#39;s <code>parse</code> hooks will be called to give you an option to transform the JSON.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span>  : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book({
+  <span class="hljs-attr">title</span>: <span class="hljs-string">"One Thousand and One Nights"</span>,
+  <span class="hljs-attr">author</span>: <span class="hljs-string">"Scheherazade"</span>
+});
+</code></pre>
+<h3 id="modelclass-from-attrs-options-">ModelClass.from(attrs, options?)</h3>
+<p>Create <code>RecordClass</code> from attributes. Similar to direct model creation, but supports additional option for strict data validation.
+If <code>{ strict : true }</code> option is passed the model validation will be performed immediately and an exception will be thrown in case of an error.</p>
+<p>Type-R always perform type checks on assignments, convert types, and reject improper updates reporting it as error. It won&#39;t, however, execute custom validation
+rules on every updates as validation is evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Fetch model with a given id.</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">await</span> Book.from({ <span class="hljs-attr">id</span> : <span class="hljs-number">5</span> }).fetch();
+
+<span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
+<span class="hljs-comment">// Throw an exception if validation fails.</span>
+<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
+</code></pre>
+<h3 id="model-assignfrom-otherrecord-">model.assignFrom(otherRecord)</h3>
+<p>Makes an existing <code>model</code> to be the full clone of <code>otherRecord</code>, recursively assigning all attributes.
+In contracts to <code>model.clone()</code>, the model is updated in place.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.assignFrom(bestSeller);
+</code></pre>
+<h3 id="model-clone-">model.clone()</h3>
+<p>Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.</p>
+<h3 id="callback-model-initialize-attrs-options-"><code>callback</code> model.initialize(attrs?, options?)</h3>
+<p>Called at the end of the <code>Model</code> constructor when all attributes are assigned and the model&#39;s inner state is properly initialized. Takes the same arguments as
+a constructor.</p>
+<h3 id="model-dispose-">model.dispose()</h3>
+<p>Recursively dispose the model and its aggregated members. &quot;Dispose&quot; means that elements of the aggregation tree will unsubscribe from all event sources. It&#39;s crucial to prevent memory leaks in SPA.</p>
+<p>The whole aggregation tree will be recursively disposed, shared members won&#39;t.</p>
+<h3 id="model-cid">model.cid</h3>
+<p>Read-only client-side model&#39;s identifier. Generated upon creation of the model and is unique for every model&#39;s instance. Cloned models will have different <code>cid</code>.</p>
+<h3 id="model-id">model.id</h3>
+<p>Predefined model&#39;s attribute, the <code>id</code> is an arbitrary string (integer id or UUID). <code>id</code> is typically generated by the server. It is used in JSON for id-references.</p>
+<p>Records can be retrieved by <code>id</code> from collections, and there can be just one instance of the model with the same <code>id</code> in the particular collection.</p>
+<h3 id="model-isnew-">model.isNew()</h3>
+<p>Has this model been saved to the server yet? If the model does not yet have an <code>id</code>, it is considered to be new.</p>
+<h3 id="model-attrname">model.attrName</h3>
+<p>Model&#39;s attributes can be directly accessed with their names as a regular class properties.</p>
+<p>If the value is not compatible with attribute&#39;s type from the declaration on assignment, it is converted with <code>Type( value )</code> call for primitive types, and with <code>new Type( value )</code> for other types.</p>
+<p>There is an important exception in type convertion logic for models and collections. Instead of applying a contructor, Type-R will try to update existing model and collection instances in place calling their <code>set()</code> method instead. This logic keeps the model and collection references stable and safe to pass around.</p>
+<p>Model triggers events on changes:</p>
+<ul>
+<li><code>change:attrName</code> <em>( model, value )</em>.</li>
+<li><code>change</code> <em>( model )</em>.</li>
+</ul>
+<aside class="warning">Please note, that you *have to declare all attributes* in `static attributes` declaration.</aside>
+
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-built_in">String</span>
+        price : <span class="hljs-built_in">Number</span>,
+        <span class="hljs-attr">publishedAt</span> : <span class="hljs-built_in">Date</span>,
+        <span class="hljs-attr">available</span> : <span class="hljs-built_in">Boolean</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> myBook = <span class="hljs-keyword">new</span> Book({ <span class="hljs-attr">title</span> : <span class="hljs-string">"State management with Type-R"</span> });
+myBook.author = <span class="hljs-string">'Vlad'</span>; <span class="hljs-comment">// That works.</span>
+myBook.price = <span class="hljs-string">'Too much'</span>; <span class="hljs-comment">// Converted with Number( 'Too much' ), resulting in NaN.</span>
+myBook.price = <span class="hljs-string">'123'</span>; <span class="hljs-comment">// = Number( '123' ).</span>
+myBook.publishedAt = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(); <span class="hljs-comment">// Type is compatible, no conversion.</span>
+myBook.publishedAt = <span class="hljs-string">'1678-10-15 12:00'</span>; <span class="hljs-comment">// new Date( '1678-10-15 12:00' )</span>
+myBook.available = some &amp;&amp; weird || condition; <span class="hljs-comment">// Will always be Boolean. Or null.</span>
+</code></pre>
+<h3 id="model-set-attrname-value-options-options-">model.set({ attrName : value, ... }, options? : <code>options</code>)</h3>
+<p>Bulk assign model&#39;s attributes using the same logic as attribute&#39;s assignment.</p>
+<p>Model will trigger <code>change:attrName</code> <em>( model, value )</em> event per changed attribute and a single <code>change</code> <em>( model )</em> event at the end.</p>
+<h3 id="model-transaction-fun-">model.transaction(fun)</h3>
+<p>Execute the all changes made to the model in <code>fun</code> as single transaction triggering the single <code>change</code> event at the end.</p>
+<p>All model updates occurs in the scope of transactions. Transaction is the sequence of changes which results in a single <code>change</code> event.
+Transaction can be opened either manually or implicitly with calling <code>set()</code> or assigning an attribute.
+Any additional changes made to the model in <code>change:attr</code> event handler will be executed in the scope of the original transaction, and won&#39;t trigger additional <code>change</code> events.</p>
+<pre><code class="highlight javascript">some.model.transaction( <span class="hljs-function"><span class="hljs-params">model</span> =&gt;</span> {
+    model.a = <span class="hljs-number">1</span>; <span class="hljs-comment">// `change:a` event is triggered.</span>
+    model.b = <span class="hljs-number">2</span>; <span class="hljs-comment">// `change:b` event is triggered.</span>
+}); <span class="hljs-comment">// `change` event is triggered.</span>
+</code></pre>
+<p>Manual transactions with attribute assignments are superior to <code>model.set()</code> in terms of both performance and flexibility.</p>
+<h3 id="model-getowner-">model.getOwner()</h3>
+<p>Return the model which is an owner of the current model, or <code>null</code> there are no one.</p>
+<p>Due to the nature of <em>aggregation</em>, an object may have one and only one owner.</p>
+<h3 id="model-collection">model.collection</h3>
+<p>Return the collection which aggregates the model, or <code>null</code> if there are no one.</p>
 <h1 id="collections">Collections</h1>
 <h2 id="overview">Overview</h2>
 <p>Collection is an ordered sets of models represented in JSON as an array of objects. In run time, it&#39;s encapsulates JS Array of models (<code>collection.models</code>) and an object hashmap by the model&#39;s <code>id</code>/<code>cid</code> for a fast O(1) look-ups. Collections expose ES6 Array and BackboneJS Collection API.</p>
@@ -653,40 +855,6 @@ Records and collections convert values to the declared types on assignment, and 
 <li>Validation is performed recursively on the aggregation tree formed by nested models and collections. If an element at the bottom of the tree is not valid, the whole object tree is not valid.</li>
 <li>Validation results are cached across the aggregation tree, thus consequent validation error reads are cheap. Only changed parts of aggregation tree will be revalidated when necessary.</li>
 </ul>
-<h2 id="attribute-level-checks">Attribute-level checks</h2>
-<h3 id="metatype-type-type-check-predicate-errormsg-"><code>metatype</code> type( Type ).check( predicate, errorMsg? )</h3>
-<p>Attribute-level validator.</p>
-<ul>
-<li><code>predicate : value =&gt; boolean</code> is the function taking attribute&#39;s value and returning <code>true</code> whenever the value is valid.</li>
-<li>optional <code>errorMsg</code> is the error message which will be passed in case if the validation fail.</li>
-</ul>
-<p>If <code>errorMsg</code> is omitted, error message will be taken from <code>predicate.error</code>. It makes possible to define reusable validation functions.</p>
-<pre><code class="highlight javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isAge</span>(<span class="hljs-params"> years </span>)</span>{
-    <span class="hljs-keyword">return</span> years &gt;= <span class="hljs-number">0</span> &amp;&amp; years &lt; <span class="hljs-number">200</span>;
-}
-
-isAge.error = <span class="hljs-string">"Age must be between 0 and 200"</span>;
-</code></pre>
-<p>Attribute may have any number of checks attached which are being executed in a sequence. Validation stops when first check in sequence fails.
-It can be used to define reusable attribute types as demonstrated below:</p>
-<pre><code class="highlight javascript"><span class="hljs-comment">// Define new attribute metatypes encapsulating validation checks.</span>
-<span class="hljs-keyword">const</span> Age = type( <span class="hljs-built_in">Number</span> )
-                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &gt;= <span class="hljs-number">0</span>, <span class="hljs-string">'I guess you are a bit older'</span> )
-                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &lt; <span class="hljs-number">200</span>, <span class="hljs-string">'No way man can be that old'</span> );
-
-<span class="hljs-keyword">const</span> Word = type( <span class="hljs-built_in">String</span> ).check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> indexOf( <span class="hljs-string">' '</span> ) &lt; <span class="hljs-number">0</span>, <span class="hljs-string">'No spaces allowed'</span> );
-
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">firstName</span> : Word,
-        <span class="hljs-attr">lastName</span> : Word,
-        <span class="hljs-attr">age</span> : Age
-    }
-}
-</code></pre>
-<h3 id="metatype-type-type-required"><code>metatype</code> type( Type ).required</h3>
-<p>The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, <code>&quot;Required&quot;</code> is used as validation error.</p>
-<p><code>isRequired</code> is the first validator to check, no matter in which order validators were attached.</p>
 <h2 id="model">Model</h2>
 <h3 id="rec-isvalid-attrname-">rec.isValid( attrName )</h3>
 <p>Returns <code>true</code> if the specified model&#39;s attribute is valid.</p>
@@ -746,8 +914,6 @@ users
 <h3 id="static-endpoint"><code>static</code> endpoint</h3>
 <p>I/O endpoint declaration which should be used in Model or Collection definition to enable I/O API.</p>
 <p>If an endpoint is defined for the <code>MyRecord</code>, it&#39;s automatically defined for the corresponding <code>MyRecord.Collection</code> as well.</p>
-<h3 id="metatype-type-type-endpoint-endpoint-"><code>metatype</code> type( Type ).endpoint( <code>endpoint</code> )</h3>
-<p>Override or define an I/O endpoint for the specific model&#39;s attribute.</p>
 <h3 id="obj-getendpoint-">obj.getEndpoint()</h3>
 <p>Returns an object&#39;s IO endpoint. Normally, this is an endpoint which is defined in object&#39;s <code>static endpoint = ...</code> declaration, but it might be overridden by the parent&#39;s model using <code>type( Type ).endpoint( ... )</code> attribute declaration.</p>
 <pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
@@ -903,8 +1069,6 @@ an existing Model subclass as a transport. This endpoint can be connected to the
     });
 });
 </code></pre>
-<h2 id="serialization">Serialization</h2>
-<p>Model and Collection has a portion of common API related to the I/O and serialization.</p>
 <h3 id="obj-tojson-options-">obj.toJSON( options? )</h3>
 <p>Serialize model or collection to JSON. Used internally by <code>save()</code> I/O method (<code>options.ioMethod === &#39;save&#39;</code> when called from within <code>save()</code>). Can be overridden to customize serialization.</p>
 <p>Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.</p>
@@ -949,19 +1113,7 @@ book.set( bestSeller.toJSON(), { <span class="hljs-attr">parse</span> : <span cl
 Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
 </aside>
 
-<h3 id="metatype-type-type-tojson-false-"><code>metatype</code> type( Type ).toJSON( false )</h3>
-<p>Do <em>not</em> serialize the specific attribute.</p>
-<h3 id="metatype-type-type-tojson-value-name-options-json-"><code>metatype</code> type( Type ).toJSON( ( value, name, options ) =&gt; json )</h3>
-<p>Override the default serialization for the specific model&#39;s attribute.</p>
-<p>Attribute is not serialized when the function return <code>undefined</code>.</p>
-<h3 id="metatype-type-type-parse-json-name-value-"><code>metatype</code> type( Type ).parse( ( json, name ) =&gt; value )</h3>
-<p>Transform the data before it will be assigned to the model&#39;s attribute.</p>
-<p>Invoked when the <code>{ parse : true }</code> option is set.</p>
-<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom boolean attribute type which is serialized as 0 or 1.</span>
-<span class="hljs-keyword">const</span> MyWeirdBool = type( <span class="hljs-built_in">Boolean</span> )
-                      .parse( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-number">1</span> )
-                      .toJSON( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span> );
-</code></pre>
+
 <h3 id="static-create-attrs-options-"><code>static</code> create( attrs, options )</h3>
 <p>Static factory function used internally by Type-R to create instances of the model.</p>
 <p>May be redefined in the abstract Model base class to make it serializable type.</p>
@@ -1211,25 +1363,6 @@ book.author.name = <span class="hljs-string">'John Smith'</span>;
 <p>Triggered by the model at the end of the attributes update transaction in case if there were any changes applied.</p>
 <h3 id="event-change-attrname-model-value-"><code>event</code> &quot;change:attrName&quot; ( model, value )</h3>
 <p>Triggered by the model during the attributes update transaction for every changed attribute.</p>
-<h3 id="metatype-type-type-watcher-watcher-"><code>metatype</code> type( Type ).watcher( watcher )</h3>
-<p>Attach <code>change:attr</code> event listener to the particular model&#39;s attribute. <code>watcher</code> can either be the model&#39;s method name or the function <code>( newValue, attr ) =&gt; void</code>. Watcher is always executed in the context of the model.</p>
-<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">name</span> : type( <span class="hljs-built_in">String</span> ).watcher( <span class="hljs-string">'onNameChange'</span> ),
-        <span class="hljs-attr">isAdmin</span> : <span class="hljs-built_in">Boolean</span>,
-    }
-
-    onNameChange(){
-        <span class="hljs-comment">// Cruel. But we need it for the purpose of the example.</span>
-        <span class="hljs-keyword">this</span>.isAdmin = <span class="hljs-keyword">this</span>.name.indexOf( <span class="hljs-string">'Admin'</span> ) &gt;= <span class="hljs-number">0</span>;
-    }
-}
-</code></pre>
-<h3 id="metatype-type-type-changeevents-false-"><code>metatype</code> type( Type ).changeEvents( false )</h3>
-<p>Turn off changes observation for nested models or collections.</p>
-<p>Model automatically listens to change events of all nested models and collections, triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.</p>
-<h3 id="metatype-type-type-events-eventname-handler-"><code>metatype</code> type( Type ).events({ eventName : handler, ... })</h3>
-<p>Automatically manage custom event subscription for the attribute. <code>handler</code> is either the method name or the handler function.</p>
 <h3 id="model-changed">model.changed</h3>
 <p>The <code>changed</code> property is the internal hash containing all the attributes that have changed during its last transaction.
 Please do not update <code>changed</code> directly since its state is internally maintained by <code>set()</code>.

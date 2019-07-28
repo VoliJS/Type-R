@@ -32,10 +32,6 @@ I/O endpoint declaration which should be used in Model or Collection definition 
 
 If an endpoint is defined for the `MyRecord`, it's automatically defined for the corresponding `MyRecord.Collection` as well.
 
-### `metatype` type( Type ).endpoint( `endpoint` )
-
-Override or define an I/O endpoint for the specific model's attribute.
-
 ### obj.getEndpoint()
 
 Returns an object's IO endpoint. Normally, this is an endpoint which is defined in object's `static endpoint = ...` declaration, but it might be overridden by the parent's model using `type( Type ).endpoint( ... )` attribute declaration.
@@ -263,9 +259,6 @@ const abortablePromise = createIOPromise( ( resolve, reject, onAbort ) =>{
 });
 ```
 
-## Serialization
-
-Model and Collection has a portion of common API related to the I/O and serialization.
 
 ### obj.toJSON( options? )
 
@@ -324,28 +317,6 @@ If you override `toJSON()`, it usually means that you must override `parse()` as
 Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
 </aside>
 
-### `metatype` type( Type ).toJSON( false )
-
-Do _not_ serialize the specific attribute.
-
-### `metatype` type( Type ).toJSON( ( value, name, options ) => json )
-
-Override the default serialization for the specific model's attribute.
-
-Attribute is not serialized when the function return `undefined`.
-
-### `metatype` type( Type ).parse( ( json, name ) => value )
-
-Transform the data before it will be assigned to the model's attribute.
-
-Invoked when the `{ parse : true }` option is set.
-
-```javascript
-// Define custom boolean attribute type which is serialized as 0 or 1.
-const MyWeirdBool = type( Boolean )
-                      .parse( x => x === 1 )
-                      .toJSON( x => x ? 1 : 0 );
-```
 
 ### `static` create( attrs, options )
 

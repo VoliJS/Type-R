@@ -42,34 +42,6 @@ Triggered by the model at the end of the attributes update transaction in case i
 
 Triggered by the model during the attributes update transaction for every changed attribute.
 
-### `metatype` type( Type ).watcher( watcher )
-
-Attach `change:attr` event listener to the particular model's attribute. `watcher` can either be the model's method name or the function `( newValue, attr ) => void`. Watcher is always executed in the context of the model.
-
-```javascript
-@define class User extends Model {
-    static attributes = {
-        name : type( String ).watcher( 'onNameChange' ),
-        isAdmin : Boolean,
-    }
-
-    onNameChange(){
-        // Cruel. But we need it for the purpose of the example.
-        this.isAdmin = this.name.indexOf( 'Admin' ) >= 0;
-    }
-}
-```
-
-### `metatype` type( Type ).changeEvents( false )
-
-Turn off changes observation for nested models or collections.
-
-Model automatically listens to change events of all nested models and collections, triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.
-
-### `metatype` type( Type ).events({ eventName : handler, ... })
-
-Automatically manage custom event subscription for the attribute. `handler` is either the method name or the handler function.
-
 ### model.changed
 
 The `changed` property is the internal hash containing all the attributes that have changed during its last transaction.

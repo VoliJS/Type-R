@@ -15,6 +15,7 @@ includes:
   - README
   - models/README
   - models/src/model/README
+  - models/src/model/API
   - models/src/collection/README
   - models/src/Validation
   - endpoints/README
