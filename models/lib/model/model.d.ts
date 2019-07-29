@@ -4,7 +4,7 @@ import { CloneOptions, Owner, Transactional, TransactionalDefinition, Transactio
 import { Infer } from './attrDef';
 import { IOModel } from './io-mixin';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues } from './updates';
-import { LinkedAttributes } from './linked-attrs';
+import { LinkedModelHash } from './linked-attrs';
 export interface ConstructorOptions extends TransactionOptions {
     clone?: boolean;
 }
@@ -22,10 +22,13 @@ export interface ModelConstructor<A> extends TheType<typeof Model> {
 export declare type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>;
 };
+export declare type LinkedAttributes<M extends {
+    attributes: object;
+}> = LinkedModelHash<InferAttrs<M['attributes']>>;
 export declare type AttributesMixin<M extends {
     attributes: object;
 }> = InferAttrs<M['attributes']> & {
-    readonly $: LinkedAttributes<InferAttrs<M['attributes']>>;
+    readonly $: LinkedAttributes<M>;
 };
 export declare class Model extends Transactional implements IOModel, AttributesContainer, Iterable<any> {
     static onDefine(definition: any, BaseClass: any): void;

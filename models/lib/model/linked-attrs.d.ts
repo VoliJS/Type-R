@@ -1,7 +1,7 @@
 import { Model } from './model';
 import { Linked } from '@linked/value';
 export declare function addAttributeLinks(Class: typeof Model): void;
-export declare type LinkedAttributes<T> = {
+export declare type LinkedModelHash<T extends object> = {
     readonly [K in keyof T]: ModelAttrRef<T[K]>;
 };
 export declare class ModelAttrRef<T> extends Linked<T> {

@@ -5845,7 +5845,7 @@ function extractChangeToken(x) {
 /*!******************************************************************************!*\
   !*** /Users/vladbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \******************************************************************************/
-/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32926,7 +32926,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!*********************************************************!*\
   !*** /Users/vladbalin/GitHub/Type-R/react/lib/index.js ***!
   \*********************************************************/
-/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32944,19 +32944,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Link"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["LinkedComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["StateLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
 
@@ -32981,6 +32975,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
 
 /* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_3__["pureRenderProps"]; });

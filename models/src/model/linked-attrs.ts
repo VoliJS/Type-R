@@ -28,7 +28,7 @@ export function addAttributeLinks( Class : typeof Model ){
     prototype.__Attributes$ = AttributeRefs as any;
 }
 
-export type LinkedAttributes<T> = {
+export type LinkedModelHash<T extends object>= {
     readonly [ K in keyof T ] : ModelAttrRef<T[K]>
 }
 

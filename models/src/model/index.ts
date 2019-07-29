@@ -8,7 +8,7 @@ import { addAttributeLinks } from './linked-attrs'
 
 export * from './attrDef';
 export * from './metatypes';
-export { AttributesMixin, InferAttrs, ModelConstructor } from './model';
+export { AttributesMixin, LinkedAttributes, InferAttrs, ModelConstructor } from './model';
 export { Model };
 
 const { assign, defaults } = tools;
