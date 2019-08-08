@@ -1,6 +1,6 @@
 {
   "name": "@type-r/models",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "The serializable type system for JS and TypeScript",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
@@ -54,8 +54,8 @@
   },
   "homepage": "https://github.com/gaperton/TransactionalJS#readme",
   "dependencies": {
-    "tslib": "*",
-    "@type-r/mixture" : "^4.0.0",
-    "@linked/value" : "^3.0.4"
+    "@linked/value": "^3.0.4",
+    "@type-r/mixture": "^4.0.0",
+    "tslib": "*"
   }
 }
