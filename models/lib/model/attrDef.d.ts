@@ -5,8 +5,8 @@ export interface AttributeCheck {
     (value: any, key: string): boolean;
     error?: any;
 }
-export declare type Infer<A> = A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> : A extends Function ? TrueReturnType<A> : A;
-declare type TrueReturnType<F extends Function> = F extends DateConstructor ? Date : F extends (...args: any[]) => infer R ? R : F extends new (...args: any[]) => infer R ? R : void;
+export declare type Infer<A> = A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> : A extends Function ? TrueReturnType<A> : A | null;
+declare type TrueReturnType<F extends Function> = F extends DateConstructor ? Date | null : F extends (...args: any[]) => infer R ? R | null : F extends new (...args: any[]) => infer R ? R | null : void;
 export declare class ChainableAttributeSpec<F extends Function> {
     options: AttributeOptions & {
         type?: F;
