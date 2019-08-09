@@ -41,6 +41,42 @@ const book = await Book.from({ id : 5 }).fetch();
 const body = MyRequestBody.from( ctx.request.body, { parse : true, strict : true });
 ```
 
+### `static` ModelClass.create( attrs, options )
+
+Static factory function used internally by Type-R to create instances of the model.
+
+May be redefined in the abstract Model base class to make it serializable type.
+
+```javascript
+@define class Widget extends Model {
+    static attributes = {
+        type : String
+    }
+
+    static create( attrs, options ){
+        switch( attrs.type ){
+            case "typeA" : return new TypeA( attrs, options );
+            case "typeB" : return new TypeB( attrs, options );
+        }
+    }
+}
+
+@define class TypeA extends Widget {
+    static attributes = {
+        type : "typeA",
+        ...
+    }
+}
+
+@define class TypeB extends Widget {
+    static attributes = {
+        type : "typeB",
+        ...
+    }
+}
+```
+
+
 ### model.clone()
 
 Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.
@@ -237,6 +273,63 @@ Returns an model's IO endpoint. Normally, this is an endpoint which is defined i
     }
 }
 ```
+
+### model.toJSON( options? )
+
+Serialize model or collection to JSON. Used internally by `save()` I/O method (`options.ioMethod === 'save'` when called from within `save()`). Can be overridden to customize serialization.
+
+Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.
+
+If you override `toJSON()`, it usually means that you must override `parse()` as well, and vice versa.
+
+<aside class="notice">
+Serialization can be controlled on per-attribute level with <b>type( Type ).toJSON()</b> declaration.
+</aside>
+
+```javascript
+@define class Comment extends Model {
+    static attributes = {
+        body : ''
+    }
+}
+
+@define class BlogPost extends Model {
+    static attributes = {
+        title : '',
+        body : '',
+        comments : Comment.Collection
+    }
+}
+
+const post = new BlogPost({
+    title: "Type-R is cool!",
+    comments : [ { body : "Agree" }]
+});
+
+const rawJSON = post.toJSON()
+// { title : "Type-R is cool!", body : "", comments : [{ body : "Agree" }] }
+```
+
+### `option` { parse : true }
+
+`obj.set()` and constructor's option to force parsing of the raw JSON. Is used internally by I/O methods to parse the data received from the server.
+
+```javascript
+// Another way of doing the bestSeller.clone()
+// Amazingly, this is guaranteed to work by default.
+const book = new Book();
+book.set( bestSeller.toJSON(), { parse : true } );
+```
+
+### `callback` model.parse( json, options? )
+
+Optional hook called to transform the JSON when it's passes to the model or collection with `set( json, { parse : true })` call. Used internally by I/O methods (`options.ioMethod` is either "save" or "fetch" when called from I/O method).
+
+If you override `toJSON()`, it usually means that you must override `parse()` as well, and vice versa.
+
+<aside class="notice">
+Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
+</aside>
 
 ## Change events
 

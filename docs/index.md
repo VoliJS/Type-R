@@ -19,6 +19,7 @@ includes:
   - models/src/model/README
   - models/src/collection/README
   - endpoints/README
+  - models/src/relations/README
   - react/README
   - examples/README
   - mixture/README
