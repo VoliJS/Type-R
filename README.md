@@ -4,13 +4,13 @@
 
 Type-R is a serializable type system for JS and TS. Data structures you describe with Type-R models are automatically and with zero effort:
 
-- serializable to and from JSON;
-- protected from improper assignments at run-time;
+- mapped to JSON and, optionally, REST API;
+- protected from improper updates at run-time;
 - deeply observable.
 
 ## Features 
 
-Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer's mistakes and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.
+Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer's error and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.
 
 Type-R models safeguard both frontend and backend from errors in JSON. Programmer's mistake on a frontend can't affect the JSON sent to the server. Wrong JSON received from the server will be validated, sanitized, and can't cause catastrophic failures on the frontend. Type-R guarantee that the data structures will retain the declared shape and it immediately reports improper assignments to the console.
 
@@ -81,16 +81,14 @@ Install extended data types (Email, URL, IP, Integer, Microsoft date, UNIX Times
 
 `npm install @type-r/ext-types`
 
-## Monorepository packages structure
-
-Core packages:
+## Repository structure
 
 - `models` - Type-R framework core.
 - `endpoints` - Type-R endpoints enabling models and collections I/O API.
 - `react` - Type-R React bindings.
 - `ext-types` - Extended data types.
 
-- `globals` - provides backward compatibility for apps written with Type-R v2.
+- `globals` - `@type-r/globals` providing backward API compatibility for Type-R v2 apps.
 
 - `mixture` - Events, Mixins, and log router. Used by `@type-r/models`.
 - `tests` - private package containing all the unit tests.

@@ -12,7 +12,7 @@ import { Infer, type } from './attrDef';
 import { IOModel, IOModelMixin } from './io-mixin';
 import { AggregatedType, AnyType } from './metatypes';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues, setAttribute, shouldBeAnObject, unknownAttrsWarning, UpdateModelMixin } from './updates';
-import { LinkedAttributes } from './linked-attrs';
+import { LinkedModelHash } from './linked-attrs';
 
 
 const { assign, isEmpty } = tools;
@@ -48,7 +48,8 @@ export type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>
 };
 
-export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']> & { readonly $ : LinkedAttributes<InferAttrs<M['attributes']>>}
+export type LinkedAttributes<M extends { attributes : object }> = LinkedModelHash<InferAttrs<M['attributes']>>
+export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']> & { readonly $ : LinkedAttributes<M> }
 
 @define({
     // Default client id prefix 

@@ -57,9 +57,9 @@
         </div>
         
       </div>
-        <div class="lang-selector">
+        <!--<div class="lang-selector">
               <a href="#" data-language-name="javascript">javascript</a>
-        </div>
+        </div>-->
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
@@ -79,12 +79,12 @@
 <h1 id="type-r-overview">Type-R Overview</h1>
 <p>Type-R is a serializable type system for JS and TS. Data structures you describe with Type-R models are automatically and with zero effort:</p>
 <ul>
-<li>serializable to and from JSON;</li>
-<li>protected from improper assignments at run-time;</li>
+<li>mapped to JSON and, optionally, REST API;</li>
+<li>protected from improper updates at run-time;</li>
 <li>deeply observable.</li>
 </ul>
 <h2 id="features">Features</h2>
-<p>Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer&#39;s mistakes and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.</p>
+<p>Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer&#39;s error and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.</p>
 <p>Type-R models safeguard both frontend and backend from errors in JSON. Programmer&#39;s mistake on a frontend can&#39;t affect the JSON sent to the server. Wrong JSON received from the server will be validated, sanitized, and can&#39;t cause catastrophic failures on the frontend. Type-R guarantee that the data structures will retain the declared shape and it immediately reports improper assignments to the console.</p>
 <p>There are virtually no point in unit-testing Type-R models as they are mostly declarative definitions. They are able to check the structural integrity themselves, and Type-R can be instructed to throw exceptions instead of console logging. It makes the unit tests of the data layer unnecessary, and greately reduces an effort when writing an integration test.</p>
 <h2 id="react-integration">React integration</h2>
@@ -138,15 +138,14 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <p><code>npm install @type-r/react</code></p>
 <p>Install extended data types (Email, URL, IP, Integer, Microsoft date, UNIX Timestamp date):</p>
 <p><code>npm install @type-r/ext-types</code></p>
-<h2 id="monorepository-packages-structure">Monorepository packages structure</h2>
-<p>Core packages:</p>
+<h2 id="repository-structure">Repository structure</h2>
 <ul>
 <li><code>models</code> - Type-R framework core.</li>
 <li><code>endpoints</code> - Type-R endpoints enabling models and collections I/O API.</li>
 <li><code>react</code> - Type-R React bindings.</li>
 <li><p><code>ext-types</code> - Extended data types.</p>
 </li>
-<li><p><code>globals</code> - provides backward compatibility for apps written with Type-R v2.</p>
+<li><p><code>globals</code> - <code>@type-r/globals</code> providing backward API compatibility for Type-R v2 apps.</p>
 </li>
 <li><p><code>mixture</code> - Events, Mixins, and log router. Used by <code>@type-r/models</code>.</p>
 </li>
