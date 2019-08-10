@@ -1,25 +1,15 @@
-import { CollectionConstructor } from '../collection';
-import { define, predefine, TheType, tools } from '../object-plus';
+import { define, predefine, tools } from '../object-plus';
 import { Transactional } from '../transactions';
-import { Infer, type } from './attrDef';
+import { type } from './attrDef';
 import { createAttributesMixin } from './mixin';
-import { Record, RecordDefinition } from './record';
+import { InferAttrs, Record, RecordConstructor, RecordDefinition } from './record';
 
 export * from './attrDef';
 export * from './metatypes';
+export { AttributesMixin, InferAttrs, RecordConstructor } from './record';
 export { Record };
 
 const { assign, defaults } = tools;
-
-export type InferAttrs<A extends object> = {
-    [K in keyof A]: Infer<A[K]>
-};
-
-export interface RecordConstructor<A> extends TheType<typeof Record> {
-    new ( attrs? : Partial<A>, options? : object ) : Record & A
-    prototype : Record
-    Collection : CollectionConstructor<Record & A>
-}
 
 export function attributes<D extends object>( attrDefs : D ) : RecordConstructor<InferAttrs<D>> {
     @define class DefaultRecord extends Record {

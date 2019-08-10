@@ -140,6 +140,11 @@ describe( 'IO', function(){
         });
     });
 
+    describe( 'restful endpoint in mock mode', ()=>{
+        testEndpoint( restfulIO( 'http://restful.basic/users', {
+            mockData : []
+        }) )()
+    });
 
     describe( "restful endpoint", () => {
 

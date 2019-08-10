@@ -4,14 +4,14 @@
  */
 
 import { CollectionConstructor } from '../collection';
-import { IOEndpoint, IOPromise } from '../io-tools';
-import { define, definitions, isProduction, Logger, logger, LogLevel, mixinRules, tools } from '../object-plus';
+import { IOEndpoint } from '../io-tools';
+import { define, definitions, isProduction, Logger, logger, LogLevel, mixinRules, TheType, tools } from '../object-plus';
 import { CloneOptions, Owner, Transaction, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { ChildrenErrors } from '../validation';
-import { AggregatedType, AnyType } from './metatypes';
+import { Infer, type } from './attrDef';
 import { IORecord, IORecordMixin } from './io-mixin';
+import { AggregatedType, AnyType } from './metatypes';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues, setAttribute, shouldBeAnObject, unknownAttrsWarning, UpdateRecordMixin } from './updates';
-import { type } from './attrDef';
 
 
 const { assign, isEmpty } = tools;
@@ -36,6 +36,18 @@ export interface RecordDefinition extends TransactionalDefinition {
     collection? : object
     Collection? : typeof Transactional
 }
+
+export interface RecordConstructor<A> extends TheType<typeof Record> {
+    new ( attrs? : Partial<A>, options? : object ) : Record & A
+    prototype : Record
+    Collection : CollectionConstructor<Record & A>
+}
+
+export type InferAttrs<A extends object> = {
+    [K in keyof A]: Infer<A[K]>
+};
+
+export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']>
 
 @define({
     // Default client id prefix 
@@ -76,8 +88,12 @@ export class Record extends Transactional implements IORecord, AttributesContain
             });
     }
 
+    static extendAttrs<T extends typeof Record, A extends object>( this : T, attrs : A ) : RecordConstructor<InstanceType<T> & InferAttrs<A>> {
+        return this.defaults( attrs ) as any;
+    }
+
     static defaults( attrs : AttributesValues ) : typeof Record {
-        return <any>this.extend({ attributes : attrs });
+        return this.extend({ attributes : attrs }) as any;
     }
     
     static attributes : AttributesValues

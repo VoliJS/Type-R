@@ -5,7 +5,7 @@
 import { IOEndpoint } from '../io-tools';
 import { definitionDecorator, EventMap, EventsDefinition, tools } from '../object-plus';
 import { Transactional } from '../transactions';
-import { AttributeOptions, Parse, AnyType, getMetatype, SharedType } from './metatypes';
+import { AttributeOptions, AttributeToJSON, getMetatype, Parse, SharedType } from './metatypes';
 import { AttributesContainer } from './updates';
 
 const { assign } = tools;
@@ -81,7 +81,7 @@ export class ChainableAttributeSpec<F extends Function>{
         return this.metadata({ parse : fun });
     }
 
-    toJSON( fun ) : this {
+    toJSON( fun : AttributeToJSON) : this {
         return this.metadata({
             toJSON : typeof fun === 'function' ? fun : ( fun ? ( x, k, o ) => x && x.toJSON( o ) : emptyFunction ) 
         });

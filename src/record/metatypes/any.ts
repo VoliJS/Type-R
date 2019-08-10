@@ -30,11 +30,11 @@ export interface AttributeOptions {
     _onChange? : ChangeAttrHandler
 }
 
-export type Parse = ( value : any, key : string ) => any;
-export type GetHook = ( value : any, key : string ) => any;
-export type AttributeToJSON = ( value : any, key : string ) => any
-export type AttributeParse = ( value : any, key : string ) => any
-export type ChangeAttrHandler = ( ( value : any, attr : string ) => void ) | string;
+export type Parse = ( value : any, key? : string ) => any;
+export type GetHook = ( value : any, key? : string ) => any;
+export type AttributeToJSON = ( value : any, key? : string ) => any
+export type AttributeParse = ( value : any, key? : string ) => any
+export type ChangeAttrHandler = ( ( value : any, attr? : string ) => void ) | string;
 
 // TODO: interface differs from options, do something obout it
 const emptyOptions : TransactionOptions = {};

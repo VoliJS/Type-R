@@ -20,8 +20,10 @@ export interface CollectionConstructor<R extends Record = Record> extends TheTyp
     Refs: CollectionConstructor<R>;
 }
 export declare class Collection<R extends Record = Record> extends Transactional implements CollectionCore, Iterable<R> {
+    static of<M extends typeof Record>(Ctor: M): M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
+    static ofRefs<M extends typeof Record>(Ctor: M): M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
     static Subset: typeof Collection;
-    static Refs: CollectionConstructor;
+    static Refs: any;
     createSubset(models: ElementsArg<R>, options?: CollectionOptions): Collection<R>;
     static onExtend(BaseClass: typeof Transactional): void;
     static onDefine(definition: CollectionDefinition, BaseClass: any): void;

@@ -1,6 +1,6 @@
 import { IOEndpoint } from '../io-tools';
 import { EventsDefinition } from '../object-plus';
-import { AttributeOptions, Parse } from './metatypes';
+import { AttributeOptions, AttributeToJSON, Parse } from './metatypes';
 export interface AttributeCheck {
     (value: any, key: string): boolean;
     error?: any;
@@ -19,7 +19,7 @@ export declare class ChainableAttributeSpec<F extends Function> {
     endpoint(endpoint: IOEndpoint): this;
     watcher(ref: string | ((value: any, key: string) => void)): this;
     parse(fun: Parse): this;
-    toJSON(fun: any): this;
+    toJSON(fun: AttributeToJSON): this;
     get(fun: any): this;
     set(fun: any): this;
     changeEvents(events: boolean): this;

@@ -1,6 +1,7 @@
 import "reflect-metadata";
-import { logger, Collection, auto, define, mixins, Record, type, value } from 'type-r';
+import { logger, Collection, auto, define, mixins, Record, type, value, Model } from 'type-r';
 import { MinutesInterval } from './common';
+import { AttributesMixin } from '../lib';
 
 logger.off();
 
@@ -260,5 +261,45 @@ describe( 'Bugs from Volicon Observer', () =>{
             expect( t.name ).toBe( 1 );
             expect( t.hi ).toBe( 'hi' );
         });
+    });
+
+    describe( 'TS typing problems', () => {
+        it('define collections manually', () => {
+            @define class MyCollection extends Collection<MyModel> {
+                hi(){ return this.first().there }
+            }
+
+            interface MyModel extends AttributesMixin<typeof MyModel> {}
+            @define class MyModel extends Model {
+                static Collection = MyCollection
+                static attributes = {
+                    there : ''
+                }
+            }
+            
+            let x : MyModel;
+            const c1  = new MyModel.Collection();
+            x = c1.first();
+
+            const c2 = Collection.of( MyModel ).create();
+            x = c2.first();
+        });
+
+        it('short syntax for model definitions', () => {
+
+            const A = Model.extendAttrs({
+                hi : ''
+            });
+            
+            const x = new A.Collection();
+
+            const B = A.extendAttrs({
+                there : 4
+            });
+
+            const y = new B.Collection();
+
+            let z : InstanceType<typeof B> = y.first();
+        })
     });
 } );

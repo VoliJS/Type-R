@@ -1,5 +1,7 @@
 import { CollectionConstructor } from '../collection';
+import { TheType } from '../object-plus';
 import { CloneOptions, Owner, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
+import { Infer } from './attrDef';
 import { IORecord } from './io-mixin';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues } from './updates';
 export interface ConstructorOptions extends TransactionOptions {
@@ -11,12 +13,24 @@ export interface RecordDefinition extends TransactionalDefinition {
     collection?: object;
     Collection?: typeof Transactional;
 }
+export interface RecordConstructor<A> extends TheType<typeof Record> {
+    new (attrs?: Partial<A>, options?: object): Record & A;
+    prototype: Record;
+    Collection: CollectionConstructor<Record & A>;
+}
+export declare type InferAttrs<A extends object> = {
+    [K in keyof A]: Infer<A[K]>;
+};
+export declare type AttributesMixin<M extends {
+    attributes: object;
+}> = InferAttrs<M['attributes']>;
 export declare class Record extends Transactional implements IORecord, AttributesContainer, Iterable<any> {
     static onDefine(definition: any, BaseClass: any): void;
     static Collection: CollectionConstructor;
     static DefaultCollection: CollectionConstructor;
     static id: import("./attrDef").ChainableAttributeSpec<StringConstructor>;
     static readonly ref: import("./attrDef").ChainableAttributeSpec<typeof Record>;
+    static extendAttrs<T extends typeof Record, A extends object>(this: T, attrs: A): RecordConstructor<InstanceType<T> & InferAttrs<A>>;
     static defaults(attrs: AttributesValues): typeof Record;
     static attributes: AttributesValues;
     previousAttributes(): AttributesValues;

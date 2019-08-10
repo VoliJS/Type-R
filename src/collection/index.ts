@@ -7,7 +7,6 @@ import { CollectionCore, CollectionTransaction, Elements, free, sortElements, up
 import { removeMany, removeOne } from './remove';
 import { emptySetTransaction, setTransaction } from './set';
 
-
 const { trigger2 } = eventsApi,
     { begin, commit, markAsDirty } = transactionApi;
 
@@ -55,8 +54,30 @@ export class Collection< R extends Record = Record> extends Transactional implem
     /** @internal */
     _aggregationError : R[]
 
+    /**
+     * EXPERIMENTAL notation to extract proper collection type from the model in TypeScript.
+     * 
+     * attrName : Collection.of( User );
+     * 
+     * const users = new ( Collection.of( User ) )
+     */
+    static of<M extends typeof Record>( Ctor : M ) : M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>> {
+        return Ctor.Collection as any;
+    }
+
+    /**
+     * EXPERIMENTAL notation to extract proper collection type from the model in TypeScript.
+     * 
+     * attrName : Collection.ofRefs( User );
+     * 
+     * const users = new ( Collection.ofRefs( User ) )
+     */
+    static ofRefs<M extends typeof Record>( Ctor : M ) : M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>> {
+        return Ctor.Collection.Refs as any;
+    }
+
     static Subset : typeof Collection
-    static Refs : CollectionConstructor
+    static Refs : any
 
     /** @internal */
     static _SubsetOf : typeof Collection
@@ -524,9 +545,7 @@ export class Collection< R extends Record = Record> extends Transactional implem
 
 import { ArrayMixin } from './arrayMethods'
 
-export interface Collection<R extends Record> extends ArrayMixin<R>{
-
-}
+export interface Collection<R extends Record> extends ArrayMixin<R>{}
 
 export type LiveUpdatesOption = boolean | ( ( x : any ) => boolean );
 

@@ -20,11 +20,11 @@ export interface AttributeOptions {
     changeHandlers?: ChangeHandler[];
     _onChange?: ChangeAttrHandler;
 }
-export declare type Parse = (value: any, key: string) => any;
-export declare type GetHook = (value: any, key: string) => any;
-export declare type AttributeToJSON = (value: any, key: string) => any;
-export declare type AttributeParse = (value: any, key: string) => any;
-export declare type ChangeAttrHandler = ((value: any, attr: string) => void) | string;
+export declare type Parse = (value: any, key?: string) => any;
+export declare type GetHook = (value: any, key?: string) => any;
+export declare type AttributeToJSON = (value: any, key?: string) => any;
+export declare type AttributeParse = (value: any, key?: string) => any;
+export declare type ChangeAttrHandler = ((value: any, attr?: string) => void) | string;
 export declare class AnyType implements AttributeUpdatePipeline {
     name: string;
     static create: (options: AttributeOptions, name: string) => AnyType;
