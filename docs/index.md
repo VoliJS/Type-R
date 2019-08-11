@@ -8,8 +8,8 @@ language_tabs:
 logoTitle: Type-R 3.0
 
 toc_footers:
-  - <a href="https://github.com/Volicon/Type-R">GitHub repository</a>
-  - <a href="https://github.com/Volicon/Type-R/issues">Report the bug</a>
+  - <a href="https://github.com/Volijs/Type-R">GitHub repository</a>
+  - <a href="https://github.com/Volijs/Type-R/issues">Report the bug</a>
   - <a href="https://groups.google.com/forum/#!forum/volicon-open-source">Ask the question</a>
   - <a href="http://www.volicon.com/">Supported by <img style="vertical-align: middle" src="images/volicon_verizon_dm.png"/></a>
 
@@ -233,12 +233,12 @@ Is packed as UMD and ES6 module. No peer dependencies are required.
 
 ## ReactJS bindings
 
-[React-MVx](https://volicon.github.io/React-MVx/) is a glue framework which uses Type-R to manage the UI state in React and the [NestedLink](https://github.com/Volicon/NestedLink) library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:
+[React-MVx](https://github.com/VoliJS/React-Type-R) is a glue framework which uses Type-R to manage the UI state in React and the [NestedLink](https://github.com/VoliJS/NestedLink) library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:
 
-- Type-R [Record](https://volicon.github.io/Type-R/#record) to manage the local [component's state](https://volicon.github.io/React-MVx/#state).
-- [two-way data binding](https://volicon.github.io/React-MVx/#link) for UI and domain state.
+- Type-R [Record](https://volijs.github.io/Type-R/#record) to manage the local [component's state](https://volijs.github.io/React-Type-R/#state).
+- [two-way data binding](https://volijs.github.io/React-Type-R/#link) for UI and domain state.
 - Hassle-free form validation (due to the combination of features of Type-R and NestedLink).
-- [Type-R type annotation](https://volicon.github.io/Type-R/#definition) used to define component [props](https://volicon.github.io/React-MVx/#props) and [context](https://volicon.github.io/React-MVx/#context).
+- [Type-R type annotation](https://volijs.github.io/Type-R/#definition) used to define component [props](https://volijs.github.io/React-Type-R/#props) and [context](https://volijs.github.io/React-Type-R/#context).
 
 ## Usage with NodeJS
 
