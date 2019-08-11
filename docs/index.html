@@ -69,8 +69,8 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-                <li><a href="https://github.com/Volicon/Type-R">GitHub repository</a></li>
-                <li><a href="https://github.com/Volicon/Type-R/issues">Report the bug</a></li>
+                <li><a href="https://github.com/VoliJS/Type-R">GitHub repository</a></li>
+                <li><a href="https://github.com/VoliJS/Type-R/issues">Report the bug</a></li>
                 <li><a href="https://groups.google.com/forum/#!forum/volicon-open-source">Ask the question</a></li>
                 <li><a href="http://www.volicon.com/">Supported by <img style="vertical-align: middle" src="images/volicon_verizon_dm.png"/></a></li>
         </ul>
@@ -296,12 +296,12 @@ expect( users.isValid() ).toBe( <span class="hljs-literal">true</span> );
 <aside class="warning">IE9 and Opera may work but has not been tested. IE8 won't work.</aside>
 
 <h2 id="reactjs-bindings">ReactJS bindings</h2>
-<p><a href="https://volicon.github.io/React-MVx/">React-MVx</a> is a glue framework which uses Type-R to manage the UI state in React and the <a href="https://github.com/Volicon/NestedLink">NestedLink</a> library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:</p>
+<p><a href="https://github.com/VoliJS/React-Type-R">React-MVx</a> is a glue framework which uses Type-R to manage the UI state in React and the <a href="https://github.com/VoliJS/NestedLink">NestedLink</a> library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:</p>
 <ul>
-<li>Type-R <a href="https://volicon.github.io/Type-R/#record">Record</a> to manage the local <a href="https://volicon.github.io/React-MVx/#state">component&#39;s state</a>.</li>
-<li><a href="https://volicon.github.io/React-MVx/#link">two-way data binding</a> for UI and domain state.</li>
+<li>Type-R <a href="https://volijs.github.io/Type-R/#definition">Record</a> to manage the local <a href="https://volijs.github.io/React-Type-R/#state">component&#39;s state</a>.</li>
+<li><a href="https://volijs.github.io/React-Type-R/#link">two-way data binding</a> for UI and domain state.</li>
 <li>Hassle-free form validation (due to the combination of features of Type-R and NestedLink).</li>
-<li><a href="https://volicon.github.io/Type-R/#definition">Type-R type annotation</a> used to define component <a href="https://volicon.github.io/React-MVx/#props">props</a> and <a href="https://volicon.github.io/React-MVx/#context">context</a>.</li>
+<li><a href="https://volijs.github.io/Type-R/#definition">Type-R type annotation</a> used to define component <a href="https://volijs.github.io/React-Type-R/#props">props</a> and <a href="https://volicon.github.io/React-MVx/#context">context</a>.</li>
 </ul>
 <h2 id="usage-with-nodejs">Usage with NodeJS</h2>
 <p>Type-R can be used at the server side to build the business logic layer by defining the custom I/O endpoints to store data in a database. Type-R dynamic type safety features are particularly advantageous when schema-less JSON databases (like Couchbase) are being used.</p>
@@ -2254,8 +2254,8 @@ If this package is not used, the code must be refactored according to the rules 
 <p>This release adds long-awaited HTTP REST endpoint.</p>
 <ul>
 <li>IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.</li>
-<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
-<li>Added proxyIO endpoint for creating endpoints from records on the server side (<a href="https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
+<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volijs.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volijs.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
+<li>Added proxyIO endpoint for creating endpoints from records on the server side (<a href="https://volijs.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volijs.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
 </ul>
 <h2 id="2-0-0">2.0.0</h2>
 <p>This release brings new features which fixes problems with component&#39;s inheritance in React bindings and implements long-awaited generic IO implementation based on ES6 promises.</p>
