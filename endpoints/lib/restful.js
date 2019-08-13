@@ -11,7 +11,10 @@ var RestfulEndpoint = (function () {
         var mockData = _a.mockData, _b = _a.simulateDelay, simulateDelay = _b === void 0 ? 1000 : _b, fetchOptions = tslib_1.__rest(_a, ["mockData", "simulateDelay"]);
         this.url = url;
         this.fetchOptions = fetchOptions;
-        this.memoryIO = mockData ? memoryIO(mockData, simulateDelay) : null;
+        this.memoryIO = mockData && !isProduction ? memoryIO(mockData, simulateDelay) : null;
+        if (mockData && isProduction) {
+            log('error', 'Type-R:RestfulIO', "Mock data is used in production for " + url);
+        }
     }
     RestfulEndpoint.prototype.create = function (json, options, record) {
         var url = this.collectionUrl(record, options);
@@ -118,8 +121,5 @@ function appendParams(url, params) {
             .map(function (k) { return esc(k) + '=' + esc(params[k]); })
             .join('&')
         : url;
-}
-function simulateIO() {
-    log("info", 'SimulatedIO', "GET " + this.url);
 }
 //# sourceMappingURL=restful.js.map

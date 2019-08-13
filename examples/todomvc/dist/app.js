@@ -610,7 +610,10 @@ var RestfulEndpoint = (function () {
         var mockData = _a.mockData, _b = _a.simulateDelay, simulateDelay = _b === void 0 ? 1000 : _b, fetchOptions = tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"](_a, ["mockData", "simulateDelay"]);
         this.url = url;
         this.fetchOptions = fetchOptions;
-        this.memoryIO = mockData ? Object(_memory__WEBPACK_IMPORTED_MODULE_2__["memoryIO"])(mockData, simulateDelay) : null;
+        this.memoryIO = mockData && !_type_r_models__WEBPACK_IMPORTED_MODULE_1__["isProduction"] ? Object(_memory__WEBPACK_IMPORTED_MODULE_2__["memoryIO"])(mockData, simulateDelay) : null;
+        if (mockData && _type_r_models__WEBPACK_IMPORTED_MODULE_1__["isProduction"]) {
+            Object(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["log"])('error', 'Type-R:RestfulIO', "Mock data is used in production for " + url);
+        }
     }
     RestfulEndpoint.prototype.create = function (json, options, record) {
         var url = this.collectionUrl(record, options);
@@ -717,9 +720,6 @@ function appendParams(url, params) {
             .map(function (k) { return esc(k) + '=' + esc(params[k]); })
             .join('&')
         : url;
-}
-function simulateIO() {
-    Object(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["log"])("info", 'SimulatedIO', "GET " + this.url);
 }
 
 

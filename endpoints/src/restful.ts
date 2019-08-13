@@ -27,7 +27,11 @@ export type RestfulFetchOptions = /* subset of RequestInit */{
 export class RestfulEndpoint implements IOEndpoint {
     constructor( public url : string, { mockData, simulateDelay = 1000, ...fetchOptions } : RestfulFetchOptions = {}) {
         this.fetchOptions = fetchOptions
-        this.memoryIO =  mockData ? memoryIO( mockData, simulateDelay ) : null;
+        this.memoryIO =  mockData && !isProduction ? memoryIO( mockData, simulateDelay ) : null;
+
+        if( mockData && isProduction ){
+            log( 'error', 'Type-R:RestfulIO', `Mock data is used in production for ${url}`);
+        }
     }
 
     fetchOptions : RestfulFetchOptions
@@ -162,10 +166,4 @@ function appendParams( url, params? ) {
                           .map( k => esc( k ) + '=' + esc( params[ k ] ) )
                           .join( '&' )
         : url;
-}
-
-
-function simulateIO(){
-    log( "info", 'SimulatedIO', `GET ${this.url}`);
-
 }
