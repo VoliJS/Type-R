@@ -385,11 +385,6 @@ user.$.roles.at( <span class="hljs-string">'user'</span> ).set( <span class="hlj
     selectedUsers : Collection.subsetOf( <span class="hljs-string">'users'</span> ) <span class="hljs-comment">// 'users' == function(){ return this.users }</span>
 }
 </code></pre>
-<h3 id="class-store"><code>class</code> Store</h3>
-<p>In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as <code>store</code>.
-Stores are used as root models holding the collections of other models with serializable references.</p>
-<p>When a symbolic path to the base collection starts with <code>store</code>, store is being resolved as follows:</p>
-<p>TODO</p>
 <h2 id="observable-references">Observable references</h2>
 <p>Non-serializable run time reference to models or collections. Used to describe a temporary observable application state.</p>
 <h3 id="attribute-refto-modelorcollection-"><code>attribute</code> : refTo( ModelOrCollection )</h3>
@@ -567,6 +562,36 @@ rules on every updates as validation is evaluated lazily. <code>strict</code> op
 <span class="hljs-comment">// Throw an exception if validation fails.</span>
 <span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
 </code></pre>
+<h3 id="static-modelclass-create-attrs-options-"><code>static</code> ModelClass.create( attrs, options )</h3>
+<p>Static factory function used internally by Type-R to create instances of the model.</p>
+<p>May be redefined in the abstract Model base class to make it serializable type.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-built_in">String</span>
+    }
+
+    <span class="hljs-keyword">static</span> create( attrs, options ){
+        <span class="hljs-keyword">switch</span>( attrs.type ){
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeA"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeA( attrs, options );
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeB"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeB( attrs, options );
+        }
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeA"</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeB</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeB"</span>,
+        ...
+    }
+}
+</code></pre>
 <h3 id="model-clone-">model.clone()</h3>
 <p>Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.</p>
 <h3 id="callback-model-initialize-attrs-options-"><code>callback</code> model.initialize(attrs?, options?)</h3>
@@ -703,6 +728,50 @@ book.assignFrom(bestSeller);
     }
 }
 </code></pre>
+<h3 id="model-tojson-options-">model.toJSON( options? )</h3>
+<p>Serialize model or collection to JSON. Used internally by <code>save()</code> I/O method (<code>options.ioMethod === &#39;save&#39;</code> when called from within <code>save()</code>). Can be overridden to customize serialization.</p>
+<p>Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Serialization can be controlled on per-attribute level with <b>type( Type ).toJSON()</b> declaration.
+</aside>
+
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">comments</span> : Comment.Collection
+    }
+}
+
+<span class="hljs-keyword">const</span> post = <span class="hljs-keyword">new</span> BlogPost({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"Type-R is cool!"</span>,
+    <span class="hljs-attr">comments</span> : [ { <span class="hljs-attr">body</span> : <span class="hljs-string">"Agree"</span> }]
+});
+
+<span class="hljs-keyword">const</span> rawJSON = post.toJSON()
+<span class="hljs-comment">// { title : "Type-R is cool!", body : "", comments : [{ body : "Agree" }] }</span>
+</code></pre>
+<h3 id="option-parse-true-"><code>option</code> { parse : true }</h3>
+<p><code>obj.set()</code> and constructor&#39;s option to force parsing of the raw JSON. Is used internally by I/O methods to parse the data received from the server.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
+<span class="hljs-comment">// Amazingly, this is guaranteed to work by default.</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.set( bestSeller.toJSON(), { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
+</code></pre>
+<h3 id="callback-model-parse-json-options-"><code>callback</code> model.parse( json, options? )</h3>
+<p>Optional hook called to transform the JSON when it&#39;s passes to the model or collection with <code>set( json, { parse : true })</code> call. Used internally by I/O methods (<code>options.ioMethod</code> is either &quot;save&quot; or &quot;fetch&quot; when called from I/O method).</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
+</aside>
+
 <h2 id="change-events">Change events</h2>
 <p>Type-R implements <em>deeply observable changes</em> on the object graph constructed of models and collection.</p>
 <p>All of the model and collection updates happens in a scope of the transaction followed by the change event. Every model or collection update operation opens <em>implicit</em> transaction. Several update operations can be groped to the single <em>explicit</em> transaction if executed in the scope of the <code>obj.transaction()</code> or <code>col.updateEach()</code> call.</p>
@@ -1083,7 +1152,7 @@ The collection must know the type of its models to restore its elements from JSO
     <span class="hljs-keyword">static</span> model = Book; 
 }
 </code></pre>
-<h1 id="i-o-and-endpoints">I/O and endpoints</h1>
+<h1 id="i-o-endpoints">I/O endpoints</h1>
 <h2 id="overview">Overview</h2>
 <p>Type-R uses IO abstraction represented by <code>IOEndpoint</code> interface, with JSON serialization handled by Model and Collection classes.</p>
 <p>IOEndpoint defines the set of CRUD + list methods operating on raw JSON.
@@ -1218,81 +1287,7 @@ an existing Model subclass as a transport. This endpoint can be connected to the
     });
 });
 </code></pre>
-<h3 id="obj-tojson-options-">obj.toJSON( options? )</h3>
-<p>Serialize model or collection to JSON. Used internally by <code>save()</code> I/O method (<code>options.ioMethod === &#39;save&#39;</code> when called from within <code>save()</code>). Can be overridden to customize serialization.</p>
-<p>Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.</p>
-<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
-<aside class="notice">
-Serialization can be controlled on per-attribute level with <b>type( Type ).toJSON()</b> declaration.
-</aside>
-
-<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
-    }
-}
-
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
-        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>,
-        <span class="hljs-attr">comments</span> : Comment.Collection
-    }
-}
-
-<span class="hljs-keyword">const</span> post = <span class="hljs-keyword">new</span> BlogPost({
-    <span class="hljs-attr">title</span>: <span class="hljs-string">"Type-R is cool!"</span>,
-    <span class="hljs-attr">comments</span> : [ { <span class="hljs-attr">body</span> : <span class="hljs-string">"Agree"</span> }]
-});
-
-<span class="hljs-keyword">const</span> rawJSON = post.toJSON()
-<span class="hljs-comment">// { title : "Type-R is cool!", body : "", comments : [{ body : "Agree" }] }</span>
-</code></pre>
-<h3 id="option-parse-true-"><code>option</code> { parse : true }</h3>
-<p><code>obj.set()</code> and constructor&#39;s option to force parsing of the raw JSON. Is used internally by I/O methods to parse the data received from the server.</p>
-<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
-<span class="hljs-comment">// Amazingly, this is guaranteed to work by default.</span>
-<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
-book.set( bestSeller.toJSON(), { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
-</code></pre>
-<h3 id="callback-obj-parse-json-options-"><code>callback</code> obj.parse( json, options? )</h3>
-<p>Optional hook called to transform the JSON when it&#39;s passes to the model or collection with <code>set( json, { parse : true })</code> call. Used internally by I/O methods (<code>options.ioMethod</code> is either &quot;save&quot; or &quot;fetch&quot; when called from I/O method).</p>
-<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
-<aside class="notice">
-Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
-</aside>
-
-
-<h3 id="static-create-attrs-options-"><code>static</code> create( attrs, options )</h3>
-<p>Static factory function used internally by Type-R to create instances of the model.</p>
-<p>May be redefined in the abstract Model base class to make it serializable type.</p>
-<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">type</span> : <span class="hljs-built_in">String</span>
-    }
-
-    <span class="hljs-keyword">static</span> create( attrs, options ){
-        <span class="hljs-keyword">switch</span>( attrs.type ){
-            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeA"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeA( attrs, options );
-            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeB"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeB( attrs, options );
-        }
-    }
-}
-
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeA"</span>,
-        ...
-    }
-}
-
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeB</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeB"</span>,
-        ...
-    }
-}
-</code></pre>
+<h1 id="stores-and-normalized-data">Stores and normalized data</h1>
 <h2 id="normalized-data">Normalized data</h2>
 <p>Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by model id. References are represented as model ids in JSON, and being transparently resolved to model instances on the first access.</p>
 <p><code>Store</code> class is the special model class which serves as a placeholder for the set of interlinked collections of normalized models. Id-references are defined as model attributes of the special type representing the serializable reference to the models from the specified master collection.</p>
@@ -1344,21 +1339,18 @@ Initialized as <code>null</code> and serialized as <code>model.id</code>. Is not
     }
 }
 </code></pre>
-<h3 id="sourcecollection-createsubset-models-options-">sourceCollection.createSubset( models?, options? )</h3>
-<p>Create an instance of <code>subsetOf( sourceCollection, CollectionCtor )</code> type (non-aggregating serializable collection) which is the subset of the given collection. Takes the same arguments as the collection&#39;s constructor.</p>
-<aside class="notice">
-Records in the collection must have an `id` attribute populated to work properly with subsets.
-</aside>
+<h3 id="recordorcollection-clone-pinstore-true-">recordOrCollection.clone({ pinStore : true })</h3>
+<p>Make the cloned object to preserve the reference to its original store.</p>
+<p>Cloned objects don&#39;t have an owner by default, thus they loose the reference to their store as no ownership chain can be traversed. <code>pinStore</code> option should be used in such a cases.</p>
+<h2 id="class-store"><code>class</code> Store</h2>
+<p>In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as <code>store</code>.
+Stores are used as root models holding the collections of other models with serializable references.</p>
+<p>For all models aggregated by store (no matter how deep) <code>store.attrName</code> baseCollection path will resolve to the <code>attrName</code> attribute of this store. If there are no such an attribute in the store, the next available store upper in aggregation tree will be checked (stores can be nested as regular models), or the default store if there are no more stores in the ownership chain.</p>
+<aside class="notice">Stores in Type-R are _very different_ to stores in other frameworks. Keep in mind, a store is just a subclass of the Model.</aside>
 
-<h3 id="class-store"><code>class</code> Store</h3>
-<p><code>Store</code> is the special kind of model which serves as a root for id references.</p>
-<p>For all models inside of the store&#39;s aggregation tree <code>~attrName</code> will resolve to the attribute of the store class found with <code>model.getStore()</code> method. If there are no such an attribute in the store, the next available store upper in aggregation tree will be used (as regular models stores can be nested), or the default store if there are no one.</p>
-<aside class="notice">Stores in Type-R is _very different_ to stores in other framework. Pay attention.</aside>
-
-<p>Store is the subclass of the Model. It&#39;s defined extending the <code>Store</code> abstract base class. It behaves as a regular model in most aspects.</p>
 <h3 id="store-_defaultstore">store._defaultStore</h3>
 <p>Reference to the master store used for lookups if the current store doesn&#39;t have the required attribute and there are no other store found upper in the ownership chain.</p>
-<p>Defaults to the <code>Store.global</code>. May be explicitly defined to create custom store lookup chains across the ownership hierarchy.</p>
+<p>Defaults to the <code>Store.global</code>. May be reassinged to create arbitrary store lookup chains.</p>
 <h3 id="static-store-global"><code>static</code> Store.global</h3>
 <p>The default singleton store class. Is always the last store to lookup when resolving ~reference.</p>
 <p>Use the default store for the <em>globally shared data only</em>. Each application page must have its local store.</p>
@@ -1373,12 +1365,11 @@ Store.global = <span class="hljs-keyword">new</span> MyStore();
 
 <span class="hljs-comment">// Now the reference '~users` will point to users collection from the MyStore.</span>
 </code></pre>
-<h3 id="recordorcollection-getstore-">recordOrCollection.getStore()</h3>
-<p>Return the closest store. Used internally to resolve symbolic <code>~reference</code> relative to the store.</p>
+<h3 id="model-getstore-">model.getStore()</h3>
+<p>Return the closest store. Used internally to resolve symbolic <code>store.attr</code> relative to the store.</p>
 <p>Method looks for the <code>Store</code> subclass traversing the ownership chain of current aggregation tree upwards. If there are no store found this way, default Store from <code>Store.global</code> is returned.</p>
-<h3 id="recordorcollection-clone-pinstore-true-">recordOrCollection.clone({ pinStore : true })</h3>
-<p>Make the cloned object to preserve the reference to its original store.</p>
-<p>Cloned objects don&#39;t have an owner by default, thus they loose the reference to their store as no ownership chain can be traversed. <code>pinStore</code> option should be used in such a cases.</p>
+<h2 id="layered-application-state">Layered application state</h2>
+<p>TODO</p>
 <h1 id="using-with-react">Using with React</h1>
 <h2 id="local-component-state">Local component state</h2>
 <h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>

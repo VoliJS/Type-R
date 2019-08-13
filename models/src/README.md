@@ -316,15 +316,6 @@ static attributes = {
 }
 ```
 
-### `class` Store
-
-In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as `store`.
-Stores are used as root models holding the collections of other models with serializable references.
-
-When a symbolic path to the base collection starts with `store`, store is being resolved as follows:
-
-TODO
-
 ## Observable references
 
 Non-serializable run time reference to models or collections. Used to describe a temporary observable application state.
