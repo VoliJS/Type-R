@@ -14,10 +14,8 @@ export class TodoHeaderComponent implements OnInit {
   addTodo() {
    
     if (this.newTodo.trim().length){
-      console.log ('Add Todo');
       this.todoStoreService.add(this.newTodo);
       this.newTodo = '';
-      console.log(this.todoStoreService.todos);
     }
   }
 
