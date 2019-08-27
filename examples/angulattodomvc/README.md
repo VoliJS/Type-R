@@ -1,7 +1,8 @@
 # Angulattodomvc
 
 
-Type-R todoMVC example.
+Type-R +typescript  todoMVC example.
+
 
 
 ## Prepare
