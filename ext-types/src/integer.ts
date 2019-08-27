@@ -1,4 +1,4 @@
-import {NumericType} from "type-r";
+import {NumericType} from '@type-r/models';
 
 export function Integer( x ) {
     return x ? Math.round( x ) : 0;

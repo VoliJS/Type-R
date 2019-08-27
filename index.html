@@ -1,0 +1,2129 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Type-R v4.0 API Reference</title>
+
+    <link rel="icon" href="docs/images/logo-dark.png" />
+    <link href="docs/lib/stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="docs/lib/stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <link href="docs/lib/stylesheets/default.css" rel="stylesheet" type="text/css" />
+
+    <style>
+      .logo-section img {
+        vertical-align: middle;
+        margin: 15px;
+        height: 48px;
+      }
+
+      .logo-section .logo-text {
+        vertical-align: middle;
+        color: white;
+        display: inline-block;
+      }
+
+      .logo-section .logo-caption {
+        font-size: 28px;
+      }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="docs/lib/javascripts/all.js" type="text/javascript"></script>
+
+      <script>
+        $(function() {
+          var langs = [];
+            langs.push("javascript");
+          setupLanguages( langs );
+        });
+      </script>
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="docs/images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <div class="logo-section">
+        <img src="docs/images/logo.png" />
+        <div class="logo-text">
+          <div class="logo-caption">Type-R v4.0</div>
+          <div>serializable type system</div>
+        </div>
+        
+      </div>
+        <!--<div class="lang-selector">
+              <a href="#" data-language-name="javascript">javascript</a>
+        </div>-->
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+                <li><a href="https://github.com/VoliJS/Type-R">GitHub repository</a></li>
+                <li><a href="https://github.com/VoliJS/Type-R/issues">Report the bug</a></li>
+                <li><a href="https://groups.google.com/forum/#!forum/volicon-open-source">Ask the question</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+        <div class="content">
+          
+<p><img src="docs/images/overview.png" alt="overview"></p>
+<h1 id="type-r-overview">Type-R Overview</h1>
+<p>Type-R is a serializable type system for JS and TS. Data structures you describe with Type-R models are automatically and with zero effort:</p>
+<ul>
+<li>mapped to JSON and, optionally, REST API;</li>
+<li>protected from improper updates at run-time;</li>
+<li>deeply observable.</li>
+</ul>
+<h2 id="features">Features</h2>
+<p>Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer&#39;s error and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.</p>
+<p>Type-R models safeguard both frontend and backend from errors in JSON. Programmer&#39;s mistake on a frontend can&#39;t affect the JSON sent to the server. Wrong JSON received from the server will be validated, sanitized, and can&#39;t cause catastrophic failures on the frontend. Type-R guarantee that the data structures will retain the declared shape and it immediately reports improper assignments to the console.</p>
+<p>There are virtually no point in unit-testing Type-R models as they are mostly declarative definitions. They are able to check the structural integrity themselves, and Type-R can be instructed to throw exceptions instead of console logging. It makes the unit tests of the data layer unnecessary, and greately reduces an effort when writing an integration test.</p>
+<h2 id="react-integration">React integration</h2>
+<p>Data structures defined with Type-R are deeply observable by default. They can be used to manage the state of React applications right out of box utilizing &quot;unidirectional data flow&quot; with no additional tooling. Type-R data structures support two-way data binding and attribute-level validation rules, making the a complex forms UI a trivial task. Normally, you don&#39;t change your UI code to add validation, just add the validation check to model&#39;s attributes.</p>
+<h2 id="example">Example</h2>
+<p>The main Type-R building block is the <code>Model</code> class with attributes types declaration which behaves as a regular JS class. Models and collections of models can be nested indefinitely to define data structures of arbitrary complexity.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, Record, Collection } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/models'</span>
+<span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/endpoints'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Record</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span>  : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Message</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Record</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/messages'</span>, {
+        <span class="hljs-comment">// REST I/O is simulated when the mock data is present, that's how you start.</span>
+        mockData : [ { <span class="hljs-attr">id</span> : <span class="hljs-number">0</span>, <span class="hljs-attr">createdAt</span> : <span class="hljs-string">"1999-07-25T03:33:29.687Z"</span>, <span class="hljs-attr">author</span> : {}, <span class="hljs-attr">to</span> : [] }]
+    } );
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">createdAt</span> : <span class="hljs-built_in">Date</span>,
+        <span class="hljs-attr">author</span>  : User, <span class="hljs-comment">// aggregated User record.</span>
+        to      : Collection.of( User ), <span class="hljs-comment">// aggregated collection of users</span>
+        subject : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span>    : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> messages = Collection.of( Message ).create();
+
+<span class="hljs-keyword">await</span> messages.fetch({ <span class="hljs-attr">params</span> : { <span class="hljs-attr">page</span> : <span class="hljs-number">0</span> }});
+
+<span class="hljs-keyword">const</span> msg = messages.first();
+msg.author.name = <span class="hljs-string">'Alan Poe'</span>;
+msg.subject = <span class="hljs-string">'Nevermore'</span>;
+
+<span class="hljs-keyword">await</span> msg.save();
+</code></pre>
+<h2 id="api-reference-and-docs"><a href="https://volijs.github.io/Type-R/">API reference and docs</a></h2>
+<h2 id="installation-and-requirements">Installation and requirements</h2>
+<aside class="success">IE10+, Edge, Safari, Chrome, and Firefox are supported</aside>
+
+<aside class="warning">IE9 and Opera may work but has not been tested. IE8 won't work.</aside>
+
+<p>Install Type-R models and built-in set of I/O endpoints (restfulIO, localStorageIO, and memoryIO):</p>
+<p><code>npm install @type-r/models @type-r/endpoints</code></p>
+<p>Install React bindings:</p>
+<p><code>npm install @type-r/react</code></p>
+<p>Install extended data types (Email, URL, IP, Integer, Microsoft date, UNIX Timestamp date):</p>
+<p><code>npm install @type-r/ext-types</code></p>
+<h2 id="repository-structure">Repository structure</h2>
+<ul>
+<li><code>models</code> - Type-R framework core.</li>
+<li><code>endpoints</code> - Type-R endpoints enabling models and collections I/O API.</li>
+<li><code>react</code> - Type-R React bindings.</li>
+<li><p><code>ext-types</code> - Extended data types.</p>
+</li>
+<li><p><code>globals</code> - <code>@type-r/globals</code> providing backward API compatibility for Type-R v2 apps.</p>
+</li>
+<li><p><code>mixture</code> - Events, Mixins, and log router. Used by <code>@type-r/models</code>.</p>
+</li>
+<li><code>tests</code> - private package containing all the unit tests.</li>
+<li><code>examples/*</code> - example <code>@type-r/react</code> apps.</li>
+</ul>
+<h1 id="defining-the-model">Defining the model</h1>
+<h2 id="overview">Overview</h2>
+<p>The <code>Model</code> class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.</p>
+<p>There are four sorts of model attributes:</p>
+<ul>
+<li><strong>Primitive</strong> types (Number, String, Boolen) mapped to JSON directly.</li>
+<li><strong>Immutable</strong> types (Date, Array, Object, or custom immutable class).</li>
+<li><strong>Aggregated</strong> models and collections represented as nested objects and arrays of objects in JSON.</li>
+<li><strong>References</strong> to models and collections. References can be either:<ul>
+<li><strong>serializable</strong> to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;</li>
+<li><strong>observable</strong>, which is a non-persistent run-time only reference, used to model temporary application state.</li>
+</ul>
+</li>
+</ul>
+<p>Model is an observable state container efficiently detecting changes in all of its attributes, including the deep changes in aggregated and observable reference attributes. Type-R models follow BackboneJS change events model which makes it a straightforward task to integrate with virtually any view layer.</p>
+<p>Model attribute definitions have extended metadata to control all aspects of model behavior on the particular attribute&#39;s level, making it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.</p>
+<p>Type-R models are almost as easy to use as plain JS objects, and much easier when more complex data types and serialization scenarios are involved. </p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// We have `/api/users` endpoint on the server. Lets describe what it is with a model.</span>
+<span class="hljs-keyword">import</span> { define, Model, Collection, value, type } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/models'</span>
+<span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/endpoints'</span>
+<span class="hljs-keyword">import</span> { Role } <span class="hljs-keyword">from</span> <span class="hljs-string">'./roles'</span> <span class="hljs-comment">// &lt;- That's another model definition.</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-comment">// Tell this model that it has a REST endpoint on the server to enable I/O API.</span>
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>, <span class="hljs-comment">// type is inferred from the default value as String</span>
+        email : <span class="hljs-string">''</span>, <span class="hljs-comment">// String</span>
+        isActive : <span class="hljs-literal">false</span>, <span class="hljs-comment">// Boolean</span>
+
+        <span class="hljs-comment">// nested array of objects in JSON, collection of Role models in JS</span>
+        roles : Collection.of( Role ) 
+
+        <span class="hljs-comment">// Add metadata to a Number attribute.</span>
+        <span class="hljs-comment">// Receive it from the server, but don't send it back on save.</span>
+        failedLoginCount : value( <span class="hljs-number">0</span> ).toJSON( <span class="hljs-literal">false</span> ), <span class="hljs-comment">// Number</span>
+
+        <span class="hljs-comment">// ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it.</span>
+        createdAt : type( <span class="hljs-built_in">Date</span> ).toJSON( <span class="hljs-literal">false</span> ), <span class="hljs-comment">// Date</span>
+    }
+}
+
+<span class="hljs-comment">// Somewhere in other code...</span>
+
+<span class="hljs-comment">// Fetch the users list from the server...</span>
+<span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> Collection.of( User ).create().fetch();
+
+<span class="hljs-comment">// Subscribe for the changes...</span>
+users.onChanges( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'changes!'</span> ) );
+
+<span class="hljs-comment">// ...and make the first user active.</span>
+<span class="hljs-keyword">const</span> firstUser = users.first();
+firstUser.isActive = <span class="hljs-literal">true</span>; <span class="hljs-comment">// Here we'll got the 'changes!' log message</span>
+<span class="hljs-keyword">await</span> firstUser.save();
+</code></pre>
+<p>Model is defined by extending the <code>Model</code> class with attributes definition and applying the <code>@define</code> decorator.</p>
+<h3 id="decorator-define"><code>decorator</code> @define</h3>
+<p>Class decorator which must preceede the <code>Model</code> subclass declaration. <code>@define</code> is a mixin which will read attribute definitions from the Model&#39;s <code>static attributes</code> and generate class properties accessors accordingly.</p>
+<p><code>@define</code> assembles attribute&#39;s update pipeline for each attribute individually depending on its type and employs a number of JIT-friendly optimizations. As a result, Type-R models handle updates about 10 times faster than frameworks like BackboneJS in all popular browsers making a collections of 10K objects a practical choice on a frontend.</p>
+<h3 id="static-attributes"><code>static</code> attributes</h3>
+<p>Attributes must be defined in <code>static attributes</code>. In a majority of cases, an attribute definition is a constructor function or the default value.</p>
+<p>If the function is used as attribute definition, it&#39;s assumed to be am attributes constructor and designates attribute type. If it&#39;s not a function, it&#39;s treated as an attribute&#39;s default value and type is being determened from this value type. The following attribute definitions are equivalent:</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>, <span class="hljs-comment">// Same as ''</span>
+        email : <span class="hljs-string">''</span> <span class="hljs-comment">// Same as String</span>
+    }
+}
+</code></pre>
+<p>To assign <code>null</code> as a default value both attribute type and value need to be specified, as the type cannot be inferred from <code>null</code>. It&#39;s done through the attribute&#39;s metadata like this:</p>
+<pre><code>nullStringAttr : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-literal">null</span> )
+
+
+</code></pre><h3 id="static-idattribute-attrname-"><code>static</code> idAttribute = &#39;attrName&#39;</h3>
+<p>A model&#39;s unique identifier is stored under the pre-defined <code>id</code> attribute.
+If you&#39;re directly communicating with a backend (CouchDB, MongoDB) that uses a different unique key, you may set a Model&#39;s <code>idAttribute</code> to transparently map from that key to id.</p>
+<p>Model&#39;s <code>id</code> property will still be linked to Model&#39;s id, no matter which value <code>idAttribute</code> has.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Meal</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+  <span class="hljs-keyword">static</span> idAttribute =  <span class="hljs-string">"_id"</span>;
+  <span class="hljs-keyword">static</span> attributes = {
+      <span class="hljs-attr">_id</span> : <span class="hljs-built_in">Number</span>,
+      <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>
+  }
+}
+
+<span class="hljs-keyword">const</span> cake = <span class="hljs-keyword">new</span> Meal({ <span class="hljs-attr">_id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"Cake"</span> });
+alert(<span class="hljs-string">"Cake id: "</span> + cake.id);
+</code></pre>
+<h3 id="static-endpoint"><code>static</code> endpoint</h3>
+<p>Enable model&#39;s I/O API by specifying an I/O endpoint. There are the list of endpoints in <code>@type-r/enpoints</code> package to work with browsers local storage, REST, and mock data.</p>
+<h2 id="primitive-attributes">Primitive attributes</h2>
+<p>Primitive attribute types are directly mapped to their values in JSON.
+Assigned value is being converted to the declared attribute type at run time. I.e. if an email is declared to be a string, it&#39;s guaranteed that it will always remain a string.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-built_in">String</span>, <span class="hljs-comment">// ''</span>
+        isActive : <span class="hljs-built_in">Boolean</span>, <span class="hljs-comment">// false</span>
+        failedLoginCount : <span class="hljs-built_in">Number</span> <span class="hljs-comment">// 0</span>
+    }
+}
+</code></pre>
+<h3 id="attribute-number"><code>attribute</code> : Number</h3>
+<p>JS <code>number</code> primitive type. Assigned value (except <code>null</code>) is automatically converted to <code>number</code> with a constructor call <code>Number( value )</code>.</p>
+<p>If something other than <code>null</code>, number, or a proper string representation of number is being assigned, the result of the convertion is <code>NaN</code> and the warning
+will be displayed in the console. Models with <code>NaN</code> in their <code>Number</code> attributes will fail the validation check.</p>
+<h3 id="attribute-boolean"><code>attribute</code> : Boolean</h3>
+<p>JS <code>boolean</code> primitive type. Assigned value (except <code>null</code>) is automatically converted to <code>true</code> or <code>false</code> with a constructor call <code>Boolean( value )</code>.</p>
+<p>This attribute type is always valid.</p>
+<h3 id="attribute-string"><code>attribute</code> : String</h3>
+<p>JS <code>string</code> primitive type. Assigned value (except <code>null</code>) is automatically converted to <code>string</code> with a constructor call <code>String( value )</code>.</p>
+<p>This attribute type is always valid.</p>
+<h2 id="immutable-attributes">Immutable attributes</h2>
+<h3 id="attribute-date"><code>attribute</code> : Date</h3>
+<p>JS <code>Date</code> type represented as ISO UTC date string in JSON. If assigned value is not a <code>Date</code> or <code>null</code>, it is automatically converted to <code>Date</code> with a constructor call <code>new Date( value )</code>.</p>
+<p>If something other than the integer timestamp or the proper string representation of date is being assigned, the result of the convertion is <code>Invalid Date</code> and the warning
+will be displayed in the console. Models with <code>Invalid Date</code> in their <code>Date</code> attributes will fail the validation check.</p>
+<p>Note that the changes to a <code>Date</code> attribute are not observable; dates are treated as immutables and need to be replaced for the model to notice the change.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-built_in">String</span>, <span class="hljs-comment">// ''</span>
+        createdAt : <span class="hljs-built_in">Date</span>
+    }
+}
+</code></pre>
+<h3 id="attribute-array"><code>attribute</code> : Array</h3>
+<p>Immutable JS Array mapped to JSON as is. Type-R assumes that an Array attribute contains a raw JSON with no complex data types in it. </p>
+<p><code>Array</code> type is primarily used to represent a list of primitives. It&#39;s recommended to use aggregated collections of models for the array of objects in JSON.</p>
+<p>If an assigned value is not an <code>Array</code>, the assignment will be ignored and a warning will be displayed in the console.
+Array attributes are always valid.</p>
+<p>Note that the changes to an <code>Array</code> attribute are not observable; arrays need to be replaced with an updated copy for the model to notice the change. Type-R uses <code>Linked</code> class proxying popular array methods from <code>@linked/value</code> package to simplify manipulations with immutable arrays.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : [ <span class="hljs-string">'admin'</span> ]
+    }
+}
+
+user.$.roles.push( <span class="hljs-string">'user'</span> );
+</code></pre>
+<h3 id="attribute-object"><code>attribute</code> : Object</h3>
+<p>Immutable JS Object mapped to JSON as is. Type-R assumes that an Object attribute contains a raw JSON with no complex data types in it. </p>
+<p>Plain JSON object type primarily used to represent dynamic hashmaps of primitives. It&#39;s recommended to use aggregated models for the complex nested objects in JSON.</p>
+<p>If an assigned value is not a plain object, the assignment will be ignored and the warning will be displayed in the console. Object attributes are always valid.</p>
+<p>Changes in Object attribute are not observable, object needs to be copied for the Type-R to notice the change. Type-R uses <code>Linked</code> class from <code>@linked/value</code> package to simplify manipulations with immutable objects.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : { <span class="hljs-attr">admin</span> : <span class="hljs-literal">true</span> }
+    }
+}
+
+user.$.roles.at( <span class="hljs-string">'user'</span> ).set( <span class="hljs-literal">false</span> );
+</code></pre>
+<h3 id="attribute-function"><code>attribute</code> : Function</h3>
+<p>Function as an attribute value. Please note that functions are not serializable.</p>
+<p>Function attributes are initialized with an empty function by default. If something other than function will be assigned, it will be ignored with a error in a console.</p>
+<h3 id="attribute-classconstructor"><code>attribute</code> : ClassConstructor</h3>
+<p>If the class constructor used as an attribute type and it&#39;s not a model or collection subclass, it is considered to be an <strong>immutable attribute</strong>. Type-R has following assumptions on immutable attributes class:</p>
+<ul>
+<li>It has <code>toJSON()</code></li>
+<li>Its constructor can take JSON as a single argument.</li>
+</ul>
+<p>Changes in immutable attributes <em>are not observable</em>, object needs to be replaced with its updated copy for the model to notice the change. The class itself doesn&#39;t need to be immutable, though, as Type-R makes no other assumptions.</p>
+<h2 id="aggregated-models">Aggregated models</h2>
+<p>Aggregated models are the part of the model represented in JSON as nested objects. Aggregated models <strong>will</strong> be copied, destroyed, and validated together with the parent.</p>
+<p>Model has an exclusive ownership rights on its aggregated attributes. Aggregated models can&#39;t be assigned to another model&#39;s attribute unless the source attribute is cleared or the target attribute is a reference.</p>
+<p>Aggregated models are deeply observable. A change of the aggregated model&#39;s attributute will trigger the <code>change</code> event on its parent.</p>
+<h3 id="attribute-modelclass"><code>attribute</code> : ModelClass</h3>
+<p>Model attribute containing another model. Describes an attribute represented in JSON as an object.</p>
+<ul>
+<li>Attribute <strong>is</strong> serializable as <code>{ attr1 : value1, attr2 : value2, ... }</code></li>
+<li>Changes of enclosed model&#39;s attributes <strong>will not</strong> trigger change of the model.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-attr">users</span> : Collection.of( User ),
+    <span class="hljs-attr">selectedUser</span> : memberOf( <span class="hljs-string">'users'</span> )
+}
+</code></pre>
+<h3 id="attribute-collection-of-modelclass-"><code>attribute</code> : Collection.of( ModelClass )</h3>
+<p>Collection containing models. The most popular collection type describing JSON array of objects.</p>
+<ul>
+<li>Collection <strong>is</strong> serializable as <code>[ { ...user1 }, { ...user2 }, ... ]</code></li>
+<li>All changes to enclosed model&#39;s attributes are treated as a change of the collection.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-attr">users</span> : Collection.of( User )
+}
+</code></pre>
+<h2 id="serializable-model-references">Serializable model references</h2>
+<p>Model attribute with reference to existing models or collections. Referenced objects <strong>will not</strong> be copied, destroyed, or validated as a part of the model.</p>
+<p>References can be either deeply observable <strong>or</strong> serializable.</p>
+<p>Serializable id-references is a Type-R way to describe many-to-one and many-to-many relashionship in JSON. Models must have an id to have serializable references. Serializable id-references are not observable.</p>
+<p>Id references represented as model ids in JSON and appears as regular models at run time. Ids are being resolved to actual model instances with lookup in the base collection <strong>on first attribute access</strong>, which allows the definition of a complex serializable object graphs consisting of multiple collections of cross-referenced models fetched asynchronously.</p>
+<h3 id="basecollection-parameter">baseCollection parameter</h3>
+<p><code>baseCollection</code> argument could be:</p>
+<ul>
+<li>a direct reference to the singleton collection object</li>
+<li>a function returning the collection which is called in a context of the model</li>
+<li>a symbolic path, which is a string with a dot-separated path resolved relative to the model&#39;s <code>this</code>.</li>
+</ul>
+<h3 id="attribute-modelclass-memberof-basecollection-"><code>attribute</code> : ModelClass.memberOf( baseCollection )</h3>
+<p>Model attribute holding serializable id-reference to a model from the base collection. Used to describe one-to-may relashioship with a model attribute represented in JSON as a model id.</p>
+<ul>
+<li>Attribute <strong>is</strong> serializable as <code>model.id</code></li>
+<li>Changes of enclosed model&#39;s attributes <strong>will not</strong> trigger the change of the attribute.</li>
+</ul>
+<p>Attribute can be assigned with either the model from the base collection or the model id. If there are no such a model in the base collection <strong>on the moment of first attribute access</strong>, the attribute value will be <code>null</code>.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-comment">// Nested collection of users.</span>
+    users : Collection.of( User ),
+
+    <span class="hljs-comment">// Model from `users` serializable as `user.id`</span>
+    selectedUser : memberOf( <span class="hljs-string">'users'</span> )
+}
+</code></pre>
+<h3 id="attribute-collection-subsetof-basecollection-"><code>attribute</code> : Collection.subsetOf( baseCollection )</h3>
+<p>Collection of id-references to models from base collection. Used to describe many-to-many relationship with a collection of models represented in JSON as an array of model ids. The subset collection itself <strong>will be</strong> be copied, destroyed, and validated as a part of the owner model, but not the models in it.</p>
+<ul>
+<li>Collection <strong>is</strong> serializable as <code>[ user1.id, user2.id, ... ]</code>.</li>
+<li>Changes of enclosed model&#39;s attributes <strong>will not</strong> trigger change of the collection.</li>
+</ul>
+<p>If some models are missing in the base collection <strong>on the moment of first attribute access</strong>, such a models will be removed from a subset collection.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-comment">// Nested collection of users.</span>
+    users : Collection.of( User ),
+
+    <span class="hljs-comment">// Collection with a subset of `users` serializable as an array of `user.id`</span>
+    selectedUsers : Collection.subsetOf( <span class="hljs-string">'users'</span> ) <span class="hljs-comment">// 'users' == function(){ return this.users }</span>
+}
+</code></pre>
+<h2 id="observable-references">Observable references</h2>
+<p>Non-serializable run time reference to models or collections. Used to describe a temporary observable application state.</p>
+<h3 id="attribute-refto-modelorcollection-"><code>attribute</code> : refTo( ModelOrCollection )</h3>
+<p>Model attribute holding a reference to a model or collection.</p>
+<ul>
+<li>Attribute <strong>is not</strong> serializable.</li>
+<li>Changes of enclosed model&#39;s attributes <strong>will</strong> trigger change of the model.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-attr">users</span> : refTo( Collection.of( User ) ),
+    <span class="hljs-attr">selectedUser</span> : refTo( User )
+}
+</code></pre>
+<h3 id="attribute-collection-ofrefsto-user-"><code>attribute</code> : Collection.ofRefsTo( User )</h3>
+<p>Collection of references to models. The collection itself <strong>will be</strong> be copied, destroyed, and validated as a part of the model, but not the models in it.</p>
+<ul>
+<li>Collection <strong>is not</strong> serializable.</li>
+<li>Changes of enclosed model&#39;s attributes <strong>will</strong> trigger change of the collection.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">static</span> attributes = {
+    <span class="hljs-attr">users</span> : Collection.of( User ),
+    <span class="hljs-attr">selectedUsers</span> : Collection.ofRefsTo( User )
+}
+</code></pre>
+<h2 id="attribute-metadata">Attribute metadata</h2>
+<h3 id="attribute-type-type-"><code>attribute</code> : type(Type)</h3>
+<p>In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the different models and projects. Such an object is called <em>attribute metatype</em>.</p>
+<p>Metadata is attached through a chain of calls after the <code>type( Ctor )</code> call. Attribute&#39;s default value is the most common example of such a metadata.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
+
+<span class="hljs-keyword">const</span> AString = type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"a"</span> );
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">a</span> : AString,
+        <span class="hljs-attr">b</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"b"</span> )
+    }
+}
+</code></pre>
+<h3 id="attribute-type-constructor-value-defaultvalue-"><code>attribute</code> : type(Constructor).value(defaultValue)</h3>
+<p>Declare an attribute with type Constructor having the custom <code>defaultValue</code>. Normally, all attributes are initialized with a default constructor call.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">phone</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-literal">null</span> ) <span class="hljs-comment">// String attribute which is null by default.</span>
+        ...
+    }
+}
+</code></pre>
+<h3 id="attribute-value-defaultvalue-"><code>attribute</code> : value( defaultValue )</h3>
+<p>Similar to <code>type( T ).value( x )</code>, but infers the type from the default value. So, for instance, <code>type( String )</code> is equivalent to <code>value(&quot;&quot;)</code>.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">a</span> : value( <span class="hljs-string">"a"</span> )
+    }
+}
+</code></pre>
+<h3 id="metatype-type-type-check-predicate-errormsg-"><code>metatype</code> type( Type ).check( predicate, errorMsg? )</h3>
+<p>Attribute-level validator.</p>
+<ul>
+<li><code>predicate : value =&gt; boolean</code> is the function taking attribute&#39;s value and returning <code>true</code> whenever the value is valid.</li>
+<li>optional <code>errorMsg</code> is the error message which will be passed in case if the validation fail.</li>
+</ul>
+<p>If <code>errorMsg</code> is omitted, error message will be taken from <code>predicate.error</code>. It makes possible to define reusable validation functions.</p>
+<pre><code class="highlight javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isAge</span>(<span class="hljs-params"> years </span>)</span>{
+    <span class="hljs-keyword">return</span> years &gt;= <span class="hljs-number">0</span> &amp;&amp; years &lt; <span class="hljs-number">200</span>;
+}
+
+isAge.error = <span class="hljs-string">"Age must be between 0 and 200"</span>;
+</code></pre>
+<p>Attribute may have any number of checks attached which are being executed in a sequence. Validation stops when first check in sequence fails.
+It can be used to define reusable attribute types as demonstrated below:</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define new attribute metatypes encapsulating validation checks.</span>
+<span class="hljs-keyword">const</span> Age = type( <span class="hljs-built_in">Number</span> )
+                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &gt;= <span class="hljs-number">0</span>, <span class="hljs-string">'I guess you are a bit older'</span> )
+                .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x == <span class="hljs-literal">null</span> || x &lt; <span class="hljs-number">200</span>, <span class="hljs-string">'No way man can be that old'</span> );
+
+<span class="hljs-keyword">const</span> Word = type( <span class="hljs-built_in">String</span> ).check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> indexOf( <span class="hljs-string">' '</span> ) &lt; <span class="hljs-number">0</span>, <span class="hljs-string">'No spaces allowed'</span> );
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">firstName</span> : Word,
+        <span class="hljs-attr">lastName</span> : Word,
+        <span class="hljs-attr">age</span> : Age
+    }
+}
+</code></pre>
+<h3 id="metatype-type-type-required"><code>metatype</code> type( Type ).required</h3>
+<p>The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, <code>&quot;Required&quot;</code> is used as validation error.</p>
+<p><code>isRequired</code> is the first validator to check, no matter in which order validators were attached.</p>
+<h3 id="attribute-type-type-get-hook-"><code>attribute</code> : type(Type).get(<code>hook</code>)</h3>
+<p>Attach get hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value right <em>before it will be read</em>. Hook is executed in the context of the model.</p>
+<h3 id="attribute-type-type-set-hook-"><code>attribute</code> : type(Type).set(<code>hook</code>)</h3>
+<p>Attach the set hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value <em>before it will be assigned</em>. Hook is executed in the context of the model.</p>
+<p>If set hook will return <code>undefined</code>, it will cancel attribute update.</p>
+<h3 id="metatype-type-type-tojson-false-"><code>metatype</code> type( Type ).toJSON( false )</h3>
+<p>Do <em>not</em> serialize the specific attribute.</p>
+<h3 id="metatype-type-type-tojson-value-name-options-json-"><code>metatype</code> type( Type ).toJSON( ( value, name, options ) =&gt; json )</h3>
+<p>Override the default serialization for the specific model&#39;s attribute.</p>
+<p>Attribute is not serialized when the function return <code>undefined</code>.</p>
+<h3 id="metatype-type-type-parse-json-name-value-"><code>metatype</code> type( Type ).parse( ( json, name ) =&gt; value )</h3>
+<p>Transform the data before it will be assigned to the model&#39;s attribute.</p>
+<p>Invoked when the <code>{ parse : true }</code> option is set.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom boolean attribute type which is serialized as 0 or 1.</span>
+<span class="hljs-keyword">const</span> MyWeirdBool = type( <span class="hljs-built_in">Boolean</span> )
+                      .parse( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-number">1</span> )
+                      .toJSON( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span> );
+</code></pre>
+<h3 id="metatype-type-type-watcher-watcher-"><code>metatype</code> type( Type ).watcher( watcher )</h3>
+<p>Attach custom reaction on attribute change. <code>watcher</code> can either be the model&#39;s method name or the function <code>( newValue, attr ) =&gt; void</code>. Watcher is executed in the context of the model.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : type( <span class="hljs-built_in">String</span> ).watcher( <span class="hljs-string">'onNameChange'</span> ),
+        <span class="hljs-attr">isAdmin</span> : <span class="hljs-built_in">Boolean</span>,
+    }
+
+    onNameChange(){
+        <span class="hljs-comment">// Cruel. But we need it for the purpose of the example.</span>
+        <span class="hljs-keyword">this</span>.isAdmin = <span class="hljs-keyword">this</span>.name.indexOf( <span class="hljs-string">'Admin'</span> ) &gt;= <span class="hljs-number">0</span>;
+    }
+}
+</code></pre>
+<h3 id="metatype-type-modelorcollection-changeevents-false-"><code>metatype</code> type( ModelOrCollection ).changeEvents( false )</h3>
+<p>Turn off observable changes for the attribute.</p>
+<p>Model automatically listens to change events of all nested models and collections triggering appropriate change events for its attributes. This declaration turns it off for the specific attribute.</p>
+<h3 id="metatype-type-type-events-eventname-handler-"><code>metatype</code> type( Type ).events({ eventName : handler, ... })</h3>
+<p>Automatically manage custom event subscription for the attribute. <code>handler</code> is either the method name or the handler function. <code>Type</code> needs to be a <code>Messenger</code> subclass from <code>@type-r/mixture</code> or include it as a mixin.</p>
+<p>Both <code>Model</code> and <code>Collection</code> includes <code>Messenger</code> as a mixin.</p>
+<h3 id="metatype-type-type-endpoint-endpoint-"><code>metatype</code> type( Type ).endpoint( <code>endpoint</code> )</h3>
+<p>Override or define an I/O endpoint for the specific model&#39;s attribute.</p>
+<h2 id="custom-attribute-metatypes">Custom attribute metatypes</h2>
+<p>&quot;Attribute metatype&quot; is the Type-R attribute type descriptor with metadata attached.
+Metatype is created by assigning the result of <code>type( T )</code> expression to some variable.</p>
+<p>The following attribute types are available from <code>@type-r/ext-types</code> package.</p>
+<h3 id="attribute-microsoftdate"><code>attribute</code> : MicrosoftDate</h3>
+<p><code>Date</code> attribute represented in JSON as Microsoft date (represented in JSON as string <code>/Date(timestamp)</code>)</p>
+<h3 id="attribute-timestamp"><code>attribute</code> : Timestamp</h3>
+<p><code>Date</code> attribute represented in JSON as UNIX timestamp (the result of <code>date.getTime()</code>).</p>
+<h3 id="attribute-integer"><code>attribute</code> : Integer</h3>
+<p><code>Number</code> attribute converting value to integer on assignment. Can be called as function.</p>
+<h3 id="attribute-email"><code>attribute</code> : Email</h3>
+<p><code>String</code> attribute with email validation check.</p>
+<h3 id="attribute-ipaddress"><code>attribute</code> : IPAddress</h3>
+<p><code>String</code> attribute with IP address validation check.</p>
+<h3 id="attribute-url"><code>attribute</code> : Url</h3>
+<p><code>String</code> attribute with URL validation check.</p>
+<h1 id="model-api">Model API</h1>
+<h2 id="create-and-dispose">Create and dispose</h2>
+<h3 id="new-model-attrs-options-">new Model( attrs?, options?)</h3>
+<p>Create the model. If no <code>attrs</code> is supplied, initialize it with defaults taken from the attributes definition.</p>
+<p>When no default value is explicitly provided for an attribute, it&#39;s initialized as <code>new AttributeType()</code> (just <code>AttributeType()</code> for primitives). When the default value is provided and it&#39;s not compatible with the attribute type, the value is converted to the proper type with <code>new Type( defaultValue )</code> call.</p>
+<p>If <code>{parse: true}</code> option is set the <code>attrs</code> is assumed to be the JSON. In this case, <code>model.parse( attr )</code> and attribute&#39;s <code>parse</code> hooks will be called to give you an option to transform the JSON.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span>  : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book({
+  <span class="hljs-attr">title</span>: <span class="hljs-string">"One Thousand and One Nights"</span>,
+  <span class="hljs-attr">author</span>: <span class="hljs-string">"Scheherazade"</span>
+});
+</code></pre>
+<h3 id="modelclass-from-attrs-options-">ModelClass.from(attrs, options?)</h3>
+<p>Create <code>RecordClass</code> from attributes. Similar to direct model creation, but supports additional option for strict data validation.
+If <code>{ strict : true }</code> option is passed the model validation will be performed immediately and an exception will be thrown in case of an error.</p>
+<p>Type-R always perform type checks on assignments, convert types, and reject improper updates reporting it as error. It won&#39;t, however, execute custom validation
+rules on every updates as validation is evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Fetch model with a given id.</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">await</span> Book.from({ <span class="hljs-attr">id</span> : <span class="hljs-number">5</span> }).fetch();
+
+<span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
+<span class="hljs-comment">// Throw an exception if validation fails.</span>
+<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
+</code></pre>
+<h3 id="static-modelclass-create-attrs-options-"><code>static</code> ModelClass.create( attrs, options )</h3>
+<p>Static factory function used internally by Type-R to create instances of the model.</p>
+<p>May be redefined in the abstract Model base class to make it serializable type.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-built_in">String</span>
+    }
+
+    <span class="hljs-keyword">static</span> create( attrs, options ){
+        <span class="hljs-keyword">switch</span>( attrs.type ){
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeA"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeA( attrs, options );
+            <span class="hljs-keyword">case</span> <span class="hljs-string">"typeB"</span> : <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> TypeB( attrs, options );
+        }
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeA"</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TypeB</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Widget</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">type</span> : <span class="hljs-string">"typeB"</span>,
+        ...
+    }
+}
+</code></pre>
+<h3 id="model-clone-">model.clone()</h3>
+<p>Create the deep copy of the aggregation tree, recursively cloning all aggregated models and collections. References to shared members will be copied, but not shared members themselves.</p>
+<h3 id="callback-model-initialize-attrs-options-"><code>callback</code> model.initialize(attrs?, options?)</h3>
+<p>Called at the end of the <code>Model</code> constructor when all attributes are assigned and the model&#39;s inner state is properly initialized. Takes the same arguments as
+a constructor.</p>
+<h3 id="model-dispose-">model.dispose()</h3>
+<p>Recursively dispose the model and its aggregated members. &quot;Dispose&quot; means that elements of the aggregation tree will unsubscribe from all event sources. It&#39;s crucial to prevent memory leaks in SPA.</p>
+<p>The whole aggregation tree will be recursively disposed, shared members won&#39;t.</p>
+<h2 id="read-and-update">Read and update</h2>
+<h3 id="model-cid">model.cid</h3>
+<p>Read-only client-side model&#39;s identifier. Generated upon creation of the model and is unique for every model&#39;s instance. Cloned models will have different <code>cid</code>.</p>
+<h3 id="model-id">model.id</h3>
+<p>Predefined model&#39;s attribute, the <code>id</code> is an arbitrary string (integer id or UUID). <code>id</code> is typically generated by the server. It is used in JSON for id-references.</p>
+<p>Records can be retrieved by <code>id</code> from collections, and there can be just one instance of the model with the same <code>id</code> in the particular collection.</p>
+<h3 id="model-attrname">model.attrName</h3>
+<p>Model&#39;s attributes can be directly accessed with their names as a regular class properties.</p>
+<p>If the value is not compatible with attribute&#39;s type from the declaration on assignment, it is converted with <code>Type( value )</code> call for primitive types, and with <code>new Type( value )</code> for other types.</p>
+<p>There is an important exception in type convertion logic for models and collections. Instead of applying a contructor, Type-R will try to update existing model and collection instances in place calling their <code>set()</code> method instead. This logic keeps the model and collection references stable and safe to pass around.</p>
+<p>Model triggers events on changes:</p>
+<ul>
+<li><code>change:attrName</code> <em>( model, value )</em>.</li>
+<li><code>change</code> <em>( model )</em>.</li>
+</ul>
+<aside class="warning">Please note, that you *have to declare all attributes* in `static attributes` declaration.</aside>
+
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-built_in">String</span>
+        price : <span class="hljs-built_in">Number</span>,
+        <span class="hljs-attr">publishedAt</span> : <span class="hljs-built_in">Date</span>,
+        <span class="hljs-attr">available</span> : <span class="hljs-built_in">Boolean</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> myBook = <span class="hljs-keyword">new</span> Book({ <span class="hljs-attr">title</span> : <span class="hljs-string">"State management with Type-R"</span> });
+myBook.author = <span class="hljs-string">'Vlad'</span>; <span class="hljs-comment">// That works.</span>
+myBook.price = <span class="hljs-string">'Too much'</span>; <span class="hljs-comment">// Converted with Number( 'Too much' ), resulting in NaN.</span>
+myBook.price = <span class="hljs-string">'123'</span>; <span class="hljs-comment">// = Number( '123' ).</span>
+myBook.publishedAt = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(); <span class="hljs-comment">// Type is compatible, no conversion.</span>
+myBook.publishedAt = <span class="hljs-string">'1678-10-15 12:00'</span>; <span class="hljs-comment">// new Date( '1678-10-15 12:00' )</span>
+myBook.available = some &amp;&amp; weird || condition; <span class="hljs-comment">// Will always be Boolean. Or null.</span>
+</code></pre>
+<h3 id="model-set-attrname-value-options-options-">model.set({ attrName : value, ... }, options? : <code>options</code>)</h3>
+<p>Bulk assign model&#39;s attributes using the same logic as attribute&#39;s assignment.</p>
+<p>Model will trigger <code>change:attrName</code> <em>( model, value )</em> event per changed attribute and a single <code>change</code> <em>( model )</em> event at the end.</p>
+<h3 id="model-transaction-fun-">model.transaction(fun)</h3>
+<p>Execute the all changes made to the model in <code>fun</code> as single transaction triggering the single <code>change</code> event at the end.</p>
+<p>All model updates occurs in the scope of transactions. Transaction is the sequence of changes which results in a single <code>change</code> event.
+Transaction can be opened either manually or implicitly with calling <code>set()</code> or assigning an attribute.
+Any additional changes made to the model in <code>change:attr</code> event handler will be executed in the scope of the original transaction, and won&#39;t trigger additional <code>change</code> events.</p>
+<pre><code class="highlight javascript">some.model.transaction( <span class="hljs-function"><span class="hljs-params">model</span> =&gt;</span> {
+    model.a = <span class="hljs-number">1</span>; <span class="hljs-comment">// `change:a` event is triggered.</span>
+    model.b = <span class="hljs-number">2</span>; <span class="hljs-comment">// `change:b` event is triggered.</span>
+}); <span class="hljs-comment">// `change` event is triggered.</span>
+</code></pre>
+<p>Manual transactions with attribute assignments are superior to <code>model.set()</code> in terms of both performance and flexibility.</p>
+<h3 id="model-assignfrom-otherrecord-">model.assignFrom(otherRecord)</h3>
+<p>Makes an existing <code>model</code> to be the full clone of <code>otherRecord</code>, recursively assigning all attributes.
+In contracts to <code>model.clone()</code>, the model is updated in place.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.assignFrom(bestSeller);
+</code></pre>
+<h2 id="validation">Validation</h2>
+<h3 id="overview">Overview</h3>
+<p>Type-R supports validation API allowing developer to attach custom validation rules to attributes, models, and collections. Type-R validation mechanics based on following principles:</p>
+<ul>
+<li>Validation happens transparently on the first access to the validation error. There&#39;s no special API to trigger the validation.</li>
+<li>Validation is performed recursively on the aggregated models. If a model at the bottom of the model tree is not valid all its owners are not valid as well.</li>
+<li>Validation results are cached across the models and collections, thus consequent validation error reads are cheap. Only changed models and collections will be validated again when necessary.</li>
+</ul>
+<h3 id="model-isvalid-attr-">model.isValid( attr? )</h3>
+<p>When called without arguments, returns <code>true</code> if the model is valid having the same effect as <code>!model.getValidationError()</code>.</p>
+<p>When attr name is specified, returns <code>true</code> if the particular attribute is valid having the same effect as <code>!model.getValidationError( attrName )</code></p>
+<h3 id="model-getvalidationerror-attrname-">model.getValidationError( attrName? )</h3>
+<p>Return the validation error object for the model or the given attribute, or return <code>null</code> if there&#39;s no error.</p>
+<p>When called without arguments and when the attribute is another model or collection the <code>ValidationError</code> object is returned which is an internal Type-R validation cache. It has the following shape:</p>
+<pre><code class="highlight javascript">{
+    <span class="hljs-attr">error</span> : <span class="hljs-comment">/* as returned from collection.validate() */</span>,
+
+    <span class="hljs-comment">// Members validation errors.</span>
+    nested : {
+        <span class="hljs-comment">// key is an attrName for the model, and model.cid for the collcation</span>
+        key : validationError,
+        ...
+    }
+}
+</code></pre>
+<h3 id="callback-model-validate-"><code>callback</code> model.validate()</h3>
+<p>Override this method to define model-level validation rules. Whatever is returned from <code>validate()</code> is treated as validation error.</p>
+<aside class="notice">Do not call this method directly, that's not the way how validation works.</aside>
+
+<h3 id="model-eachvalidationerror-iteratee-error-key-obj-void-">model.eachValidationError( iteratee : ( error, key, obj ) =&gt; void )</h3>
+<p>Recursively traverse validation errors in all aggregated models.</p>
+<p><code>iteratee</code> is a function taking following arguments:</p>
+<ul>
+<li><code>error</code> is the value of the error as specified at <code>type( T ).check( validator, error )</code> or returned by <code>validate()</code> callback.</li>
+<li><code>obj</code> is the reference to the current model or collection having an error.</li>
+<li><code>key</code> is:<ul>
+<li>an attribute name for a model.</li>
+<li>model.id for collection.</li>
+<li><code>null</code> for the object-level validation error returned by <code>validate()</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="i-o">I/O</h2>
+<h3 id="model-isnew-">model.isNew()</h3>
+<p>Has this model been saved to the server yet? If the model does not yet have an <code>id</code>, it is considered to be new.</p>
+<h3 id="async-model-fetch-options-"><code>async</code> model.fetch( options? )</h3>
+<p>Asynchronously fetch the model using <code>endpoint.read()</code> method. Returns an abortable ES6 promise.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="async-model-save-options-"><code>async</code> model.save( options? )</h3>
+<p>Asynchronously save the model using <code>endpoint.create()</code> (if there are no id) or <code>endpoint.update()</code> (if id is present) method. Returns an abortable ES6 promise.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="async-model-destroy-options-"><code>async</code> model.destroy( options? )</h3>
+<p>Asynchronously destroy the model using <code>endpoint.destroy()</code> method. Returns an abortable ES6 promise. The model is removed from the aggregating collection upon the completion of the I/O request.</p>
+<p>An endpoint must be defined for the model in order to use that method.</p>
+<h3 id="model-haspendingio-">model.hasPendingIO()</h3>
+<p>Returns an promise if there&#39;s any I/O pending with the object, or <code>null</code> otherwise. Can be used to check for active I/O in progress.</p>
+<h3 id="model-getendpoint-">model.getEndpoint()</h3>
+<p>Returns an model&#39;s IO endpoint. Normally, this is an endpoint which is defined in object&#39;s <code>static endpoint = ...</code> declaration, but it might be overridden by the parent&#39;s model using <code>type( Type ).endpoint( ... )</code> attribute declaration.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+    ...
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserRole</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-comment">// Use the relative path '/api/roles/:id/users'</span>
+        users : type( User.Collection ).endpoint( restfulIO( <span class="hljs-string">'./users'</span> ) ),
+        ...
+    }
+}
+</code></pre>
+<h3 id="model-tojson-options-">model.toJSON( options? )</h3>
+<p>Serialize model or collection to JSON. Used internally by <code>save()</code> I/O method (<code>options.ioMethod === &#39;save&#39;</code> when called from within <code>save()</code>). Can be overridden to customize serialization.</p>
+<p>Produces the JSON for the given model or collection and its aggregated members. Aggregation tree is serialized as nested JSON. Model corresponds to an object in JSON, while the collection is represented as an array of objects.</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Serialization can be controlled on per-attribute level with <b>type( Type ).toJSON()</b> declaration.
+</aside>
+
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Comment</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BlogPost</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">comments</span> : Comment.Collection
+    }
+}
+
+<span class="hljs-keyword">const</span> post = <span class="hljs-keyword">new</span> BlogPost({
+    <span class="hljs-attr">title</span>: <span class="hljs-string">"Type-R is cool!"</span>,
+    <span class="hljs-attr">comments</span> : [ { <span class="hljs-attr">body</span> : <span class="hljs-string">"Agree"</span> }]
+});
+
+<span class="hljs-keyword">const</span> rawJSON = post.toJSON()
+<span class="hljs-comment">// { title : "Type-R is cool!", body : "", comments : [{ body : "Agree" }] }</span>
+</code></pre>
+<h3 id="option-parse-true-"><code>option</code> { parse : true }</h3>
+<p><code>obj.set()</code> and constructor&#39;s option to force parsing of the raw JSON. Is used internally by I/O methods to parse the data received from the server.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Another way of doing the bestSeller.clone()</span>
+<span class="hljs-comment">// Amazingly, this is guaranteed to work by default.</span>
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.set( bestSeller.toJSON(), { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
+</code></pre>
+<h3 id="callback-model-parse-json-options-"><code>callback</code> model.parse( json, options? )</h3>
+<p>Optional hook called to transform the JSON when it&#39;s passes to the model or collection with <code>set( json, { parse : true })</code> call. Used internally by I/O methods (<code>options.ioMethod</code> is either &quot;save&quot; or &quot;fetch&quot; when called from I/O method).</p>
+<p>If you override <code>toJSON()</code>, it usually means that you must override <code>parse()</code> as well, and vice versa.</p>
+<aside class="notice">
+Parsing can be controlled on per-attribute level with <b>type( Type ).parse()</b> declaration.
+</aside>
+
+<h2 id="change-events">Change events</h2>
+<p>Type-R implements <em>deeply observable changes</em> on the object graph constructed of models and collection.</p>
+<p>All of the model and collection updates happens in a scope of the transaction followed by the change event. Every model or collection update operation opens <em>implicit</em> transaction. Several update operations can be groped to the single <em>explicit</em> transaction if executed in the scope of the <code>obj.transaction()</code> or <code>col.updateEach()</code> call.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Author</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">datePublished</span> : <span class="hljs-built_in">Date</span>,
+        <span class="hljs-attr">author</span> : Author
+    }
+}
+
+<span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> Book();
+book.on( <span class="hljs-string">'change'</span>, () =&gt; <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'Book is changed'</span>) );
+
+<span class="hljs-comment">// Implicit transaction, prints to the console</span>
+book.author.name = <span class="hljs-string">'John Smith'</span>;
+</code></pre>
+<h3 id="events-mixin-methods-7-">Events mixin methods (7)</h3>
+<p>Model implements <a href="#events-mixin">Events</a> mixin.</p>
+<h3 id="event-change-model-"><code>event</code> &quot;change&quot; ( model )</h3>
+<p>Triggered by the model at the end of the attributes update transaction in case if there were any changes applied.</p>
+<h3 id="event-change-attrname-model-value-"><code>event</code> &quot;change:attrName&quot; ( model, value )</h3>
+<p>Triggered by the model during the attributes update transaction for every changed attribute.</p>
+<h3 id="model-changed">model.changed</h3>
+<p>The <code>changed</code> property is the internal hash containing all the attributes that have changed during its last transaction.
+Please do not update <code>changed</code> directly since its state is internally maintained by <code>set()</code>.
+A copy of <code>changed</code> can be acquired from <code>changedAttributes()</code>.</p>
+<h3 id="model-changedattributes-attrs-">model.changedAttributes( attrs? )</h3>
+<p>Retrieve a hash of only the model&#39;s attributes that have changed during the last transaction,
+or false if there are none. Optionally, an external attributes hash can be passed in,
+returning the attributes in that hash which differ from the model.
+This can be used to figure out which portions of a view should be updated,
+or what calls need to be made to sync the changes to the server.</p>
+<h3 id="model-previous-attr-">model.previous( attr )</h3>
+<p>During a &quot;change&quot; event, this method can be used to get the previous value of a changed attribute.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span></span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> bill = <span class="hljs-keyword">new</span> Person({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">"Bill Smith"</span>
+});
+
+bill.on(<span class="hljs-string">"change:name"</span>, ( model, name ) =&gt; {
+  alert( <span class="hljs-string">`Changed name from <span class="hljs-subst">${ bill.previous(<span class="hljs-string">'name'</span>) }</span> to <span class="hljs-subst">${ name }</span>`</span>);
+});
+
+bill.name = <span class="hljs-string">"Bill Jones"</span>;
+</code></pre>
+<h3 id="model-previousattributes-">model.previousAttributes()</h3>
+<p>Return a copy of the model&#39;s previous attributes. Useful for getting a diff between versions of a model, or getting back to a valid state after an error occurs.</p>
+<h2 id="other">Other</h2>
+<h3 id="model-getowner-">model.getOwner()</h3>
+<p>If the model is an nested in an aggregated attribute return the owner model or <code>null</code> otherwise.
+If the model is a member of an <code>Collection.of( ModelType )</code>, the collection will be bypassed and the owner of the collection will be returned.</p>
+<h3 id="model-collection">model.collection</h3>
+<p>If the model is a member of a some <code>Collection.of( ModelType )</code> return this collection or <code>null</code> otherwise.</p>
+<h1 id="collection-api">Collection API</h1>
+<h2 id="overview">Overview</h2>
+<p>Collection is an ordered sets of models represented in JSON as an array of objects. In run time, it&#39;s encapsulates JS Array of models (<code>collection.models</code>) and an object hashmap by the model&#39;s <code>id</code>/<code>cid</code> for a fast O(1) look-ups. Collections expose ES6 Array and BackboneJS Collection API.</p>
+<p>Collections are deeply observable. They emit the full set of Backbone Collection events (add, remove, change, etc) having the same semantic plus &quot;changes&quot; event triggered once when the processing of other change events is finished.</p>
+<p>In most cases you don&#39;t need to define collection class manually, although you may. Every <code>Model</code> class has an implicitly defined <code>Collection</code>.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>
+        author : Author
+    }
+}
+
+<span class="hljs-comment">// Access an implicitly defined collection.</span>
+<span class="hljs-keyword">const</span> books = Collection.of( Book ).create();
+</code></pre>
+<h2 id="create-and-dispose">Create and dispose</h2>
+<h3 id="callback-collection-initialize-models-options-"><code>callback</code> collection.initialize( models?, options? )</h3>
+<p>Initialization function which is called at the end of the constructor.</p>
+<h3 id="constructor-collection-of-modelclass-"><code>constructor</code> Collection.of( ModelClass )</h3>
+<p>The most common collection type is an <strong>aggregating serializable collection</strong>. By default, collection aggregates its elements which are treated as an integral part of the collection (serialized, cloned, disposed, and validated recursively). An aggregation means the <em>single owner</em>, as the single object cannot be an integral part of two distinct things. The collection will take ownership on its models and will put an error in the console if it can&#39;t.</p>
+<p>When creating a Collection, you may choose to pass in the initial array of models.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> roles = <span class="hljs-keyword">new</span> Role.Collection( json, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> } );
+</code></pre>
+<h3 id="constructor-collection-ofrefsto-modelclass-"><code>constructor</code> Collection.ofRefsTo( ModelClass )</h3>
+<p>Collection of model references is a <strong>non-aggregating non-serializable collection</strong>. <code>Collection.Refs</code> doesn&#39;t aggregate its elements, which means that containing models are not considered as an integral part of the enclosing collection and not being validated, cloned, disposed, and serialized recursively.</p>
+<p>It is useful for a local non-persistent application state.</p>
+<h3 id="new-collectionclass-models-options-">new CollectionClass( models?, options? )</h3>
+<h3 id="collectionclass-create-models-options-">CollectionClass.create( models?, options? )</h3>
+<h3 id="collection-clone-">collection.clone()</h3>
+<p>Clone the collection. An aggregating collection will be recursively cloned, non-aggregated collections will be shallow cloned.</p>
+<h3 id="collectionclass-from-models-options-">CollectionClass.from( models, options? )</h3>
+<p>Create <code>CollectionClass</code> from the array of models. Similar to direct collection creation, but supports additional option for strict data validation.
+If <code>{ strict : true }</code> option is passed the validation will be performed and an exception will be thrown in case of an error.</p>
+<p>Please note, that Type-R always performs type checks on assignments, convert types, and reject improper updates reporting it as an error. It won&#39;t, however, execute custom validation
+rules on every update as they are evaluated lazily. <code>strict</code> option will invoke custom validators and will throw on every error or warning instead of reporting them and continue.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Validate the body of an incoming HTTP request.</span>
+<span class="hljs-comment">// Throw an exception if validation fails.</span>
+<span class="hljs-keyword">const</span> body = MyRequestBody.from( ctx.request.body, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">strict</span> : <span class="hljs-literal">true</span> });
+</code></pre>
+<h3 id="collection-dispose-">collection.dispose()</h3>
+<p>Dispose of the collection. An aggregating collection will recursively dispose of its models.</p>
+<p>All changes in the models cause change events in the collections they are contained in.</p>
+<p>Subset collections is an exception; they don&#39;t observe changes of its elements by default.</p>
+<h3 id="collection-createsubset-models-options-">collection.createSubset( models?, options? )</h3>
+<p>Creates a collection which is an instance of <code>Collection.subsetOf( sourceCollection )</code> attribute type.
+ Takes the same arguments as the collection&#39;s constructor.</p>
+<p>Subset collections are serializable as an array of model ids. Create the collection which is a subset of a source collection.</p>
+<aside class="notice">
+Records in the collection must have an `id` attribute populated to work properly with subsets.
+</aside>
+
+<p>The subset of other collections are <strong>non-aggregating serializable collection</strong>. Subset-of collection is serialized as an array of model ids and used to model many-to-many relationships. The collection object itself is recursively created and cloned, however, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed. <code>CollectionClass</code> argument may be omitted unless you need the model&#39;s attribute to be an instance of the particular collection class.</p>
+<aside class="notice">
+<b>subsetOf</b> collections are not deeply observable.
+</aside>
+
+<aside class="notice">
+Since its an attribute <i>metatype</i> (combination of type and attribute metadata), it's not a real constructor and cannot be used with <b>new</b>. Use <b>collection.createSubset()</b> method to create subset-of collection instances.
+</aside>
+
+<p>Must have a reference to the master collection which is used to resolve model ids to models. <code>masterRef</code> may be:</p>
+<ul>
+<li>direct reference to a singleton collection.</li>
+<li>function, returning the reference to the collection.</li>
+<li>symbolic dot-separated path to the master collection resolved relative to the model&#39;s <code>this</code>. You may use <code>owner</code> and <code>store</code> macro in path:<ul>
+<li><code>owner</code> is the reference to the model&#39;s owner. <code>owner.some.path</code> works as <code>() =&gt; this.getOwner().some.path</code>.</li>
+<li><code>store</code> is the reference to the closes store. <code>store.some.path</code> works as <code>() =&gt; this.getStore().some.path</code>.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : subsetOf( <span class="hljs-string">'owner.roles'</span>, Role.Collection )
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UsersDirectory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">roles</span> : Role.Collection,
+        <span class="hljs-attr">users</span> : User.Collection <span class="hljs-comment">// `~roles` references will be resolved against this.roles</span>
+    }
+}
+</code></pre>
+<h2 id="read-and-update">Read and update</h2>
+<p>Common options used by Backbone API methods:</p>
+<ul>
+<li><code>{ sort : false }</code> - do not sort the collection.</li>
+<li><code>{ parse : true }</code> - parse raw JSON (used to set collection with data from the server).</li>
+</ul>
+<h3 id="collection-assignfrom-othercollection-">collection.assignFrom( otherCollection )</h3>
+<p>Synchronize the state of the collection and its aggregation tree with other collection of the same type. Updates existing objects in place. Model in the collection is considered to be &quot;existing&quot; if it has the same <code>id</code>.</p>
+<p>Equivalent to <code>collection.set( otherCollection.models, { merge : true } )</code> and triggers similar events on change.</p>
+<h3 id="collection-models">collection.models</h3>
+<p>Raw access to the JavaScript array of models inside of the collection. Usually, you&#39;ll want to use <code>get</code>, <code>at</code>, or the other methods to access model objects, but occasionally a direct reference to the array is desired.</p>
+<h3 id="collection-get-id-">collection.get( id )</h3>
+<p>Get a model from a collection, specified by an <code>id</code>, a <code>cid</code>, or by passing in a model.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> book = library.get(<span class="hljs-number">110</span>);
+</code></pre>
+<h3 id="collection-at-index-">collection.at( index )</h3>
+<p>Get a model from a collection, specified by index. Useful if your collection is sorted, and if your collection isn&#39;t sorted, at will still retrieve models in insertion order. When passed a negative index, it will retrieve the model from the back of the collection.</p>
+<h3 id="collection-add-models-options-">collection.add( models, options? )</h3>
+<p>Add a model (or an array of models) to the collection. If this is the <code>Model.Collection</code>, you may also pass raw attributes objects, and have them be vivified as instances of the <code>Model</code>. Returns the added (or preexisting, if duplicate) models.</p>
+<p>Pass <code>{at: index}</code> to splice the model into the collection at the specified index. If you&#39;re adding models to the collection that are already in the collection, they&#39;ll be ignored, unless you pass <code>{merge: true}</code>, in which case their attributes will be merged into the corresponding models.</p>
+<ol>
+<li>Trigger the one event per model:<ul>
+<li><code>add</code>(model, collection, options) for each model added.</li>
+<li><code>change</code>(model, options) for each model changed (if the <code>{merge: true}</code> option is passed).</li>
+</ul>
+</li>
+<li>Trigger the single event:<ul>
+<li><code>update</code>(collection, options) if any models were added.</li>
+<li><code>sort</code>(collection, options) if an order of models was changed.</li>
+</ul>
+</li>
+<li>Trigger <code>changes</code> event in case if any changes were made to the collection and objects inside.</li>
+</ol>
+<h3 id="collection-remove-models-options-">collection.remove( models, options? )</h3>
+<p>Remove a model (or an array of models) from the collection, and return them. Each model can be a model instance, an id string or a JS object, any value acceptable as the id argument of collection.get.</p>
+<ol>
+<li>Trigger <code>remove</code>(model, collection, options) for each model removed.</li>
+<li>If any models were removed, trigger:<ul>
+<li><code>update</code>(collection, options)</li>
+<li><code>changes</code>(collection, options).</li>
+</ul>
+</li>
+</ol>
+<h3 id="collection-set-models-options-">collection.set( models, options? )</h3>
+<p>The set method performs a &quot;smart&quot; update of the collection with the passed list of models. If a model in the list isn&#39;t yet in the collection it will be added; if the model is already in the collection its attributes will be merged; and if the collection contains any models that aren&#39;t present in the list, they&#39;ll be removed. All of the appropriate &quot;add&quot;, &quot;remove&quot;, and &quot;change&quot; events are fired as this happens. Returns the touched models in the collection. If you&#39;d like to customize the behavior, you can disable it with options: <code>{remove: false}</code>, or <code>{merge: false}</code>.</p>
+<h4 id="events">Events</h4>
+<ol>
+<li>Trigger the one event per model:<ul>
+<li><code>add</code>(model, collection, options) for each model added.</li>
+<li><code>remove</code>(model, collection, options) for each model removed.</li>
+<li><code>change</code>(model, options) for each model changed.</li>
+</ul>
+</li>
+<li>Trigger the single event:<ul>
+<li><code>update</code>(collection, options) if any models were added.</li>
+<li><code>sort</code>(collection, options) if an order of models was changed.</li>
+</ul>
+</li>
+<li>Trigger <code>changes</code> event in case if any changes were made to the collection and objects inside.</li>
+</ol>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> vanHalen = <span class="hljs-keyword">new</span> Man.Collection([ eddie, alex, stone, roth ]);
+
+vanHalen.set([ eddie, alex, stone, hagar ]);
+
+<span class="hljs-comment">// Fires a "remove" event for roth, and an "add" event for hagar.</span>
+<span class="hljs-comment">// Updates any of stone, alex, and eddie's attributes that may have</span>
+<span class="hljs-comment">// changed over the years.</span>
+</code></pre>
+<h3 id="collection-reset-models-options-">collection.reset(models, options?)</h3>
+<p>Replace the collection&#39;s content with the new models. More efficient than <code>collection.set</code>, but does not send model-level events.</p>
+<p>Calling <code>collection.reset()</code> without passing any models as arguments will empty the entire collection.</p>
+<ol>
+<li>Trigger event <code>reset</code>(collection, options).</li>
+<li>Trigger event <code>changes</code>(collection, options).</li>
+</ol>
+<h3 id="collection-pluck-attribute-">collection.pluck(attribute)</h3>
+<p>Pluck an attribute from each model in the collection. Equivalent to calling map and returning a single attribute from the iterator.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> users = <span class="hljs-keyword">new</span> UserCollection([
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Curly"</span>},
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Larry"</span>},
+  {<span class="hljs-attr">name</span>: <span class="hljs-string">"Moe"</span>}
+]);
+
+<span class="hljs-keyword">const</span> names = users.pluck(<span class="hljs-string">"name"</span>);
+
+alert(<span class="hljs-built_in">JSON</span>.stringify(names));
+</code></pre>
+<h2 id="array-api">Array API</h2>
+<p>A collection class is an array-like object implementing ES6 Array methods and properties.</p>
+<h3 id="collection-length">collection.length</h3>
+<p>Like an array, a Collection maintains a length property, counting the number of models it contains.</p>
+<h3 id="collection-slice-begin-end-">collection.slice( begin, end )</h3>
+<p>Return a shallow copy of the <code>collection.models</code>, using the same options as native Array#slice.</p>
+<h3 id="collection-indexof-recordorid-any-number">collection.indexOf( recordOrId : any ) : number</h3>
+<p>Return an index of the model in the collection, and -1 if there is no such a model in the collection.</p>
+<p>Can take the model itself as an argument, <code>id</code>, or <code>cid</code> of the model.</p>
+<h3 id="collection-foreach-iteratee-val-model-index-void-context-">collection.forEach( iteratee : ( val : Model, index ) =&gt; void, context? )</h3>
+<p>Iterate through the elements of the collection.</p>
+<aside class="notice">Use <code>collection.updateEach( iteratee, index )</code> method to update models in a loop.</aside>
+
+<h3 id="collection-map-iteratee-val-model-index-t-context-">collection.map( iteratee : ( val : Model, index ) =&gt; T, context? )</h3>
+<p>Map elements of the collection. Similar to <code>Array.map</code>.</p>
+<h3 id="collection-filter-iteratee-predicate-context-">collection.filter( iteratee : Predicate, context? )</h3>
+<p>Return the filtered array of models matching the predicate.</p>
+<p>The predicate is either the iteratee function returning boolean, or an object with attribute values used to match with model&#39;s attributes.</p>
+<h3 id="collection-every-iteratee-predicate-context-boolean">collection.every( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if all models match the predicate.</p>
+<h3 id="collection-some-iteratee-predicate-context-boolean">collection.some( iteratee : Predicate, context? ) : boolean</h3>
+<p>Return <code>true</code> if at least one model matches the predicated.</p>
+<h3 id="collection-push-model-options-">collection.push( model, options? )</h3>
+<p>Add a model at the end of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-pop-options-">collection.pop( options? )</h3>
+<p>Remove and return the last model from a collection. Takes the same options as <code>remove()</code>.</p>
+<h3 id="collection-unshift-model-options-">collection.unshift( model, options? )</h3>
+<p>Add a model at the beginning of a collection. Takes the same options as <code>add()</code>.</p>
+<h3 id="collection-shift-options-">collection.shift( options? )</h3>
+<p>Remove and return the first model from a collection. Takes the same options as <code>remove()</code>.</p>
+<h2 id="sorting">Sorting</h2>
+<p>Type-R implements BackboneJS Collection sorting API with some extensions.</p>
+<h3 id="collection-sort-options-">collection.sort(options?)</h3>
+<p>Force a collection to re-sort itself. You don&#39;t need to call this under normal circumstances, as a collection with a comparator will sort itself whenever a model is added. To disable sorting when adding a model, pass <code>{sort: false}</code> to add. Calling sort triggers a &quot;sort&quot; event on the collection.</p>
+<p>By default, there is no comparator for a collection. If you define a comparator, it will be used to maintain the collection in sorted order. This means that as models are added, they are inserted at the correct index in <code>collection.models</code>.</p>
+<p>Note that Type-R depends on the arity of your comparator function to determine between the two styles, so be careful if your comparator function is bound.</p>
+<p>Collections with a comparator will not automatically re-sort if you later change model attributes, so you may wish to call sort after changing model attributes that would affect the order.</p>
+<h3 id="static-comparator-attrname-"><code>static</code> comparator = &#39;attrName&#39;</h3>
+<p>Maintain the collection in sorted order by the given model&#39;s attribute.</p>
+<h3 id="static-comparator-x-number-string"><code>static</code> comparator = x =&gt; number | string</h3>
+<p>Maintain the collection in sorted order according to the &quot;sortBy&quot; comparator function.</p>
+<p>&quot;sortBy&quot; comparator functions take a model and return a numeric or string value by which the model should be ordered relative to others.</p>
+<h3 id="static-comparator-x-y-1-0-1"><code>static</code> comparator = (x, y) =&gt; -1 | 0 | 1</h3>
+<p>Maintain the collection in sorted order according to the &quot;sort&quot; comparator function.</p>
+<p>&quot;sort&quot; comparator functions take two models and return -1 if the first model should come before the second, 0 if they are of the same rank and 1 if the first model should come after.</p>
+<p>Note how even though all of the chapters in this example are added backward, they come out in the proper order:</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Chapter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">page</span> : <span class="hljs-built_in">Number</span>,
+        <span class="hljs-attr">title</span> : <span class="hljs-built_in">String</span>
+    }
+}
+
+<span class="hljs-keyword">var</span> chapters = <span class="hljs-keyword">new</span> Chapter.Collection();
+
+chapters.comparator = <span class="hljs-string">'page'</span>;
+
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The End"</span>});
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The Middle"</span>});
+chapters.add({<span class="hljs-attr">page</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">"The Beginning"</span>});
+
+alert(chapters.map( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.title ));
+</code></pre>
+<h2 id="validation">Validation</h2>
+<p>Collection implements the same validation API as the model, excepts that it uses model ids instead of the attribute names.</p>
+<h2 id="i-o">I/O</h2>
+<h3 id="async-collection-fetch-options-"><code>async</code> collection.fetch( options? )</h3>
+<p>Fetch the collection. Returns an abortable promise.</p>
+<p><code>options</code> accepts an optional <code>liveUpdates</code> parameter. When <code>true</code>, collection subscribes for the live updates when I/O is finished.</p>
+<h3 id="collection-liveupdates-true-false-">collection.liveUpdates( true | false )</h3>
+<p>Subscribe for the live data updates if an I/O endpoint supports it (<code>subscribe()</code>/<code>unsubscribe()</code> IOEndpoint methods).</p>
+<aside class="notice">
+No built-in I/O enpoints support that functionality yet.
+</aside>
+
+<h3 id="collection-haspendingio-">collection.hasPendingIO()</h3>
+<p>Returns a promise if there&#39;s any I/O pending with the object, or <code>null</code> otherwise.
+Can be used to check for active I/O in progress.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> promise = users.hasPendingIO();
+<span class="hljs-keyword">if</span>( promise &amp;&amp; promise.abort ) promise.abort();
+</code></pre>
+<h2 id="change-events">Change events</h2>
+<h3 id="events-mixin-methods-7-">Events mixin methods (7)</h3>
+<p>Collection implements <a href="#events-mixin">Events</a> mixin.</p>
+<h3 id="collection-transaction-fun-">collection.transaction( fun )</h3>
+<p>Execute the sequence of updates in <code>fun</code> function in the scope of the transaction.</p>
+<p>All collection updates occurs in the scope of transactions. Transaction is the sequence of changes which results in a single <code>changes</code> event.</p>
+<p>Transaction can be opened either manually or implicitly with calling any of collection update methods.
+Any additional changes made to the collection or its items in event handlers will be executed in the scope of the original transaction, and won&#39;t trigger an additional <code>changes</code> events.</p>
+<h3 id="collection-updateeach-iteratee-val-model-index-void-context-">collection.updateEach( iteratee : ( val : Model, index ) =&gt; void, context? )</h3>
+<p>Similar to the <code>collection.each</code>, but wraps an iteration in a transaction. The single <code>changes</code> event will be emitted for the group of changes to the models made in <code>updateEach</code>.</p>
+<h3 id="static-itemevents-eventname-handler-"><code>static</code> itemEvents = { eventName : <code>handler</code>, ... }</h3>
+<p>Subscribe for events from models. The <code>hander</code> is either the collection&#39;s method name, the handler function, or <code>true</code>.</p>
+<p>When <code>true</code> is passed as a handler, the corresponding event will be triggered on the collection.</p>
+<h3 id="event-changes-collection-options-"><code>event</code> &quot;changes&quot; (collection, options)</h3>
+<p>When collection has changed. Single event triggered when the collection has been changed.</p>
+<h3 id="event-reset-collection-options-"><code>event</code> &quot;reset&quot; (collection, options)</h3>
+<p>When the collection&#39;s entire contents have been reset (<code>reset()</code> method was called).</p>
+<h3 id="event-update-collection-options-"><code>event</code> &quot;update&quot; (collection, options)</h3>
+<p>Single event triggered after any number of models have been added or removed from a collection.</p>
+<h3 id="event-sort-collection-options-"><code>event</code> &quot;sort&quot; (collection, options)</h3>
+<p>When the collection has been re-sorted.</p>
+<h3 id="event-add-model-collection-options-"><code>event</code> &quot;add&quot; (model, collection, options)</h3>
+<p>When a model is added to a collection.</p>
+<h3 id="event-remove-model-collection-options-"><code>event</code> &quot;remove&quot; (model, collection, options)</h3>
+<p>When a model is removed from a collection.</p>
+<h3 id="event-change-model-options-"><code>event</code> &quot;change&quot; (model, options)</h3>
+<p>When a model inside of the collection is changed.</p>
+<h2 id="defining-custom-collections">Defining custom collections</h2>
+<p>You can define custom collection classes extending <code>Collection</code> or any other collection class.</p>
+<aside class="notice">
+The collection must know the type of its models to restore its elements from JSON properly. When the `model` is not specified, the collection can hold any Model subclass but it cannot restore itself from JSON.
+</aside>
+
+<pre><code class="highlight javascript"><span class="hljs-comment">// Define custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Library</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{
+    doSomething(){ ... }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-comment">// Make it a default collection class for Book model,</span>
+    <span class="hljs-comment">// which is retrievable by the `Collection.of( Book )`</span>
+    <span class="hljs-keyword">static</span> Collection = Library;
+}
+
+<span class="hljs-comment">// Define another custom collection class.</span>
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherLibrary</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Collection</span> </span>{
+    <span class="hljs-comment">// Specify the model so the collection will be able to restore itself from JSON.</span>
+    <span class="hljs-keyword">static</span> model = Book; 
+}
+</code></pre>
+<h1 id="i-o-endpoints">I/O endpoints</h1>
+<h2 id="overview">Overview</h2>
+<p>Type-R uses IO abstraction represented by <code>IOEndpoint</code> interface, with JSON serialization handled by Model and Collection classes.</p>
+<p>IOEndpoint defines the set of CRUD + list methods operating on raw JSON.
+Attachment of an endpoint to the model or collection enables I/O API.  There are few endpoints bundled with Type-R, for instance <code>memoryIO()</code> which can be used for mock testing.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> users = <span class="hljs-keyword">new</span> User.Collection();
+users
+    .add({ <span class="hljs-attr">name</span> : <span class="hljs-string">'John'</span> })
+    .save()
+    .then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( user.id );
+</code></pre>
+<h2 id="i-o-endpoints">I/O endpoints</h2>
+<h3 id="restfulio-url-options-">restfulIO( url, options? )</h3>
+<p>HTTP REST client endpoint. Requires <code>window.fetch</code> available natively or through the polyfill. Implements standard BackboneJS REST semantic.</p>
+<p>All I/O methods append an optional <code>options.params</code> object to the URL parameters translating them to string with <code>JSON.stringify()</code>.</p>
+<ul>
+<li><code>model.save()</code> makes:<ul>
+<li><code>POST url</code>, if the model has no id. Expects to receive <code>{ id : recordId }</code>.</li>
+<li><code>PUT url/:id</code>, if the model has an id.</li>
+</ul>
+</li>
+<li><code>collection.fetch()</code> makes <code>GET url</code>.</li>
+<li><code>model.destroy()</code> makes <code>DELETE url</code>.</li>
+</ul>
+<p>Supports URI relative to owner (<code>./relative/url</code> resolves as <code>/owner/:id/relative/url/:id</code> ).</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/restful'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    ...
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-comment">// Roles collection here has relative url /api/users/:user_id/roles/</span>
+        roles : type( Role.Collection ).endpoint( restfulIO( <span class="hljs-string">'./roles'</span> ) ), 
+        ...
+    }
+}
+</code></pre>
+<h3 id="memoryio-mockdata-delay-">memoryIO( mockData?, delay? )</h3>
+<p>Endpoint for mock testing. Takes optional array with mock data, and optional <code>delay</code> parameter which is the simulated I/O delay in milliseconds.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { memoryIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/memory'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+    ...
+}
+</code></pre>
+<h3 id="localstorageio-key-">localStorageIO( key )</h3>
+<p>Endpoint for localStorage. Takes <code>key</code> parameter which must be unique for the persistent model&#39;s collection.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { localStorageIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/localStorage'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = localStorageIO( <span class="hljs-string">'/users'</span> );
+    ...
+}
+</code></pre>
+<h3 id="attributesio-">attributesIO()</h3>
+<p>Endpoint for I/O composition. Redirects model&#39;s <code>fetch()</code> request to its attributes and returns the combined abortable promise. Does not enable any other I/O methods and can be used with <code>model.fetch()</code> only.</p>
+<p>It&#39;s common pattern to use attributesIO endpoint in conjunction with Store to fetch all the data required by SPA page.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { localStorageIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoints/attributes'</span>
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : UserRole.Collection,
+    }
+}
+...
+const store = <span class="hljs-keyword">new</span> PageStore();
+store.fetch().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> renderUI() );
+</code></pre>
+<h3 id="proxyio-recordctor-">proxyIO( RecordCtor )</h3>
+<p>Create IO endpoint from the Model class. This endpoint is designed for use on the server side with a data layer managed by Type-R.</p>
+<p>Assuming that you have Type-R models with endpoints working with the database, you can create an endpoint which will use
+an existing Model subclass as a transport. This endpoint can be connected to the RESTful endpoint API on the server side which will serve JSON to the restfulIO endpoint on the client.</p>
+<p>An advantage of this approach is that JSON schema will be transparently validated on the server side by the Type-R.</p>
+<pre><code class="highlight javascript">    <span class="hljs-keyword">import</span> { proxyIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r/endpoint/proxy'</span>
+
+    ...
+
+    const usersIO = proxyIO( User );
+</code></pre>
+<h2 id="ioendpoint-interface">IOEndpoint Interface</h2>
+<p>An IO endpoint is an &quot;plug-in&quot; abstraction representing the persistent collection of JSON objects, which is required to enable models and collections I/O API. There are several pre-defined endpoints included in Type-R package which can be used for HTTP REST I/O, mock testing, working with localStorage, and IO composition.</p>
+<p>You will need to define custom endpoint if you would like to implement or customize serialization transport for Type-R objects. Use built-in endpoints as an example and the starting boilerplate.</p>
+<p>All IOEndpoint methods might return standard Promises or abortable promises (created with <code>createIOPromise()</code>). An IOEndpoint instance is shared by all of the class instances it&#39;s attached to and therefore it&#39;s normally <em>must be stateless</em>.</p>
+<h3 id="endpoint-read-id-options-model-">endpoint.read( id, options, model )</h3>
+<p>Reads an object with a given id. Used by <code>model.fetch()</code> method. Must return JSON wrapped in abortable promise.</p>
+<h3 id="endpoint-update-id-json-options-model-">endpoint.update( id, json, options, model )</h3>
+<p>Updates or creates an object with a given id. Used by <code>model.save()</code> method when model <em>already has</em> an id. Must return abortable promise.</p>
+<h3 id="endpoint-create-json-options-model-">endpoint.create( json, options, model )</h3>
+<p>Creates an object. Used by <code>model.save()</code> method when model <em>does not</em> have an id. Must return abortable promise.</p>
+<h3 id="endpoint-destroy-id-options-model-">endpoint.destroy( id, options, model )</h3>
+<p>Destroys the object with the given id. Used by <code>model.destroy()</code> method. Must return abortable promise.</p>
+<h3 id="endpoint-list-options-collection-">endpoint.list( options, collection )</h3>
+<p>Fetch an array of objects. Used by <code>collection.fetch()</code> method. Must returns abortable promise.</p>
+<h3 id="endpoint-subscribe-callbacks-collection-">endpoint.subscribe( <code>callbacks</code>, collection )</h3>
+<p>Optional method to enable the live updates subscription. Used by <code>collection.liveUpdates( true )</code> method. Must returns abortable promise.</p>
+<p>Method <code>callbacks</code> argument is an object of the following shape:</p>
+<pre><code class="highlight javascript">{
+    <span class="hljs-comment">// Endpoint must call it when an object is created or updated.</span>
+    updated( json ){}
+
+    <span class="hljs-comment">// Endpoint must call it when an object is removed.</span>
+    removed( json ){}
+}
+</code></pre>
+<h3 id="endpoint-unsubscribe-callbacks-collection-">endpoint.unsubscribe( <code>callbacks</code>, collection )</h3>
+<p>Unsubscribe from the live updates. Used by <code>collection.liveUpdates( false )</code> method. Takes the same <code>callbacks</code> object as <code>subscribe()</code>.</p>
+<h3 id="createiopromise-init-">createIOPromise( init )</h3>
+<p>Service function to create an abortable version of ES6 promise (with <code>promise.abort()</code> which meant to stop pending I/O and reject the promise).</p>
+<p><code>init</code> function takes the third <code>onAbort</code> argument to register an optional abort handler. If no handler is registered, the default implementation of <code>promise.abort()</code> will just reject the promise.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { createIOPromise } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r'</span>
+
+<span class="hljs-keyword">const</span> abortablePromise = createIOPromise( <span class="hljs-function">(<span class="hljs-params"> resolve, reject, onAbort </span>) =&gt;</span>{
+    ...
+    onAbort( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        reject( <span class="hljs-string">'I/O Aborted'</span> );
+    });
+});
+</code></pre>
+<h1 id="stores-and-normalized-data">Stores and normalized data</h1>
+<h2 id="normalized-data">Normalized data</h2>
+<p>Type-R has first-class support for working with normalized data represented as a set of collections with cross-references by model id. References are represented as model ids in JSON, and being transparently resolved to model instances on the first access.</p>
+<p><code>Store</code> class is the special model class which serves as a placeholder for the set of interlinked collections of normalized models. Id-references are defined as model attributes of the special type representing the serializable reference to the models from the specified master collection.</p>
+<h3 id="metatype-memberof-sourcecollection-"><code>metatype</code> memberOf( <code>sourceCollection</code> )</h3>
+<p>Serializable reference to the model from the particular collection.
+Initialized as <code>null</code> and serialized as <code>model.id</code>. Is not recursively cloned, validated, or disposed. Used to model one-to-many relationships.</p>
+<p>Changes in shared model are not detected.</p>
+<p><code>sourceCollection</code> may be:</p>
+<ul>
+<li>the JS variable pointing to the collection singleton;</li>
+<li>the function returning the collection;</li>
+<li>the string with the dot-separated <em>relative object path</em> to the collection. It is resolved dynamically relative to the model&#39;s <code>this</code>. Following shortcuts may be used in path:<ul>
+<li><code>owner.path</code> (or <code>^path</code>) works as <code>() =&gt; this.getOwner().path</code>.</li>
+<li><code>store.path</code> (or <code>~path</code>) works as <code>() =&gt; this.getStore().path</code>.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="highlight javascript">    @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+        <span class="hljs-keyword">static</span> attributes = {
+            <span class="hljs-attr">items</span> : Item.Collection,
+            <span class="hljs-attr">selected</span> : memberOf( <span class="hljs-string">'items'</span> ) <span class="hljs-comment">// Will resolve to `this.items`</span>
+        }
+    }
+</code></pre>
+<aside class="info">It's recommended to use ~paths and stores instead of ^paths.</aside>
+
+<h3 id="metatype-subsetof-sourcecollection-collectionctor-"><code>metatype</code> subsetOf( <code>sourceCollection</code>, CollectionCtor? )</h3>
+<p>Serializable non-aggregating collection which is the subset of the existing collection. Serialized as an array of model ids. Used to model many-to-many relationships. <code>CollectionCtor</code> argument may be omitted unless you need it to be a sublass of the particular collection type.</p>
+<p>The collection object itself is recursively created and cloned. However, its models are not aggregated by the collection thus they are not recursively cloned, validated, or disposed.</p>
+<p><code>sourceCollection</code> is the same reference as used by <code>memberOf( sourceCollection )</code>.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        <span class="hljs-attr">roles</span> : subsetOf( <span class="hljs-string">'~roles'</span>, Role.Collection )
+    }
+}
+
+@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UsersDirectory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">roles</span> : Role.Collection,
+        <span class="hljs-attr">users</span> : User.Collection <span class="hljs-comment">// `~roles` references will be resolved against this.roles</span>
+    }
+}
+</code></pre>
+<h3 id="recordorcollection-clone-pinstore-true-">recordOrCollection.clone({ pinStore : true })</h3>
+<p>Make the cloned object to preserve the reference to its original store.</p>
+<p>Cloned objects don&#39;t have an owner by default, thus they loose the reference to their store as no ownership chain can be traversed. <code>pinStore</code> option should be used in such a cases.</p>
+<h2 id="class-store"><code>class</code> Store</h2>
+<p>In Type-R, stores are the subclasses of models which can be referenced in base collection symbolic paths as <code>store</code>.
+Stores are used as root models holding the collections of other models with serializable references.</p>
+<p>For all models aggregated by store (no matter how deep) <code>store.attrName</code> baseCollection path will resolve to the <code>attrName</code> attribute of this store. If there are no such an attribute in the store, the next available store upper in aggregation tree will be checked (stores can be nested as regular models), or the default store if there are no more stores in the ownership chain.</p>
+<aside class="notice">Stores in Type-R are _very different_ to stores in other frameworks. Keep in mind, a store is just a subclass of the Model.</aside>
+
+<h3 id="store-_defaultstore">store._defaultStore</h3>
+<p>Reference to the master store used for lookups if the current store doesn&#39;t have the required attribute and there are no other store found upper in the ownership chain.</p>
+<p>Defaults to the <code>Store.global</code>. May be reassinged to create arbitrary store lookup chains.</p>
+<h3 id="static-store-global"><code>static</code> Store.global</h3>
+<p>The default singleton store class. Is always the last store to lookup when resolving ~reference.</p>
+<p>Use the default store for the <em>globally shared data only</em>. Each application page must have its local store.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : Role.Collection
+    }
+}
+
+Store.global = <span class="hljs-keyword">new</span> MyStore();
+
+<span class="hljs-comment">// Now the reference '~users` will point to users collection from the MyStore.</span>
+</code></pre>
+<h3 id="model-getstore-">model.getStore()</h3>
+<p>Return the closest store. Used internally to resolve symbolic <code>store.attr</code> relative to the store.</p>
+<p>Method looks for the <code>Store</code> subclass traversing the ownership chain of current aggregation tree upwards. If there are no store found this way, default Store from <code>Store.global</code> is returned.</p>
+<h2 id="layered-application-state">Layered application state</h2>
+<p>TODO</p>
+<h1 id="using-with-react">Using with React</h1>
+<h2 id="local-component-state">Local component state</h2>
+<h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>
+<h3 id="hook-usecollection-of-modelclass-"><code>hook</code> useCollection.of( ModelClass )</h3>
+<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
+    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
+});
+
+<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State <span class="hljs-comment">/* any model class */</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counter++ }&gt;
+            { state.counter }
+        <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+    );
+}
+</code></pre>
+<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> </span>= attributes({
+    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
+});
+
+<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> counters = useCollection.of( Counter );
+
+    <span class="hljs-keyword">const</span> selected = useCollection.subsetOf( counters );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{ user.counter }<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> user.counter++ }&gt;Add<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
+</code></pre>
+<h2 id="data-binding">Data binding</h2>
+<h3 id="class-linked"><code>class</code> Linked</h3>
+<h3 id="hook-uselinked-value-"><code>hook</code> useLinked( value )</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked local state.</span>
+    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}
+</span>
+</code></pre>
+<h3 id="model-">model.$</h3>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> EditBook = <span class="hljs-function">(<span class="hljs-params">{ book }</span>) =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked model attributes.</span>
+    <span class="hljs-keyword">const</span> { name, author } = book.$;
+
+    <span class="hljs-keyword">return</span> (
+        &lt;div&gt;
+            &lt;input {...name.props} /&gt;
+            &lt;input {...author.props} /&gt;
+        &lt;/div&gt;
+    )
+}
+</code></pre>
+<h3 id="collection-includes-model-">collection.$includes( model )</h3>
+<h3 id="static-linked-value-value-set-"><code>static</code> Linked.value( value, set )</h3>
+<h2 id="normalized-data-and-stores">Normalized data and stores</h2>
+<p><code>Store</code> is the subclass of <code>Model</code> used as a root to resolve id-references in &#39;normalized data structures&#39;, when 
+the data is represented as a set of collections with items referencing each other by id. If you don&#39;t have normalized data structures, you don&#39;t need <code>Store</code>.</p>
+<p>Attributes of types <code>Model.memberOf( &#39;store.someCollection&#39; )</code> and <code>Collection.subsetOf( &#39;store.someCollection&#39; )</code>
+will resolve model ids to the models taken from <code>someCollection</code> belonging to the closest <code>Store</code> model. The closest
+store is located as follows:</p>
+<p>1) The first <code>Store</code> from the model&#39;s owners chain is taken first.
+2) If there are no such a collection in it, the next <code>Store</code> class in ownership chain is taken.
+3) If there are no stores left in the ownerhip chain, the <code>Store.global</code> is used.</p>
+<p>From the particular model&#39;s view, there&#39;s a single <code>store</code> namespace which is defined by <code>Store.global</code> and
+extended by upper stores in its ownership chain.</p>
+<p>In <code>@type-r/react</code>, you can create the store as a local component state, and expose it down to the component subtree
+so its children can opt to use this context store for id resolutions in their local state models.</p>
+<p>That leads to a multi-tier store achitecture where the next tier store may override upper store collections and extend it with new collections.</p>
+<ul>
+<li>Tier 1. <code>Store.global</code> holds the state which is shared across all SPA pages.</li>
+<li>Tier 2. Page component stores holds the state which is related to particular pages.</li>
+<li>Tier 3. Particular components might add their local stores extending the namespace created by upper stores.</li>
+</ul>
+<p>Stores</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> X = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
+    useContextStore( state );
+}
+</code></pre>
+<h2 id="example-apps">Example apps</h2>
+<h3 id="js-project-starter">JS project starter</h3>
+<h3 id="ts-project-starter">TS project starter</h3>
+<h3 id="hierarchical-checklist">Hierarchical checklist</h3>
+<h3 id="editable-users-list">Editable users list</h3>
+<h3 id="todomvc">TodoMVC</h3>
+<h1 id="mixins-events-logging">Mixins, events, logging</h1>
+<h2 id="overview">Overview</h2>
+<p>Type-R Mixture is the toolkit combining React-style mixins, Backbone-style events, and minimal set of Underscore-style object manipulation functions.</p>
+<p><code>Events</code> is an object with pub-sub events API which can be mixed into your classes manually or with <code>@mixins</code> decorator.
+Alternatively, you can extend <code>Messenger</code> class having <code>Events</code> pre-mixed. Or, you can use <code>Messenger</code> as a mixin with <code>@mixins</code> decorator. <code>@mixins</code> can mix both plain objects and classes.</p>
+<p><code>log</code> is a small function triggering the log event on <code>logger</code> object. Then, you can easily attach your custom loggers from anywhere subscribing for log events. And it you don&#39;t, there&#39;s a default log listener writing everything to the console.</p>
+<p>Written in TypeScript, works with ES5 and ES6.</p>
+<h3 id="installation">Installation</h3>
+<p><code>npm install @type-r/mixture</code></p>
+<h3 id="features">Features</h3>
+<ul>
+<li><code>Mixable</code>, React-style mixins.<ul>
+<li>Fine-grained control over member merge rules.</li>
+<li>Can mix both classes and plain objects.</li>
+<li>Works with and without ES6 class decorators.</li>
+</ul>
+</li>
+<li><code>Messenger</code>, synchronous events.<ul>
+<li>Can be used as mixin and as a base class.</li>
+<li>100% backward API compatibility with <a href="http://backbonejs.org/#Events">Backbone Events</a> (passes Backbone 1.2.x unit test)</li>
+<li>Much faster than Backbone events.</li>
+</ul>
+</li>
+<li><code>Logger</code>, thin but powerful logging abstraction build on top of <code>Messenger</code>. Defaults to the <code>console</code>.</li>
+<li>Minimal set of speed-optimized underscore-style object manipulation tools (<code>assign</code>, <code>defaults</code>, <code>mapObject</code>, etc).</li>
+</ul>
+<h2 id="mixins">Mixins</h2>
+<p>Both plain JS object and class constructor may be used as mixins. In the case of the class constructor, missing static members will copied over as well.</p>
+<p>You need to import <code>mixins</code> decorator to use mixins:</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { mixins } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/mixture'</span>
+
+...
+
+@mixins( plainObject, MyClass, ... )
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">X</span> </span>{
+    ...
+}
+</code></pre>
+<h3 id="merge-rules-and-react-compatibility">Merge Rules and React Compatibility</h3>
+<p>Mixture implements <em>configurable</em> merge rules, which allows to add standard React mixins functionality to the ES6 React Components.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { Mixable } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/mixture'</span>
+
+<span class="hljs-comment">// Make React.Component mixable...</span>
+Mixable.mixTo( React.Component );
+
+<span class="hljs-comment">// Define lifecycle methods merge rules...</span>
+React.Component.mixinRules({
+    <span class="hljs-attr">componentWillMount</span> : <span class="hljs-string">'reverse'</span>,
+    <span class="hljs-attr">componentDidMount</span> : <span class="hljs-string">'reverse'</span>,
+    <span class="hljs-attr">componentWillReceiveProps</span> : <span class="hljs-string">'reverse'</span>,
+    <span class="hljs-attr">shouldComponentUpdate</span> : <span class="hljs-string">'some'</span>,
+    <span class="hljs-attr">componentWillUpdate</span> : <span class="hljs-string">'reverse'</span>,
+    <span class="hljs-attr">componentDidUpdate</span> : <span class="hljs-string">'reverse'</span>,
+    <span class="hljs-attr">componentWillUnmount</span> : <span class="hljs-string">'sequence'</span>,
+});
+</code></pre>
+<p>Mixin merge rules can be extented in any subclass using the <code>@mixinRules({ attr : rule })</code> class decorator. Rule is the string from the following list.</p>
+<ul>
+<li><em>merge</em> - assume property to be an object, which members taken from mixins must be merged.</li>
+<li><em>pipe</em> - property is the function <code>( x : T ) =&gt; T</code> transforming the value. Multiple functions joined in pipe.</li>
+<li><em>sequence</em> - property is the function. Multiple functions will be called in sequence.</li>
+<li><em>reverse</em> - same as <em>sequence</em>, but functions called in reverse sequence.</li>
+<li><em>mergeSequence</em> - merge the object returned by functions, executing them in sequence.</li>
+<li><em>every</em> - property is the function <code>( ...args : any[] ) =&gt; boolean</code>. Resulting method will return true if every single function returns true.</li>
+<li><em>some</em> - same as previous, but method will return true when at least one function returns true.</li>
+</ul>
+<p>If merge rule is an object, the corresponding member is expected to be an object and the rule defines the merge rules for its members.</p>
+<h3 id="usage-example">Usage Example</h3>
+<p>Here we adding <a href="http://backbonejs.org/#Events">Events</a> support (on, off, trigger, listenTo, etc.):</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { mixins, Events } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/mixture'</span>
+
+<span class="hljs-keyword">const</span> UnsubscribeMixin = {
+    componentWillUnmount(){
+        <span class="hljs-keyword">this</span>.off();
+        <span class="hljs-keyword">this</span>.stopListening();
+    }
+}
+
+@mixins( Events, UnsubscribeMixin )
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EventedComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>{
+    <span class="hljs-comment">// ...</span>
+}
+</code></pre>
+<h2 id="mixin-events"><code>mixin</code> Events</h2>
+<p>Type-R uses an efficient synchronous events implementation which is backward compatible with <a href="http://backbonejs.org/#Events">Backbone Events API</a> but is about twice faster in all major browsers. It comes in form of <code>Events</code> mixin and the <code>Messenger</code> base class.</p>
+<p><img src="https://raw.githubusercontent.com/Volicon/mixturejs/master/perf-chart.jpg" alt="performance"></p>
+<p>The complete semantic if Backbone v1.1.x Events is supported with the following exceptions:</p>
+<ul>
+<li><code>source.trigger( &#39;ev1 ev2 ev3&#39; )</code> is not supported. Use <code>source.trigger( &#39;ev1&#39; ).trigger( &#39;ev2&#39; ).trigger( &#39;ev3&#39; )</code> instead.</li>
+<li><code>source.trigger( &#39;ev&#39;, a, b, ... )</code> doesn&#39;t support more than 5 event parameters.</li>
+<li><code>source.on( &#39;ev&#39;, callback )</code> - callback will <em>not</em> be called in the context of <code>source</code> by default.</li>
+</ul>
+<p><code>Events</code> is a <a href="#mixins">mixin</a> giving the object the ability to bind and trigger custom named events.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { mixins, Events } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r'</span>
+
+@mixins( Events )
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EventfulClass</span> </span>{
+    ...
+
+    doSomething(){
+        ...
+        this.trigger( <span class="hljs-string">'doneSomething'</span>, here, are, results );
+    }
+}
+
+<span class="hljs-keyword">const</span> ec = <span class="hljs-keyword">new</span> EventfulClass();
+ec.on( <span class="hljs-string">'doneSomething'</span>, ( here, are, results ) =&gt; <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'unbelievable'</span> ) );
+</code></pre>
+<aside class="notice">There's the <code>Messenger</code> abstract base class with Events mixed in.</aside>
+
+<h3 id="source-trigger-event-arg1-arg2-">source.trigger(event, arg1, arg2, ... )</h3>
+<p>Trigger callbacks for the given event, or space-delimited list of events. Subsequent arguments to trigger will be passed along to the event callbacks.</p>
+<h3 id="listener-listento-source-event-callback-">listener.listenTo(source, event, callback)</h3>
+<p>Tell an object to listen to a particular event on an other object. The advantage of using this form, instead of other.on(event, callback, object), is that listenTo allows the object to keep track of the events, and they can be removed all at once later on. The callback will always be called with object as context.</p>
+<pre><code class="highlight javascript">    view.listenTo(model, <span class="hljs-string">'change'</span>, view.render );
+</code></pre>
+<aside class="success">Subscriptions made with <code>listenTo()</code> will be stopped automatically if an object is properly disposed (<code>dispose()</code> method is called).</aside>
+
+<h3 id="listener-stoplistening-source-event-callback-">listener.stopListening([source], [event], [callback])</h3>
+<p>Tell an object to stop listening to events. Either call stopListening with no arguments to have the object remove all of its registered callbacks ... or be more precise by telling it to remove just the events it&#39;s listening to on a specific object, or a specific event, or just a specific callback.</p>
+<pre><code class="highlight javascript">    view.stopListening(); <span class="hljs-comment">// Unsubscribe from all events</span>
+
+    view.stopListening(model); <span class="hljs-comment">// Unsubscribe from all events from the model</span>
+</code></pre>
+<aside class="notice">Messenger, Model, Collection, and Store execute <code>this.stopListening()</code> from their <code>dispose()</code> method. You don't have to unsubscribe from events explicitly if you are using <code>listenTo()</code> method and disposing your objects properly.</aside>
+
+<h3 id="listener-listentoonce-source-event-callback-">listener.listenToOnce(source, event, callback)</h3>
+<p>Just like <code>listenTo()</code>, but causes the bound callback to fire only once before being automatically removed.</p>
+<h3 id="source-on-event-callback-context-">source.on(event, callback, [context])</h3>
+<p>Bind a callback function to an object. The callback will be invoked whenever the event is fired. If you have a large number of different events on a page, the convention is to use colons to namespace them: <code>poll:start</code>, or <code>change:selection</code>. The event string may also be a space-delimited list of several events...</p>
+<pre><code class="highlight javascript">    book.on(<span class="hljs-string">"change:title change:author"</span>, ...);
+</code></pre>
+<p>Callbacks bound to the special &quot;all&quot; event will be triggered when any event occurs, and are passed the name of the event as the first argument. For example, to proxy all events from one object to another:</p>
+<pre><code class="highlight javascript">    proxy.on(<span class="hljs-string">"all"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">eventName</span>) </span>{
+        object.trigger(eventName);
+    });
+</code></pre>
+<p>All event methods also support an event map syntax, as an alternative to positional arguments:</p>
+<pre><code class="highlight javascript">    book.on({
+        <span class="hljs-string">"change:author"</span>: authorPane.update,
+        <span class="hljs-string">"change:title change:subtitle"</span>: titleView.update,
+        <span class="hljs-string">"destroy"</span>: bookView.remove
+    });
+</code></pre>
+<p>To supply a context value for this when the callback is invoked, pass the optional last argument: <code>model.on(&#39;change&#39;, this.render, this)</code> or <code>model.on({change: this.render}, this)</code>.</p>
+<aside class="warning">Event subscription with <code>source.on()</code> may create memory leaks if it's not stopped properly with <code>source.off()</code></aside>
+
+<h3 id="source-off-event-callback-context-">source.off([event], [callback], [context])</h3>
+<p>Remove a previously bound callback function from an object. If no context is specified, all of the versions of the callback with different contexts will be removed. If no callback is specified, all callbacks for the event will be removed. If no event is specified, callbacks for all events will be removed.</p>
+<pre><code class="highlight javascript">    <span class="hljs-comment">// Removes just the `onChange` callback.</span>
+    object.off(<span class="hljs-string">"change"</span>, onChange);
+
+    <span class="hljs-comment">// Removes all "change" callbacks.</span>
+    object.off(<span class="hljs-string">"change"</span>);
+
+    <span class="hljs-comment">// Removes the `onChange` callback for all events.</span>
+    object.off(<span class="hljs-literal">null</span>, onChange);
+
+    <span class="hljs-comment">// Removes all callbacks for `context` for all events.</span>
+    object.off(<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, context);
+
+    <span class="hljs-comment">// Removes all callbacks on `object`.</span>
+    object.off();
+</code></pre>
+<p>Note that calling <code>model.off()</code>, for example, will indeed remove all events on the model — including events that Backbone uses for internal bookkeeping.</p>
+<h3 id="source-once-event-callback-context-">source.once(event, callback, [context])</h3>
+<p>Just like <code>on()</code>, but causes the bound callback to fire only once before being removed. Handy for saying &quot;the next time that X happens, do this&quot;. When multiple events are passed in using the space separated syntax, the event will fire once for every event you passed in, not once for a combination of all events</p>
+<h3 id="type-r-events-list">Type-R events list</h3>
+<p>All Type-R objects implement Events mixin and use events to notify listeners on changes.</p>
+<p>Model and Store change events:</p>
+<table>
+<thead>
+<tr>
+<th>Event name</th>
+<th>Handler arguments</th>
+<th>When triggered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>change</td>
+<td>(model, options)</td>
+<td>At the end of any changes.</td>
+</tr>
+<tr>
+<td>change:attrName</td>
+<td>(model, value, options)</td>
+<td>The model&#39;s attribute has been changed.</td>
+</tr>
+</tbody>
+</table>
+<p>Collection change events:</p>
+<table>
+<thead>
+<tr>
+<th>Event name</th>
+<th>Handler arguments</th>
+<th>When triggered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>changes</td>
+<td>(collection, options)</td>
+<td>At the end of any changes.</td>
+</tr>
+<tr>
+<td>reset</td>
+<td>(collection, options)</td>
+<td><code>reset()</code> method was called.</td>
+</tr>
+<tr>
+<td>update</td>
+<td>(collection, options)</td>
+<td>Any models added or removed.</td>
+</tr>
+<tr>
+<td>sort</td>
+<td>(collection, options)</td>
+<td>Order of models is changed. </td>
+</tr>
+<tr>
+<td>add</td>
+<td>(model, collection, options)</td>
+<td>The model is added to a collection.</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>(model, collection, options)</td>
+<td>The model is removed from a collection.</td>
+</tr>
+<tr>
+<td>change</td>
+<td>(model, options)</td>
+<td>The model is changed inside of collection.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="class-messenger"><code>class</code> Messenger</h2>
+<p>Messenger is an abstract base class implementing Events mixin and some convenience methods.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, Messenger } <span class="hljs-keyword">from</span> <span class="hljs-string">'type-r'</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyMessenger</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Messenger</span> </span>{
+
+}
+</code></pre>
+<h3 id="events-mixin-methods-7-">Events mixin methods (7)</h3>
+<p>Messenger implements <a href="#events-mixin">Events</a> mixin.</p>
+<h3 id="messenger-cid">messenger.cid</h3>
+<p>Unique run-time only messenger instance id (string).</p>
+<h3 id="callback-messenger-initialize-"><code>callback</code> messenger.initialize()</h3>
+<p>Callback which is called at the end of the constructor.</p>
+<h3 id="messenger-dispose-">messenger.dispose()</h3>
+<p>Executes <code>messenger.stopListening()</code> and <code>messenger.off()</code>.</p>
+<p>Objects must be disposed to prevent memory leaks caused by subscribing for events from singletons.</p>
+<h2 id="logging">Logging</h2>
+<p>Logging in Type-R is done through Events. <code>Logger</code> doesn&#39;t compete with your logging libraries, it helps you to utilize them.</p>
+<h3 id="log-level-topic-message-context-">log( level, topic, message, context? )</h3>
+<p>Write to the log. Arguments:</p>
+<ul>
+<li><code>level</code> is a string corresponding to the <code>console</code> log methods: &#39;error&#39;, &#39;warn&#39;, &#39;info&#39;, &#39;log&#39;, &#39;debug&#39;.</li>
+<li><code>topic</code> is an arbitrary string reflecting the feature area.</li>
+<li><code>message</code> is a log message.</li>
+<li><code>context</code> is an optional JS object with additional information on the context of logging event.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { log } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/mixture'</span>
+
+...
+
+log( <span class="hljs-string">'info'</span>, <span class="hljs-string">'feature:and:topic'</span>, textMessage, { someRelatedData, someOtherData, ... });
+</code></pre>
+<h3 id="singleton-logger"><code>singleton</code> logger</h3>
+<p>Singlton acting as a router for log events.</p>
+<p>What really happens when the <code>log</code> is called is an event being sent. There could be many listeners to the log events, and the one which is listening by default is the console listener, so you get pretty standard logging out of box.</p>
+<p>However, here&#39;s the list of things you can do which you can&#39;t do with a standard console logging:</p>
+<ul>
+<li>When you&#39;re writing the unit test,<ul>
+<li>you can easily turn console errors and warnings into exceptions, or</li>
+<li>you can turn on log event counter to be used in asserts.</li>
+</ul>
+</li>
+<li>You can selectively turn logging off removing the listeners for the specific log levels. <code>Logger</code> does it by default muting all events except <code>error</code> and <code>warn</code> in production build, but you can override that.</li>
+<li>You can add as many custom log event listeners as you want, which simplifies replacement of the logging library.</li>
+</ul>
+<h3 id="turning-off-the-default-logger">Turning off the default logger</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { logger } <span class="hljs-keyword">from</span> <span class="hljs-string">"@type-r/mixture"</span>
+
+logger.off(); <span class="hljs-comment">// Mute it completely</span>
+logger.off( <span class="hljs-string">'warn'</span> ); <span class="hljs-comment">// Mute warn (log levels correspons to the console[level]( msg ))</span>
+</code></pre>
+<h3 id="selectively-turn-on-logging">Selectively turn on logging</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { logger } <span class="hljs-keyword">from</span> <span class="hljs-string">"@type-r/mixture"</span>
+
+logger.off().logToConsole( <span class="hljs-string">'error'</span> ).logToConsole( <span class="hljs-string">'warn'</span>, /^myfeature:<span class="hljs-regexp">/ );</span>
+</code></pre>
+<h3 id="throw-exceptions-on-log-messages">Throw exceptions on log messages</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { logger } <span class="hljs-keyword">from</span> <span class="hljs-string">"@type-r/mixture"</span>
+
+logger.off().throwOn( <span class="hljs-string">'error'</span> ).throwOn( <span class="hljs-string">'warn'</span>, /^myfeature:<span class="hljs-regexp">/ );</span>
+</code></pre>
+<h3 id="count-specific-log-messages-by-level">Count specific log messages by level</h3>
+<pre><code class="highlight javascript">import { logger } from "@type-r/mixture"
+
+logger.off().count( 'error' ).throwOn( 'warn', /^myfeature:/ );;
+
+....
+
+assert( !logger.counter.errors &amp;&amp; !logger.counter.warn)
+</code></pre>
+<h3 id="add-a-new-log-event-listener">Add a new log event listener</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { logger } <span class="hljs-keyword">from</span> <span class="hljs-string">"@type-r/mixture"</span>
+
+logger.on( <span class="hljs-string">'error'</span>, ( subject, message, data ) =&gt; {
+    <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'There was an error, you know?'</span> );
+});
+</code></pre>
+<h1 id="release-notes">Release Notes</h1>
+<h2 id="v4-0">v4.0</h2>
+<h3 id="overview">Overview</h3>
+<p>The major goals of this release is to bring the support for writing React applications with React hooks and TypeScript.</p>
+<h3 id="npm-package-names-changes">npm package names changes</h3>
+<p>Renamed npm packages:</p>
+<ul>
+<li><code>type-r</code> -&gt; <code>@type-r/models</code></li>
+<li><code>type-r/ext-types</code> -&gt; <code>@type-r/ext-types</code></li>
+<li><code>type-r/globals</code> -&gt; <code>@type-r/globals</code></li>
+</ul>
+<p>Combined into one package:</p>
+<ul>
+<li><code>type-r/endpoints/*</code> -&gt; <code>@type-r/endpoints</code></li>
+</ul>
+<h3 id="-type-r-models-former-type-r-"><code>@type-r/models</code> (former <code>type-r</code>)</h3>
+<p>The main <code>type-r</code> package.</p>
+<ul>
+<li>More accurate TypeScript typings.</li>
+<li><code>Linked</code> class representing an abstract reference to the value; the foundation of two-way data-binding.</li>
+<li><code>model.$.attrName</code> returns linked attribute used for two-way data binding in React.</li>
+<li><code>AttributesMixin</code> - TypeScript interface to inject attribute types into the Model. Attribute decorators are deprecated and will be removed in v5.</li>
+</ul>
+<h3 id="-type-r-react-new-"><code>@type-r/react</code> (new)</h3>
+<p>New hooks-based React binding based on <code>@linked/react</code>:</p>
+<ul>
+<li>Local component state management with Type-R:<ul>
+<li><code>useModel( ModelClass )</code></li>
+<li><code>useCollection.of( ModelClass )</code></li>
+<li><code>useCollection.ofRefsTo( ModelClass )</code></li>
+<li><code>useCollection.subsetOf( collection )</code></li>
+</ul>
+</li>
+<li><code>pureRenderProps</code> - declarative pure render wrapper working with <code>Date</code>, <code>Linked</code>, type-r models and collections.</li>
+<li><code>useChanges( modelOrCollection )</code> - update React component when global model or collection changes.</li>
+<li><code>useLinked( value )</code> - create linked component state.</li>
+<li><code>useIO( async () =&gt; { ... } )</code> - perform an I/O with async functions.</li>
+</ul>
+<h3 id="-type-r-endpoints-former-type-r-endpoints-"><code>@type-r/endpoints</code> (former <code>type-r/endpoints/*</code>)</h3>
+<ul>
+<li><code>modelFetchIO</code> - read-only endpoint to fetch models.</li>
+<li><code>restfulIO</code> and <code>modelFetchIO</code> supports json data mocking. When <code>mockData</code> option is present, the HTTP is bypassed and I/O is simulated through the <code>memoryIO</code> endpoint. It makes it possible to develop frontend without a test server.</li>
+<li><code>restfulIO</code> and <code>modelFetchIO</code> support for templated URLs.</li>
+</ul>
+<h3 id="-type-r-mixture-new-"><code>@type-r/mixture</code> (new)</h3>
+<p>Type-R mixins, events, logging router, and helper functions factored out to the separate package.</p>
+<h2 id="v3-0">v3.0</h2>
+<h3 id="breaking-changes">Breaking changes</h3>
+<p>Changed semantic which needs to be refactored:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typeless attribute</td>
+<td><code>value(x)</code></td>
+<td><code>type(null).value(x)</code></td>
+</tr>
+<tr>
+<td>Infer type from the value</td>
+<td><code>x</code> (except functions)</td>
+<td><code>value(x)</code>, or <code>x</code> (except functions)</td>
+</tr>
+<tr>
+<td>model.parse() override</td>
+<td><code>model._parse(json)</code></td>
+<td>no such a method, remove it</td>
+</tr>
+<tr>
+<td>model attributes iteration</td>
+<td><code>model.forEachAttr(obj, iteratee)</code></td>
+<td><code>model.forEach(iteratee)</code></td>
+</tr>
+<tr>
+<td>Shared object</td>
+<td><code>User.shared</code></td>
+<td><code>shared( User )</code></td>
+</tr>
+<tr>
+<td>one-to-many relationship</td>
+<td><code>RecordClass.from( ref )</code></td>
+<td><code>memberOf( ref )</code></td>
+</tr>
+<tr>
+<td>many-to-many relationship</td>
+<td><code>CollectionClass.from( ref )</code></td>
+<td><code>subsetOf( ref, CollectionClass? )</code></td>
+</tr>
+<tr>
+<td>construct from object/array</td>
+<td>-</td>
+<td><code>RecordOrCollectionClass.from( json, options? )</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="new-attribute-definition-notation">New attribute definition notation</h3>
+<p>Starting from version 3.X, Type-R does not modify built-in global JS objects. New <code>type(T)</code> attribute definition notation is introduced to replace <code>T.has.</code></p>
+<p>There&#39;s <code>type-r/globals</code> package for compatibility with version 2.x which must be imported once with <code>import &#39;type-r/globals&#39;</code>.
+If this package is not used, the code must be refactored according to the rules below.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNIX Timestamp</td>
+<td><code>Date.timestamp</code></td>
+<td><code>import { Timestamp } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Microsoft date</td>
+<td><code>Date.microsoft</code></td>
+<td><code>import { MicrosoftDate } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Integer</td>
+<td><code>Integer</code> and <code>Number.integer</code></td>
+<td><code>import { Integer } from &#39;type-r/ext-types&#39;</code></td>
+</tr>
+<tr>
+<td>Create metatype from constructor</td>
+<td><code>Ctor.has</code></td>
+<td><code>type(Ctor)</code></td>
+</tr>
+<tr>
+<td>Typed attribute with default value</td>
+<td><code>Ctor.value(default)</code></td>
+<td><code>type(Ctor).value(default)</code></td>
+</tr>
+<tr>
+<td>Attribute &quot;Required&quot; check</td>
+<td><code>Ctor.isRequired</code></td>
+<td><code>type(Ctor).required</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="first-class-typescript-support">First-class TypeScript support</h3>
+<ul>
+<li><code>Infer&lt;typeof Metatype&gt;</code> infers TypeScript type from the Type-R attribute metatype.</li>
+<li><code>InferAttrs&lt;typeof attributes&gt;</code> infers TypeScript type for the Type-R attributes definitions.</li>
+<li><code>attributes({ attrDefs })</code> returns the properly typed TypeScript Model class.</li>
+</ul>
+<p>TypeScript attributes definitions:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>2.x</th>
+<th>3.x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extract Type-R type with Reflect.metadata</td>
+<td><code>@attr name : T</code></td>
+<td><code>@auto name : T</code></td>
+</tr>
+<tr>
+<td>Extract Type-R type &amp; specify the default value</td>
+<td>not possible</td>
+<td><code>@auto(default) name : T</code></td>
+</tr>
+<tr>
+<td>Explicitly specify the type</td>
+<td><code>@attr(T) name : T</code></td>
+<td><code>@type(T).as name : T</code></td>
+</tr>
+<tr>
+<td>Infer Type-R type from default value</td>
+<td><code>@attr(default) name : T</code></td>
+<td><code>@value(default).as name : T</code></td>
+</tr>
+<tr>
+<td>Specify type and default value</td>
+<td><code>@attr(T.value(default)) name : T</code></td>
+<td><code>@type(T).value(default).as name : T</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-improvements">Other improvements</h3>
+<ul>
+<li><code>Collection</code> class now proxies ES6 Array methods</li>
+<li>New logger API which easy to override or turn off.</li>
+<li>Improved error messages.</li>
+<li><code>Type.from( json, options? )</code> method to restore object from JSON with a strict type check and validation.</li>
+</ul>
+<pre><code class="highlight typescript"><span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> User <span class="hljs-keyword">extends</span> Model {
+    <span class="hljs-comment">// There's an HTTP REST enpoint for users.</span>
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
+
+    <span class="hljs-meta">@auto</span> name : <span class="hljs-built_in">string</span>
+
+    <span class="hljs-comment">// Collection of Role models represented as an array of role.id in JSON.</span>
+    <span class="hljs-comment">// When the "roles" attribute will be accessed for the first time,</span>
+    <span class="hljs-comment">// User will look-up for a 'roles' attribute of the nearest store to resolve ids to actual Users.</span>
+    <span class="hljs-meta">@subsetOf</span>( <span class="hljs-string">'~roles'</span> ).as roles : Collection&lt;Role&gt;
+}
+
+<span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> Role <span class="hljs-keyword">extends</span> Model {
+    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/roles'</span> );
+    <span class="hljs-meta">@auto</span> name : <span class="hljs-built_in">string</span>
+}
+
+<span class="hljs-comment">// Store is the regular Model, nothing special.</span>
+<span class="hljs-meta">@define</span> <span class="hljs-keyword">class</span> UsersDirectory <span class="hljs-keyword">extends</span> Store {
+    <span class="hljs-comment">// When this model is fetched, fetch all the attributes instead.</span>
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+
+    <span class="hljs-comment">// '~roles' references from all aggregated collections</span>
+    <span class="hljs-comment">// will point to here, because this is the nearest store.</span>
+    <span class="hljs-meta">@type</span>( User.Collection ).as users : Collection&lt;User&gt;
+    <span class="hljs-meta">@type</span>( Role.Collection ).as roles : Collection&lt;Role&gt;
+}
+
+<span class="hljs-keyword">const</span> directory = <span class="hljs-keyword">new</span> UsersDirectory();
+<span class="hljs-keyword">await</span> directory.fetch();
+
+<span class="hljs-keyword">for</span>( <span class="hljs-keyword">let</span> user of directory.users ){
+    assert( user.roles.first().users.first() instanceOf User );
+}
+</code></pre>
+<h2 id="v2-1">v2.1</h2>
+<p>This release adds long-awaited HTTP REST endpoint.</p>
+<ul>
+<li>IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.</li>
+<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
+<li>Added proxyIO endpoint for creating endpoints from models on the server side (<a href="https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
+</ul>
+<h2 id="v2-0">v2.0</h2>
+<p>This release brings new features which fixes problems with component&#39;s inheritance in React bindings and implements long-awaited generic IO implementation based on ES6 promises.</p>
+<p>There shouldn&#39;t be breaking changes <em>unless</em> you&#39;re using custom logger or React bindings (formerly known as React-MVx, with a name changed to React-R in new release).</p>
+<h3 id="generic-io-support">Generic IO support</h3>
+<p>New <a href="">IOEndpoint</a> concept is introduced, making it easy to create IO abstractions. To enable <code>Model</code> and <code>Collection</code> IO API, you need to assign IO endpoint in the class definition.</p>
+<p>Endpoint is the class defining CRUD and list operations on JSON data, as well as the methods to subscribe for the data changes. There are two endpoints included with 2.0 release, <code>memoryIO</code> which is suitable for mock testing and <code>localStorageIO</code> which could be used in demos and prototypes. They can be used as a references as starting points to define your own IO endpoints.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = memoryIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+        ...
+    }
+}
+</code></pre>
+<p>There are three Model IO methods (<code>save()</code>, <code>fetch()</code>, and <code>destroy()</code>) and two collection IO method (<code>fetch()</code> and <code>liveUpdates()</code>) ). All IO methods returns ES6 promises, so you either must have the runtime supporting ES6 or use the ES6 promise polyfill. The promises are modified to be <em>abortable</em> (all of them have <code>abort()</code> method).</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User({ <span class="hljs-attr">name</span> : <span class="hljs-string">'John'</span> });
+user.save().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log( <span class="hljs-string">`new user is added <span class="hljs-subst">${ user.id }</span>`</span> )
+});
+</code></pre>
+<p>There&#39;s the special <code>attributesIO()</code> endpoint to fetch all of attributes independently and return the combined promise. This is the recommended way of fetching the data required by SPA page.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : User.Collection,
+        <span class="hljs-attr">roles</span> : UserRole.Collection,
+        ...
+    }
+}
+
+<span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> PageStore();
+store.fetch().then( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>{
+    <span class="hljs-comment">// render your page</span>
+});
+</code></pre>
+<p>It&#39;s possible to define or override the defined endpoint for the nested model or collection using <code>type().endpoint()</code> type-R attribute annotation.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageStore</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Store</span> </span>{
+    <span class="hljs-keyword">static</span> endpoint = attributesIO();
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">users</span> : type( User.Collection ).endpoint( restful( <span class="hljs-string">'/api/users'</span> ) ),
+        <span class="hljs-attr">roles</span> : type( UserRole.Collection ).endpoint( restful( <span class="hljs-string">'/api/userroles'</span> ) ),
+        ...
+    }
+}
+</code></pre>
+<aside class="notice">
+Please note, that `restful` endpoint is not included with 2.0 release but is planned for the future 2.x releases.
+</aside>
+
+<h3 id="new-mixins-engine">New mixins engine</h3>
+<p>Type-R metaprogramming system built on powerful mixins composition with configurable member merge rules. In 2.0 release, mixins engine was rewritten to properly apply merge rules on inheritance. This feature is heavily used in Type-R React&#39;s bindings and is crucial to prevent errors when extending the <code>React.Component</code> subclasses.</p>
+<p>An example illustrating the principle:</p>
+<pre><code class="highlight javascript">@define
+<span class="hljs-comment">// Define the class with </span>
+@mixinRules({
+    <span class="hljs-attr">componentWillMount</span> : mixinRules.classLast,
+    <span class="hljs-attr">componentWillUnmount</span> : mixinRules.classFirst
+})
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Component</span> </span>{
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">1</span> );
+    }
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">3</span> );
+    }
+}
+
+@define
+@mixins({
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">2</span> );
+    },
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">2</span> );
+    }
+})
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBaseComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>{
+    componentWillMount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">3</span> );
+    }
+
+    componentWillUnmount(){
+        <span class="hljs-built_in">console</span>.log( <span class="hljs-number">1</span> );
+    }
+}
+</code></pre>
+<p>In this example, all of the methods defined in the mixin, base class, and subclass will be called in the order specified in the <code>console.log</code>.</p>
+<h3 id="other-changes">Other changes</h3>
+<ul>
+<li>Update pipeline was rewritten to improve model&#39;s initialization speed (collection&#39;s fetch speed is improved by 30%).</li>
+<li>Fixed bug causing dynamic type checks to be disabled in models constructors.</li>
+<li>New implementation of the <code>Collection.subsetOf</code> which both fixes some edge case bugs and is more efficient.</li>
+<li>New logger handling NODE_ENV variable setting.</li>
+</ul>
+        </div>
+    </div>
+  </body>
+</html>

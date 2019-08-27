@@ -1,5 +1,5 @@
-import { Integer, MicrosoftDate, Timestamp } from "type-r/ext-types";
-import { type, ChainableAttributeSpec } from "type-r";
+import { Integer, MicrosoftDate, Timestamp } from '@type-r/ext-types';
+import { type, ChainableAttributeSpec } from '@type-r/models';
 Function.prototype.value = function (x) {
     return new ChainableAttributeSpec({ type: this, value: x, hasCustomDefault: true });
 };

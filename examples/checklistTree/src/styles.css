@@ -1,0 +1,40 @@
+.checkbox {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: solid;
+    border-width: 1px;
+    margin: 3px;
+    vertical-align: middle;
+}
+
+.children {
+    margin-left: 1em;
+}
+
+.checkbox.selected {
+    background-color: black;
+}
+
+input {
+    border: none;
+    border-bottom: solid;
+    border-width: 1px;
+    margin: 3px;
+    margin-left : 10px;
+}
+
+input:focus {
+    outline: none;
+    border-width: 2px;
+}
+
+button {
+    border-radius: 3px;
+    background-color: white;
+}
+
+.created {
+    margin : 3px;
+    font-size: 11px;
+}

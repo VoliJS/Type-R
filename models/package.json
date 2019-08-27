@@ -1,0 +1,61 @@
+{
+  "name": "@type-r/models",
+  "version": "4.0.2",
+  "description": "The serializable type system for JS and TypeScript",
+  "main": "./dist/index.js",
+  "jsnext:main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "dist",
+    "lib",
+    "src",
+    "endpoints",
+    "ext-types",
+    "globals"
+  ],
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "cleanup": "rimraf ./lib",
+    "compile": "yarn cleanup && tsc",
+    "bundle": "rollup --config",
+    "build": "yarn compile && yarn bundle",
+    "publish:alpha": "npm publish --tag alpha",
+    "publish:beta": "npm publish --tag beta"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaperton/TransactionalJS.git"
+  },
+  "keywords": [
+    "model",
+    "collection",
+    "backbonejs",
+    "data",
+    "nestedtypes",
+    "schema",
+    "serialization",
+    "validation",
+    "observable",
+    "reactive",
+    "orm",
+    "odm",
+    "typescript"
+  ],
+  "author": "Vlad Balin",
+  "contributors": [
+    "Ivan Terpugov <ru.ivan.alexandrovich@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gaperton/TransactionalJS/issues"
+  },
+  "homepage": "https://github.com/gaperton/TransactionalJS#readme",
+  "dependencies": {
+    "@linked/value": "^3.0.4",
+    "@type-r/mixture": "^4.0.0",
+    "tslib": "*"
+  }
+}

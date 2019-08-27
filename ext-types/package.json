@@ -1,11 +1,17 @@
 {
-    "name": "ext-types",
+    "name": "@type-r/ext-types",
+    "description": "Extended attribute types for Type-R models",
+    "version": "4.0.0",
     "main": "./dist/index.js",
     "jsnext:main": "./lib/index.js",
     "module": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "scripts": {
-        "build":"../node_modules/.bin/tsc && ../node_modules/.bin/rollup --config"
+        "build":"tsc && rollup --config"
+    },
+    "dependencies": {
+        "@type-r/models" : "^4.0.0",
+        "tslib":"*"
     },
     "author": "Ivan Terpugov",
     "license": "MIT"

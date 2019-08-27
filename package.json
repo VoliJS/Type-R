@@ -1,91 +1,24 @@
 {
-  "name": "type-r",
-  "version": "3.0.13",
-  "description": "Serializable, validated, and observable data layer for modern JS applications",
-  "main": "./dist/index.js",
-  "jsnext:main": "./lib/index.js",
-  "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "files": [
-    "dist",
-    "lib",
-    "src",
-    "endpoints",
-    "ext-types",
-    "globals"
-  ],
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "build:lib": "yarn compile:lib && yarn bundle:lib",
-    "build:cleanup": "node_modules/.bin/rimraf ./lib",
-    "compile:lib": "yarn build:cleanup && ./node_modules/.bin/tsc",
-    "bundle:lib": "node_modules/.bin/rollup --config",
-    "test:backbone": "node_modules/.bin/qunit 'tests/backbone-regression/*.tst.js'",
-    "test:type-r": "node_modules/.bin/jest",
-    "test": "npm run test:backbone && npm run test:type-r",
-    "build": "yarn && npm run build:lib && npm run build:endpoints && npm run build:ext-types && npm run build:globals && npm test && npm run docs",
-    "docs": "node docs/build.js",
-    "publish:alpha": "npm publish --tag alpha",
-    "publish:beta": "npm publish --tag beta",
-    "build:endpoints": "cd endpoints/attributes && npm run build && cd ../localStorage && npm run build && cd ../memory && npm run build && cd ../restful && npm run build && cd ../proxy && npm run build",
-    "build:ext-types": "cd ext-types && npm run build",
-    "build:globals": "cd globals && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gaperton/TransactionalJS.git"
-  },
-  "keywords": [
-    "model",
-    "collection",
-    "backbonejs",
-    "data",
-    "nestedtypes",
-    "schema",
-    "serialization",
-    "validation",
-    "observable",
-    "reactive",
-    "orm",
-    "odm",
-    "typescript"
-  ],
-  "author": "Vlad Balin",
-  "contributors": [
-    "Ivan Terpugov <ru.ivan.alexandrovich@gmail.com>"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gaperton/TransactionalJS/issues"
-  },
-  "homepage": "https://github.com/gaperton/TransactionalJS#readme",
-  "devDependencies": {
-    "@types/jest": "*",
-    "chai": "*",
-    "handlebars": "*",
-    "highlight.js": "*",
-    "jest": "*",
-    "marked": "^0.3.0",
-    "nock": "*",
-    "qunit": "*",
-    "reflect-metadata": "*",
-    "rimraf": "^2.6.3",
-    "rollup": "*",
-    "rollup-plugin-commonjs": "*",
-    "rollup-plugin-node-resolve": "*",
-    "rollup-plugin-paths": "*",
-    "rollup-plugin-sourcemaps": "*",
-    "rollup-plugin-uglify": "*",
-    "sinon": "*",
-    "sinon-chai": "*",
-    "ts-jest": "*",
-    "typescript": "*",
-    "underscore": "*"
-  },
-  "dependencies": {
-    "isomorphic-fetch": "*",
-    "tslib": "*"
-  }
+    "private": true,
+    "workspaces" : [
+        "mixture", "models", "ext-types", "globals", "endpoints", "react", "tests", "docs",
+        "examples/*"
+    ],
+
+    "scripts" : {
+        "build" : "yarn && yarn build:all && yarn test",
+        "build:all" : "yarn workspaces run build",
+        "test" : "yarn workspace @type-r/tests test"
+    },
+
+    "devDependencies": {
+      "rimraf": "^2.6.3",
+      "rollup": "*",
+      "rollup-plugin-commonjs": "*",
+      "rollup-plugin-node-resolve": "*",
+      "rollup-plugin-paths": "*",
+      "rollup-plugin-sourcemaps": "*",
+      "rollup-plugin-uglify": "*",
+      "typescript": "*"
+    }  
 }

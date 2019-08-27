@@ -1,0 +1,40 @@
+{
+  "name": "@type-r/mixture",
+  "version": "4.0.2",
+  "description": "React-style mixins, Backbone-style events, logging router.",
+  "main": "./dist/index.js",
+  "jsnext:main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "cleanup": "rimraf ./lib",
+    "compile": "yarn cleanup && tsc",
+    "bundle": "rollup --config",
+    "build": "yarn compile && yarn bundle"
+  },
+  "repository": "git+https://github.com/VoliJS/Type-R.git",
+  "keywords": [
+    "mixins",
+    "events",
+    "logging",
+    "underscore",
+    "backbone",
+    "typescript"
+  ],
+  "author": "Vlad Balin",
+  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VoliJS/Type-R/issues"
+  },
+  "homepage": "https://github.com/VoliJS/Type-R/tree/develop/mixture",
+  "dependencies": {
+    "tslib": "*"
+  },
+  "private": false
+}

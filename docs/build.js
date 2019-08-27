@@ -10,6 +10,7 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations
 under
 */
+console.info( 'Building Type-R docs...' );
 
 var marked = require('marked')
 var fs = require('fs')
@@ -48,7 +49,7 @@ Handlebars.registerHelper('html', function (content) {
   return new Handlebars.SafeString(content)
 })
 
-fs.readFile('./docs/index.md', 'utf8', function (err, content) {
+fs.readFile('./index.md', 'utf8', function (err, content) {
   if (err) console.log(err)
 
   content = content.split(/---/g)
@@ -92,13 +93,13 @@ fs.readFile('./docs/index.md', 'utf8', function (err, content) {
     // create partials
     for (var i = 0; i < data.includes.length; i++) {
       var includeFileName = data.includes[i]
-      var includeFilePath = path.resolve(__dirname, './chapters', includeFileName + '.md')
+      var includeFilePath = path.resolve(__dirname, '..', includeFileName + '.md')
       var includeContent = fs.readFileSync(includeFilePath, {encoding: 'utf8'})
       var markedInclude = marked(includeContent)
       Handlebars.registerPartial(includeFileName, markedInclude)
     }
   }
-  fs.readFile('./docs/lib/layouts/layout.html', 'utf8', function (err, source) {
+  fs.readFile('./lib/layouts/layout.html', 'utf8', function (err, source) {
     if (err) console.log(err)
 
     if (data.includes) {
@@ -113,8 +114,10 @@ fs.readFile('./docs/index.md', 'utf8', function (err, content) {
     var template = Handlebars.compile(source)
     data['content'] = marked(content.slice(2).join(''))
 
-    fs.writeFile('./docs/index.html', template(data), function (err) {
-      if (err) console.log(err)
+    fs.writeFile('../index.html', template(data), function (err) {
+      if (err){
+        console.log(err);
+      }
     })
   })
 })

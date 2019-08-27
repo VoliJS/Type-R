@@ -12,15 +12,6 @@
     "esModuleInterop": true,
     "noImplicitAny": false,
     "removeComments":true,
-    "experimentalDecorators": true,
-    "baseUrl": ".",
-    "paths" : {
-      "type-r": ["src"],
-      "type-r/globals": ["globals"],
-      "type-r/ext-types": ["ext-types"]
-    }
-  },
-  "files":[
-    "./src/index.ts"
-  ]
+    "experimentalDecorators": true
+  }
 }

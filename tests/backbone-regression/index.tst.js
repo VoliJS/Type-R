@@ -1,4 +1,4 @@
-Backbone = require( '../../dist' );
+Backbone = require( '@type-r/models' );
 _ = require( 'underscore' );
 
 deepEqual = QUnit.assert.deepEqual.bind( QUnit.assert );

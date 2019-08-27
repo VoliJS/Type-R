@@ -1,24 +1,9 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
-    "lib":[ "dom", "es2015"],
-    "module":"es6",
-    "declaration": true,
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "./lib",
-    "esModuleInterop": true,
-    "noImplicitAny": false,
-    "removeComments":true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "baseUrl": ".",
-    "paths" : {
-      "type-r": ["../src"],
-      "type-r/globals": ["../globals"],
-      "type-r/ext-types": ["../ext-types"]
-    }
+    "outDir": "./lib",
   },
   "include":[
     "./*.ts"

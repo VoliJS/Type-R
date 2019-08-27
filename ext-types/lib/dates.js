@@ -1,5 +1,5 @@
 import * as tslib_1 from "tslib";
-import { DateType, ChainableAttributeSpec, type } from "type-r";
+import { DateType, ChainableAttributeSpec, type } from '@type-r/models';
 var msDatePattern = /\/Date\(([0-9]+)\)\//;
 var MicrosoftDateType = (function (_super) {
     tslib_1.__extends(MicrosoftDateType, _super);

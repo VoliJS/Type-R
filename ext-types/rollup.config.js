@@ -5,7 +5,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
     input : 'lib/index.js',
-    external : "type-r",
+    external : "@type-r/models",
 
     output : {
         file   : 'dist/index.js',
@@ -13,7 +13,7 @@ export default {
         name : 'NestedExtTypes',
         sourcemap: true,
         globals : {
-            "type-r":"Nested"
+            "@type-r/models":"Nested"
         }
     },
     plugins: [

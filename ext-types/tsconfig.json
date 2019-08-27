@@ -1,20 +1,7 @@
 {
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-      "target": "es5",
-      "module":"es6",
-      "declaration": true,
-      "importHelpers": true,
-      "moduleResolution": "node",
-      "sourceMap": true,
       "outDir": "./lib",
-      "noImplicitAny": false,
-      "removeComments":true,
-      "experimentalDecorators": true,
-      "baseUrl": ".",
-      "paths" : {
-        "type-r":[ "../lib" ],
-        "type-r/ext-types":[ "../lib" ]
-      }
     },
     "files":[
       "./src/index.ts"

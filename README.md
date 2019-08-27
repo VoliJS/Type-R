@@ -1,72 +1,95 @@
-![master build](https://api.travis-ci.org/Volicon/Type-R.svg?branch=master)
-
-# Getting started
-
-Type-R is the modern JS data framework to manage complex domain and UI application state. Features:
-
-- _It's mapped to JSON by default_. The mapping can handle sophisticated scenarios with nested JSON and relations by id, and can be easily customized for every particular attribute or class.
-- _All changes are observable_, happens in the scope of transactions, and there's the fine-grained change events system.
-- _Validation_ is performed on the first access to the validation error and never happens twice for unchanged data.
-- _Everything is typed at run-time_ and is protected from improper updates. The shape of generated JSON and data classes is guaranteed to match the definitions.
-- It still looks like regular JS classes and is freaking fast. Type-R data structures are about 10 times faster than Backbone models and collections.
-
 ![overview](docs/images/overview.png)
 
-Data layer is defined as a superposition of three kinds of building blocks:
+# Type-R Overview
 
-- *Record* classes with typed attributes.
-- Ordered *collections* of records.
-- *Stores* are records with a set of collections in its attributes used to resolve id-references in JSON.
-- *IOEndpoints* is an entity encapsulating I/O transport which represent the persistent collection of records.
+Type-R is a serializable type system for JS and TS. Data structures you describe with Type-R models are automatically and with zero effort:
 
-Type-R is completely unopinionated on the client-server transport protocol and the view layer technology. It's your perfect M and VM in modern MVVM or MVC architecture.
+- mapped to JSON and, optionally, REST API;
+- protected from improper updates at run-time;
+- deeply observable.
+
+## Features 
+
+Mapping of complex JS types to JSON (such as Date, classes, objects trees with cross-references) is automatic with Type-R which eliminates a possibility of programmer's error and improves productivity. Less code to write means less things to unit test, less bugs to fix, and less code to read and understand when making changes.
+
+Type-R models safeguard both frontend and backend from errors in JSON. Programmer's mistake on a frontend can't affect the JSON sent to the server. Wrong JSON received from the server will be validated, sanitized, and can't cause catastrophic failures on the frontend. Type-R guarantee that the data structures will retain the declared shape and it immediately reports improper assignments to the console.
+
+There are virtually no point in unit-testing Type-R models as they are mostly declarative definitions. They are able to check the structural integrity themselves, and Type-R can be instructed to throw exceptions instead of console logging. It makes the unit tests of the data layer unnecessary, and greately reduces an effort when writing an integration test.
+
+## React integration
+
+Data structures defined with Type-R are deeply observable by default. They can be used to manage the state of React applications right out of box utilizing "unidirectional data flow" with no additional tooling. Type-R data structures support two-way data binding and attribute-level validation rules, making the a complex forms UI a trivial task. Normally, you don't change your UI code to add validation, just add the validation check to model's attributes.
+
+## Example
+
+The main Type-R building block is the `Model` class with attributes types declaration which behaves as a regular JS class. Models and collections of models can be nested indefinitely to define data structures of arbitrary complexity.
 
 ```javascript
-import { define, Record } from 'type-r'
-
-// Define email attribute type with encapsulated validation check.
-const Email = String.has.check( x => x! || x.indexOf( '@' ) >= 0, 'Invalid email' );
+import { define, Record, Collection } from '@type-r/models'
+import { restfulIO } from '@type-r/endpoints'
 
 @define class User extends Record {
     static attributes = {
-        name  : String.isRequired, // should not be empty for the record to be valid.
-        email : Email.isRequired
+        name  : '',
+        email : ''
     }
 }
 
 @define class Message extends Record {
+    static endpoint = restfulIO( '/api/messages', {
+        // REST I/O is simulated when the mock data is present, that's how you start.
+        mockData : [ { id : 0, createdAt : "1999-07-25T03:33:29.687Z", author : {}, to : [] }]
+    } );
+
     static attributes = {
-        created : Date //  = new Date()
+        createdAt : Date,
         author  : User, // aggregated User record.
-        to      : User.Collection, // aggregating collection of users
+        to      : Collection.of( User ), // aggregated collection of users
         subject : '',
         body    : ''
     }
 }
 
-const msg = new Message();
-assert( !msg.isValid() ); // Is not valid because msg.author has empty attributes
+const messages = Collection.of( Message ).create();
 
-// Listen for the changes in aggregation tree...
-msg.on( 'change', () => console.log( 'change!!!' ) );
+await messages.fetch({ params : { page : 0 }});
 
-msg.transaction( () => { // Prepare to make the sequence of changes on msg
-    msg.author.name = 'John Dee'; // No 'change' event yet as we're in the transaction. 
-    msg.author.email = 'dee@void.com'; 
+const msg = messages.first();
+msg.author.name = 'Alan Poe';
+msg.subject = 'Nevermore';
 
-    assert( msg.isValid() ); // Now msg is valid as all of its attributes are valid.
-}); // Got single 'change!!!' message in the console.
+await msg.save();
 ```
 
-## [Documentation](https://volijs.github.io/Type-R/)
+## [API reference and docs](https://volijs.github.io/Type-R/)
 
 ## Installation and requirements
-
-Is packed as UMD and ES6 module. No peer dependencies are required.
-
-`npm install type-r --save-dev`
 
 <aside class="success">IE10+, Edge, Safari, Chrome, and Firefox are supported</aside>
 
 <aside class="warning">IE9 and Opera may work but has not been tested. IE8 won't work.</aside>
 
+Install Type-R models and built-in set of I/O endpoints (restfulIO, localStorageIO, and memoryIO):
+
+`npm install @type-r/models @type-r/endpoints`
+
+Install React bindings:
+
+`npm install @type-r/react`
+
+Install extended data types (Email, URL, IP, Integer, Microsoft date, UNIX Timestamp date):
+
+`npm install @type-r/ext-types`
+
+## Repository structure
+
+- `models` - Type-R framework core.
+- `endpoints` - Type-R endpoints enabling models and collections I/O API.
+- `react` - Type-R React bindings.
+- `ext-types` - Extended data types.
+
+- `globals` - `@type-r/globals` providing backward API compatibility for Type-R v2 apps.
+
+- `mixture` - Events, Mixins, and log router. Used by `@type-r/models`.
+- `tests` - private package containing all the unit tests.
+- `examples/*` - example `@type-r/react` apps.

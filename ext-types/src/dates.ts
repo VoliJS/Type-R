@@ -1,4 +1,4 @@
-import {DateType, ChainableAttributeSpec, type} from "type-r";
+import {DateType, ChainableAttributeSpec, type} from '@type-r/models';
 
 const msDatePattern  = /\/Date\(([0-9]+)\)\//;
 

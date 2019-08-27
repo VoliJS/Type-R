@@ -1,4 +1,4 @@
-import { Model, type } from 'type-r';
+import { Model, type } from '@type-r/models';
 
 export const SecondsInterval = Model.extend({
     units: [

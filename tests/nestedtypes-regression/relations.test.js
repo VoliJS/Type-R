@@ -1,9 +1,9 @@
-var Nested = require('type-r'),
+var Nested = require('@type-r/models'),
     chai = require('chai');
 
 var { memberOf, subsetOf } = Nested;
 
-require('type-r/globals');
+require('@type-r/globals');
 
 var Record = Nested.Record,
     Store = Nested.Store;

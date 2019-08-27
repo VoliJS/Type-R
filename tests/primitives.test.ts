@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { logger, Logger, type, auto, Collection, attributes, subsetOf, define, predefine, Record, CollectionConstructor, shared, memberOf } from "type-r";
-import "type-r/globals";
+import { logger, Logger, type, auto, Collection, attributes, subsetOf, define, predefine, Record, CollectionConstructor, shared, memberOf } from '@type-r/models';
+import "@type-r/globals";
 
 logger.off()
     .throwOn( 'error' )
@@ -184,7 +184,7 @@ describe( 'Record', () =>{
 
             it( "infers types from values", () =>{
                 const m = new M(),
-                      { _attributes } = m;
+                      { _attributes } = m as any;
 
                 expect( _attributes.s.type ).toBe( String );
                 expect( _attributes.n.type ).toBe( Number );

@@ -1,7 +1,7 @@
-var Nested = require( 'type-r' ),
+var Nested = require( '@type-r/models' ),
     expect = require( 'chai' ).expect;
 
-require( 'type-r/globals' );
+require( '@type-r/globals' );
 
 var Model = Nested.Model.extend({
     defaults : {

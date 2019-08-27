@@ -1,4 +1,4 @@
-    var Nested = require( 'type-r' ),
+    var Nested = require( '@type-r/models' ),
         chai = require( 'chai' ),
         _ = require( 'underscore' ),
         sinon = require( 'sinon' ),
@@ -8,7 +8,7 @@
 
     const { expect } = chai;
 
-    require( 'type-r/globals' );
+    require( '@type-r/globals' );
 
     describe( 'Nested Models and Collections', function(){
         function shouldFireChangeOnce( model, attr, todo ){

@@ -1,4 +1,4 @@
-import { AttributeCheck, type } from 'type-r';
+import { AttributeCheck, type } from '@type-r/models';
 
 const ipPattern = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
 

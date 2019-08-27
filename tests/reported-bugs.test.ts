@@ -1,7 +1,6 @@
 import "reflect-metadata";
-import { logger, Collection, auto, define, mixins, Record, type, value, Model } from 'type-r';
+import { logger, Collection, auto, define, mixins, Record, type, value, Model, AttributesMixin } from '@type-r/models';
 import { MinutesInterval } from './common';
-import { AttributesMixin } from '../lib';
 
 logger.off();
 

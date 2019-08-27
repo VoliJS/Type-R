@@ -1,4 +1,4 @@
-import { define, definitions, Mixable, mixinRules, mixins, predefine } from 'type-r';
+import { define, definitions, Mixable, mixinRules, mixins, predefine } from '@type-r/models';
 
 const M = {
     num : 1,

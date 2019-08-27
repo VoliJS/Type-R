@@ -1,4 +1,4 @@
-    var Nested = require( 'type-r' ),
+    var Nested = require( '@type-r/models' ),
         chai = require( 'chai' ),
         expect = chai.expect,
         sinon = require( 'sinon' ),
@@ -8,7 +8,7 @@
 
     Nested.logger.off();
     
-    require( 'type-r/globals' );
+    require( '@type-r/globals' );
     
     describe( 'Type specs', function(){
         describe( 'Constructor type spec', function(){

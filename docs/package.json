@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "name": "@type-r/docs",
+    "version": "4.0.0",
+    "scripts": {
+        "build" : "node build.js"
+    },
+    "dependencies": {
+        "handlebars": "*",
+        "highlight.js": "*",
+        "jest": "*",
+        "marked": "^0.3.0"    
+    }
+}

@@ -5,15 +5,15 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 export default {
     input : 'lib/index.js',
     // FIXME: need to build UMD bundle properly so ext-types will be included.
-    external : ["type-r", "type-r/ext-types"],
+    external : ["@type-r/models", "@type-r/ext-types"],
 
     output : {
         file   : 'dist/index.js',
         format : 'umd',
         sourcemap: true,
         globals : {
-            "type-r":"Nested",
-            "type-r/ext-types": "NestedExtTypes"
+            "@type-r/models":"Nested",
+            "@type-r/ext-types": "NestedExtTypes"
         }
     },
     plugins: [

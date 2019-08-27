@@ -1,5 +1,5 @@
-import { Integer } from "type-r/ext-types";
-import { ChainableAttributeSpec } from "type-r";
+import { Integer } from '@type-r/ext-types';
+import { ChainableAttributeSpec } from '@type-r/models';
 declare global {
     interface Function {
         value: (x: any) => ChainableAttributeSpec<any>;

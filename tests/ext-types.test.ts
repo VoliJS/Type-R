@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import "isomorphic-fetch"
-import {Record} from 'type-r'
-import {Timestamp, MicrosoftDate, Integer, Url, IPAddress, Email} from "type-r/ext-types";
+import {Record} from '@type-r/models'
+import {Timestamp, MicrosoftDate, Integer, Url, IPAddress, Email} from "@type-r/ext-types";
 
 describe( 'Extended Type specs', function () {
 

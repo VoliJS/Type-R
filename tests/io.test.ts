@@ -1,12 +1,9 @@
 import "isomorphic-fetch";
 import nock from 'nock';
 import "reflect-metadata";
-import { auto, Collection, define, Record, Store, type, CollectionConstructor } from 'type-r';
-import { attributesIO } from '../endpoints/attributes';
-import { localStorageIO } from '../endpoints/localStorage';
-import { memoryIO } from '../endpoints/memory';
-import { RestfulEndpoint, restfulIO } from '../endpoints/restful';
-import "type-r/globals";
+import { auto, Collection, define, Record, Store, type, CollectionConstructor } from '@type-r/models';
+import { attributesIO, RestfulEndpoint, restfulIO, memoryIO, localStorageIO } from '@type-r/endpoints';
+import "@type-r/globals";
 
 describe( 'IO', function(){
     describe( 'memory endpoint', () => {

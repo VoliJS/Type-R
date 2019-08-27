@@ -1,5 +1,5 @@
-var Nested = require( 'type-r' );
-require("type-r/globals");
+var Nested = require( '@type-r/models' );
+require( '@type-r/globals' );
 
 const { shared } = Nested;
 
