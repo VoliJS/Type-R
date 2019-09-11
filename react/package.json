@@ -10,7 +10,7 @@
   "private": false,
   "dependencies": {
     "@linked/react": "^3.0.8",
-    "@type-r/models": "^4.0.0",
+    "@type-r/models": "4.x",
     "react": "^16.8.6"
   },
   "devDependencies": {
