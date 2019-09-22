@@ -1,6 +1,6 @@
 import { IOEndpoint } from '../../io-tools';
 import { LogLevel, tools, Logger } from '@type-r/mixture';
-import { TransactionOptions } from '../../transactions';
+import { TransactionOptions, Transactional } from '../../transactions';
 import { AttributesContainer, AttributeUpdatePipeline, ModelTransaction, setAttribute } from '../updates';
 
 const { notEqual, assign} = tools;
@@ -96,6 +96,10 @@ export class AnyType implements AttributeUpdatePipeline {
 
     toJSON( value, key, options? : object ) {
         return value && value.toJSON ? value.toJSON( options ) : value;
+    }
+
+    isMutableType(){
+        return this.type && this.type.prototype instanceof Transactional;
     }
 
     createPropertyDescriptor() : PropertyDescriptor | void {

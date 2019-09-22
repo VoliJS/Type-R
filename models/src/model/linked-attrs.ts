@@ -1,5 +1,6 @@
 import { Model } from './model'
 import { Linked } from '@linked/value'
+import { Transactional } from '../transactions';
 
 export function addAttributeLinks( Class : typeof Model ){
     const { prototype } = Class;
@@ -10,17 +11,24 @@ export function addAttributeLinks( Class : typeof Model ){
         ${ _attributesArray.map( ({ name }) => `this.$${name} = void 0; `).join( '\n' )}
     `)
 
-    AttributeRefs.prototype.__ModelAttrRef = ModelAttrRef;
+    AttributeRefs.prototype.__ModelAttrRef = LinkedAttr;
 
     for( let attr of _attributesArray ){
         const { name } = attr;
         
         Object.defineProperty( AttributeRefs.prototype, name, {
-            get : new Function(`
-                var x = this.$${name};
-                return x && x.value === this._model.${name} ?
-                    x :
-                    ( this.$${name} = new this.__ModelAttrRef( this._model, '${name}' ) );
+            get : new Function( attr.isMutableType() ? `
+                var cached = this.$${name},
+                    value = this._model.${name},
+                    token = value && value._changeToken;
+
+                return cached && cached._token === token ? cached :
+                    ( this.$${name} = new this.__ModelAttrRef( this._model, '${name}', value, token ) );
+            ` : `
+                var cached = this.$${name};
+
+                return cached && cached.value === this._model.${name} ? cached :
+                    ( this.$${name} = new this.__ModelAttrRef( this._model, '${name}', this._model.${name} ) );
             `) as any
         });
     }
@@ -29,12 +37,12 @@ export function addAttributeLinks( Class : typeof Model ){
 }
 
 export type LinkedModelHash<T extends object>= {
-    readonly [ K in keyof T ] : ModelAttrRef<T[K]>
+    readonly [ K in keyof T ] : LinkedAttr<T[K]>
 }
 
-export class ModelAttrRef<T> extends Linked<T> {
-    constructor( protected model : Model, protected attr : string ){
-        super( model[ attr ] );
+export class LinkedAttr<T> extends Linked<T> {
+    constructor( protected model : Model, protected attr : string, value, protected _token ){
+        super( value );
     }
 
     set( x : T ){
@@ -56,3 +64,5 @@ export class ModelAttrRef<T> extends Linked<T> {
         return this.model._attributes[ this.attr ];
     }
 }
+
+Object.defineProperty( LinkedAttr.prototype, '_changeToken', { value : null } );

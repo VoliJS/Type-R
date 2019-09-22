@@ -1,5 +1,6 @@
 import * as tslib_1 from "tslib";
 import { tools } from '@type-r/mixture';
+import { Transactional } from '../../transactions';
 import { setAttribute } from '../updates';
 var notEqual = tools.notEqual, assign = tools.assign;
 var emptyOptions = {};
@@ -68,6 +69,9 @@ var AnyType = (function () {
     AnyType.prototype.validate = function (record, value, key) { };
     AnyType.prototype.toJSON = function (value, key, options) {
         return value && value.toJSON ? value.toJSON(options) : value;
+    };
+    AnyType.prototype.isMutableType = function () {
+        return this.type && this.type.prototype instanceof Transactional;
     };
     AnyType.prototype.createPropertyDescriptor = function () {
         var _a = this, name = _a.name, getHook = _a.getHook;

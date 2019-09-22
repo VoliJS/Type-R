@@ -1,4 +1,5 @@
-import { define, value, Model, AttributesMixin } from '@type-r/models'
+import { type, define, value, Model, AttributesMixin } from '@type-r/models'
+
 
 describe( 'Attribute value refs', () => {
     @define class Test extends Model {
@@ -48,4 +49,24 @@ describe( 'Attribute value refs', () => {
         expect( c ).toBe( test.$.c );
     } );
 
+    it( 'updates the link on deep changes', () => {
+
+        interface Test2 extends AttributesMixin<typeof Test2>{}
+
+        @define class Test2 extends Model {
+            static attributes = {
+                deep : Test,
+                other : Boolean
+            }
+        }
+
+        const t2 = new Test2();
+        const l1 = t2.$.deep,
+            l2 = t2.$.other;
+
+        t2.deep.a = 10;
+
+        expect( l1 !== t2.$.deep ).toBeTruthy();
+        expect( l2 === t2.$.other ).toBeTruthy();
+    });
 });

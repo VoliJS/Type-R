@@ -38,6 +38,7 @@ export declare class AnyType implements AttributeUpdatePipeline {
     dispose(record: AttributesContainer, value: any): void;
     validate(record: AttributesContainer, value: any, key: string): any;
     toJSON(value: any, key: any, options?: object): any;
+    isMutableType(): boolean;
     createPropertyDescriptor(): PropertyDescriptor | void;
     value: any;
     static defaultValue: any;
