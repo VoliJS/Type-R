@@ -56,7 +56,7 @@
           <div class="logo-caption">Type-R 3.0</div>
           <div>universal state management</div>
         </div>
-        
+
       </div>
         <div class="lang-selector">
               <a href="#" data-language-name="javascript">javascript</a>
@@ -69,8 +69,8 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-                <li><a href="https://github.com/Volicon/Type-R">GitHub repository</a></li>
-                <li><a href="https://github.com/Volicon/Type-R/issues">Report the bug</a></li>
+                <li><a href="https://github.com/VoliJs/Type-R">GitHub repository</a></li>
+                <li><a href="https://github.com/VoliJs/Type-R/issues">Report the bug</a></li>
                 <li><a href="https://groups.google.com/forum/#!forum/volicon-open-source">Ask the question</a></li>
                 <li><a href="http://www.volicon.com/">Supported by <img style="vertical-align: middle" src="images/volicon_verizon_dm.png"/></a></li>
         </ul>
@@ -296,12 +296,12 @@ expect( users.isValid() ).toBe( <span class="hljs-literal">true</span> );
 <aside class="warning">IE9 and Opera may work but has not been tested. IE8 won't work.</aside>
 
 <h2 id="reactjs-bindings">ReactJS bindings</h2>
-<p><a href="https://volicon.github.io/React-MVx/">React-MVx</a> is a glue framework which uses Type-R to manage the UI state in React and the <a href="https://github.com/Volicon/NestedLink">NestedLink</a> library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:</p>
+<p><a href="https://volijs.github.io/React-MVx/">React-MVx</a> is a glue framework which uses Type-R to manage the UI state in React and the <a href="https://github.com/VoliJs/NestedLink">NestedLink</a> library to implement two-way data binding. React-MVx provides the complete MVVM solution on top of ReactJS, featuring:</p>
 <ul>
-<li>Type-R <a href="https://volicon.github.io/Type-R/#record">Record</a> to manage the local <a href="https://volicon.github.io/React-MVx/#state">component&#39;s state</a>.</li>
-<li><a href="https://volicon.github.io/React-MVx/#link">two-way data binding</a> for UI and domain state.</li>
+<li>Type-R <a href="https://volijs.github.io/Type-R/#record">Record</a> to manage the local <a href="https://volijs.github.io/React-MVx/#state">component&#39;s state</a>.</li>
+<li><a href="https://volijs.github.io/React-MVx/#link">two-way data binding</a> for UI and domain state.</li>
 <li>Hassle-free form validation (due to the combination of features of Type-R and NestedLink).</li>
-<li><a href="https://volicon.github.io/Type-R/#definition">Type-R type annotation</a> used to define component <a href="https://volicon.github.io/React-MVx/#props">props</a> and <a href="https://volicon.github.io/React-MVx/#context">context</a>.</li>
+<li><a href="https://volijs.github.io/Type-R/#definition">Type-R type annotation</a> used to define component <a href="https://volijs.github.io/React-MVx/#props">props</a> and <a href="https://volijs.github.io/React-MVx/#context">context</a>.</li>
 </ul>
 <h2 id="usage-with-nodejs">Usage with NodeJS</h2>
 <p>Type-R can be used at the server side to build the business logic layer by defining the custom I/O endpoints to store data in a database. Type-R dynamic type safety features are particularly advantageous when schema-less JSON databases (like Couchbase) are being used.</p>
@@ -345,7 +345,7 @@ users.updateEach( <span class="hljs-function"><span class="hljs-params">user</sp
     <span class="hljs-meta">@auto</span> lastName  : <span class="hljs-built_in">string</span> <span class="hljs-comment">// ⟵ @auto decorator extracts type from the Reflect metadata</span>
     <span class="hljs-meta">@auto</span> createdAt : <span class="hljs-built_in">Date</span> <span class="hljs-comment">// ⟵ It works for any constructor.</span>
     <span class="hljs-meta">@auto</span>(<span class="hljs-string">'somestring'</span>) firstName : <span class="hljs-built_in">string</span> <span class="hljs-comment">//⟵ The custom default value must be passed to @auto decorator.</span>
-    <span class="hljs-meta">@auto</span>(<span class="hljs-literal">null</span>) updatedAt : <span class="hljs-built_in">Date</span> 
+    <span class="hljs-meta">@auto</span>(<span class="hljs-literal">null</span>) updatedAt : <span class="hljs-built_in">Date</span>
 
     <span class="hljs-comment">// You have to pass the type explicitly if reflect-metadata is not used.</span>
     <span class="hljs-meta">@type</span>(<span class="hljs-built_in">String</span>).as email : <span class="hljs-built_in">string</span>
@@ -354,7 +354,7 @@ users.updateEach( <span class="hljs-function"><span class="hljs-params">user</sp
     <span class="hljs-meta">@value</span>(<span class="hljs-string">''</span>).as email2 : <span class="hljs-built_in">string</span>
 
     <span class="hljs-comment">// Type cannot be inferred from null default values, and needs to be specified explicitly</span>
-    <span class="hljs-meta">@type</span>(<span class="hljs-built_in">String</span>).value(<span class="hljs-literal">null</span>).as email3 : <span class="hljs-built_in">string</span> 
+    <span class="hljs-meta">@type</span>(<span class="hljs-built_in">String</span>).value(<span class="hljs-literal">null</span>).as email3 : <span class="hljs-built_in">string</span>
 
     <span class="hljs-comment">// You can attach ⤹ metadata to fine-tune attribute's behavior</span>
     <span class="hljs-meta">@type</span>(<span class="hljs-built_in">Date</span>).toJSON(<span class="hljs-literal">false</span>).as
@@ -844,7 +844,7 @@ Comment.define({
 <span class="hljs-comment">// Define another custom collection class.</span>
 @define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OtherLibrary</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Record</span>.<span class="hljs-title">Collection</span> </span>{
     <span class="hljs-comment">// Specify the record so the collection will be able to restore itself from JSON.</span>
-    <span class="hljs-keyword">static</span> model = Book; 
+    <span class="hljs-keyword">static</span> model = Book;
 }
 </code></pre>
 <pre><code class="highlight typescript"><span class="hljs-comment">// Define custom collection class.</span>
@@ -1578,7 +1578,7 @@ No built-in I/O enpoints support that functionality yet.
 
     <span class="hljs-keyword">static</span> attributes = {
         <span class="hljs-comment">// Roles collection here has relative url /api/users/:user_id/roles/</span>
-        roles : type( Role.Collection ).endpoint( restfulIO( <span class="hljs-string">'./roles'</span> ) ), 
+        roles : type( Role.Collection ).endpoint( restfulIO( <span class="hljs-string">'./roles'</span> ) ),
         ...
     }
 }
@@ -2254,8 +2254,8 @@ If this package is not used, the code must be refactored according to the rules 
 <p>This release adds long-awaited HTTP REST endpoint.</p>
 <ul>
 <li>IO endpoints moved outside of the man sources tree. Creation of the custom endpoints is easier than ever.</li>
-<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volicon.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
-<li>Added proxyIO endpoint for creating endpoints from records on the server side (<a href="https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volicon.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
+<li>Added HTTP REST endpoint <code>restfulIO</code> with relative urls support (<a href="https://volijs.github.io/Type-R/#endpoint-restfulio-url-options-)">https://volijs.github.io/Type-R/#endpoint-restfulio-url-options-)</a>.</li>
+<li>Added proxyIO endpoint for creating endpoints from records on the server side (<a href="https://volijs.github.io/Type-R/#endpoint-proxyio-recordctor-)">https://volijs.github.io/Type-R/#endpoint-proxyio-recordctor-)</a>.</li>
 </ul>
 <h2 id="2-0-0">2.0.0</h2>
 <p>This release brings new features which fixes problems with component&#39;s inheritance in React bindings and implements long-awaited generic IO implementation based on ES6 promises.</p>
