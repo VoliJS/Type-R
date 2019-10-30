@@ -12,12 +12,12 @@ Written in TypeScript, works with ES5, ES6, and TypeScript.
 
 Packed as UMD, exports to global `Mixture` variable when included with script tag.
 
-> MixtureJS is the core part of [Volicon/Verizon](http://www.volicon.com/) technology stack - [Type-R](https://github.com/Volicon/Type-R), [NestedTypes](https://github.com/Volicon/NestedTypes), and [NestedReact](https://github.com/Volicon/NestedReact).
+> MixtureJS is the core part of [Volicon/Verizon](http://www.volicon.com/) technology stack - [Type-R](https://github.com/VoliJs/Type-R), [NestedTypes](https://github.com/VoliJs/NestedTypes), and [NestedReact](https://github.com/VoliJs/NestedReact).
 
 ## Events Performance
 
 MixtureJS _implements_ [Backbone API for Events](http://backbonejs.org/#Events), but it's entirely different internally. Here's the results of the typical
-run of the [performance tests](https://github.com/Volicon/mixturejs/tree/master/tests) enclosed.
+run of the [performance tests](https://github.com/VoliJs/mixturejs/tree/master/tests) enclosed.
 
 ![performance](https://raw.githubusercontent.com/Volicon/mixturejs/master/perf-chart.jpg)
 
