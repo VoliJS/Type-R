@@ -4068,6 +4068,11 @@ mixin-deep@^1.2.0:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
 
+mixin-flavors@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/mixin-flavors/-/mixin-flavors-0.4.1.tgz#c904c500c9831750e2940685c1a2f28051bda749"
+  integrity sha512-mW8IbhLPqiTuK7d74Dl/9p7P+wCJHpauDX1Kr0OLqLdgVx1zPV99vhrMj1AchjsEQZ2ZvsN5pLuFRVCjZx7+ZQ==
+
 mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"

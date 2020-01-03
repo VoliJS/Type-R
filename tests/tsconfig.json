@@ -1,9 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2015",
     "emitDecoratorMetadata": true,
-    "outDir": "./lib",
+    "outDir": "./lib"
   },
   "include":[
     "./*.ts"

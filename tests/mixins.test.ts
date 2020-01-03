@@ -1,5 +1,14 @@
 import { define, definitions, Mixable, mixinRules, mixins, predefine } from '@type-r/models';
 
+import { superMixins } from 'mixin-flavors/lib/mixture'
+import { mixin } from 'mixin-flavors'
+
+@mixin class F {
+    constructor(){
+        superMixins( this );
+    }
+}
+
 const M = {
     num : 1,
     nul : null,

@@ -1,13 +1,14 @@
 {
-    "private" : true,
+    "private": true,
     "name": "@type-r/tests",
     "version": "4.0.0",
     "dependencies": {
-        "@type-r/models" : "^4.0.0",
-        "isomorphic-fetch": "*",
+        "@type-r/models": "^4.0.0",
         "@types/jest": "*",
         "chai": "*",
+        "isomorphic-fetch": "*",
         "jest": "*",
+        "mixin-flavors": "^0.4.1",
         "nock": "*",
         "qunit": "*",
         "reflect-metadata": "*",
@@ -17,7 +18,7 @@
         "underscore": "*"
     },
     "scripts": {
-        "build":"echo Tests: nothing to build, skipping",
+        "build": "echo Tests: nothing to build, skipping",
         "test:backbone": "qunit backbone-regression/*.tst.js",
         "test:type-r": "jest",
         "test": "yarn test:backbone && yarn test:type-r"
