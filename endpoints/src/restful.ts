@@ -1,8 +1,10 @@
-import { IOEndpoint, IOOptions, log, isProduction } from '@type-r/models'
+import { IOEndpoint, IOOptions, log, isProduction, Model } from '@type-r/models'
 import { memoryIO, MemoryEndpoint } from './memory'
 
-export function create( url : string, fetchOptions? : Partial<RestfulFetchOptions> ){
-    return new RestfulEndpoint( url, fetchOptions );
+export type ConstructUrl<M extends Model = Model> = ( params : { [ key : string ] : any }, model? : M ) => string;
+
+export function create<M extends Model>( url : string | ConstructUrl<M>, fetchOptions? : Partial<RestfulFetchOptions> ){
+    return new RestfulEndpoint( typeof url === 'string' ? () => url : url, fetchOptions );
 }
 
 export { create as restfulIO }
@@ -25,7 +27,7 @@ export type RestfulFetchOptions = /* subset of RequestInit */{
 }
 
 export class RestfulEndpoint implements IOEndpoint {
-    constructor( public url : string, { mockData, simulateDelay = 1000, ...fetchOptions } : RestfulFetchOptions = {}) {
+    constructor( public url : ConstructUrl, { mockData, simulateDelay = 1000, ...fetchOptions } : RestfulFetchOptions = {}) {
         this.fetchOptions = fetchOptions
         this.memoryIO =  mockData && !isProduction ? memoryIO( mockData, simulateDelay ) : null;
 
@@ -96,8 +98,9 @@ export class RestfulEndpoint implements IOEndpoint {
         return endsWithSlash ? url.substr( 0, url.length - 1 ) : url;
     }
 
-    protected getRootUrl( recordOrCollection ) {
-        const { url } = this
+    protected getRootUrl( recordOrCollection, params ) {
+        const url = this.url( params );
+
         if( this.isRelativeUrl( url ) ) {
             const owner         = recordOrCollection.getOwner(),
                   ownerUrl      = owner.getEndpoint().getUrl( owner );
@@ -116,7 +119,7 @@ export class RestfulEndpoint implements IOEndpoint {
     }
 
     protected objectUrl( record, id, options ){
-        return appendParams( this.getUrl( record ), options.params );
+        return appendParams( this.getUrl( record, options.params ), options.params );
     }
 
     protected collectionUrl( collection, options ){
@@ -167,3 +170,18 @@ function appendParams( url, params? ) {
                           .join( '&' )
         : url;
 }
+
+/**
+ * {
+ *      list: ({ filter, ...rest }) =>
+ *          [ 'get', `/api/users/${ filter || '' }`, rest ],
+ *      
+ *      create: [ 'post', `/api/users` ],
+ *      read: ({ id }) => [ 'get', `/api/users/${id}` ],
+ *      update: ({ id }) => [ 'put', `/api/users/${id}` ],
+ *      destroy: ({ id }) => [ 'delete', `/api/users/${id}` ],
+ * 
+ *      headers : ()
+ * }
+ */
+
