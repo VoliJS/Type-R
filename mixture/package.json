@@ -1,6 +1,6 @@
 {
   "name": "@type-r/mixture",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "React-style mixins, Backbone-style events, logging router.",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
