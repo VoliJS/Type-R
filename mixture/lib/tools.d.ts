@@ -22,3 +22,4 @@ export declare function keys(o: any): string[];
 export declare function once(func: Function): Function;
 export declare function notEqual(a: any, b: any): boolean;
 export declare function hashMap(obj?: any): any;
+export declare function compare(a: any, b: any): -1 | 0 | 1;

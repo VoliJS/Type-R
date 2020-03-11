@@ -32,6 +32,7 @@ export declare type AttributesMixin<M extends {
 };
 export declare class Model extends Transactional implements IOModel, AttributesContainer, Iterable<any> {
     static onDefine(definition: any, BaseClass: any): void;
+    static comparator<T extends typeof Model>(this: T, attr: keyof InstanceType<T>, asc?: boolean): (a: InstanceType<T>, b: InstanceType<T>) => -1 | 0 | 1;
     static Collection: CollectionConstructor;
     static DefaultCollection: CollectionConstructor;
     static id: import("./attrDef").ChainableAttributeSpec<StringConstructor>;

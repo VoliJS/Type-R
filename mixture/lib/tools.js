@@ -197,4 +197,16 @@ export function hashMap(obj) {
     var hash = Object.create(HashProto);
     return obj ? assign(hash, obj) : hash;
 }
+export function compare(a, b) {
+    if (a == b)
+        return 0;
+    if (a == null)
+        return -1;
+    if (b == null)
+        return 1;
+    var av = a.valueOf(), bv = b.valueOf();
+    return av < bv ? -1 :
+        av > bv ? 1 :
+            0;
+}
 //# sourceMappingURL=tools.js.map

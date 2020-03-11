@@ -271,3 +271,20 @@ export function hashMap( obj? ){
     const hash = Object.create( HashProto );
     return obj ? assign( hash, obj ) : hash;
 }
+
+export function compare( a : any, b : any ) : -1 | 0 | 1 {
+    // Handle strictly equal values.
+    if( a == b ) return 0;
+
+    // Handle nulls.
+    if( a == null ) return -1;
+    if( b == null ) return 1;
+
+    // No nulls. Convert values to primitives.
+    const av = a.valueOf(),
+        bv = b.valueOf();
+
+    return  av < bv ? -1 :
+            av > bv ? 1 :
+            0;
+}

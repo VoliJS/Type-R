@@ -23,6 +23,13 @@ var Model = (function (_super) {
     }
     Model_1 = Model;
     Model.onDefine = function (definition, BaseClass) { };
+    Model.comparator = function (attr, asc) {
+        if (asc === void 0) { asc = true; }
+        var compare = tools.compare;
+        return asc ?
+            function (a, b) { return compare(a[attr], b[attr]); } :
+            function (a, b) { return -compare(a[attr], b[attr]); };
+    };
     Object.defineProperty(Model, "ref", {
         get: function () {
             var _this = this;

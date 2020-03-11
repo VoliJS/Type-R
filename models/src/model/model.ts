@@ -75,6 +75,13 @@ export class Model extends Transactional implements IOModel, AttributesContainer
     // Hack
     static onDefine( definition, BaseClass ){}
 
+    static comparator<T extends typeof Model>( this : T, attr : keyof InstanceType<T>, asc = true ) : ( a : InstanceType<T>, b : InstanceType<T> ) => -1 | 0 | 1 {
+        const { compare } = tools;
+        return asc ? 
+            ( a, b ) => compare( a[ attr ], b[ attr ] ) :
+            ( a, b ) => -compare( a[ attr ], b[ attr ] ) as any;
+    }
+
     static Collection : CollectionConstructor;
     static DefaultCollection : CollectionConstructor;
     
