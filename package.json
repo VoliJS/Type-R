@@ -24,6 +24,6 @@
         "rollup-plugin-paths": "*",
         "rollup-plugin-sourcemaps": "*",
         "rollup-plugin-uglify": "*",
-        "typescript": "*"
+        "typescript": "~3.6.0"
     }
 }

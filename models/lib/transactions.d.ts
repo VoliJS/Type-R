@@ -42,7 +42,7 @@ export declare abstract class Transactional implements Messenger, IONode, Valida
     getStore(): Transactional;
     hasPendingIO(): IOPromise<this>;
     getEndpoint(): IOEndpoint;
-    get validationError(): ValidationError;
+    readonly validationError: ValidationError;
     validate(obj?: Transactional): any;
     getValidationError(key?: string): any;
     deepValidationError(reference: string): any;

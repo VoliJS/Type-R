@@ -32,9 +32,8 @@ export declare class Collection<R extends Model = Model> extends Transactional i
     static onExtend(BaseClass: typeof Transactional): void;
     static onDefine(definition: CollectionDefinition, BaseClass: any): void;
     models: R[];
-    set comparator(x: GenericComparator);
+    comparator: GenericComparator;
     getStore(): Transactional;
-    get comparator(): GenericComparator;
     get(objOrId: string | {
         id?: string;
         cid?: string;
@@ -54,7 +53,7 @@ export declare class Collection<R extends Model = Model> extends Transactional i
     } & TransactionOptions): IOPromise<this>;
     dispose(): void;
     reset(a_elements?: ElementsArg<R>, options?: TransactionOptions): R[];
-    add(a_elements: ElementsArg<R>, options?: AddOptions): Model[];
+    add(a_elements: ElementsArg<R>, options?: AddOptions): any;
     remove(recordsOrIds: any, options?: CollectionOptions): R[] | R;
     $includes(idOrObj: R): Linked<boolean>;
     sort(options?: TransactionOptions): this;
@@ -62,10 +61,10 @@ export declare class Collection<R extends Model = Model> extends Transactional i
     modelId(attrs: {}): any;
     toggle(model: R, a_next?: boolean): boolean;
     getClassName(): string;
-    get length(): number;
-    push(model: ElementsArg<R>, options?: CollectionOptions): Model[];
+    readonly length: number;
+    push(model: ElementsArg<R>, options?: CollectionOptions): any;
     pop(options?: CollectionOptions): R;
-    unshift(model: ElementsArg<R>, options?: CollectionOptions): Model[];
+    unshift(model: ElementsArg<R>, options?: CollectionOptions): any;
     shift(options?: CollectionOptions): R;
 }
 export interface Collection<R extends Model> extends ArrayMixin<R> {

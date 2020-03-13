@@ -10,7 +10,7 @@ export interface ProxyIOInternalOptions {
 }
 export declare class ProxyEndpoint implements IOEndpoint {
     Record: typeof Record;
-    get endpoint(): any;
+    readonly endpoint: any;
     options: ProxyIOInternalOptions;
     constructor(record: typeof Record, options?: ProxyIOOptions);
     subscribe(events: any, target: any): Promise<any>;
