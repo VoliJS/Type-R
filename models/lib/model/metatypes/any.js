@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign } from "tslib";
 import { tools } from '@type-r/mixture';
 import { Transactional } from '../../transactions';
 import { setAttribute } from '../updates';
@@ -9,7 +9,7 @@ var AnyType = (function () {
         this.name = name;
         this.getHook = null;
         this.options = a_options;
-        var options = tslib_1.__assign({ getHooks: [], transforms: [], changeHandlers: [] }, a_options);
+        var options = __assign({ getHooks: [], transforms: [], changeHandlers: [] }, a_options);
         options.getHooks = options.getHooks.slice();
         options.transforms = options.transforms.slice();
         options.changeHandlers = options.changeHandlers.slice();

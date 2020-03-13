@@ -1,7 +1,7 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { AnyType } from './any';
 var DateType = (function (_super) {
-    tslib_1.__extends(DateType, _super);
+    __extends(DateType, _super);
     function DateType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

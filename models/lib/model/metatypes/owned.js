@@ -1,9 +1,9 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { ItemsBehavior, transactionApi } from '../../transactions';
 import { AnyType } from './any';
 var free = transactionApi.free, aquire = transactionApi.aquire;
 var AggregatedType = (function (_super) {
-    tslib_1.__extends(AggregatedType, _super);
+    __extends(AggregatedType, _super);
     function AggregatedType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

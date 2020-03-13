@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign, __decorate, __extends } from "tslib";
 import { define, definitions, isProduction, logger, mixinRules, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
@@ -8,7 +8,7 @@ import { setAttribute, shouldBeAnObject, unknownAttrsWarning, UpdateModelMixin }
 var assign = tools.assign, isEmpty = tools.isEmpty;
 var _cidCounter = 0;
 var Model = (function (_super) {
-    tslib_1.__extends(Model, _super);
+    __extends(Model, _super);
     function Model(a_values, a_options) {
         var _this = _super.call(this, _cidCounter++) || this;
         _this._attributes$ = void 0;
@@ -85,7 +85,7 @@ var Model = (function (_super) {
     });
     Model.prototype.changedAttributes = function (diff) {
         if (!diff)
-            return this.hasChanged() ? tslib_1.__assign({}, this.changed) : false;
+            return this.hasChanged() ? __assign({}, this.changed) : false;
         var val, changed = false, old = this._transaction ? this._previousAttributes : this.attributes, attrSpecs = this._attributes;
         for (var attr in diff) {
             if (!attrSpecs[attr].isChanged(old[attr], (val = diff[attr])))
@@ -119,7 +119,7 @@ var Model = (function (_super) {
     Model.prototype.unset = function (key, options) {
         var _a;
         var value = this[key];
-        this.set((_a = {}, _a[key] = void 0, _a), tslib_1.__assign({ unset: true }, options));
+        this.set((_a = {}, _a[key] = void 0, _a), __assign({ unset: true }, options));
         return value;
     };
     Model.prototype.clear = function (options) {
@@ -247,7 +247,7 @@ var Model = (function (_super) {
         _super.prototype.dispose.call(this);
     };
     Model.prototype._log = function (level, topic, text, props, a_logger) {
-        (a_logger || logger).trigger(level, topic, this.getClassName() + ' ' + text, tslib_1.__assign({}, props, { 'Model': this, 'Attributes definition': this._attributes }));
+        (a_logger || logger).trigger(level, topic, this.getClassName() + ' ' + text, __assign(__assign({}, props), { 'Model': this, 'Attributes definition': this._attributes }));
     };
     Model.prototype.getClassName = function () {
         return _super.prototype.getClassName.call(this) || 'Model';
@@ -279,7 +279,7 @@ var Model = (function (_super) {
     var Model_1;
     Model._metatype = AggregatedType;
     Model.id = type(String).value(null);
-    Model = Model_1 = tslib_1.__decorate([
+    Model = Model_1 = __decorate([
         define({
             cidPrefix: 'm',
             _changeEventName: 'change',

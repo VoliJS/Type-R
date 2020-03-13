@@ -13,9 +13,9 @@ export declare class ChainableAttributeSpec<F extends Function> {
     };
     constructor(options: AttributeOptions);
     check(check: AttributeCheck, error?: any): this;
-    readonly as: PropertyDecorator;
-    readonly isRequired: this;
-    readonly required: this;
+    get as(): PropertyDecorator;
+    get isRequired(): this;
+    get required(): this;
     endpoint(endpoint: IOEndpoint): this;
     watcher(ref: string | ((value: any, key: string) => void)): this;
     parse(fun: Parse): this;
@@ -24,7 +24,7 @@ export declare class ChainableAttributeSpec<F extends Function> {
     set(fun: any): this;
     changeEvents(events: boolean): this;
     events(map: EventsDefinition): this;
-    readonly has: this;
+    get has(): this;
     metadata(options: object): this;
     value(x: any): this;
     static from(spec: any): ChainableAttributeSpec<any>;

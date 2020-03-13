@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __decorate, __extends } from "tslib";
 import { Collection } from '../collection';
 import { define, tools } from '@type-r/mixture';
 import { type } from '../model';
@@ -20,7 +20,7 @@ Collection.prototype.createSubset = function (models, options) {
 var subsetOfBehavior = ItemsBehavior.share | ItemsBehavior.persistent;
 function defineSubsetCollection(CollectionClass) {
     var SubsetOfCollection = (function (_super) {
-        tslib_1.__extends(SubsetOfCollection, _super);
+        __extends(SubsetOfCollection, _super);
         function SubsetOfCollection(recordsOrIds, options) {
             var _this = _super.call(this, [], options, subsetOfBehavior) || this;
             _this.resolvedWith = null;
@@ -115,7 +115,7 @@ function defineSubsetCollection(CollectionClass) {
         SubsetOfCollection.prototype.toggleAll = function () {
             return this.length ? this.reset() : this.addAll();
         };
-        SubsetOfCollection = tslib_1.__decorate([
+        SubsetOfCollection = __decorate([
             define
         ], SubsetOfCollection);
         return SubsetOfCollection;

@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign, __extends } from "tslib";
 import React, { Component } from 'react';
 import { attributes, Transactional, Linked } from '@type-r/models';
 export function pureRenderProps(props, Comp) {
@@ -10,7 +10,7 @@ export function pureRenderProps(props, Comp) {
         return "vector[" + idx + "] !== ( " + propForType(_attributes[key].type, key) + " )";
     }).join(' || ') + ";\n    ");
     var PureRenderWrapper = (function (_super) {
-        tslib_1.__extends(PureRenderWrapper, _super);
+        __extends(PureRenderWrapper, _super);
         function PureRenderWrapper(props) {
             var _this = _super.call(this, props) || this;
             _this._vector = createVector(_this.props);
@@ -23,7 +23,7 @@ export function pureRenderProps(props, Comp) {
             this._vector = createVector(this.props);
         };
         PureRenderWrapper.prototype.render = function () {
-            return React.createElement(Comp, tslib_1.__assign({}, this.props));
+            return React.createElement(Comp, __assign({}, this.props));
         };
         return PureRenderWrapper;
     }(Component));

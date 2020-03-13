@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __extends as __extends_1, __rest } from "tslib";
 import { __extends } from 'tslib';
 import { assign, defaults, getBaseClass, hashMap, transform } from './tools';
 var Mixable = (function () {
@@ -8,7 +8,7 @@ var Mixable = (function () {
         if (protoProps === void 0) { protoProps = {}; }
         var BaseClass = getBaseClass(this);
         staticProps && assign(this, staticProps);
-        var mixins = protoProps.mixins, defineMixin = tslib_1.__rest(protoProps, ["mixins"]);
+        var mixins = protoProps.mixins, defineMixin = __rest(protoProps, ["mixins"]);
         mixins && this.mixins.merge(mixins);
         this.mixins.mergeObject(this.prototype, defineMixin, true);
         this.mixins.mergeObject(this.prototype, this.mixins.getStaticDefinitions(BaseClass), true);
@@ -24,7 +24,7 @@ var Mixable = (function () {
         }
         else {
             TheSubclass = (function (_super) {
-                tslib_1.__extends(Subclass, _super);
+                __extends_1(Subclass, _super);
                 function Subclass() {
                     return _super !== null && _super.apply(this, arguments) || this;
                 }

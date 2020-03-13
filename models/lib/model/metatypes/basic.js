@@ -1,7 +1,7 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { AnyType } from './any';
 var ImmutableClassType = (function (_super) {
-    tslib_1.__extends(ImmutableClassType, _super);
+    __extends(ImmutableClassType, _super);
     function ImmutableClassType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -24,7 +24,7 @@ var ImmutableClassType = (function (_super) {
 }(AnyType));
 export { ImmutableClassType };
 var PrimitiveType = (function (_super) {
-    tslib_1.__extends(PrimitiveType, _super);
+    __extends(PrimitiveType, _super);
     function PrimitiveType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -50,7 +50,7 @@ var PrimitiveType = (function (_super) {
 }(AnyType));
 export { PrimitiveType };
 var NumericType = (function (_super) {
-    tslib_1.__extends(NumericType, _super);
+    __extends(NumericType, _super);
     function NumericType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -73,7 +73,7 @@ var NumericType = (function (_super) {
 }(PrimitiveType));
 export { NumericType };
 var ArrayType = (function (_super) {
-    tslib_1.__extends(ArrayType, _super);
+    __extends(ArrayType, _super);
     function ArrayType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -93,7 +93,7 @@ var ArrayType = (function (_super) {
 }(AnyType));
 export { ArrayType };
 var ObjectType = (function (_super) {
-    tslib_1.__extends(ObjectType, _super);
+    __extends(ObjectType, _super);
     function ObjectType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -109,7 +109,7 @@ var ObjectType = (function (_super) {
 export { ObjectType };
 export function doNothing() { }
 var FunctionType = (function (_super) {
-    tslib_1.__extends(FunctionType, _super);
+    __extends(FunctionType, _super);
     function FunctionType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

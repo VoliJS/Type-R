@@ -1,9 +1,9 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { Model } from '../model';
 import { Transactional } from '../transactions';
 var _store = null;
 var Store = (function (_super) {
-    tslib_1.__extends(Store, _super);
+    __extends(Store, _super);
     function Store() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

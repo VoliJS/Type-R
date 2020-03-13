@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { Linked } from '@linked/value';
 export function addAttributeLinks(Class) {
     var prototype = Class.prototype;
@@ -18,7 +18,7 @@ export function addAttributeLinks(Class) {
     prototype.__Attributes$ = AttributeRefs;
 }
 var LinkedAttr = (function (_super) {
-    tslib_1.__extends(LinkedAttr, _super);
+    __extends(LinkedAttr, _super);
     function LinkedAttr(model, attr, value, _token) {
         var _this = _super.call(this, value) || this;
         _this.model = model;

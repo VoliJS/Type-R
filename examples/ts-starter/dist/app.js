@@ -211,7 +211,7 @@ var Messenger = (function () {
         this.off();
         this._disposed = true;
     };
-    Messenger = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Messenger = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
         _mixins__WEBPACK_IMPORTED_MODULE_2__["define"],
         Object(_mixins__WEBPACK_IMPORTED_MODULE_2__["definitions"])({
             properties: _mixins__WEBPACK_IMPORTED_MODULE_2__["mixinRules"].merge,
@@ -550,7 +550,7 @@ var isProduction = typeof process !== 'undefined' && process.env && "development
     ['error', 'info'] :
     ['error', 'warn', 'debug', 'info', 'log'];
 var Logger = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Logger, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(Logger, _super);
     function Logger() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.counter = {};
@@ -585,7 +585,7 @@ var Logger = (function (_super) {
     Logger.prototype.on = function (a, b) {
         return _super.prototype.on.call(this, a, b);
     };
-    Logger = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Logger = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
         _mixins__WEBPACK_IMPORTED_MODULE_2__["define"]
     ], Logger);
     return Logger;
@@ -646,7 +646,7 @@ var Mixable = (function () {
         if (protoProps === void 0) { protoProps = {}; }
         var BaseClass = Object(_tools__WEBPACK_IMPORTED_MODULE_1__["getBaseClass"])(this);
         staticProps && Object(_tools__WEBPACK_IMPORTED_MODULE_1__["assign"])(this, staticProps);
-        var mixins = protoProps.mixins, defineMixin = tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"](protoProps, ["mixins"]);
+        var mixins = protoProps.mixins, defineMixin = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(protoProps, ["mixins"]);
         mixins && this.mixins.merge(mixins);
         this.mixins.mergeObject(this.prototype, defineMixin, true);
         this.mixins.mergeObject(this.prototype, this.mixins.getStaticDefinitions(BaseClass), true);
@@ -662,7 +662,7 @@ var Mixable = (function () {
         }
         else {
             TheSubclass = (function (_super) {
-                tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Subclass, _super);
+                Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(Subclass, _super);
                 function Subclass() {
                     return _super !== null && _super.apply(this, arguments) || this;
                 }
@@ -1289,9 +1289,28 @@ var ArrayMixin = (function () {
         var index = a_index < 0 ? a_index + this.models.length : a_index;
         return this.models[index];
     };
+    ArrayMixin.prototype.groupBy = function (attr, a_reducer) {
+        var map = typeof attr === 'string' ?
+            function (x) { return x[attr]; } :
+            attr;
+        var reducer = a_reducer || defaultGrouping;
+        var results = {};
+        for (var _i = 0, _a = this.models; _i < _a.length; _i++) {
+            var model = _a[_i];
+            var key = map(model);
+            if (key != null) {
+                results[key] = reducer(results[key], model, key);
+            }
+        }
+        return results;
+    };
     return ArrayMixin;
 }());
 
+var defaultGrouping = function (acc, x) {
+    if (acc === void 0) { acc = []; }
+    return (acc.push(x), acc);
+};
 var noOp = function (x) { return x; };
 function toPredicateFunction(iteratee) {
     if (iteratee == null)
@@ -1506,7 +1525,7 @@ __webpack_require__.r(__webpack_exports__);
 var trigger2 = _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["eventsApi"].trigger2, begin = _transactions__WEBPACK_IMPORTED_MODULE_5__["transactionApi"].begin, commit = _transactions__WEBPACK_IMPORTED_MODULE_5__["transactionApi"].commit, markAsDirty = _transactions__WEBPACK_IMPORTED_MODULE_5__["transactionApi"].markAsDirty;
 var _count = 0;
 var CollectionRefsType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](CollectionRefsType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(CollectionRefsType, _super);
     function CollectionRefsType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -1515,7 +1534,7 @@ var CollectionRefsType = (function (_super) {
 }(_model__WEBPACK_IMPORTED_MODULE_4__["SharedType"]));
 ;
 var Collection = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Collection, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(Collection, _super);
     function Collection(records, options, shared) {
         if (options === void 0) { options = {}; }
         var _this = _super.call(this, _count++) || this;
@@ -1710,9 +1729,9 @@ var Collection = (function (_super) {
     Collection.prototype.fetch = function (a_options) {
         var _this = this;
         if (a_options === void 0) { a_options = {}; }
-        var options = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ parse: true }, a_options), endpoint = this.getEndpoint();
+        var options = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ parse: true }, a_options), endpoint = this.getEndpoint();
         return Object(_io_tools__WEBPACK_IMPORTED_MODULE_3__["startIO"])(this, endpoint.list(options, this), options, function (json) {
-            var result = _this.set(json, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ parse: true, ioMethod: 'fetch' }, options));
+            var result = _this.set(json, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ parse: true, ioMethod: 'fetch' }, options));
             if (options.liveUpdates) {
                 result = _this.liveUpdates(options.liveUpdates);
             }
@@ -1743,7 +1762,7 @@ var Collection = (function (_super) {
             this.models = [];
         }
         markAsDirty(this, options);
-        options.silent || trigger2(this, 'reset', this, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ previousModels: previousModels }, options));
+        options.silent || trigger2(this, 'reset', this, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ previousModels: previousModels }, options));
         var _byId = this._byId;
         for (var _i = 0, previousModels_1 = previousModels; _i < previousModels_1.length; _i++) {
             var toDispose = previousModels_1[_i];
@@ -1799,7 +1818,7 @@ var Collection = (function (_super) {
     };
     Collection.prototype.unset = function (modelOrId, options) {
         var value = this.get(modelOrId);
-        this.remove(modelOrId, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ unset: true }, options));
+        this.remove(modelOrId, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ unset: true }, options));
         return value;
     };
     Collection.prototype.modelId = function (attrs) {
@@ -1832,25 +1851,25 @@ var Collection = (function (_super) {
         configurable: true
     });
     Collection.prototype.push = function (model, options) {
-        return this.add(model, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ at: this.length }, options));
+        return this.add(model, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ at: this.length }, options));
     };
     Collection.prototype.pop = function (options) {
         var model = this.at(this.length - 1);
-        this.remove(model, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ unset: true }, options));
+        this.remove(model, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ unset: true }, options));
         return model;
     };
     Collection.prototype.unshift = function (model, options) {
-        return this.add(model, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ at: 0 }, options));
+        return this.add(model, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ at: 0 }, options));
     };
     Collection.prototype.shift = function (options) {
         var model = this.at(0);
-        this.remove(model, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ unset: true }, options));
+        this.remove(model, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ unset: true }, options));
         return model;
     };
     var Collection_1;
     Collection.refsTo = _model__WEBPACK_IMPORTED_MODULE_4__["shared"];
     Collection._metatype = _model__WEBPACK_IMPORTED_MODULE_4__["AggregatedType"];
-    Collection = Collection_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Collection = Collection_1 = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["define"])({
             cidPrefix: 'c',
             model: _model__WEBPACK_IMPORTED_MODULE_4__["Model"],
@@ -1873,7 +1892,7 @@ function toElements(collection, elements, options) {
 }
 _model__WEBPACK_IMPORTED_MODULE_4__["Model"].Collection = Collection;
 var LinkedIncludes = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](LinkedIncludes, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(LinkedIncludes, _super);
     function LinkedIncludes(collection, model) {
         var _this = _super.call(this, collection.get(model)) || this;
         _this.collection = collection;
@@ -2558,12 +2577,12 @@ __webpack_require__.r(__webpack_exports__);
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, defaults = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].defaults;
 function attributes(attrDefs) {
     var DefaultModel = (function (_super) {
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DefaultModel, _super);
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(DefaultModel, _super);
         function DefaultModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         DefaultModel.attributes = attrDefs;
-        DefaultModel = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        DefaultModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
         ], DefaultModel);
         return DefaultModel;
@@ -2574,12 +2593,12 @@ _model__WEBPACK_IMPORTED_MODULE_5__["Model"].onExtend = function (BaseClass) {
     _transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"].onExtend.call(this, BaseClass);
     var Class = this;
     var DefaultCollection = (function (_super) {
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DefaultCollection, _super);
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(DefaultCollection, _super);
         function DefaultCollection() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         DefaultCollection.model = Class;
-        DefaultCollection = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        DefaultCollection = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["predefine"]
         ], DefaultCollection);
         return DefaultCollection;
@@ -2591,7 +2610,7 @@ _model__WEBPACK_IMPORTED_MODULE_5__["Model"].onExtend = function (BaseClass) {
 };
 _model__WEBPACK_IMPORTED_MODULE_5__["Model"].onDefine = function (definition, BaseClass) {
     var baseProto = BaseClass.prototype;
-    var _a = Object(_mixin__WEBPACK_IMPORTED_MODULE_4__["createAttributesMixin"])(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"](_a, ["properties", "_localEvents"]);
+    var _a = Object(_mixin__WEBPACK_IMPORTED_MODULE_4__["createAttributesMixin"])(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, ["properties", "_localEvents"]);
     assign(this.prototype, dynamicMixin);
     definition.properties = defaults(definition.properties || {}, properties);
     definition._localEvents = _localEvents;
@@ -2649,17 +2668,17 @@ var IOModelMixin = {
     save: function (options) {
         var _this = this;
         if (options === void 0) { options = {}; }
-        var endpoint = this.getEndpoint(), json = this.toJSON(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ ioMethod: 'save' }, options));
+        var endpoint = this.getEndpoint(), json = this.toJSON(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ ioMethod: 'save' }, options));
         return Object(_io_tools__WEBPACK_IMPORTED_MODULE_1__["startIO"])(this, this.isNew() ?
             endpoint.create(json, options, this) :
             endpoint.update(this.id, json, options, this), options, function (update) {
-            _this.set(update, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ parse: true, ioMethod: 'save' }, options));
+            _this.set(update, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ parse: true, ioMethod: 'save' }, options));
         });
     },
     fetch: function (options) {
         var _this = this;
         if (options === void 0) { options = {}; }
-        return Object(_io_tools__WEBPACK_IMPORTED_MODULE_1__["startIO"])(this, this.getEndpoint().read(this.id, options, this), options, function (json) { return _this.set(json, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ parse: true, ioMethod: 'fetch' }, options)); });
+        return Object(_io_tools__WEBPACK_IMPORTED_MODULE_1__["startIO"])(this, this.getEndpoint().read(this.id, options, this), options, function (json) { return _this.set(json, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ parse: true, ioMethod: 'fetch' }, options)); });
     },
     destroy: function (options) {
         var _this = this;
@@ -2713,7 +2732,7 @@ function addAttributeLinks(Class) {
     prototype.__Attributes$ = AttributeRefs;
 }
 var LinkedAttr = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](LinkedAttr, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(LinkedAttr, _super);
     function LinkedAttr(model, attr, value, _token) {
         var _this = _super.call(this, value) || this;
         _this.model = model;
@@ -2774,7 +2793,7 @@ var AnyType = (function () {
         this.name = name;
         this.getHook = null;
         this.options = a_options;
-        var options = tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ getHooks: [], transforms: [], changeHandlers: [] }, a_options);
+        var options = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ getHooks: [], transforms: [], changeHandlers: [] }, a_options);
         options.getHooks = options.getHooks.slice();
         options.transforms = options.transforms.slice();
         options.changeHandlers = options.changeHandlers.slice();
@@ -2928,7 +2947,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ImmutableClassType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ImmutableClassType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(ImmutableClassType, _super);
     function ImmutableClassType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2951,7 +2970,7 @@ var ImmutableClassType = (function (_super) {
 }(_any__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
 
 var PrimitiveType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](PrimitiveType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(PrimitiveType, _super);
     function PrimitiveType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -2977,7 +2996,7 @@ var PrimitiveType = (function (_super) {
 }(_any__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
 
 var NumericType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](NumericType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(NumericType, _super);
     function NumericType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3000,7 +3019,7 @@ var NumericType = (function (_super) {
 }(PrimitiveType));
 
 var ArrayType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ArrayType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(ArrayType, _super);
     function ArrayType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3020,7 +3039,7 @@ var ArrayType = (function (_super) {
 }(_any__WEBPACK_IMPORTED_MODULE_1__["AnyType"]));
 
 var ObjectType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ObjectType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(ObjectType, _super);
     function ObjectType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3036,7 +3055,7 @@ var ObjectType = (function (_super) {
 
 function doNothing() { }
 var FunctionType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](FunctionType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(FunctionType, _super);
     function FunctionType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3072,7 +3091,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var DateType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](DateType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(DateType, _super);
     function DateType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3227,7 +3246,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var free = _transactions__WEBPACK_IMPORTED_MODULE_1__["transactionApi"].free, aquire = _transactions__WEBPACK_IMPORTED_MODULE_1__["transactionApi"].aquire;
 var AggregatedType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](AggregatedType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(AggregatedType, _super);
     function AggregatedType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3347,7 +3366,7 @@ __webpack_require__.r(__webpack_exports__);
 var on = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["eventsApi"].on, off = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["eventsApi"].off, free = _transactions__WEBPACK_IMPORTED_MODULE_2__["transactionApi"].free, aquire = _transactions__WEBPACK_IMPORTED_MODULE_2__["transactionApi"].aquire;
 var shareAndListen = _transactions__WEBPACK_IMPORTED_MODULE_2__["ItemsBehavior"].listen | _transactions__WEBPACK_IMPORTED_MODULE_2__["ItemsBehavior"].share;
 var SharedType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SharedType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(SharedType, _super);
     function SharedType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -3472,7 +3491,7 @@ function createAttribute(spec, name) {
 function createAttributesMixin(attributesDefinition, baseClassAttributes) {
     var myAttributes = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, attributesDefinition, createAttribute), allAttributes = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].defaults({}, myAttributes, baseClassAttributes);
     var ConstructorsMixin = Object(_updates__WEBPACK_IMPORTED_MODULE_5__["constructorsMixin"])(allAttributes);
-    return tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, ConstructorsMixin, { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }) }, localEventsMixin(myAttributes), { _endpoints: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, ConstructorsMixin), { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }) }), localEventsMixin(myAttributes)), { _endpoints: _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
 }
 function localEventsMixin(attrSpecs) {
     var _localEvents;
@@ -3534,7 +3553,7 @@ __webpack_require__.r(__webpack_exports__);
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, isEmpty = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].isEmpty;
 var _cidCounter = 0;
 var Model = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Model, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(Model, _super);
     function Model(a_values, a_options) {
         var _this = _super.call(this, _cidCounter++) || this;
         _this._attributes$ = void 0;
@@ -3611,7 +3630,7 @@ var Model = (function (_super) {
     });
     Model.prototype.changedAttributes = function (diff) {
         if (!diff)
-            return this.hasChanged() ? tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this.changed) : false;
+            return this.hasChanged() ? Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, this.changed) : false;
         var val, changed = false, old = this._transaction ? this._previousAttributes : this.attributes, attrSpecs = this._attributes;
         for (var attr in diff) {
             if (!attrSpecs[attr].isChanged(old[attr], (val = diff[attr])))
@@ -3645,7 +3664,7 @@ var Model = (function (_super) {
     Model.prototype.unset = function (key, options) {
         var _a;
         var value = this[key];
-        this.set((_a = {}, _a[key] = void 0, _a), tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({ unset: true }, options));
+        this.set((_a = {}, _a[key] = void 0, _a), Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ unset: true }, options));
         return value;
     };
     Model.prototype.clear = function (options) {
@@ -3773,7 +3792,7 @@ var Model = (function (_super) {
         _super.prototype.dispose.call(this);
     };
     Model.prototype._log = function (level, topic, text, props, a_logger) {
-        (a_logger || _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["logger"]).trigger(level, topic, this.getClassName() + ' ' + text, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, props, { 'Model': this, 'Attributes definition': this._attributes }));
+        (a_logger || _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["logger"]).trigger(level, topic, this.getClassName() + ' ' + text, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, props), { 'Model': this, 'Attributes definition': this._attributes }));
     };
     Model.prototype.getClassName = function () {
         return _super.prototype.getClassName.call(this) || 'Model';
@@ -3805,7 +3824,7 @@ var Model = (function (_super) {
     var Model_1;
     Model._metatype = _metatypes__WEBPACK_IMPORTED_MODULE_5__["AggregatedType"];
     Model.id = Object(_attrDef__WEBPACK_IMPORTED_MODULE_3__["type"])(String).value(null);
-    Model = Model_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Model = Model_1 = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"])({
             cidPrefix: 'm',
             _changeEventName: 'change',
@@ -4057,7 +4076,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ModelRefType = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](ModelRefType, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(ModelRefType, _super);
     function ModelRefType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -4143,7 +4162,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _store = null;
 var Store = (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Store, _super);
+    Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(Store, _super);
     function Store() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -4211,7 +4230,7 @@ _collection__WEBPACK_IMPORTED_MODULE_1__["Collection"].prototype.createSubset = 
 var subsetOfBehavior = _transactions__WEBPACK_IMPORTED_MODULE_4__["ItemsBehavior"].share | _transactions__WEBPACK_IMPORTED_MODULE_4__["ItemsBehavior"].persistent;
 function defineSubsetCollection(CollectionClass) {
     var SubsetOfCollection = (function (_super) {
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](SubsetOfCollection, _super);
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(SubsetOfCollection, _super);
         function SubsetOfCollection(recordsOrIds, options) {
             var _this = _super.call(this, [], options, subsetOfBehavior) || this;
             _this.resolvedWith = null;
@@ -4306,7 +4325,7 @@ function defineSubsetCollection(CollectionClass) {
         SubsetOfCollection.prototype.toggleAll = function () {
             return this.length ? this.reset() : this.addAll();
         };
-        SubsetOfCollection = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        SubsetOfCollection = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["define"]
         ], SubsetOfCollection);
         return SubsetOfCollection;
@@ -4436,8 +4455,8 @@ var Transactional = (function () {
     };
     Transactional.from = function (json, _a) {
         if (_a === void 0) { _a = {}; }
-        var strict = _a.strict, options = tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"](_a, ["strict"]);
-        var obj = this.create(json, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, options, { logger: strict ? _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["throwingLogger"] : void 0 }));
+        var strict = _a.strict, options = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, ["strict"]);
+        var obj = this.create(json, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, options), { logger: strict ? _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["throwingLogger"] : void 0 }));
         if (strict && obj.validationError) {
             obj.eachValidationError(function (error, key, obj) {
                 throw new Error(obj.getClassName() + "." + key + ": " + error);
@@ -4491,7 +4510,7 @@ var Transactional = (function () {
             return name;
     };
     var Transactional_1;
-    Transactional = Transactional_1 = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Transactional = Transactional_1 = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
         _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["define"],
         Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["definitions"])({
             endpoint: _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["mixinRules"].value
@@ -4908,7 +4927,7 @@ function extractChangeToken(x) {
 /*!***************************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \***************************************************************************/
-/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35455,7 +35474,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35473,13 +35492,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Link"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["LinkedComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["StateLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
 
@@ -35504,12 +35529,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
 
 /* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_3__["pureRenderProps"]; });
@@ -35548,7 +35567,7 @@ function pureRenderProps(props, Comp) {
         return "vector[" + idx + "] !== ( " + propForType(_attributes[key].type, key) + " )";
     }).join(' || ') + ";\n    ");
     var PureRenderWrapper = (function (_super) {
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](PureRenderWrapper, _super);
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(PureRenderWrapper, _super);
         function PureRenderWrapper(props) {
             var _this = _super.call(this, props) || this;
             _this._vector = createVector(_this.props);
@@ -35561,7 +35580,7 @@ function pureRenderProps(props, Comp) {
             this._vector = createVector(this.props);
         };
         PureRenderWrapper.prototype.render = function () {
-            return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Comp, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, this.props));
+            return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Comp, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, this.props));
         };
         return PureRenderWrapper;
     }(react__WEBPACK_IMPORTED_MODULE_1__["Component"]));

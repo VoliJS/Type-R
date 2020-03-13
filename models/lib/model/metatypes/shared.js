@@ -1,11 +1,11 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { eventsApi } from '@type-r/mixture';
 import { ItemsBehavior, transactionApi } from '../../transactions';
 import { AnyType } from './any';
 var on = eventsApi.on, off = eventsApi.off, free = transactionApi.free, aquire = transactionApi.aquire;
 var shareAndListen = ItemsBehavior.listen | ItemsBehavior.share;
 var SharedType = (function (_super) {
-    tslib_1.__extends(SharedType, _super);
+    __extends(SharedType, _super);
     function SharedType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

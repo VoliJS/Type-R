@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign } from "tslib";
 import { eventsApi, tools as _ } from '@type-r/mixture';
 import { CompiledReference } from '../traversable';
 import { ChainableAttributeSpec } from './attrDef';
@@ -10,7 +10,7 @@ export function createAttribute(spec, name) {
 export function createAttributesMixin(attributesDefinition, baseClassAttributes) {
     var myAttributes = _.transform({}, attributesDefinition, createAttribute), allAttributes = _.defaults({}, myAttributes, baseClassAttributes);
     var ConstructorsMixin = constructorsMixin(allAttributes);
-    return tslib_1.__assign({}, ConstructorsMixin, { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: _.transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }) }, localEventsMixin(myAttributes), { _endpoints: _.transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
+    return __assign(__assign(__assign(__assign({}, ConstructorsMixin), { _attributes: new ConstructorsMixin.AttributesCopy(allAttributes), _attributesArray: Object.keys(allAttributes).map(function (key) { return allAttributes[key]; }), properties: _.transform({}, myAttributes, function (x) { return x.createPropertyDescriptor(); }) }), localEventsMixin(myAttributes)), { _endpoints: _.transform({}, allAttributes, function (attrDef) { return attrDef.options.endpoint; }) });
 }
 function localEventsMixin(attrSpecs) {
     var _localEvents;

@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __decorate, __extends, __rest } from "tslib";
 import { define, predefine, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
@@ -11,12 +11,12 @@ export { Model };
 var assign = tools.assign, defaults = tools.defaults;
 export function attributes(attrDefs) {
     var DefaultModel = (function (_super) {
-        tslib_1.__extends(DefaultModel, _super);
+        __extends(DefaultModel, _super);
         function DefaultModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         DefaultModel.attributes = attrDefs;
-        DefaultModel = tslib_1.__decorate([
+        DefaultModel = __decorate([
             define
         ], DefaultModel);
         return DefaultModel;
@@ -27,12 +27,12 @@ Model.onExtend = function (BaseClass) {
     Transactional.onExtend.call(this, BaseClass);
     var Class = this;
     var DefaultCollection = (function (_super) {
-        tslib_1.__extends(DefaultCollection, _super);
+        __extends(DefaultCollection, _super);
         function DefaultCollection() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         DefaultCollection.model = Class;
-        DefaultCollection = tslib_1.__decorate([
+        DefaultCollection = __decorate([
             predefine
         ], DefaultCollection);
         return DefaultCollection;
@@ -44,7 +44,7 @@ Model.onExtend = function (BaseClass) {
 };
 Model.onDefine = function (definition, BaseClass) {
     var baseProto = BaseClass.prototype;
-    var _a = createAttributesMixin(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = tslib_1.__rest(_a, ["properties", "_localEvents"]);
+    var _a = createAttributesMixin(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = __rest(_a, ["properties", "_localEvents"]);
     assign(this.prototype, dynamicMixin);
     definition.properties = defaults(definition.properties || {}, properties);
     definition._localEvents = _localEvents;

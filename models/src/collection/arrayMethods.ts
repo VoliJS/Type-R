@@ -130,7 +130,36 @@ export abstract class ArrayMixin<R extends Model> {
         const index = a_index < 0 ? a_index + this.models.length : a_index;    
         return this.models[ index ];
     }
+
+    groupBy<A>( attr : keyof R | (( m : R ) => string )) : { [ key : string ] : R[] };
+    groupBy<A>(
+        attr : keyof R | (( m : R ) => string ),
+        a_reducer : ( acc : A, model? : R, key? : string ) => A
+    ) : { [ key : string ] : A };
+    groupBy<A>(
+        attr : keyof R | (( m : R ) => string ),
+        a_reducer? : ( acc : A, model? : R, key? : string ) => A
+    ){
+        const map : any = typeof attr === 'string' ?
+            x => x[ attr ] :
+            attr;
+
+        const reducer = a_reducer || defaultGrouping;
+
+        const results = {};
+
+        for( let model of this.models ){
+            const key = map( model );
+            if( key != null ){
+                results[ key ] = reducer( results[ key ], model, key );
+            }
+        }
+
+        return results;
+    }
 }
+
+const defaultGrouping = ( acc = [], x ) => ( acc.push( x ), acc );
 
 const noOp = x => x;
 

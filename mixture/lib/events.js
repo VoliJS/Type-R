@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __decorate } from "tslib";
 import * as _eventsApi from './eventsource';
 import { EventMap } from './eventsource';
 import { define, definitions, mixinRules } from './mixins';
@@ -106,7 +106,7 @@ var Messenger = (function () {
         this.off();
         this._disposed = true;
     };
-    Messenger = tslib_1.__decorate([
+    Messenger = __decorate([
         define,
         definitions({
             properties: mixinRules.merge,

@@ -1,8 +1,8 @@
-import * as tslib_1 from "tslib";
+import { __extends } from "tslib";
 import { AnyType, ChainableAttributeSpec, Model } from '../model';
 import { parseReference } from './commons';
 var ModelRefType = (function (_super) {
-    tslib_1.__extends(ModelRefType, _super);
+    __extends(ModelRefType, _super);
     function ModelRefType() {
         return _super !== null && _super.apply(this, arguments) || this;
     }

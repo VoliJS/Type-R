@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign, __decorate, __rest } from "tslib";
 import { abortIO } from './io-tools';
 import { define, definitions, eventsApi, Messenger, mixinRules, mixins, throwingLogger } from '@type-r/mixture';
 import { resolveReference } from './traversable';
@@ -76,8 +76,8 @@ var Transactional = (function () {
     };
     Transactional.from = function (json, _a) {
         if (_a === void 0) { _a = {}; }
-        var strict = _a.strict, options = tslib_1.__rest(_a, ["strict"]);
-        var obj = this.create(json, tslib_1.__assign({}, options, { logger: strict ? throwingLogger : void 0 }));
+        var strict = _a.strict, options = __rest(_a, ["strict"]);
+        var obj = this.create(json, __assign(__assign({}, options), { logger: strict ? throwingLogger : void 0 }));
         if (strict && obj.validationError) {
             obj.eachValidationError(function (error, key, obj) {
                 throw new Error(obj.getClassName() + "." + key + ": " + error);
@@ -131,7 +131,7 @@ var Transactional = (function () {
             return name;
     };
     var Transactional_1;
-    Transactional = Transactional_1 = tslib_1.__decorate([
+    Transactional = Transactional_1 = __decorate([
         define,
         definitions({
             endpoint: mixinRules.value

@@ -11,6 +11,7 @@ export declare class LinkedAttr<T> extends Linked<T> {
     constructor(model: Model, attr: string, value: any, _token: any);
     set(x: T): void;
     _error: any;
-    error: any;
-    readonly descriptor: import("./metatypes").AnyType;
+    get error(): any;
+    set error(x: any);
+    get descriptor(): import("./metatypes").AnyType;
 }

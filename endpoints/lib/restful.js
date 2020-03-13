@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __assign, __awaiter, __generator, __rest } from "tslib";
 import { log, isProduction } from '@type-r/models';
 import { memoryIO } from './memory';
 export function create(url, fetchOptions) {
@@ -8,7 +8,7 @@ export { create as restfulIO };
 var RestfulEndpoint = (function () {
     function RestfulEndpoint(url, _a) {
         if (_a === void 0) { _a = {}; }
-        var mockData = _a.mockData, _b = _a.simulateDelay, simulateDelay = _b === void 0 ? 1000 : _b, fetchOptions = tslib_1.__rest(_a, ["mockData", "simulateDelay"]);
+        var mockData = _a.mockData, _b = _a.simulateDelay, simulateDelay = _b === void 0 ? 1000 : _b, fetchOptions = __rest(_a, ["mockData", "simulateDelay"]);
         this.url = url;
         this.fetchOptions = fetchOptions;
         this.memoryIO = mockData && !isProduction ? memoryIO(mockData, simulateDelay) : null;
@@ -49,8 +49,8 @@ var RestfulEndpoint = (function () {
     RestfulEndpoint.prototype.subscribe = function (events) { };
     RestfulEndpoint.prototype.unsubscribe = function (events) { };
     RestfulEndpoint.prototype.simulateIO = function (method, httpMethod, url, args) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
                 log(isProduction ? "error" : "info", 'Type-R:SimulatedIO', httpMethod + " " + url);
                 return [2, this.memoryIO[method].apply(this.memoryIO, args)];
             });
@@ -86,8 +86,8 @@ var RestfulEndpoint = (function () {
         return appendParams(this.getRootUrl(collection), options.params);
     };
     RestfulEndpoint.prototype.buildRequestOptions = function (method, options, body) {
-        var mergedOptions = tslib_1.__assign({}, RestfulEndpoint.defaultFetchOptions, this.fetchOptions, options);
-        var headers = mergedOptions.headers, rest = tslib_1.__rest(mergedOptions, ["headers"]), resultOptions = tslib_1.__assign({ method: method, headers: tslib_1.__assign({ 'Content-Type': 'application/json' }, headers) }, rest);
+        var mergedOptions = __assign(__assign(__assign({}, RestfulEndpoint.defaultFetchOptions), this.fetchOptions), options);
+        var headers = mergedOptions.headers, rest = __rest(mergedOptions, ["headers"]), resultOptions = __assign({ method: method, headers: __assign({ 'Content-Type': 'application/json' }, headers) }, rest);
         if (body) {
             resultOptions.body = JSON.stringify(body);
         }

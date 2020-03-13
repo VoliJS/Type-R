@@ -11,7 +11,8 @@ export declare class LocalStorageEndpoint implements IOEndpoint {
     update(id: any, json: any, options: IOOptions): IOPromise<any>;
     read(id: any, options: IOOptions): IOPromise<any>;
     destroy(id: any, options: IOOptions): IOPromise<any>;
-    index: (string | number)[];
+    get index(): (string | number)[];
+    set index(x: (string | number)[]);
     list(options?: IOOptions): IOPromise<any>;
     subscribe(events: any): any;
     unsubscribe(events: any): any;

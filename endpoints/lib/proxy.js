@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __awaiter, __generator } from "tslib";
 var parseOptions = { parse: true, strict: true };
 export function proxyIO(record, options) {
     if (options === void 0) { options = {}; }
@@ -33,8 +33,8 @@ var ProxyEndpoint = (function () {
         configurable: true
     });
     ProxyEndpoint.prototype.subscribe = function (events, target) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
                 return [2, this.endpoint.subscribe(events, target)];
             });
         });
@@ -43,9 +43,9 @@ var ProxyEndpoint = (function () {
         this.endpoint.unsubscribe(events, target);
     };
     ProxyEndpoint.prototype.list = function (options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var coll;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         coll = new this.Record.Collection();
@@ -58,9 +58,9 @@ var ProxyEndpoint = (function () {
         });
     };
     ProxyEndpoint.prototype.update = function (id, json, options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var doc, res;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         json.id = id;
@@ -76,9 +76,9 @@ var ProxyEndpoint = (function () {
         });
     };
     ProxyEndpoint.prototype.create = function (json, options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var doc, res;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         doc = this.Record.from(json, parseOptions);
@@ -93,9 +93,9 @@ var ProxyEndpoint = (function () {
         });
     };
     ProxyEndpoint.prototype.read = function (id, options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, void 0, function () {
             var doc;
-            return tslib_1.__generator(this, function (_a) {
+            return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         doc = new this.Record({ id: id });
@@ -108,8 +108,8 @@ var ProxyEndpoint = (function () {
         });
     };
     ProxyEndpoint.prototype.destroy = function (id, options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
                 return [2, this.endpoint.destroy(id, options)];
             });
         });

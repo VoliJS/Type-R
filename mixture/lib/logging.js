@@ -1,11 +1,11 @@
-import * as tslib_1 from "tslib";
+import { __decorate, __extends } from "tslib";
 import { Messenger } from './events';
 import { define } from './mixins';
 export var isProduction = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'production', logEvents = isProduction ?
     ['error', 'info'] :
     ['error', 'warn', 'debug', 'info', 'log'];
 var Logger = (function (_super) {
-    tslib_1.__extends(Logger, _super);
+    __extends(Logger, _super);
     function Logger() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.counter = {};
@@ -40,7 +40,7 @@ var Logger = (function (_super) {
     Logger.prototype.on = function (a, b) {
         return _super.prototype.on.call(this, a, b);
     };
-    Logger = tslib_1.__decorate([
+    Logger = __decorate([
         define
     ], Logger);
     return Logger;

@@ -23,4 +23,10 @@ export declare abstract class ArrayMixin<R extends Model> {
     first(): R;
     last(): R;
     at(a_index: number): R;
+    groupBy<A>(attr: keyof R | ((m: R) => string)): {
+        [key: string]: R[];
+    };
+    groupBy<A>(attr: keyof R | ((m: R) => string), a_reducer: (acc: A, model?: R, key?: string) => A): {
+        [key: string]: A;
+    };
 }

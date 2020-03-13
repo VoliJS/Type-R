@@ -1,20 +1,20 @@
-import * as tslib_1 from "tslib";
+import { __assign } from "tslib";
 import { startIO } from '../io-tools';
 export var IOModelMixin = {
     save: function (options) {
         var _this = this;
         if (options === void 0) { options = {}; }
-        var endpoint = this.getEndpoint(), json = this.toJSON(tslib_1.__assign({ ioMethod: 'save' }, options));
+        var endpoint = this.getEndpoint(), json = this.toJSON(__assign({ ioMethod: 'save' }, options));
         return startIO(this, this.isNew() ?
             endpoint.create(json, options, this) :
             endpoint.update(this.id, json, options, this), options, function (update) {
-            _this.set(update, tslib_1.__assign({ parse: true, ioMethod: 'save' }, options));
+            _this.set(update, __assign({ parse: true, ioMethod: 'save' }, options));
         });
     },
     fetch: function (options) {
         var _this = this;
         if (options === void 0) { options = {}; }
-        return startIO(this, this.getEndpoint().read(this.id, options, this), options, function (json) { return _this.set(json, tslib_1.__assign({ parse: true, ioMethod: 'fetch' }, options)); });
+        return startIO(this, this.getEndpoint().read(this.id, options, this), options, function (json) { return _this.set(json, __assign({ parse: true, ioMethod: 'fetch' }, options)); });
     },
     destroy: function (options) {
         var _this = this;
