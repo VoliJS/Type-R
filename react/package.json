@@ -1,6 +1,6 @@
 {
   "name": "@type-r/react",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "React bindings for Type-R/models",
   "main": "dist/index.js",
   "module": "./lib/index.js",
