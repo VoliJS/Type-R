@@ -4927,7 +4927,7 @@ function extractChangeToken(x) {
 /*!***************************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \***************************************************************************/
-/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35474,69 +35474,81 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "../../react/lib/state.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_0__["useModel"]; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useEvent", function() { return useEvent; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "../../react/lib/state.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModel"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_0__["useCollection"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useCollection"]; });
 
-/* harmony import */ var _globalState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./globalState */ "../../react/lib/globalState.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return _globalState__WEBPACK_IMPORTED_MODULE_1__["useChanges"]; });
+/* harmony import */ var _globalState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./globalState */ "../../react/lib/globalState.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["useChanges"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return _globalState__WEBPACK_IMPORTED_MODULE_1__["useForceUpdate"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["useForceUpdate"]; });
 
-/* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Link"]; });
+/* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Link"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["Linked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Linked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["PropValueLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["PropValueLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["LinkedComponent"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["LinkedComponent"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["StateLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["StateLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["helpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["objectHelpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLinked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["arrayHelpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useSafeLinked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useSyncLinked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLinked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useSafeSyncLinked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeLinked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useSafeLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSyncLinked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIsMountedRef", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useIsMountedRef"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeSyncLinked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeSyncLinked"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useBoundLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useSafeBoundLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIsMountedRef", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIsMountedRef"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLocalStorage", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLocalStorage"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useBoundLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useIO"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useSafeBoundLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useSafeBoundLink"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["whenChanged"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLocalStorage", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useLocalStorage"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["helpers"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["useIO"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["objectHelpers"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_2__["whenChanged"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["arrayHelpers"]; });
 
-/* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_3__["pureRenderProps"]; });
-
-
+/* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_4__["pureRenderProps"]; });
 
 
 
+
+
+
+function useEvent(source, event, handler) {
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        source.on(event, handler);
+        return function () {
+            source.off(event, handler);
+        };
+    }, []);
+}
 
 
 /***/ }),
