@@ -1,7 +1,9 @@
 import { useReducer, useRef, useEffect } from 'react'
-import { Model, Collection, Transactional } from '@type-r/models'
+import { Model, Collection, Transactional, attributes, InferAttrs } from '@type-r/models'
+import { LinkedModelHash } from '@type-r/models/lib/model/linked-attrs';
 
 export const useModel : <M extends typeof Model>( Ctor : M ) => InstanceType<M> = mutableHook( Model => new Mutable( new Model ) );
+export const useAttributes : <D extends object>( attrDef : D ) => Model & InferAttrs<D> & LinkedModelHash<InferAttrs<D>> = mutableHook( attrs => new Mutable( new ( attributes( attrs ) ) ) );
 
 export interface CollectionHooks {
     of<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>

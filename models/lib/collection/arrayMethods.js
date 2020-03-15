@@ -1,3 +1,4 @@
+import { tools as _ } from '@type-r/mixture';
 var ArrayMixin = (function () {
     function ArrayMixin() {
     }
@@ -71,28 +72,12 @@ var ArrayMixin = (function () {
         var index = a_index < 0 ? a_index + this.models.length : a_index;
         return this.models[index];
     };
-    ArrayMixin.prototype.groupBy = function (attr, a_reducer) {
-        var map = typeof attr === 'string' ?
-            function (x) { return x[attr]; } :
-            attr;
-        var reducer = a_reducer || defaultGrouping;
-        var results = {};
-        for (var _i = 0, _a = this.models; _i < _a.length; _i++) {
-            var model = _a[_i];
-            var key = map(model);
-            if (key != null) {
-                results[key] = reducer(results[key], model, key);
-            }
-        }
-        return results;
+    ArrayMixin.prototype.groupBy = function (attr, reducer, init) {
+        return _.groupBy(this.models, attr, reducer, init);
     };
     return ArrayMixin;
 }());
 export { ArrayMixin };
-var defaultGrouping = function (acc, x) {
-    if (acc === void 0) { acc = []; }
-    return (acc.push(x), acc);
-};
 var noOp = function (x) { return x; };
 function toPredicateFunction(iteratee) {
     if (iteratee == null)

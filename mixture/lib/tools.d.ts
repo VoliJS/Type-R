@@ -23,3 +23,12 @@ export declare function once(func: Function): Function;
 export declare function notEqual(a: any, b: any): boolean;
 export declare function hashMap(obj?: any): any;
 export declare function compare(a: any, b: any): -1 | 0 | 1;
+export declare function groupBy<A, R>(arr: R[], attr: keyof R | ((m: R) => string)): {
+    [key: string]: R[];
+};
+export declare function groupBy<A, R>(arr: R[], attr: keyof R | ((m: R) => string), a_reducer: (acc: A, model?: R, key?: string) => A): {
+    [key: string]: A;
+};
+export declare function groupBy<A, R>(arr: R[], attr: keyof R | ((m: R) => string), a_reducer: (acc: A, model?: R, key?: string) => void, init: (key?: string) => A): {
+    [key: string]: A;
+};

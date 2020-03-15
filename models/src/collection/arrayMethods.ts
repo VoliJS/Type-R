@@ -1,4 +1,5 @@
 import { Model } from '../model'
+import { tools as _ } from '@type-r/mixture'
 
 export type Predicate<R> = ( ( val : R, key? : number ) => boolean ) | Partial<R>;
 
@@ -131,35 +132,24 @@ export abstract class ArrayMixin<R extends Model> {
         return this.models[ index ];
     }
 
-    groupBy<A>( attr : keyof R | (( m : R ) => string )) : { [ key : string ] : R[] };
+    groupBy( attr : keyof R | (( m : R ) => string )) : { [ key : string ] : R[] };
     groupBy<A>(
         attr : keyof R | (( m : R ) => string ),
         a_reducer : ( acc : A, model? : R, key? : string ) => A
     ) : { [ key : string ] : A };
     groupBy<A>(
         attr : keyof R | (( m : R ) => string ),
-        a_reducer? : ( acc : A, model? : R, key? : string ) => A
+        reducer : ( acc : A, model? : R, key? : string ) => void,
+        init : ( key? : string ) => A
+    ) : { [ key : string ] : A };
+    groupBy<A>(
+        attr : keyof R | (( m : R ) => string ),
+        reducer? : ( acc : A, model? : R, key? : string ) => A,
+        init? : ( key : string ) => A
     ){
-        const map : any = typeof attr === 'string' ?
-            x => x[ attr ] :
-            attr;
-
-        const reducer = a_reducer || defaultGrouping;
-
-        const results = {};
-
-        for( let model of this.models ){
-            const key = map( model );
-            if( key != null ){
-                results[ key ] = reducer( results[ key ], model, key );
-            }
-        }
-
-        return results;
+        return _.groupBy( this.models, attr, reducer, init );
     }
 }
-
-const defaultGrouping = ( acc = [], x ) => ( acc.push( x ), acc );
 
 const noOp = x => x;
 

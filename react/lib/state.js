@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from 'react';
-import { Collection } from '@type-r/models';
+import { Collection, attributes } from '@type-r/models';
 export var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
+export var useAttributes = mutableHook(function (attrs) { return new Mutable(new (attributes(attrs))); });
 export var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (Collection.of(Model))()); }),
     ofRefs: mutableHook(function (Model) { return new Mutable(new (Collection.ofRefs(Model))()); }),

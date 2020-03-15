@@ -4,7 +4,7 @@ import { type } from './attrDef';
 import { createAttributesMixin } from './mixin';
 import { InferAttrs, Model, ModelConstructor, ModelDefinition } from './model';
 
-import { addAttributeLinks } from './linked-attrs'
+import { addAttributeLinks, LinkedModelHash } from './linked-attrs'
 
 export * from './attrDef';
 export * from './metatypes';
@@ -13,7 +13,7 @@ export { Model };
 
 const { assign, defaults } = tools;
 
-export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<InferAttrs<D>> {
+export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<InferAttrs<D> & { $ : LinkedModelHash<InferAttrs<D>> }> {
     @define class DefaultModel extends Model {
         static attributes = attrDefs;
     }

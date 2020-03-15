@@ -288,3 +288,82 @@ export function compare( a : any, b : any ) : -1 | 0 | 1 {
             av > bv ? 1 :
             0;
 }
+
+export function groupBy<A,R>( arr : R[], attr : keyof R | (( m : R ) => string )) : { [ key : string ] : R[] };
+export function groupBy<A,R>(
+    arr : R[],
+    attr : keyof R | (( m : R ) => string ),
+    a_reducer : ( acc : A, model? : R, key? : string ) => A
+) : { [ key : string ] : A };
+export function groupBy<A,R>(
+    arr : R[],
+    attr : keyof R | (( m : R ) => string ),
+    a_reducer : ( acc : A, model? : R, key? : string ) => void,
+    init : ( key? : string ) => A
+) : { [ key : string ] : A };
+export function groupBy<A,R>(
+    arr : R[],
+    attr : keyof R | (( m : R ) => string ),
+    a_reducer? : ( acc : A, model? : R, key? : string ) => A,
+    init? : ( key? : string ) => A
+){
+    const map : any = typeof attr === 'string' ?
+        x => x[ attr ] :
+        attr;
+
+    return a_reducer ? (
+            init ?
+                mutableGroupBy( arr, map, a_reducer, init ) :
+                immutableGroupBy( arr, map, a_reducer )
+        ) :
+            mutableGroupBy( arr, map, arrayGroup, arrayGroupInit );
+}
+
+const arrayGroup = ( acc : any[], x : any) => {
+    acc.push( x );
+}
+
+const arrayGroupInit = () => [];
+
+function immutableGroupBy<A,R>(
+    arr : R[],
+    map : (( m : R ) => string ),
+    reducer : ( acc : A, model? : R, key? : string ) => A
+){
+    const results = {};
+
+    for( let model of arr ){
+        const key = map( model );
+
+        if( key != null ){
+            results[ key ] = reducer( results[ key ], model, key );
+        }
+    }
+
+    return results;
+}
+
+function mutableGroupBy<A,R>(
+    arr : R[],
+    map : (( m : R ) => string ),
+    reducer : ( acc : A, model? : R, key? : string ) => void,
+    init : ( key? : string ) => A
+){
+    const results = {};
+
+    for( let model of arr ){
+        const key = map( model );
+
+        if( key != null ){
+            let acc = results[ key ];
+
+            if( acc === undefined ){
+                acc = results[ key ] = init( key );
+            }
+
+            reducer( acc, model, key );
+        }
+    }
+
+    return results;
+}

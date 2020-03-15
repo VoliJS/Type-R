@@ -1,4 +1,4 @@
-import { Collection, Model, define, CollectionConstructor, AttributesMixin } from '@type-r/models'
+import { Collection, Model, define, CollectionConstructor, AttributesMixin, attributes } from '@type-r/models'
 
 interface Data extends AttributesMixin<typeof Data>{}
 
@@ -45,7 +45,22 @@ describe( 'Collection', () =>{
                 expect( result[ 'null' ] ).toEqual( undefined );
             })
 
-            it( 'counts items', () =>{
+            it( 'pure reducer', () =>{
+                const items = new ( Collection.of( Data ) );
+
+                items.add([
+                    { num : 1, str : '1' },
+                    { num : 2, str : '2' },
+                    { num : 3, str : '2' },
+                ])
+
+                const result = items.groupBy( 'str', ( n : number = 0 ) => n + 1 );
+    
+                expect( result[ '1' ] ).toEqual( 1 );
+                expect( result[ '2' ] ).toEqual( 2 );
+            })
+
+            it( 'mutable reducer', () =>{
                 const items = new ( Collection.of( Data ) );
 
                 items.add([
@@ -54,10 +69,23 @@ describe( 'Collection', () =>{
                     { num : 3, str : '2' },
                 ])
     
-                const result = items.groupBy( 'str', ( n : number = 0 ) => n + 1 );
+                const aggregates = Collection.of(
+                    attributes({
+                        count : 0
+                    })
+                ).create();
+                
+                aggregates.set(
+                    Object.values(
+                        items.groupBy( 'str',
+                            acc => { acc.count++; },
+                            ( id : string ) => ({ id, count : 0 })
+                        )
+                    )         
+                );
     
-                expect( result[ '1' ] ).toEqual( 1 );
-                expect( result[ '2' ] ).toEqual( 2 );
+                expect( aggregates.get( '1' ).count ).toEqual( 1 );
+                expect( aggregates.get( '2' ).count ).toEqual( 2 );
             })
         })
     } )

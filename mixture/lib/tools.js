@@ -209,4 +209,43 @@ export function compare(a, b) {
         av > bv ? 1 :
             0;
 }
+export function groupBy(arr, attr, a_reducer, init) {
+    var map = typeof attr === 'string' ?
+        function (x) { return x[attr]; } :
+        attr;
+    return a_reducer ? (init ?
+        mutableGroupBy(arr, map, a_reducer, init) :
+        immutableGroupBy(arr, map, a_reducer)) :
+        mutableGroupBy(arr, map, arrayGroup, arrayGroupInit);
+}
+var arrayGroup = function (acc, x) {
+    acc.push(x);
+};
+var arrayGroupInit = function () { return []; };
+function immutableGroupBy(arr, map, reducer) {
+    var results = {};
+    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+        var model = arr_1[_i];
+        var key = map(model);
+        if (key != null) {
+            results[key] = reducer(results[key], model, key);
+        }
+    }
+    return results;
+}
+function mutableGroupBy(arr, map, reducer, init) {
+    var results = {};
+    for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
+        var model = arr_2[_i];
+        var key = map(model);
+        if (key != null) {
+            var acc = results[key];
+            if (acc === undefined) {
+                acc = results[key] = init(key);
+            }
+            reducer(acc, model, key);
+        }
+    }
+    return results;
+}
 //# sourceMappingURL=tools.js.map
