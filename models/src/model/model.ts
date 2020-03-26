@@ -38,18 +38,21 @@ export interface ModelDefinition extends TransactionalDefinition {
     Collection? : typeof Transactional
 }
 
-export interface ModelConstructor<A> extends TheType<typeof Model> {
-    new ( attrs? : Partial<A>, options? : object ) : Model & A
+export interface ModelConstructor<A extends object> extends TheType<typeof Model> {
+    new ( attrs? : Partial<InferAttrs<A>>, options? : object ) : Model & ModelAttributes<A>
     prototype : Model
-    Collection : CollectionConstructor<Model & A>
+    attributes : A,
+    Collection : CollectionConstructor<Model & ModelAttributes<A>>
 }
+
+type ModelAttributes<D extends object> = InferAttrs<D> & { readonly $ : LinkedModelHash<InferAttrs<D>> }
 
 export type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>
 };
 
 export type LinkedAttributes<M extends { attributes : object }> = LinkedModelHash<InferAttrs<M['attributes']>>
-export type AttributesMixin<M extends { attributes : object }> = InferAttrs<M['attributes']> & { readonly $ : LinkedAttributes<M> }
+export type AttributesMixin<M extends { attributes : object }> = ModelAttributes<M['attributes']>
 
 @define({
     // Default client id prefix 
@@ -97,7 +100,7 @@ export class Model extends Transactional implements IOModel, AttributesContainer
             });
     }
 
-    static extendAttrs<T extends typeof Model, A extends object>( this : T, attrs : A ) : ModelConstructor<InstanceType<T> & InferAttrs<A>> {
+    static extendAttrs<T extends typeof Model, A extends object>( this : T, attrs : A ) : ModelConstructor<T['attributes'] & A> {
         return this.defaults( attrs ) as any;
     }
 

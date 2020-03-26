@@ -13,12 +13,19 @@ export { Model };
 
 const { assign, defaults } = tools;
 
-export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<InferAttrs<D>> {
-    @define class DefaultModel extends Model {
+export function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model, B3 extends typeof Model>( b1 : B1, b2 : B2, b3 : B3, attrDefs : D ) : ModelConstructor<D & B1['attributes'] & B2['attributes'] & B3['attributes']>;
+export function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model>( b1 : B1, b2 : B2, attrDefs : D ) : ModelConstructor<D & B1['attributes'] & B2['attributes']>;
+export function attributes<D extends object, B1 extends typeof Model>( b1 : B1, attrDefs : D ) : ModelConstructor<D & B1['attributes']>;
+export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<D>;
+export function attributes<D extends object>( ...models : any ) : ModelConstructor<D> {
+    const attrs = models.map( x => x instanceof Function ? x.attributes : x ),
+        attrDefs = assign( {}, ...attrs );
+
+    @define class NamelessModel extends Model {
         static attributes = attrDefs;
     }
 
-    return DefaultModel as any;
+    return NamelessModel as any;
 }
 
 Model.onExtend = function( this : typeof Model, BaseClass : typeof Model ){

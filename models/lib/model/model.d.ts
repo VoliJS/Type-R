@@ -14,11 +14,15 @@ export interface ModelDefinition extends TransactionalDefinition {
     collection?: object;
     Collection?: typeof Transactional;
 }
-export interface ModelConstructor<A> extends TheType<typeof Model> {
-    new (attrs?: Partial<A>, options?: object): Model & A;
+export interface ModelConstructor<A extends object> extends TheType<typeof Model> {
+    new (attrs?: Partial<InferAttrs<A>>, options?: object): Model & ModelAttributes<A>;
     prototype: Model;
-    Collection: CollectionConstructor<Model & A>;
+    attributes: A;
+    Collection: CollectionConstructor<Model & ModelAttributes<A>>;
 }
+declare type ModelAttributes<D extends object> = InferAttrs<D> & {
+    readonly $: LinkedModelHash<InferAttrs<D>>;
+};
 export declare type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>;
 };
@@ -27,9 +31,7 @@ export declare type LinkedAttributes<M extends {
 }> = LinkedModelHash<InferAttrs<M['attributes']>>;
 export declare type AttributesMixin<M extends {
     attributes: object;
-}> = InferAttrs<M['attributes']> & {
-    readonly $: LinkedAttributes<M>;
-};
+}> = ModelAttributes<M['attributes']>;
 export declare class Model extends Transactional implements IOModel, AttributesContainer, Iterable<any> {
     static onDefine(definition: any, BaseClass: any): void;
     static comparator<T extends typeof Model>(this: T, attr: keyof InstanceType<T>, asc?: boolean): (a: InstanceType<T>, b: InstanceType<T>) => -1 | 0 | 1;
@@ -37,7 +39,7 @@ export declare class Model extends Transactional implements IOModel, AttributesC
     static DefaultCollection: CollectionConstructor;
     static id: import("./attrDef").ChainableAttributeSpec<StringConstructor>;
     static readonly ref: import("./attrDef").ChainableAttributeSpec<typeof Model>;
-    static extendAttrs<T extends typeof Model, A extends object>(this: T, attrs: A): ModelConstructor<InstanceType<T> & InferAttrs<A>>;
+    static extendAttrs<T extends typeof Model, A extends object>(this: T, attrs: A): ModelConstructor<T['attributes'] & A>;
     static defaults(attrs: AttributesValues): typeof Model;
     static attributes: AttributesValues;
     _attributes$: object;
@@ -85,3 +87,4 @@ export declare class ModelEntriesIterator implements Iterator<[string, any]> {
     constructor(record: Model);
     next(): IteratorResult<[string, any]>;
 }
+export {};

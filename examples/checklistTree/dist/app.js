@@ -3214,19 +3214,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, defaults = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].defaults;
-function attributes(attrDefs) {
-    var DefaultModel = (function (_super) {
-        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(DefaultModel, _super);
-        function DefaultModel() {
+function attributes() {
+    var models = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        models[_i] = arguments[_i];
+    }
+    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spreadArrays"])([{}], attrs));
+    var NamelessModel = (function (_super) {
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(NamelessModel, _super);
+        function NamelessModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        DefaultModel.attributes = attrDefs;
-        DefaultModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+        NamelessModel.attributes = attrDefs;
+        NamelessModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
-        ], DefaultModel);
-        return DefaultModel;
+        ], NamelessModel);
+        return NamelessModel;
     }(_model__WEBPACK_IMPORTED_MODULE_5__["Model"]));
-    return DefaultModel;
+    return NamelessModel;
 }
 _model__WEBPACK_IMPORTED_MODULE_5__["Model"].onExtend = function (BaseClass) {
     _transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"].onExtend.call(this, BaseClass);
@@ -5833,7 +5838,7 @@ function extractChangeToken(x) {
 /*!***************************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \***************************************************************************/
-/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37117,7 +37122,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useEvent, useModel, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
+/*! exports provided: useEvent, useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37138,13 +37143,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Link"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["LinkedComponent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["StateLink"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Linked"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["PropValueLink"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["LinkedComponent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["StateLink"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLink"]; });
 

@@ -1,8 +1,11 @@
-import { InferAttrs, Model, ModelConstructor } from './model';
+import { Model, ModelConstructor } from './model';
 export * from './attrDef';
 export * from './metatypes';
 export { AttributesMixin, LinkedAttributes, InferAttrs, ModelConstructor } from './model';
 export { Model };
-export declare function attributes<D extends object>(attrDefs: D): ModelConstructor<InferAttrs<D>>;
+export declare function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model, B3 extends typeof Model>(b1: B1, b2: B2, b3: B3, attrDefs: D): ModelConstructor<D & B1['attributes'] & B2['attributes'] & B3['attributes']>;
+export declare function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model>(b1: B1, b2: B2, attrDefs: D): ModelConstructor<D & B1['attributes'] & B2['attributes']>;
+export declare function attributes<D extends object, B1 extends typeof Model>(b1: B1, attrDefs: D): ModelConstructor<D & B1['attributes']>;
+export declare function attributes<D extends object>(attrDefs: D): ModelConstructor<D>;
 export declare function auto(value: any): PropertyDecorator;
 export declare function auto(proto: object, attrName: string): void;

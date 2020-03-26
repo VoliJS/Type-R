@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { logger, Collection, auto, define, mixins, Record, type, value, Model, AttributesMixin } from '@type-r/models';
+import { logger, Collection, auto, define, mixins, Record, type, value, Model, LinkedAttributes, AttributesMixin, attributes } from '@type-r/models';
 import { MinutesInterval } from './common';
 
 logger.off();
@@ -32,6 +32,24 @@ describe( 'Bugs from Volicon Observer', () =>{
             t.str = 6 as any;
             expect( t.str ).toBe( "6" );
         } );
+
+        it( 'attributes() should export proper .attributes static type', () => {
+            type A = typeof A;
+            const A = attributes({
+                a : 1,
+                b : value( 2 )
+            });
+
+            type B = typeof B;
+            const B = attributes({
+                ...A.attributes,
+                c : 3
+            });
+
+            const b = new B();
+
+            expect( b.a ).toEqual( 1 );
+        })
     } );
 
     describe( 'Attribute change watcher', () =>{
@@ -287,7 +305,7 @@ describe( 'Bugs from Volicon Observer', () =>{
         it('short syntax for model definitions', () => {
 
             const A = Model.extendAttrs({
-                hi : ''
+                hi : '2'
             });
             
             const x = new A.Collection();
@@ -296,9 +314,72 @@ describe( 'Bugs from Volicon Observer', () =>{
                 there : 4
             });
 
-            const y = new B.Collection();
+            const y = new B.Collection([{}]);
 
-            let z : InstanceType<typeof B> = y.first();
+            let z = y.first();
+
+            expect( z.hi ).toEqual( '2' );
+            expect( z.there ).toEqual( 4 );
+        });
+
+        it( 'correctly extends $ on inheritance - classes', () =>{
+            @define class A extends Model {
+                static attributes = {
+                    a : 1
+                }
+            }
+
+            interface A extends AttributesMixin<typeof A>{}
+
+            @define class B extends A {
+                static attributes = {
+                    ...A.attributes,
+                    b : 1
+                }
+            }
+
+            interface B extends AttributesMixin<typeof B>{
+                $ : LinkedAttributes<typeof B>
+            }
+        })
+
+        it( 'correctly extends $ on inheritance - attributes', () =>{
+            const A = attributes({
+                a : 1
+            })
+
+            type A = InstanceType<typeof A>;
+
+            const B = attributes({
+                ...A.attributes,
+                b : 1
+            })
+
+            type B = InstanceType<typeof B>;
+
+            const b = new B();
+            const c : A = b;
+
+            expect( b.$.a.value ).toEqual( 1 );
+        })
+
+        it( 'correctly extends $ on multiple inheritance - attributes', () =>{
+            const A = attributes({
+                a : 1
+            })
+
+            type A = InstanceType<typeof A>;
+
+            const B = attributes( A, {
+                b : 1
+            })
+
+            type B = InstanceType<typeof B>;
+
+            const b = new B();
+            const c : A = b;
+
+            expect( b.$.a.value ).toEqual( 1 );
         })
     });
 } );

@@ -1,4 +1,4 @@
-import { __decorate, __extends, __rest } from "tslib";
+import { __decorate, __extends, __rest, __spreadArrays } from "tslib";
 import { define, predefine, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
@@ -9,19 +9,24 @@ export * from './attrDef';
 export * from './metatypes';
 export { Model };
 var assign = tools.assign, defaults = tools.defaults;
-export function attributes(attrDefs) {
-    var DefaultModel = (function (_super) {
-        __extends(DefaultModel, _super);
-        function DefaultModel() {
+export function attributes() {
+    var models = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        models[_i] = arguments[_i];
+    }
+    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, __spreadArrays([{}], attrs));
+    var NamelessModel = (function (_super) {
+        __extends(NamelessModel, _super);
+        function NamelessModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        DefaultModel.attributes = attrDefs;
-        DefaultModel = __decorate([
+        NamelessModel.attributes = attrDefs;
+        NamelessModel = __decorate([
             define
-        ], DefaultModel);
-        return DefaultModel;
+        ], NamelessModel);
+        return NamelessModel;
     }(Model));
-    return DefaultModel;
+    return NamelessModel;
 }
 Model.onExtend = function (BaseClass) {
     Transactional.onExtend.call(this, BaseClass);

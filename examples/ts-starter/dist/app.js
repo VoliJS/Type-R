@@ -2575,19 +2575,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var assign = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].assign, defaults = _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["tools"].defaults;
-function attributes(attrDefs) {
-    var DefaultModel = (function (_super) {
-        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(DefaultModel, _super);
-        function DefaultModel() {
+function attributes() {
+    var models = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        models[_i] = arguments[_i];
+    }
+    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spreadArrays"])([{}], attrs));
+    var NamelessModel = (function (_super) {
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(NamelessModel, _super);
+        function NamelessModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        DefaultModel.attributes = attrDefs;
-        DefaultModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+        NamelessModel.attributes = attrDefs;
+        NamelessModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
-        ], DefaultModel);
-        return DefaultModel;
+        ], NamelessModel);
+        return NamelessModel;
     }(_model__WEBPACK_IMPORTED_MODULE_5__["Model"]));
-    return DefaultModel;
+    return NamelessModel;
 }
 _model__WEBPACK_IMPORTED_MODULE_5__["Model"].onExtend = function (BaseClass) {
     _transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"].onExtend.call(this, BaseClass);
