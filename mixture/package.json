@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/VoliJS/Type-R/tree/develop/mixture",
   "dependencies": {
-    "tslib": "*"
+    "tslib" : "^1.10.0"
   },
   "private": false
 }

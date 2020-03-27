@@ -12,7 +12,7 @@
     "dependencies": {
         "@type-r/models" : "^4.0.0",
         "@type-r/ext-types" : "^4.0.0",
-        "tslib" : "*"
+        "tslib" : "^1.10.0"
     },
     "author": "Ivan Terpugov",
     "license": "MIT"
