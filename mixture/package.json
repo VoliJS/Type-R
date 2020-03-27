@@ -1,6 +1,6 @@
 {
   "name": "@type-r/mixture",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "React-style mixins, Backbone-style events, logging router.",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/VoliJS/Type-R/tree/develop/mixture",
   "dependencies": {
-    "tslib" : "^1.10.0"
+    "tslib": "^1.10.0"
   },
   "private": false
 }
