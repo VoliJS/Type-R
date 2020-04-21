@@ -1,6 +1,6 @@
 {
   "name": "@type-r/models",
-  "version": "4.0.10",
+  "version": "4.0.11",
   "description": "The serializable type system for JS and TypeScript",
   "main": "./dist/index.js",
   "jsnext:main": "./lib/index.js",
@@ -56,6 +56,6 @@
   "dependencies": {
     "@linked/value": "^3.0.4",
     "@type-r/mixture": "^4.0.3",
-    "tslib" : "^1.10.0"
+    "tslib": "^1.10.0"
   }
 }
