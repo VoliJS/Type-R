@@ -413,6 +413,54 @@ describe( 'Record', () =>{
             expect( entries.next().value[ 1 ] ).toBe( String( "1" ) ) ;
             expect( entries.next().value[ 0 ] ).toBe( "email" ) ;
         });
-
     });
+
+    describe( 'type( objects )', () => {
+        it( 'Infers the object as model', () => {
+            const X = attributes({
+                a : type({
+                    b : 1,
+                    c : "2"
+                })
+            });
+
+            const x = new X();
+            x.a.b = 5;
+            expect( x.a.b ).toEqual( 5 );
+        })
+
+        it( 'Infers the array of objects as collection', () => {
+            const X = attributes({
+                a : type([{
+                    b : 1,
+                    c : "2"
+                }])
+            });
+
+            const x = new X();
+            x.a.add({
+                b : 5
+            });
+
+            expect( x.a.first().b ).toEqual( 5 );
+        })
+
+        it( 'Infers the array of models as collection', () => {
+            const A = attributes({
+                b : 1,
+                c : "2"
+            })
+
+            const X = attributes({
+                a : type([ A ])
+            });
+
+            const x = new X();
+            x.a.add({
+                b : 5
+            });
+
+            expect( x.a.first().b ).toEqual( 5 );
+        })
+    })
 } );

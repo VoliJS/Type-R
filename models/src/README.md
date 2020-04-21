@@ -2,22 +2,48 @@
 
 ## Overview
 
-The `Model` class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.
+`Model` is a typesafe, automatically serializable, and deeply observable object
+represented as plain object in JSON. Models are as easy to use as plain JS objects, and beating them in scenarios with complex data types serialization.
 
-There are four sorts of model attributes:
+Model checks attribute types on assignment rejecting improper updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.
 
-- **Primitive** types (Number, String, Boolen) mapped to JSON directly.
-- **Immutable** types (Date, Array, Object, or custom immutable class).
-- **Aggregated** models and collections represented as nested objects and arrays of objects in JSON.
-- **References** to models and collections. References can be either:
-    - **serializable** to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;
-    - **observable**, which is a non-persistent run-time only reference, used to model temporary application state.
+Model detect changes in its attributes, including the changes in nested models and collections. Type-R follows BackboneJS change events model which makes it easy to integrate with virtually any view layer.
 
-Model is an observable state container efficiently detecting changes in all of its attributes, including the deep changes in aggregated and observable reference attributes. Type-R models follow BackboneJS change events model which makes it a straightforward task to integrate with virtually any view layer.
+All aspects of model behavior can be controlled on the attribute level through the attribute metadata. It makes it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
 
-Model attribute definitions have extended metadata to control all aspects of model behavior on the particular attribute's level, making it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
+Model can be defined with `attributes()` declaration, or by extending the `Model` base class.
 
-Type-R models are almost as easy to use as plain JS objects, and much easier when more complex data types and serialization scenarios are involved. 
+```javascript
+// Create Role model's constructor.
+@define
+class Role extends Model{
+    static attributes = {
+        createdAt : Date, // date, represented in JSON as UTC string.
+        name : String // Will be converted to string on assignment
+    }
+}
+
+// Create Role model's constructor.
+const User = attributes({
+    name : String,
+
+    // Collection of roles, represented in JSON as an array of objects.
+    roles : type( [Role] ), 
+    
+    // Inline nested model, represented in JSON as nested object.
+    permissions : type({
+        canDoA : Boolean,
+        canDoB : Boolean,
+    })
+});
+
+const user = new User( json, { parse : true });
+user.permissions.canDoA = true;
+console.log( user.toJSON() );
+```
+
+Models may have I/O endpoints attached, which enables I/O API. They need to be declared as class to do that.
+There are several standard endpoints awailable in `@type-r/endpoints` package.
 
 ```javascript
 // We have `/api/users` endpoint on the server. Lets describe what it is with a model.
@@ -31,18 +57,14 @@ import { Role } from './roles' // <- That's another model definition.
 
     static attributes = {
         name : '', // type is inferred from the default value as String
-        email : '', // String
+        email : String, // String
         isActive : false, // Boolean
 
         // nested array of objects in JSON, collection of Role models in JS
-        roles : Collection.of( Role ) 
+        roles : Collection.of( Role )
 
-        // Add metadata to a Number attribute.
-        // Receive it from the server, but don't send it back on save.
-        failedLoginCount : value( 0 ).toJSON( false ), // Number
-
-        // ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it.
-        createdAt : type( Date ).toJSON( false ), // Date
+        // ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it to JSON.
+        createdAt : type( Date ).dontSave, // Date
     }
 }
 
@@ -60,7 +82,18 @@ firstUser.isActive = true; // Here we'll got the 'changes!' log message
 await firstUser.save();
 ```
 
-Model is defined by extending the `Model` class with attributes definition and applying the `@define` decorator.
+There are four sorts of model attributes:
+
+- **Primitive** types (Number, String, Boolen) mapped to JSON directly.
+- **Immutable** types (Date, Array, Object, or custom immutable class).
+- **Nested** models and collections represented as nested objects and arrays of objects in JSON.
+- **Referenced** models and collections. References can be:
+    - **serializable** to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;
+    - **observable**, which is a non-persistent run-time only reference, used to model temporary application state.
+
+### attributes( attrDefs )
+
+Create the Model class constructor from the attribute definitions.
 
 ### `decorator` @define
 
@@ -225,17 +258,17 @@ If the class constructor used as an attribute type and it's not a model or colle
 
 Changes in immutable attributes *are not observable*, object needs to be replaced with its updated copy for the model to notice the change. The class itself doesn't need to be immutable, though, as Type-R makes no other assumptions.
 
-## Aggregated models
+## Nested models
 
-Aggregated models are the part of the model represented in JSON as nested objects. Aggregated models **will** be copied, destroyed, and validated together with the parent.
+Nested models are the part of the model represented in JSON as nested objects. Nested models **will** be copied, destroyed, and validated as a part of the parent.
 
-Model has an exclusive ownership rights on its aggregated attributes. Aggregated models can't be assigned to another model's attribute unless the source attribute is cleared or the target attribute is a reference.
+Model has an exclusive ownership rights on its nested members. Nested model can't be assigned to another model's attribute unless the source attribute is cleared or the target attribute has a reference type.
 
-Aggregated models are deeply observable. A change of the aggregated model's attributute will trigger the `change` event on its parent.
+Nested models are deeply observable. A change of the nested model's attributute will trigger the `change` event on its parent.
 
 ### `attribute` : ModelClass
 
-Model attribute containing another model. Describes an attribute represented in JSON as an object.
+Nested model. Describes an attribute represented in JSON as an object.
 
 - Attribute **is** serializable as `{ attr1 : value1, attr2 : value2, ... }`
 - Changes of enclosed model's attributes **will not** trigger change of the model.
@@ -352,21 +385,49 @@ static attributes = {
 
 ### `attribute` : type(Type)
 
-In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the different models and projects. Such an object is called *attribute metatype*.
+Convert attribute type to a _metatype_, which is a combination of type and metadata. Attribute's default value is the common example of the a metadata. Metadata can control all aspects of attribute behavior and. It's is added through a chain of calls after the `type( Type )` call.
 
-Metadata is attached through a chain of calls after the `type( Ctor )` call. Attribute's default value is the most common example of such a metadata.
+Following values can be used as a `Type`:
+
+- Constructor functions.
+- Plain object, meaning the nested model with a given attributes.
+- Array with either constructor or plain object inside, meaning the collection of models.
+
+```javascript
+import { define, type, Model }
+
+const Role = attributes({
+    name : String
+})
+
+const User = attributes({
+    name : type( String ).value( 'change me' ),
+    createdAt : type( Date ).dontSave
+    
+    permissions : type({
+        canDoA : true,
+        canDoB : true
+    }),
+
+    roles : type( [Role] ) // type( Collection.of( Role ) )
+
+    flags : type( [{ // type( Collection.of( attributes({ name : String }) ) )
+        name : String
+    }])
+});
+```
+
+Since the attribute definition is a regular JavaScript, attribute metatype definition can be shared and reused across the different models and projects.
 
 ```javascript
 import { define, type, Model }
 
 const AString = type( String ).value( "a" );
 
-@define class Dummy extends Model {
-    static attributes = {
-        a : AString,
-        b : type( String ).value( "b" )
-    }
-}
+const Dummy = attributes({
+    a : AString,
+    b : type( String ).value( "b" )
+});
 ```
 
 ### `attribute` : type(Constructor).value(defaultValue)
@@ -377,6 +438,19 @@ Declare an attribute with type Constructor having the custom `defaultValue`. Nor
 @define class Person extends Model {
     static attributes = {
         phone : type( String ).value( null ) // String attribute which is null by default.
+        ...
+    }
+}
+```
+
+### `attribute` : type(Constructor).null
+
+Shorthand for `type(Constructor).value( null )`.
+
+```javascript
+@define class Person extends Model {
+    static attributes = {
+        phone : type( String ).null // String attribute which is null by default.
         ...
     }
 }
@@ -398,7 +472,7 @@ import { define, type, Model }
 
 ### `metatype` type( Type ).check( predicate, errorMsg? )
 
-Attribute-level validator.
+Attribute validation check.
 
 - `predicate : value => boolean` is the function taking attribute's value and returning `true` whenever the value is valid.
 - optional `errorMsg` is the error message which will be passed in case if the validation fail.
@@ -435,35 +509,31 @@ const Word = type( String ).check( x => indexOf( ' ' ) < 0, 'No spaces allowed' 
 
 ### `metatype` type( Type ).required
 
-The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, `"Required"` is used as validation error.
+Attribute validator checking that the attribute is not empty. Attribute value must be truthy to pass, `"Required"` string is used as validation error.
 
-`isRequired` is the first validator to check, no matter in which order validators were attached.
+`required` validator always checked first, no matter in which order validators were attached.
 
-### `attribute` : type(Type).get(`hook`)
+### `attribute` : type(Type).get( ( value, attr ) => value )
 
-Attach get hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value right _before it will be read_. Hook is executed in the context of the model.
+Transform the value right _before it will be read_. The hook is executed in the context of the model.
 
-### `attribute` : type(Type).set(`hook`)
+### `attribute` : type(Type).set( ( value, attr ) => value )
 
-Attach the set hook to the model's attribute. `hook` is the function of signature `( value, attr ) => value` which is used to transform the attribute's value _before it will be assigned_. Hook is executed in the context of the model.
+Transform the value right _before it will be assigned_. The hook is executed in the context of the model.
 
-If set hook will return `undefined`, it will cancel attribute update.
+If set hook will return `undefined`, the attribute won't be assigned.
 
-### `metatype` type( Type ).toJSON( false )
+### `metatype` type( Type ).dontSave
 
-Do _not_ serialize the specific attribute.
+Do _not_ serialize the attribute.
 
 ### `metatype` type( Type ).toJSON( ( value, name, options ) => json )
 
-Override the default serialization for the specific model's attribute.
-
-Attribute is not serialized when the function return `undefined`.
+Override the way how the attribute transforms to JSON. Attribute is not serialized when the function return `undefined`.
 
 ### `metatype` type( Type ).parse( ( json, name ) => value )
 
-Transform the data before it will be assigned to the model's attribute.
-
-Invoked when the `{ parse : true }` option is set.
+When restoring attribute from JSON, transform the value before it will be assigned.
 
 ```javascript
 // Define custom boolean attribute type which is serialized as 0 or 1.

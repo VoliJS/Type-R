@@ -87,6 +87,14 @@ export class ChainableAttributeSpec<F extends Function>{
         });
     }
 
+    get dontSave(){
+        return this.toJSON( false );
+    }
+
+    get null(){
+        return this.value( null );
+    }
+
     // Attribute get hook.
     get( fun ) : this {
         return this.metadata({

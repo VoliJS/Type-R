@@ -1,14 +1,13 @@
 import { define, predefine, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
+import { addAttributeLinks } from './linked-attrs';
 import { createAttributesMixin } from './mixin';
-import { InferAttrs, Model, ModelConstructor, ModelDefinition } from './model';
-
-import { addAttributeLinks } from './linked-attrs'
+import { Model, ModelConstructor, ModelDefinition } from './model';
 
 export * from './attrDef';
 export * from './metatypes';
-export { AttributesMixin, LinkedAttributes, InferAttrs, ModelConstructor } from './model';
+export { AttributesMixin, InferAttrs, LinkedAttributes, ModelConstructor } from './model';
 export { Model };
 
 const { assign, defaults } = tools;

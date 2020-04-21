@@ -57,6 +57,20 @@ var ChainableAttributeSpec = (function () {
             toJSON: typeof fun === 'function' ? fun : (fun ? function (x, k, o) { return x && x.toJSON(o); } : emptyFunction)
         });
     };
+    Object.defineProperty(ChainableAttributeSpec.prototype, "dontSave", {
+        get: function () {
+            return this.toJSON(false);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ChainableAttributeSpec.prototype, "null", {
+        get: function () {
+            return this.value(null);
+        },
+        enumerable: true,
+        configurable: true
+    });
     ChainableAttributeSpec.prototype.get = function (fun) {
         return this.metadata({
             getHooks: this.options.getHooks.concat(fun)
