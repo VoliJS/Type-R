@@ -154,21 +154,41 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 </ul>
 <h1 id="defining-the-model">Defining the model</h1>
 <h2 id="overview">Overview</h2>
-<p>The <code>Model</code> class is a main building block of Type-R representing serializable and observable object. Models are mapped to objects in JSON according to the types in attributes definition. Model asserts attribute types on assignment and guarantee that these types will be preserved at run time, continuously checking the client-server protocol and guarding it from errors on both ends.</p>
-<p>There are four sorts of model attributes:</p>
-<ul>
-<li><strong>Primitive</strong> types (Number, String, Boolen) mapped to JSON directly.</li>
-<li><strong>Immutable</strong> types (Date, Array, Object, or custom immutable class).</li>
-<li><strong>Aggregated</strong> models and collections represented as nested objects and arrays of objects in JSON.</li>
-<li><strong>References</strong> to models and collections. References can be either:<ul>
-<li><strong>serializable</strong> to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;</li>
-<li><strong>observable</strong>, which is a non-persistent run-time only reference, used to model temporary application state.</li>
-</ul>
-</li>
-</ul>
-<p>Model is an observable state container efficiently detecting changes in all of its attributes, including the deep changes in aggregated and observable reference attributes. Type-R models follow BackboneJS change events model which makes it a straightforward task to integrate with virtually any view layer.</p>
-<p>Model attribute definitions have extended metadata to control all aspects of model behavior on the particular attribute&#39;s level, making it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.</p>
-<p>Type-R models are almost as easy to use as plain JS objects, and much easier when more complex data types and serialization scenarios are involved. </p>
+<p><code>Model</code> is a typesafe, automatically serializable, and deeply observable object
+represented as plain object in JSON. Models are as easy to use as plain JS objects, and beating them in scenarios with complex data types serialization.</p>
+<p>Model checks attribute types on assignment rejecting improper updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.</p>
+<p>Model detect changes in its attributes, including the changes in nested models and collections. Type-R follows BackboneJS change events model which makes it easy to integrate with virtually any view layer.</p>
+<p>All aspects of model behavior can be controlled on the attribute level through the attribute metadata. It makes it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.</p>
+<p>Model can be defined with <code>attributes()</code> declaration, or by extending the <code>Model</code> base class.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// Create Role model's constructor.</span>
+@define
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Role</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span></span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">createdAt</span> : <span class="hljs-built_in">Date</span>, <span class="hljs-comment">// date, represented in JSON as UTC string.</span>
+        name : <span class="hljs-built_in">String</span> <span class="hljs-comment">// Will be converted to string on assignment</span>
+    }
+}
+
+<span class="hljs-comment">// Create Role model's constructor.</span>
+<span class="hljs-keyword">const</span> User = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
+
+    <span class="hljs-comment">// Collection of roles, represented in JSON as an array of objects.</span>
+    roles : type( [Role] ), 
+
+    <span class="hljs-comment">// Inline nested model, represented in JSON as nested object.</span>
+    permissions : type({
+        <span class="hljs-attr">canDoA</span> : <span class="hljs-built_in">Boolean</span>,
+        <span class="hljs-attr">canDoB</span> : <span class="hljs-built_in">Boolean</span>,
+    })
+});
+
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User( json, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> });
+user.permissions.canDoA = <span class="hljs-literal">true</span>;
+<span class="hljs-built_in">console</span>.log( user.toJSON() );
+</code></pre>
+<p>Models may have I/O endpoints attached, which enables I/O API. They need to be declared as class to do that.
+There are several standard endpoints awailable in <code>@type-r/endpoints</code> package.</p>
 <pre><code class="highlight javascript"><span class="hljs-comment">// We have `/api/users` endpoint on the server. Lets describe what it is with a model.</span>
 <span class="hljs-keyword">import</span> { define, Model, Collection, value, type } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/models'</span>
 <span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/endpoints'</span>
@@ -180,18 +200,14 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 
     <span class="hljs-keyword">static</span> attributes = {
         <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>, <span class="hljs-comment">// type is inferred from the default value as String</span>
-        email : <span class="hljs-string">''</span>, <span class="hljs-comment">// String</span>
+        email : <span class="hljs-built_in">String</span>, <span class="hljs-comment">// String</span>
         isActive : <span class="hljs-literal">false</span>, <span class="hljs-comment">// Boolean</span>
 
         <span class="hljs-comment">// nested array of objects in JSON, collection of Role models in JS</span>
-        roles : Collection.of( Role ) 
+        roles : Collection.of( Role )
 
-        <span class="hljs-comment">// Add metadata to a Number attribute.</span>
-        <span class="hljs-comment">// Receive it from the server, but don't send it back on save.</span>
-        failedLoginCount : value( <span class="hljs-number">0</span> ).toJSON( <span class="hljs-literal">false</span> ), <span class="hljs-comment">// Number</span>
-
-        <span class="hljs-comment">// ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it.</span>
-        createdAt : type( <span class="hljs-built_in">Date</span> ).toJSON( <span class="hljs-literal">false</span> ), <span class="hljs-comment">// Date</span>
+        <span class="hljs-comment">// ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it to JSON.</span>
+        createdAt : type( <span class="hljs-built_in">Date</span> ).dontSave, <span class="hljs-comment">// Date</span>
     }
 }
 
@@ -208,7 +224,19 @@ users.onChanges( <span class="hljs-function"><span class="hljs-params">()</span>
 firstUser.isActive = <span class="hljs-literal">true</span>; <span class="hljs-comment">// Here we'll got the 'changes!' log message</span>
 <span class="hljs-keyword">await</span> firstUser.save();
 </code></pre>
-<p>Model is defined by extending the <code>Model</code> class with attributes definition and applying the <code>@define</code> decorator.</p>
+<p>There are four sorts of model attributes:</p>
+<ul>
+<li><strong>Primitive</strong> types (Number, String, Boolen) mapped to JSON directly.</li>
+<li><strong>Immutable</strong> types (Date, Array, Object, or custom immutable class).</li>
+<li><strong>Nested</strong> models and collections represented as nested objects and arrays of objects in JSON.</li>
+<li><strong>Referenced</strong> models and collections. References can be:<ul>
+<li><strong>serializable</strong> to JSON as an ids of the referenced models, used to model one-to-many and many-to-many relashinships in JSON;</li>
+<li><strong>observable</strong>, which is a non-persistent run-time only reference, used to model temporary application state.</li>
+</ul>
+</li>
+</ul>
+<h3 id="attributes-attrdefs-">attributes( attrDefs )</h3>
+<p>Create the Model class constructor from the attribute definitions.</p>
 <h3 id="decorator-define"><code>decorator</code> @define</h3>
 <p>Class decorator which must preceede the <code>Model</code> subclass declaration. <code>@define</code> is a mixin which will read attribute definitions from the Model&#39;s <code>static attributes</code> and generate class properties accessors accordingly.</p>
 <p><code>@define</code> assembles attribute&#39;s update pipeline for each attribute individually depending on its type and employs a number of JIT-friendly optimizations. As a result, Type-R models handle updates about 10 times faster than frameworks like BackboneJS in all popular browsers making a collections of 10K objects a practical choice on a frontend.</p>
@@ -318,12 +346,12 @@ user.$.roles.at( <span class="hljs-string">'user'</span> ).set( <span class="hlj
 <li>Its constructor can take JSON as a single argument.</li>
 </ul>
 <p>Changes in immutable attributes <em>are not observable</em>, object needs to be replaced with its updated copy for the model to notice the change. The class itself doesn&#39;t need to be immutable, though, as Type-R makes no other assumptions.</p>
-<h2 id="aggregated-models">Aggregated models</h2>
-<p>Aggregated models are the part of the model represented in JSON as nested objects. Aggregated models <strong>will</strong> be copied, destroyed, and validated together with the parent.</p>
-<p>Model has an exclusive ownership rights on its aggregated attributes. Aggregated models can&#39;t be assigned to another model&#39;s attribute unless the source attribute is cleared or the target attribute is a reference.</p>
-<p>Aggregated models are deeply observable. A change of the aggregated model&#39;s attributute will trigger the <code>change</code> event on its parent.</p>
+<h2 id="nested-models">Nested models</h2>
+<p>Nested models are the part of the model represented in JSON as nested objects. Nested models <strong>will</strong> be copied, destroyed, and validated as a part of the parent.</p>
+<p>Model has an exclusive ownership rights on its nested members. Nested model can&#39;t be assigned to another model&#39;s attribute unless the source attribute is cleared or the target attribute has a reference type.</p>
+<p>Nested models are deeply observable. A change of the nested model&#39;s attributute will trigger the <code>change</code> event on its parent.</p>
 <h3 id="attribute-modelclass"><code>attribute</code> : ModelClass</h3>
-<p>Model attribute containing another model. Describes an attribute represented in JSON as an object.</p>
+<p>Nested model. Describes an attribute represented in JSON as an object.</p>
 <ul>
 <li>Attribute <strong>is</strong> serializable as <code>{ attr1 : value1, attr2 : value2, ... }</code></li>
 <li>Changes of enclosed model&#39;s attributes <strong>will not</strong> trigger change of the model.</li>
@@ -411,24 +439,59 @@ user.$.roles.at( <span class="hljs-string">'user'</span> ).set( <span class="hlj
 </code></pre>
 <h2 id="attribute-metadata">Attribute metadata</h2>
 <h3 id="attribute-type-type-"><code>attribute</code> : type(Type)</h3>
-<p>In Type-R, every aspect of a model behavior can be customized on the attribute level through the attaching metadata to the attribute definitions. Since the attribute definition is a regular JavaScript, an attribute definition with metadata can be shared and reused across the different models and projects. Such an object is called <em>attribute metatype</em>.</p>
-<p>Metadata is attached through a chain of calls after the <code>type( Ctor )</code> call. Attribute&#39;s default value is the most common example of such a metadata.</p>
+<p>Convert attribute type to a <em>metatype</em>, which is a combination of type and metadata. Attribute&#39;s default value is the common example of the a metadata. Metadata can control all aspects of attribute behavior and. It&#39;s is added through a chain of calls after the <code>type( Type )</code> call.</p>
+<p>Following values can be used as a <code>Type</code>:</p>
+<ul>
+<li>Constructor functions.</li>
+<li>Plain object, meaning the nested model with a given attributes.</li>
+<li>Array with either constructor or plain object inside, meaning the collection of models.</li>
+</ul>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
+
+<span class="hljs-keyword">const</span> Role = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>
+})
+
+<span class="hljs-keyword">const</span> User = attributes({
+    <span class="hljs-attr">name</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">'change me'</span> ),
+    <span class="hljs-attr">createdAt</span> : type( <span class="hljs-built_in">Date</span> ).dontSave
+
+    permissions : type({
+        <span class="hljs-attr">canDoA</span> : <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">canDoB</span> : <span class="hljs-literal">true</span>
+    }),
+
+    <span class="hljs-attr">roles</span> : type( [Role] ) <span class="hljs-comment">// type( Collection.of( Role ) )</span>
+
+    flags : type( [{ <span class="hljs-comment">// type( Collection.of( attributes({ name : String }) ) )</span>
+        name : <span class="hljs-built_in">String</span>
+    }])
+});
+</code></pre>
+<p>Since the attribute definition is a regular JavaScript, attribute metatype definition can be shared and reused across the different models and projects.</p>
 <pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { define, type, Model }
 
 <span class="hljs-keyword">const</span> AString = type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"a"</span> );
 
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">a</span> : AString,
-        <span class="hljs-attr">b</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"b"</span> )
-    }
-}
+<span class="hljs-keyword">const</span> Dummy = attributes({
+    <span class="hljs-attr">a</span> : AString,
+    <span class="hljs-attr">b</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-string">"b"</span> )
+});
 </code></pre>
 <h3 id="attribute-type-constructor-value-defaultvalue-"><code>attribute</code> : type(Constructor).value(defaultValue)</h3>
 <p>Declare an attribute with type Constructor having the custom <code>defaultValue</code>. Normally, all attributes are initialized with a default constructor call.</p>
 <pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
     <span class="hljs-keyword">static</span> attributes = {
         <span class="hljs-attr">phone</span> : type( <span class="hljs-built_in">String</span> ).value( <span class="hljs-literal">null</span> ) <span class="hljs-comment">// String attribute which is null by default.</span>
+        ...
+    }
+}
+</code></pre>
+<h3 id="attribute-type-constructor-null"><code>attribute</code> : type(Constructor).null</h3>
+<p>Shorthand for <code>type(Constructor).value( null )</code>.</p>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">phone</span> : type( <span class="hljs-built_in">String</span> ).null <span class="hljs-comment">// String attribute which is null by default.</span>
         ...
     }
 }
@@ -444,7 +507,7 @@ user.$.roles.at( <span class="hljs-string">'user'</span> ).set( <span class="hlj
 }
 </code></pre>
 <h3 id="metatype-type-type-check-predicate-errormsg-"><code>metatype</code> type( Type ).check( predicate, errorMsg? )</h3>
-<p>Attribute-level validator.</p>
+<p>Attribute validation check.</p>
 <ul>
 <li><code>predicate : value =&gt; boolean</code> is the function taking attribute&#39;s value and returning <code>true</code> whenever the value is valid.</li>
 <li>optional <code>errorMsg</code> is the error message which will be passed in case if the validation fail.</li>
@@ -474,21 +537,19 @@ It can be used to define reusable attribute types as demonstrated below:</p>
 }
 </code></pre>
 <h3 id="metatype-type-type-required"><code>metatype</code> type( Type ).required</h3>
-<p>The special case of attribute-level check cutting out empty values. Attribute value must be truthy to pass, <code>&quot;Required&quot;</code> is used as validation error.</p>
-<p><code>isRequired</code> is the first validator to check, no matter in which order validators were attached.</p>
-<h3 id="attribute-type-type-get-hook-"><code>attribute</code> : type(Type).get(<code>hook</code>)</h3>
-<p>Attach get hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value right <em>before it will be read</em>. Hook is executed in the context of the model.</p>
-<h3 id="attribute-type-type-set-hook-"><code>attribute</code> : type(Type).set(<code>hook</code>)</h3>
-<p>Attach the set hook to the model&#39;s attribute. <code>hook</code> is the function of signature <code>( value, attr ) =&gt; value</code> which is used to transform the attribute&#39;s value <em>before it will be assigned</em>. Hook is executed in the context of the model.</p>
-<p>If set hook will return <code>undefined</code>, it will cancel attribute update.</p>
-<h3 id="metatype-type-type-tojson-false-"><code>metatype</code> type( Type ).toJSON( false )</h3>
-<p>Do <em>not</em> serialize the specific attribute.</p>
+<p>Attribute validator checking that the attribute is not empty. Attribute value must be truthy to pass, <code>&quot;Required&quot;</code> string is used as validation error.</p>
+<p><code>required</code> validator always checked first, no matter in which order validators were attached.</p>
+<h3 id="attribute-type-type-get-value-attr-value-"><code>attribute</code> : type(Type).get( ( value, attr ) =&gt; value )</h3>
+<p>Transform the value right <em>before it will be read</em>. The hook is executed in the context of the model.</p>
+<h3 id="attribute-type-type-set-value-attr-value-"><code>attribute</code> : type(Type).set( ( value, attr ) =&gt; value )</h3>
+<p>Transform the value right <em>before it will be assigned</em>. The hook is executed in the context of the model.</p>
+<p>If set hook will return <code>undefined</code>, the attribute won&#39;t be assigned.</p>
+<h3 id="metatype-type-type-dontsave"><code>metatype</code> type( Type ).dontSave</h3>
+<p>Do <em>not</em> serialize the attribute.</p>
 <h3 id="metatype-type-type-tojson-value-name-options-json-"><code>metatype</code> type( Type ).toJSON( ( value, name, options ) =&gt; json )</h3>
-<p>Override the default serialization for the specific model&#39;s attribute.</p>
-<p>Attribute is not serialized when the function return <code>undefined</code>.</p>
+<p>Override the way how the attribute transforms to JSON. Attribute is not serialized when the function return <code>undefined</code>.</p>
 <h3 id="metatype-type-type-parse-json-name-value-"><code>metatype</code> type( Type ).parse( ( json, name ) =&gt; value )</h3>
-<p>Transform the data before it will be assigned to the model&#39;s attribute.</p>
-<p>Invoked when the <code>{ parse : true }</code> option is set.</p>
+<p>When restoring attribute from JSON, transform the value before it will be assigned.</p>
 <pre><code class="highlight javascript"><span class="hljs-comment">// Define custom boolean attribute type which is serialized as 0 or 1.</span>
 <span class="hljs-keyword">const</span> MyWeirdBool = type( <span class="hljs-built_in">Boolean</span> )
                       .parse( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x === <span class="hljs-number">1</span> )

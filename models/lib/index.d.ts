@@ -13,5 +13,5 @@ export declare const on: any, off: any, trigger: any, once: any, listenTo: any, 
 export declare function transaction<F extends Function>(method: F): F;
 export declare function type<T extends new (...args: any) => Model>(t: T[]): ChainableAttributeSpec<CollectionConstructor<InstanceType<T>>>;
 export declare function type<T extends object>(t: T[]): ChainableAttributeSpec<CollectionConstructor<InstanceType<ModelConstructor<T>>>>;
-export declare function type<T extends Function>(t: T): ChainableAttributeSpec<T>;
+export declare function type<T extends Function>(t: T | ChainableAttributeSpec<T>): ChainableAttributeSpec<T>;
 export declare function type<T extends object>(t: T): ChainableAttributeSpec<ModelConstructor<T>>;

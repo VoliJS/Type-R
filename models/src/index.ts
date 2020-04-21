@@ -38,7 +38,7 @@ export function transaction< F extends Function >( method : F ) : F {
 
 export function type<T extends new ( ...args : any ) => Model>( t : T[] ) : ChainableAttributeSpec<CollectionConstructor<InstanceType<T>>>;
 export function type<T extends object>( t : T[] ) : ChainableAttributeSpec<CollectionConstructor<InstanceType<ModelConstructor<T>>>>;
-export function type<T extends Function>( t : T ) : ChainableAttributeSpec<T>;
+export function type<T extends Function>( t : T | ChainableAttributeSpec<T> ) : ChainableAttributeSpec<T>;
 export function type<T extends object>( t : T ) : ChainableAttributeSpec<ModelConstructor<T>>;
 export function type<T>( t : T ){
     return Array.isArray( t ) ?

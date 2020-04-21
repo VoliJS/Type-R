@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { logger, Logger, type, auto, Collection, attributes, subsetOf, define, predefine, Record, CollectionConstructor, shared, memberOf } from '@type-r/models';
+import { logger, Logger, type, auto, Collection, attributes, subsetOf, define, predefine, Record, CollectionConstructor, shared, memberOf, ChainableAttributeSpec } from '@type-r/models';
 import "@type-r/globals";
 
 logger.off()
@@ -461,6 +461,20 @@ describe( 'Record', () =>{
             });
 
             expect( x.a.first().b ).toEqual( 5 );
+        })
+
+        it( 'Generic metatypes', () => {
+            type Arg<T extends Function> = T | ChainableAttributeSpec<T>
+            const Readonly = <T extends Function>( t : Arg<T> ) => type( t ).toJSON( false );
+
+            const X = attributes({
+                a : Readonly( String )
+            });
+
+            const x = new X();
+            x.a = "dedede"
+
+            expect( x.a ).toEqual( "dedede" );
         })
     })
 } );
