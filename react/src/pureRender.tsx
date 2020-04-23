@@ -52,6 +52,6 @@ export function pureRenderProps<T extends object>( props : T, Comp : ComponentTy
 function propForType( type : Function, key : string ) : string {
     return  type.prototype instanceof Transactional ? `props.${key} && props.${key}._changeToken` :
             type === Date ? `props.${key} && props.${key}.getTime()` :
-            type.prototype instanceof Linked ? `props.${key} && props.${key}.value` :
+            type === Linked ? `props.${key} && props.${key}.value` :
             `props.${key}`;
 }

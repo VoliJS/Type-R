@@ -7,6 +7,7 @@ import { definitionDecorator, EventMap, EventsDefinition, tools } from '@type-r/
 import { Transactional } from '../transactions';
 import { AttributeOptions, AttributeToJSON, getMetatype, Parse, SharedType } from './metatypes';
 import { AttributesContainer } from './updates';
+import { Linked } from '@linked/value';
 
 const { assign } = tools;
 
@@ -24,6 +25,7 @@ export type Infer<A> =
 // Extract the proper TS return type for a function or constructor.
 type TrueReturnType<F extends Function> =
     F extends DateConstructor ? Date | null :
+    F extends typeof Linked ? Linked<any> :
     F extends ( ...args : any[] ) => infer R ? R | null :
     F extends new ( ...args : any[] ) => infer R ? R | null:
     void;

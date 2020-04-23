@@ -32,7 +32,7 @@ export function pureRenderProps(props, Comp) {
 function propForType(type, key) {
     return type.prototype instanceof Transactional ? "props." + key + " && props." + key + "._changeToken" :
         type === Date ? "props." + key + " && props." + key + ".getTime()" :
-            type.prototype instanceof Linked ? "props." + key + " && props." + key + ".value" :
+            type === Linked ? "props." + key + " && props." + key + ".value" :
                 "props." + key;
 }
 //# sourceMappingURL=pureRender.js.map
