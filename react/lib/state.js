@@ -1,6 +1,13 @@
 import { useReducer, useEffect } from 'react';
 import { Collection } from '@type-r/models';
 export var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
+export function useModelCopy(model) {
+    var local = useModel(model.constructor);
+    useEffect(function () {
+        local.assignFrom(model);
+    }, [model._changeToken]);
+    return local;
+}
 export var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (Collection.of(Model))()); }),
     ofRefs: mutableHook(function (Model) { return new Mutable(new (Collection.ofRefs(Model))()); }),

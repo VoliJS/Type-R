@@ -3,6 +3,16 @@ import { Model, Collection, Transactional } from '@type-r/models'
 
 export const useModel : <M extends typeof Model>( Ctor : M ) => InstanceType<M> = mutableHook( Model => new Mutable( new Model ) );
 
+export function useModelCopy<M extends Model>( model : M ) : M {
+    const local = useModel( model.constructor as any );
+
+    useEffect( () => {
+        local.assignFrom( model );
+    }, [ ( model as any )._changeToken ] );
+
+    return local;
+}
+
 export interface CollectionHooks {
     of<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
     ofRefs<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
