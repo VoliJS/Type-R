@@ -1,7 +1,7 @@
 import { Linked } from '@linked/value';
 import { EventMap, EventsDefinition, TheType } from '@type-r/mixture';
 import { IOPromise } from '../io-tools';
-import { Model, shared } from '../model';
+import { Model, shared, ModelConstructor } from '../model';
 import { CloneOptions, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { AddOptions } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -24,6 +24,7 @@ export interface CollectionConstructor<R extends Model = Model> extends TheType<
 declare type CollectionOf<M extends typeof Model> = M['Collection'] extends CollectionConstructor<InstanceType<M>> ? M['Collection'] : CollectionConstructor<InstanceType<M>>;
 export declare class Collection<R extends Model = Model> extends Transactional implements CollectionCore, Iterable<R> {
     static of<M extends typeof Model>(Ctor: M): CollectionOf<M>;
+    static of<M extends object>(spec: M): CollectionOf<ModelConstructor<M>>;
     static ofRefs<M extends typeof Model>(Ctor: M): CollectionOf<M>;
     static Subset: typeof Collection;
     static Refs: any;

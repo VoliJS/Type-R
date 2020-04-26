@@ -45,7 +45,7 @@ export interface ModelConstructor<A extends object> extends TheType<typeof Model
     Collection : CollectionConstructor<Model & ModelAttributes<A>>
 }
 
-type ModelAttributes<D extends object> = InferAttrs<D> & { readonly $ : LinkedModelHash<InferAttrs<D>> }
+export type ModelAttributes<D extends object> = InferAttrs<D> & { readonly $ : LinkedModelHash<InferAttrs<D>> }
 
 export type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>

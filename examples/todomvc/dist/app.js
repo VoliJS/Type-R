@@ -2202,7 +2202,9 @@ var Collection = (function (_super) {
     }
     Collection_1 = Collection;
     Collection.of = function (Ctor) {
-        return Ctor.Collection;
+        return typeof Ctor === 'function' ?
+            Ctor.Collection :
+            Object(_model__WEBPACK_IMPORTED_MODULE_4__["attributes"])(Ctor).Collection;
     };
     Collection.ofRefs = function (Ctor) {
         return Ctor.Collection.Refs;

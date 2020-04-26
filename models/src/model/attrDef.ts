@@ -7,6 +7,8 @@ import { definitionDecorator, EventMap, EventsDefinition, tools } from '@type-r/
 import { Transactional } from '../transactions';
 import { AttributeOptions, AttributeToJSON, getMetatype, Parse, SharedType } from './metatypes';
 import { AttributesContainer } from './updates';
+import { Collection } from '../collection';
+import { ModelConstructor, Model, ModelAttributes } from './model';
 
 const { assign } = tools;
 
@@ -15,12 +17,21 @@ export interface AttributeCheck {
     error? : any
 }
 
+
 // Infer the proper TS type from a Type-R attribute spec.
 export type Infer<A> =
-    A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> :
     A extends Function ? TrueReturnType<A> :
+    A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> :
+    A extends Array<infer T> ? (
+        T extends new (...args : any[]) => infer M ? (
+                M extends Model ? Collection<M> : never
+        ) :
+        T extends object ? Collection<Model & ModelAttributes<T>> :
+        T[]
+    ) :
+    A extends object ? Model & ModelAttributes<A> :
     A | null;
- 
+
 // Extract the proper TS return type for a function or constructor.
 type TrueReturnType<F extends Function> =
     F extends DateConstructor ? Date | null :
