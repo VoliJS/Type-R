@@ -1,5 +1,5 @@
 import { __assign, __awaiter, __decorate, __extends, __generator, __rest } from "tslib";
-import { define, log, isProduction } from '@type-r/models';
+import { define, isProduction, log } from '@type-r/models';
 import { RestfulEndpoint } from './restful';
 export function fetchModelIO(method, url, options) {
     return new ModelFetchEndpoint(method, url, options);
@@ -9,12 +9,12 @@ function notSupported(method) {
 }
 var ModelFetchEndpoint = (function (_super) {
     __extends(ModelFetchEndpoint, _super);
-    function ModelFetchEndpoint(method, constructUrl, _a) {
+    function ModelFetchEndpoint(method, url, _a) {
         if (_a === void 0) { _a = {}; }
         var mockData = _a.mockData, options = __rest(_a, ["mockData"]);
         var _this = _super.call(this, '', mockData ? __assign({ mockData: [mockData] }, options) : options) || this;
         _this.method = method;
-        _this.constructUrl = constructUrl;
+        _this.url = url;
         return _this;
     }
     ModelFetchEndpoint.prototype.list = function () {
@@ -43,15 +43,16 @@ var ModelFetchEndpoint = (function (_super) {
     };
     ModelFetchEndpoint.prototype.read = function (id, options, model) {
         return __awaiter(this, void 0, void 0, function () {
+            var url;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.url = this.constructUrl(options.params, model);
+                        url = this.collectionUrl(model, options);
                         if (!this.memoryIO) return [3, 2];
-                        log(isProduction ? "error" : "info", 'Type-R:SimulatedIO', "GET " + this.url);
+                        log(isProduction ? "error" : "info", 'Type-R:SimulatedIO', "GET " + url);
                         return [4, this.memoryIO.list(options)];
                     case 1: return [2, (_a.sent())[0]];
-                    case 2: return [2, this.request(this.method, this.getRootUrl(model), options)];
+                    case 2: return [2, this.request(this.method, url, options)];
                 }
             });
         });

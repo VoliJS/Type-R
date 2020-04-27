@@ -155,12 +155,12 @@ function notSupported(method) {
 }
 var ModelFetchEndpoint = (function (_super) {
     Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(ModelFetchEndpoint, _super);
-    function ModelFetchEndpoint(method, constructUrl, _a) {
+    function ModelFetchEndpoint(method, url, _a) {
         if (_a === void 0) { _a = {}; }
         var mockData = _a.mockData, options = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, ["mockData"]);
         var _this = _super.call(this, '', mockData ? Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ mockData: [mockData] }, options) : options) || this;
         _this.method = method;
-        _this.constructUrl = constructUrl;
+        _this.url = url;
         return _this;
     }
     ModelFetchEndpoint.prototype.list = function () {
@@ -189,15 +189,16 @@ var ModelFetchEndpoint = (function (_super) {
     };
     ModelFetchEndpoint.prototype.read = function (id, options, model) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+            var url;
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        this.url = this.constructUrl(options.params, model);
+                        url = this.collectionUrl(model, options);
                         if (!this.memoryIO) return [3, 2];
-                        Object(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["log"])(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["isProduction"] ? "error" : "info", 'Type-R:SimulatedIO', "GET " + this.url);
+                        Object(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["log"])(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["isProduction"] ? "error" : "info", 'Type-R:SimulatedIO', "GET " + url);
                         return [4, this.memoryIO.list(options)];
                     case 1: return [2, (_a.sent())[0]];
-                    case 2: return [2, this.request(this.method, this.getRootUrl(model), options)];
+                    case 2: return [2, this.request(this.method, url, options)];
                 }
             });
         });
@@ -215,7 +216,7 @@ var ModelFetchEndpoint = (function (_super) {
 /*!**********************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/endpoints/lib/index.js ***!
   \**********************************************************/
-/*! exports provided: create, restfulIO, RestfulEndpoint, fetchModelIO, memoryIO, MemoryEndpoint, proxyIO, ProxyEndpoint, localStorageIO, LocalStorageEndpoint, attributesIO, AttributesEndpoint */
+/*! exports provided: create, restfulIO, RestfulEndpoint, UrlBuilder, fetchModelIO, memoryIO, MemoryEndpoint, proxyIO, ProxyEndpoint, localStorageIO, LocalStorageEndpoint, attributesIO, AttributesEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -226,6 +227,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "restfulIO", function() { return _restful__WEBPACK_IMPORTED_MODULE_0__["restfulIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RestfulEndpoint", function() { return _restful__WEBPACK_IMPORTED_MODULE_0__["RestfulEndpoint"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UrlBuilder", function() { return _restful__WEBPACK_IMPORTED_MODULE_0__["UrlBuilder"]; });
 
 /* harmony import */ var _fetchModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fetchModel */ "../../endpoints/lib/fetchModel.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fetchModelIO", function() { return _fetchModel__WEBPACK_IMPORTED_MODULE_1__["fetchModelIO"]; });
@@ -586,7 +589,7 @@ function fillAttrs(res, doc, attrs) {
 /*!************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/endpoints/lib/restful.js ***!
   \************************************************************/
-/*! exports provided: create, restfulIO, RestfulEndpoint */
+/*! exports provided: create, restfulIO, RestfulEndpoint, UrlBuilder */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -594,6 +597,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restfulIO", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RestfulEndpoint", function() { return RestfulEndpoint; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UrlBuilder", function() { return UrlBuilder; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
 /* harmony import */ var _memory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./memory */ "../../endpoints/lib/memory.js");
@@ -615,26 +619,26 @@ var RestfulEndpoint = (function () {
             Object(_type_r_models__WEBPACK_IMPORTED_MODULE_1__["log"])('error', 'Type-R:RestfulIO', "Mock data is used in production for " + url);
         }
     }
-    RestfulEndpoint.prototype.create = function (json, options, record) {
-        var url = this.collectionUrl(record, options);
+    RestfulEndpoint.prototype.create = function (json, options, model) {
+        var url = this.collectionUrl(model, options);
         return this.memoryIO ?
             this.simulateIO('create', 'POST', url, arguments) :
             this.request('POST', url, options, json);
     };
-    RestfulEndpoint.prototype.update = function (id, json, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.update = function (id, json, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('update', 'PUT', url, arguments) :
             this.request('PUT', url, options, json);
     };
-    RestfulEndpoint.prototype.read = function (id, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.read = function (id, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('read', 'GET', url, arguments) :
             this.request('GET', url, options);
     };
-    RestfulEndpoint.prototype.destroy = function (id, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.destroy = function (id, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('destroy', 'DELETE', url, arguments) :
             this.request('DELETE', url, options);
@@ -655,34 +659,20 @@ var RestfulEndpoint = (function () {
             });
         });
     };
-    RestfulEndpoint.prototype.isRelativeUrl = function (url) {
-        return url.indexOf('./') === 0;
-    };
-    RestfulEndpoint.prototype.removeTrailingSlash = function (url) {
-        var endsWithSlash = url.charAt(url.length - 1) === '/';
-        return endsWithSlash ? url.substr(0, url.length - 1) : url;
-    };
-    RestfulEndpoint.prototype.getRootUrl = function (recordOrCollection) {
-        var url = this.url;
-        if (this.isRelativeUrl(url)) {
-            var owner = recordOrCollection.getOwner(), ownerUrl = owner.getEndpoint().getUrl(owner);
-            return this.removeTrailingSlash(ownerUrl) + '/' + url.substr(2);
-        }
-        else {
-            return url;
-        }
-    };
-    RestfulEndpoint.prototype.getUrl = function (record) {
-        var url = this.getRootUrl(record);
-        return record.isNew()
-            ? url
-            : this.removeTrailingSlash(url) + '/' + record.id;
-    };
-    RestfulEndpoint.prototype.objectUrl = function (record, id, options) {
-        return appendParams(this.getUrl(record), options.params);
+    RestfulEndpoint.prototype.objectUrl = function (model, id, options) {
+        if (options === void 0) { options = {}; }
+        return UrlBuilder
+            .from(this.url, model, options)
+            .modelId(model)
+            .params(options.params)
+            .toString();
     };
     RestfulEndpoint.prototype.collectionUrl = function (collection, options) {
-        return appendParams(this.getRootUrl(collection), options.params);
+        if (options === void 0) { options = {}; }
+        return UrlBuilder
+            .from(this.url, collection, options)
+            .params(options.params)
+            .toString();
     };
     RestfulEndpoint.prototype.buildRequestOptions = function (method, options, body) {
         var mergedOptions = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, RestfulEndpoint.defaultFetchOptions), this.fetchOptions), options);
@@ -713,13 +703,46 @@ var RestfulEndpoint = (function () {
     return RestfulEndpoint;
 }());
 
-function appendParams(url, params) {
-    var esc = encodeURIComponent;
-    return params
-        ? url + '?' + Object.keys(params)
-            .map(function (k) { return esc(k) + '=' + esc(params[k]); })
-            .join('&')
-        : url;
+var UrlBuilder = (function () {
+    function UrlBuilder(url) {
+        this.url = url;
+    }
+    UrlBuilder.from = function (url, object, options) {
+        if (options === void 0) { options = {}; }
+        var rootUrl = typeof url === 'function' ?
+            url(options, object instanceof _type_r_models__WEBPACK_IMPORTED_MODULE_1__["Model"] ? object : null)
+            : url;
+        if (rootUrl.indexOf('./') === 0) {
+            var owner = object.getOwner(), ownerUrl = owner.getEndpoint().objectUrl(owner, options);
+            rootUrl = removeTrailingSlash(ownerUrl) + '/' + rootUrl.substr(2);
+        }
+        return new UrlBuilder(rootUrl);
+    };
+    UrlBuilder.prototype.modelId = function (model) {
+        return model instanceof _type_r_models__WEBPACK_IMPORTED_MODULE_1__["Model"] && !model.isNew()
+            ? this.append(model.id)
+            : this;
+    };
+    UrlBuilder.prototype.append = function (id) {
+        return new UrlBuilder(removeTrailingSlash(this.url) + '/' + id);
+    };
+    UrlBuilder.prototype.params = function (params) {
+        var esc = encodeURIComponent;
+        return params ?
+            new UrlBuilder(this.url + '?' + Object.keys(params)
+                .map(function (k) { return esc(k) + '=' + esc(params[k]); })
+                .join('&')) :
+            this;
+    };
+    UrlBuilder.prototype.toString = function () {
+        return this.url;
+    };
+    return UrlBuilder;
+}());
+
+function removeTrailingSlash(url) {
+    var endsWithSlash = url.charAt(url.length - 1) === '/';
+    return endsWithSlash ? url.substr(0, url.length - 1) : url;
 }
 
 
@@ -2217,6 +2240,7 @@ var Collection = (function (_super) {
             Ctor.call(this, a, b, _transactions__WEBPACK_IMPORTED_MODULE_5__["ItemsBehavior"].share | (listen ? _transactions__WEBPACK_IMPORTED_MODULE_5__["ItemsBehavior"].listen : 0));
         }
         _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["Mixable"].mixins.populate(RefsCollection);
+        RefsCollection.create = Collection_1.create;
         RefsCollection.prototype = this.prototype;
         RefsCollection._metatype = CollectionRefsType;
         this.Refs = this.Subset = RefsCollection;
@@ -39867,7 +39891,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useEvent, useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useModelCopy, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39877,6 +39901,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "../../react/lib/state.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModelCopy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useCollection"]; });
 
@@ -40005,12 +40031,13 @@ function propForType(type, key) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/state.js ***!
   \******************************************************/
-/*! exports provided: useModel, useCollection */
+/*! exports provided: useModel, useModelCopy, useCollection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return useModel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return useModelCopy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return useCollection; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -40018,6 +40045,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
+function useModelCopy(model) {
+    var local = useModel(model.constructor);
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        local.assignFrom(model);
+    }, [model._changeToken]);
+    return local;
+}
 var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].of(Model))()); }),
     ofRefs: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].ofRefs(Model))()); }),

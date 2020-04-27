@@ -32,6 +32,7 @@ export class AggregatedType extends AnyType {
         // This can be moved to transactional attribute. And chained with the rest.
         if( update = this.canBeUpdated( prev, value, options ) ) { // todo - skip empty updates.
             const nestedTransaction = prev._createTransaction( update, options );
+            // TODO: sync update tokens
             if( nestedTransaction ){
                 if( nested ){
                     nested.push( nestedTransaction );

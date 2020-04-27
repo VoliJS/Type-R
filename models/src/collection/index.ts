@@ -102,6 +102,7 @@ export class Collection< R extends Model = Model> extends Transactional implemen
         }
 
         Mixable.mixins.populate( RefsCollection );
+        RefsCollection.create = Collection.create;
         
         RefsCollection.prototype = this.prototype;
         RefsCollection._metatype = CollectionRefsType;
@@ -352,7 +353,7 @@ export class Collection< R extends Model = Model> extends Transactional implemen
     /** @internal */
     _liveUpdates : object
 
-    fetch( a_options : { liveUpdates? : LiveUpdatesOption } & TransactionOptions = {} ) : IOPromise<this> {
+    fetch( a_options : { liveUpdates? : LiveUpdatesOption } & TransactionOptions & { [ key : string ] : any } = {} ) : IOPromise<this> {
         const options = { parse : true, ...a_options },
             endpoint = this.getEndpoint();
 

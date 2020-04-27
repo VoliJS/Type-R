@@ -65,6 +65,7 @@ var Collection = (function (_super) {
             Ctor.call(this, a, b, ItemsBehavior.share | (listen ? ItemsBehavior.listen : 0));
         }
         Mixable.mixins.populate(RefsCollection);
+        RefsCollection.create = Collection_1.create;
         RefsCollection.prototype = this.prototype;
         RefsCollection._metatype = CollectionRefsType;
         this.Refs = this.Subset = RefsCollection;

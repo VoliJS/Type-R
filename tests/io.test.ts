@@ -287,6 +287,66 @@ describe( 'IO', function(){
             } )
         } )
 
+        describe( 'Template urls', () => {
+            @define
+            class User extends Record {
+                static Collection : CollectionConstructor<User>
+                static endpoint = restfulIO( options => `http://restful.relative/store/${options.id}/users` );
+                @auto name : string
+            }
+
+            @define
+            class Store extends Record {
+                static endpoint = restfulIO( options => `http://restful.relative/store` );
+                @auto name : string
+                @auto user : User
+            }
+
+            @define
+            class Root extends Record {
+                static endpoint = restfulIO( 'http://restful.relative/' );
+                
+                @type( User.Collection )
+                .as users : Collection<User>
+
+                @auto store : Store
+            }
+
+            const root = new Root();
+            root.store.id = "99";
+            root.store.user.id = "1000";
+
+            nock( 'http://restful.relative' )
+                .get( '/store/99/users', )
+                .reply( 200, [ {id: 10, name: 'John'}, {id: 11, name: 'Jack'} ] )
+                .get( '/store/99' )
+                .reply( 200, {id: 99, name: 'something'} )
+                .get( '/store/99/users/1000' )
+                .reply( 200, {id: 1000, name: 'special'} )
+
+            it( 'resolves in simple case', done => {
+                root.store.fetch({ id : 99 }).then( () => {
+                    expect( root.store.name ).toBe( 'something' )
+                    done()
+                } )
+            } )
+
+            it( 'resolves for collection', done => {
+                root.users.fetch({ id : 99 }).then( () => {
+                    expect( root.users.map( u => u.id ) ).toEqual( [ 10, 11 ] )
+                    done()
+                } )
+            } )
+
+            it( 'nested resolve', done => {
+                const {user} = root.store;
+                user.fetch({ id : 99 }).then( () => {
+                    expect( user.name ).toBe( 'special' )
+                    done()
+                } )
+            } )
+        } )
+
         describe( "Merging options", () => {
             RestfulEndpoint.defaultFetchOptions = {
                 cache: "force-cache",

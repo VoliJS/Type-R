@@ -1,5 +1,5 @@
 import { __assign, __awaiter, __generator, __rest } from "tslib";
-import { log, isProduction } from '@type-r/models';
+import { Model, log, isProduction } from '@type-r/models';
 import { memoryIO } from './memory';
 export function create(url, fetchOptions) {
     return new RestfulEndpoint(url, fetchOptions);
@@ -16,26 +16,26 @@ var RestfulEndpoint = (function () {
             log('error', 'Type-R:RestfulIO', "Mock data is used in production for " + url);
         }
     }
-    RestfulEndpoint.prototype.create = function (json, options, record) {
-        var url = this.collectionUrl(record, options);
+    RestfulEndpoint.prototype.create = function (json, options, model) {
+        var url = this.collectionUrl(model, options);
         return this.memoryIO ?
             this.simulateIO('create', 'POST', url, arguments) :
             this.request('POST', url, options, json);
     };
-    RestfulEndpoint.prototype.update = function (id, json, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.update = function (id, json, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('update', 'PUT', url, arguments) :
             this.request('PUT', url, options, json);
     };
-    RestfulEndpoint.prototype.read = function (id, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.read = function (id, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('read', 'GET', url, arguments) :
             this.request('GET', url, options);
     };
-    RestfulEndpoint.prototype.destroy = function (id, options, record) {
-        var url = this.objectUrl(record, id, options);
+    RestfulEndpoint.prototype.destroy = function (id, options, model) {
+        var url = this.objectUrl(model, id, options);
         return this.memoryIO ?
             this.simulateIO('destroy', 'DELETE', url, arguments) :
             this.request('DELETE', url, options);
@@ -56,34 +56,20 @@ var RestfulEndpoint = (function () {
             });
         });
     };
-    RestfulEndpoint.prototype.isRelativeUrl = function (url) {
-        return url.indexOf('./') === 0;
-    };
-    RestfulEndpoint.prototype.removeTrailingSlash = function (url) {
-        var endsWithSlash = url.charAt(url.length - 1) === '/';
-        return endsWithSlash ? url.substr(0, url.length - 1) : url;
-    };
-    RestfulEndpoint.prototype.getRootUrl = function (recordOrCollection) {
-        var url = this.url;
-        if (this.isRelativeUrl(url)) {
-            var owner = recordOrCollection.getOwner(), ownerUrl = owner.getEndpoint().getUrl(owner);
-            return this.removeTrailingSlash(ownerUrl) + '/' + url.substr(2);
-        }
-        else {
-            return url;
-        }
-    };
-    RestfulEndpoint.prototype.getUrl = function (record) {
-        var url = this.getRootUrl(record);
-        return record.isNew()
-            ? url
-            : this.removeTrailingSlash(url) + '/' + record.id;
-    };
-    RestfulEndpoint.prototype.objectUrl = function (record, id, options) {
-        return appendParams(this.getUrl(record), options.params);
+    RestfulEndpoint.prototype.objectUrl = function (model, id, options) {
+        if (options === void 0) { options = {}; }
+        return UrlBuilder
+            .from(this.url, model, options)
+            .modelId(model)
+            .params(options.params)
+            .toString();
     };
     RestfulEndpoint.prototype.collectionUrl = function (collection, options) {
-        return appendParams(this.getRootUrl(collection), options.params);
+        if (options === void 0) { options = {}; }
+        return UrlBuilder
+            .from(this.url, collection, options)
+            .params(options.params)
+            .toString();
     };
     RestfulEndpoint.prototype.buildRequestOptions = function (method, options, body) {
         var mergedOptions = __assign(__assign(__assign({}, RestfulEndpoint.defaultFetchOptions), this.fetchOptions), options);
@@ -114,12 +100,45 @@ var RestfulEndpoint = (function () {
     return RestfulEndpoint;
 }());
 export { RestfulEndpoint };
-function appendParams(url, params) {
-    var esc = encodeURIComponent;
-    return params
-        ? url + '?' + Object.keys(params)
-            .map(function (k) { return esc(k) + '=' + esc(params[k]); })
-            .join('&')
-        : url;
+var UrlBuilder = (function () {
+    function UrlBuilder(url) {
+        this.url = url;
+    }
+    UrlBuilder.from = function (url, object, options) {
+        if (options === void 0) { options = {}; }
+        var rootUrl = typeof url === 'function' ?
+            url(options, object instanceof Model ? object : null)
+            : url;
+        if (rootUrl.indexOf('./') === 0) {
+            var owner = object.getOwner(), ownerUrl = owner.getEndpoint().objectUrl(owner, options);
+            rootUrl = removeTrailingSlash(ownerUrl) + '/' + rootUrl.substr(2);
+        }
+        return new UrlBuilder(rootUrl);
+    };
+    UrlBuilder.prototype.modelId = function (model) {
+        return model instanceof Model && !model.isNew()
+            ? this.append(model.id)
+            : this;
+    };
+    UrlBuilder.prototype.append = function (id) {
+        return new UrlBuilder(removeTrailingSlash(this.url) + '/' + id);
+    };
+    UrlBuilder.prototype.params = function (params) {
+        var esc = encodeURIComponent;
+        return params ?
+            new UrlBuilder(this.url + '?' + Object.keys(params)
+                .map(function (k) { return esc(k) + '=' + esc(params[k]); })
+                .join('&')) :
+            this;
+    };
+    UrlBuilder.prototype.toString = function () {
+        return this.url;
+    };
+    return UrlBuilder;
+}());
+export { UrlBuilder };
+function removeTrailingSlash(url) {
+    var endsWithSlash = url.charAt(url.length - 1) === '/';
+    return endsWithSlash ? url.substr(0, url.length - 1) : url;
 }
 //# sourceMappingURL=restful.js.map

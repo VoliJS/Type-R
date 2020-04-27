@@ -50,7 +50,9 @@ export declare class Collection<R extends Model = Model> extends Transactional i
     liveUpdates(enabled: LiveUpdatesOption): IOPromise<this>;
     fetch(a_options?: {
         liveUpdates?: LiveUpdatesOption;
-    } & TransactionOptions): IOPromise<this>;
+    } & TransactionOptions & {
+        [key: string]: any;
+    }): IOPromise<this>;
     dispose(): void;
     reset(a_elements?: ElementsArg<R>, options?: TransactionOptions): R[];
     add(a_elements: ElementsArg<R>, options?: AddOptions): any;

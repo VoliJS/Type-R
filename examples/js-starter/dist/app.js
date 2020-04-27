@@ -1578,6 +1578,7 @@ var Collection = (function (_super) {
             Ctor.call(this, a, b, _transactions__WEBPACK_IMPORTED_MODULE_5__["ItemsBehavior"].share | (listen ? _transactions__WEBPACK_IMPORTED_MODULE_5__["ItemsBehavior"].listen : 0));
         }
         _type_r_mixture__WEBPACK_IMPORTED_MODULE_2__["Mixable"].mixins.populate(RefsCollection);
+        RefsCollection.create = Collection_1.create;
         RefsCollection.prototype = this.prototype;
         RefsCollection._metatype = CollectionRefsType;
         this.Refs = this.Subset = RefsCollection;
@@ -35750,7 +35751,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useEvent, useModel, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useModelCopy, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -35760,6 +35761,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "../../react/lib/state.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModelCopy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useCollection"]; });
 
@@ -35888,12 +35891,13 @@ function propForType(type, key) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/state.js ***!
   \******************************************************/
-/*! exports provided: useModel, useCollection */
+/*! exports provided: useModel, useModelCopy, useCollection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return useModel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return useModelCopy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return useCollection; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -35901,6 +35905,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
+function useModelCopy(model) {
+    var local = useModel(model.constructor);
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        local.assignFrom(model);
+    }, [model._changeToken]);
+    return local;
+}
 var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].of(Model))()); }),
     ofRefs: mutableHook(function (Model) { return new Mutable(new (_type_r_models__WEBPACK_IMPORTED_MODULE_1__["Collection"].ofRefs(Model))()); }),

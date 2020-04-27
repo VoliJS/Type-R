@@ -1,7 +1,9 @@
-import { IOEndpoint, IOOptions, log, isProduction } from '@type-r/models'
+import { IOEndpoint, IOOptions, Model, Collection, log, isProduction, Transactional } from '@type-r/models'
 import { memoryIO, MemoryEndpoint } from './memory'
 
-export function create( url : string, fetchOptions? : Partial<RestfulFetchOptions> ){
+export type UrlTemplate = ( options : any, model? : any ) => string
+
+export function create( url : string | UrlTemplate, fetchOptions? : Partial<RestfulFetchOptions> ){
     return new RestfulEndpoint( url, fetchOptions );
 }
 
@@ -25,7 +27,7 @@ export type RestfulFetchOptions = /* subset of RequestInit */{
 }
 
 export class RestfulEndpoint implements IOEndpoint {
-    constructor( public url : string, { mockData, simulateDelay = 1000, ...fetchOptions } : RestfulFetchOptions = {}) {
+    constructor( public url : string | UrlTemplate, { mockData, simulateDelay = 1000, ...fetchOptions } : RestfulFetchOptions = {}) {
         this.fetchOptions = fetchOptions
         this.memoryIO =  mockData && !isProduction ? memoryIO( mockData, simulateDelay ) : null;
 
@@ -44,29 +46,29 @@ export class RestfulEndpoint implements IOEndpoint {
         redirect: "error",
     }
 
-    create( json, options : RestfulIOOptions, record ) {
-        const url = this.collectionUrl( record, options );
+    create( json, options : RestfulIOOptions, model ) {
+        const url = this.collectionUrl( model, options );
         return this.memoryIO ?
             this.simulateIO( 'create', 'POST', url, arguments ) :
             this.request( 'POST', url, options, json );
     }
 
-    update( id, json, options : RestfulIOOptions, record ) {
-        const url = this.objectUrl( record, id, options )
+    update( id, json, options : RestfulIOOptions, model ) {
+        const url = this.objectUrl( model, id, options )
         return this.memoryIO ?
             this.simulateIO( 'update', 'PUT', url, arguments ) :
             this.request( 'PUT', url, options, json );
     }
 
-    read( id, options : IOOptions, record ){
-        const url = this.objectUrl( record, id, options );
+    read( id, options : IOOptions, model ){
+        const url = this.objectUrl( model, id, options );
         return this.memoryIO ?
             this.simulateIO( 'read', 'GET', url, arguments ) :
             this.request( 'GET', url, options );
         }
 
-    destroy( id, options : RestfulIOOptions, record ){
-        const url = this.objectUrl( record, id, options );
+    destroy( id, options : RestfulIOOptions, model ){
+        const url = this.objectUrl( model, id, options );
         return this.memoryIO ?
             this.simulateIO( 'destroy', 'DELETE', url, arguments ) :
             this.request( 'DELETE', url, options );
@@ -87,40 +89,19 @@ export class RestfulEndpoint implements IOEndpoint {
         return this.memoryIO[ method ].apply( this.memoryIO, args );
     }
 
-    protected isRelativeUrl( url ) {
-        return url.indexOf( './' ) === 0;
+    protected objectUrl( model : Transactional, id : string, options : RestfulIOOptions = {} ){
+        return UrlBuilder
+            .from( this.url, model, options )
+            .modelId( model )
+            .params( options.params )
+            .toString()
     }
 
-    protected removeTrailingSlash( url : string ) {
-        const endsWithSlash = url.charAt( url.length - 1 ) === '/';
-        return endsWithSlash ? url.substr( 0, url.length - 1 ) : url;
-    }
-
-    protected getRootUrl( recordOrCollection ) {
-        const { url } = this
-        if( this.isRelativeUrl( url ) ) {
-            const owner         = recordOrCollection.getOwner(),
-                  ownerUrl      = owner.getEndpoint().getUrl( owner );
-
-            return this.removeTrailingSlash( ownerUrl ) + '/' + url.substr( 2 )
-        } else {
-            return url;
-        }
-    }
-
-    protected getUrl( record ) {
-        const url = this.getRootUrl( record );
-        return record.isNew()
-            ? url
-            : this.removeTrailingSlash( url ) + '/' + record.id
-    }
-
-    protected objectUrl( record, id, options ){
-        return appendParams( this.getUrl( record ), options.params );
-    }
-
-    protected collectionUrl( collection, options ){
-        return appendParams( this.getRootUrl( collection ), options.params );
+    protected collectionUrl( collection : Transactional, options : RestfulIOOptions = {} ){
+        return UrlBuilder
+            .from( this.url, collection, options )
+            .params( options.params )
+            .toString()
     }
 
     protected buildRequestOptions( method : string, options? : RequestInit, body? ) : RequestInit {
@@ -147,7 +128,6 @@ export class RestfulEndpoint implements IOEndpoint {
     }
 
     protected request( method : HttpMethod, url : string, {options} : RestfulIOOptions, body? ) : Promise<any> {
-        
         return fetch( url, this.buildRequestOptions( method, options, body ) )
             .then( response => {
                 if( response.ok ) {
@@ -159,11 +139,53 @@ export class RestfulEndpoint implements IOEndpoint {
     }
 }
 
-function appendParams( url, params? ) {
-    var esc = encodeURIComponent;
-    return params
-        ? url + '?' + Object.keys( params )
-                          .map( k => esc( k ) + '=' + esc( params[ k ] ) )
-                          .join( '&' )
-        : url;
+export class UrlBuilder {
+    static from( url : string | UrlTemplate, object : Transactional, options : RestfulIOOptions = {} ){
+        // Resolve URL template 
+        let rootUrl = typeof url === 'function' ?
+            url( options, object instanceof Model ? object : null )
+            : url;
+        
+        // Resolve relative URL
+        if( rootUrl.indexOf( './' ) === 0 ){
+            const owner         = object.getOwner() as Model,
+                  ownerUrl      = ( owner.getEndpoint() as any ).objectUrl( owner, options );
+            
+            rootUrl = removeTrailingSlash( ownerUrl ) + '/' + rootUrl.substr( 2 )
+        }
+
+        return new UrlBuilder( rootUrl );
+    }
+
+    constructor( private url : string ){}
+
+    modelId( model : Transactional ){
+        return model instanceof Model && !model.isNew()
+            ? this.append( model.id )
+            : this;
+    }
+
+    append( id : string ){
+        return new UrlBuilder( removeTrailingSlash( this.url ) + '/' + id );
+    }
+
+    params( params : object ){
+        var esc = encodeURIComponent;
+        return params ?
+            new UrlBuilder(
+                this.url + '?' + Object.keys( params )
+                    .map( k => esc( k ) + '=' + esc( params[ k ] ) )
+                    .join( '&' )
+            ):
+            this;
+    }
+
+    toString(){
+        return this.url;
+    }
+}
+
+function removeTrailingSlash( url : string ) {
+    const endsWithSlash = url.charAt( url.length - 1 ) === '/';
+    return endsWithSlash ? url.substr( 0, url.length - 1 ) : url;
 }

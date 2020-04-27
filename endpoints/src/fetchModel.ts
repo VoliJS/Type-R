@@ -1,7 +1,5 @@
-import { Model, define, log, isProduction } from '@type-r/models';
-import { RestfulFetchOptions, RestfulEndpoint, RestfulIOOptions, HttpMethod } from './restful';
-
-export type ConstructUrl = ( params : { [ key : string ] : any }, model? : Model ) => string;
+import { define, isProduction, log, Model } from '@type-r/models';
+import { HttpMethod, RestfulEndpoint, RestfulFetchOptions, RestfulIOOptions, UrlTemplate } from './restful';
 
 /**
  * Implement custom model.fetch() according to the given rules.
@@ -11,7 +9,7 @@ export type ConstructUrl = ( params : { [ key : string ] : any }, model? : Model
  * @param url template function to generate the URL
  * @param options options coming from `model.fetch( options )`
  */
-export function fetchModelIO( method : HttpMethod, url : ConstructUrl, options? : RestfulFetchOptions ){
+export function fetchModelIO( method : HttpMethod, url : string | UrlTemplate, options? : RestfulFetchOptions ){
     return new ModelFetchEndpoint( method, url, options );
 }
 
@@ -22,7 +20,7 @@ function notSupported( method ){
 @define class ModelFetchEndpoint extends RestfulEndpoint {
     constructor(
         public method : HttpMethod,
-        public constructUrl : ConstructUrl,
+        public url : string | UrlTemplate,
         { mockData, ...options } : RestfulFetchOptions = {}
     ){
         super( '', mockData ? { mockData : [ mockData ], ...options } : options );
@@ -34,14 +32,14 @@ function notSupported( method ){
     async update(){ notSupported( 'model.save()') }
 
     async read( id, options : RestfulIOOptions, model : Model ){
-        this.url = this.constructUrl( options.params, model );
+        const url = this.collectionUrl( model, options );
 
         if( this.memoryIO ){
-            log( isProduction ? "error" : "info", 'Type-R:SimulatedIO', `GET ${this.url}`);
+            log( isProduction ? "error" : "info", 'Type-R:SimulatedIO', `GET ${url}`);
             return ( await this.memoryIO.list( options ) )[ 0 ];
         }
         else{
-            return this.request( this.method, this.getRootUrl( model ), options );    
+            return this.request( this.method, url, options );
         }
     }
 }
