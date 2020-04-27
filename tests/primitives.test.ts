@@ -463,6 +463,37 @@ describe( 'Record', () =>{
             expect( x.a.first().b ).toEqual( 5 );
         })
 
+        it( 'Define adhoc collection', () => {
+            const aa = Collection.of({ x : 1 }).create();
+
+            const B = attributes({
+                b : 1
+            });
+
+            const A = attributes({
+                x : 1,
+                z : {
+                    collA : [{ a : 1 }],
+                    collB : [ B ],
+                    y : {
+                        k : 1
+                    }
+                }
+            });
+
+            const ab = Collection.of( A ).create();
+
+            ab.add({
+                x : 5
+            });
+
+            aa.add({
+                x : 5
+            });
+
+            expect( aa.first().x ).toEqual( ab.first().x );
+        })
+
         it( 'Generic metatypes', () => {
             type Arg<T extends Function> = T | ChainableAttributeSpec<T>
             const Readonly = <T extends Function>( t : Arg<T> ) => type( t ).toJSON( false );

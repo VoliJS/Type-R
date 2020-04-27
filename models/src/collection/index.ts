@@ -1,7 +1,7 @@
 import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, EventsDefinition, Logger, logger, LogLevel, Mixable, mixinRules, mixins, TheType } from '@type-r/mixture';
 import { IOPromise, startIO } from '../io-tools';
-import { AggregatedType, Model, SharedType, shared } from '../model';
+import { AggregatedType, Model, SharedType, shared, ModelConstructor, attributes } from '../model';
 import { CloneOptions, ItemsBehavior, Transactional, TransactionalDefinition, transactionApi, TransactionOptions } from '../transactions';
 import { AddOptions, addTransaction } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -65,8 +65,12 @@ export class Collection< R extends Model = Model> extends Transactional implemen
      * 
      * const users = new ( Collection.of( User ) )
      */
+    static of<M extends typeof Model>( Ctor : M ) : CollectionOf<M>;
+    static of<M extends object>( spec : M ) : CollectionOf<ModelConstructor<M>>;
     static of<M extends typeof Model>( Ctor : M ) : CollectionOf<M> {
-        return Ctor.Collection as any;
+        return typeof Ctor === 'function' ?
+            Ctor.Collection as any :
+            attributes( Ctor ).Collection;
     }
 
     /**

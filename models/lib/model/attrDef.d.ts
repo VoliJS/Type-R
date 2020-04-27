@@ -1,12 +1,14 @@
-import { IOEndpoint } from '../io-tools';
-import { EventsDefinition } from '@type-r/mixture';
-import { AttributeOptions, AttributeToJSON, Parse } from './metatypes';
 import { Linked } from '@linked/value';
+import { EventsDefinition } from '@type-r/mixture';
+import { Collection } from '../collection';
+import { IOEndpoint } from '../io-tools';
+import { AttributeOptions, AttributeToJSON, Parse } from './metatypes';
+import { Model, ModelAttributes } from './model';
 export interface AttributeCheck {
     (value: any, key: string): boolean;
     error?: any;
 }
-export declare type Infer<A> = A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> : A extends Function ? TrueReturnType<A> : A | null;
+export declare type Infer<A> = A extends Function ? TrueReturnType<A> : A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> : A extends Array<infer T> ? (T extends new (...args: any[]) => infer M ? (M extends Model ? Collection<M> : never) : T extends object ? Collection<Model & ModelAttributes<T>> : T[]) : A extends object ? Model & ModelAttributes<A> : A | null;
 declare type TrueReturnType<F extends Function> = F extends DateConstructor ? Date | null : F extends typeof Linked ? Linked<any> : F extends (...args: any[]) => infer R ? R | null : F extends new (...args: any[]) => infer R ? R | null : void;
 export declare class ChainableAttributeSpec<F extends Function> {
     options: AttributeOptions & {

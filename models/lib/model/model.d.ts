@@ -20,7 +20,7 @@ export interface ModelConstructor<A extends object> extends TheType<typeof Model
     attributes: A;
     Collection: CollectionConstructor<Model & ModelAttributes<A>>;
 }
-declare type ModelAttributes<D extends object> = InferAttrs<D> & {
+export declare type ModelAttributes<D extends object> = InferAttrs<D> & {
     readonly $: LinkedModelHash<InferAttrs<D>>;
 };
 export declare type InferAttrs<A extends object> = {
@@ -87,4 +87,3 @@ export declare class ModelEntriesIterator implements Iterator<[string, any]> {
     constructor(record: Model);
     next(): IteratorResult<[string, any]>;
 }
-export {};

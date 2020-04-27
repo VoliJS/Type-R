@@ -2,7 +2,7 @@ import { __assign, __decorate, __extends } from "tslib";
 import { Linked } from '@linked/value';
 import { define, definitions, EventMap, eventsApi, logger, Mixable, mixinRules, mixins } from '@type-r/mixture';
 import { startIO } from '../io-tools';
-import { AggregatedType, Model, SharedType, shared } from '../model';
+import { AggregatedType, Model, SharedType, shared, attributes } from '../model';
 import { ItemsBehavior, Transactional, transactionApi } from '../transactions';
 import { addTransaction } from './add';
 import { ArrayMixin } from './arrayMethods';
@@ -50,7 +50,9 @@ var Collection = (function (_super) {
     }
     Collection_1 = Collection;
     Collection.of = function (Ctor) {
-        return Ctor.Collection;
+        return typeof Ctor === 'function' ?
+            Ctor.Collection :
+            attributes(Ctor).Collection;
     };
     Collection.ofRefs = function (Ctor) {
         return Ctor.Collection.Refs;

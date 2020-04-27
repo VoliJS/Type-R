@@ -2,12 +2,14 @@
  * Type spec engine. Declare attributes using chainable syntax,
  * and returns object with spec.
  */
-import { IOEndpoint } from '../io-tools';
+import { Linked } from '@linked/value';
 import { definitionDecorator, EventMap, EventsDefinition, tools } from '@type-r/mixture';
+import { Collection } from '../collection';
+import { IOEndpoint } from '../io-tools';
 import { Transactional } from '../transactions';
 import { AttributeOptions, AttributeToJSON, getMetatype, Parse, SharedType } from './metatypes';
+import { Model, ModelAttributes } from './model';
 import { AttributesContainer } from './updates';
-import { Linked } from '@linked/value';
 
 const { assign } = tools;
 
@@ -16,12 +18,21 @@ export interface AttributeCheck {
     error? : any
 }
 
+
 // Infer the proper TS type from a Type-R attribute spec.
 export type Infer<A> =
-    A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> :
     A extends Function ? TrueReturnType<A> :
+    A extends ChainableAttributeSpec<infer F> ? TrueReturnType<F> :
+    A extends Array<infer T> ? (
+        T extends new (...args : any[]) => infer M ? (
+                M extends Model ? Collection<M> : never
+        ) :
+        T extends object ? Collection<Model & ModelAttributes<T>> :
+        T[]
+    ) :
+    A extends object ? Model & ModelAttributes<A> :
     A | null;
- 
+
 // Extract the proper TS return type for a function or constructor.
 type TrueReturnType<F extends Function> =
     F extends DateConstructor ? Date | null :
@@ -183,7 +194,7 @@ export function shared<C extends Function>( this : void, Constructor : C ) : Cha
     });
 }
 
-export { shared as refTo }
+export { shared as refTo };
 
 // Create attribute metatype inferring the type from the value.
 export function value<T>( this : void, x : T ) : ChainableAttributeSpec<new ( ...args : any[] ) => T> {
