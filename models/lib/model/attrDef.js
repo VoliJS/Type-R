@@ -117,10 +117,7 @@ var ChainableAttributeSpec = (function () {
         return this.metadata({ value: x, hasCustomDefault: true });
     };
     ChainableAttributeSpec.from = function (spec) {
-        if (spec && spec instanceof ChainableAttributeSpec) {
-            return spec;
-        }
-        return typeof spec === 'function' ? type(spec) : value(spec);
+        return null;
     };
     return ChainableAttributeSpec;
 }());

@@ -6,7 +6,7 @@ if( typeof Symbol === 'undefined' ){
 import { Events, Mixable as Class } from '@type-r/mixture';
 import { CollectionConstructor } from './collection';
 // Define synonims for NestedTypes backward compatibility.
-import { attributes, ChainableAttributeSpec, Model, ModelConstructor, type as _type } from './model';
+import { attributes, ChainableAttributeSpec, Model, ModelConstructor, type as _type, value } from './model';
 
 /**
  * Export everything 
@@ -50,3 +50,17 @@ const _toModel = t =>
     t != null && Object.getPrototypeOf( t ) === Object.prototype ?
         attributes( t ) :
         t;
+
+ChainableAttributeSpec.from = ( spec : any ) : ChainableAttributeSpec<any> => {
+    // Pass metatype through untouched...
+    if( spec && spec instanceof ChainableAttributeSpec ) {
+        return spec;
+    }
+
+    return typeof spec === 'function' ||
+        Array.isArray( spec ) ||
+        ( spec && Object.getPrototypeOf( spec ) === Object.prototype ) ?
+            type( spec ) :
+            value( spec );
+}
+    

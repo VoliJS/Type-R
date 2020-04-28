@@ -3,7 +3,7 @@ if (typeof Symbol === 'undefined') {
     Object.defineProperty(window, 'Symbol', { value: { iterator: 'Symbol.iterator' }, configurable: true });
 }
 import { Events, Mixable as Class } from '@type-r/mixture';
-import { attributes, Model, type as _type } from './model';
+import { attributes, ChainableAttributeSpec, Model, type as _type, value } from './model';
 export { Linked } from '@linked/value';
 export * from '@type-r/mixture';
 export * from './collection';
@@ -36,5 +36,15 @@ var _toModel = function (t) {
     return t != null && Object.getPrototypeOf(t) === Object.prototype ?
         attributes(t) :
         t;
+};
+ChainableAttributeSpec.from = function (spec) {
+    if (spec && spec instanceof ChainableAttributeSpec) {
+        return spec;
+    }
+    return typeof spec === 'function' ||
+        Array.isArray(spec) ||
+        (spec && Object.getPrototypeOf(spec) === Object.prototype) ?
+        type(spec) :
+        value(spec);
 };
 //# sourceMappingURL=index.js.map

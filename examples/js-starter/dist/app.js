@@ -2272,6 +2272,16 @@ var _toModel = function (t) {
         Object(_model__WEBPACK_IMPORTED_MODULE_1__["attributes"])(t) :
         t;
 };
+_model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"].from = function (spec) {
+    if (spec && spec instanceof _model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"]) {
+        return spec;
+    }
+    return typeof spec === 'function' ||
+        Array.isArray(spec) ||
+        (spec && Object.getPrototypeOf(spec) === Object.prototype) ?
+        type(spec) :
+        Object(_model__WEBPACK_IMPORTED_MODULE_1__["value"])(spec);
+};
 
 
 /***/ }),
@@ -2487,10 +2497,7 @@ var ChainableAttributeSpec = (function () {
         return this.metadata({ value: x, hasCustomDefault: true });
     };
     ChainableAttributeSpec.from = function (spec) {
-        if (spec && spec instanceof ChainableAttributeSpec) {
-            return spec;
-        }
-        return typeof spec === 'function' ? type(spec) : value(spec);
+        return null;
     };
     return ChainableAttributeSpec;
 }());
