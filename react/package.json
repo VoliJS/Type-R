@@ -1,6 +1,6 @@
 {
   "name": "@type-r/react",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "description": "React bindings for Type-R/models",
   "main": "dist/index.js",
   "module": "./lib/index.js",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@linked/react": "^3.0.8",
+    "@linked/react": "^3.1.2",
     "@type-r/models": "4.x",
     "react": "^16.8.6"
   },

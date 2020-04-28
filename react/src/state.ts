@@ -1,5 +1,5 @@
 import { useReducer, useRef, useEffect } from 'react'
-import { Model, Collection, Transactional } from '@type-r/models'
+import { Model, Collection, Transactional, SubsetCollection } from '@type-r/models'
 
 export const useModel : <M extends typeof Model>( Ctor : M ) => InstanceType<M> = mutableHook( Model => new Mutable( new Model ) );
 
@@ -16,13 +16,36 @@ export function useModelCopy<M extends Model>( model : M ) : M {
 export interface CollectionHooks {
     of<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
     ofRefs<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
-    subsetOf<C extends Collection>( collection : C ) : C
+    subsetOf<T extends Model>( init : Collection<T> ) : SubsetCollection<T>
 }
+
+
+const createSubsetOf = collection => new Mutable( collection.createSubset([]) );
 
 export const useCollection : CollectionHooks = {
     of : mutableHook( Model => new Mutable( new ( Collection.of( Model ) )() ) ),
     ofRefs : mutableHook( Model => new Mutable( new ( Collection.ofRefs( Model ) )() ) ),
-    subsetOf : mutableHook( collection => new Mutable( collection.createSubset([]) ) )
+    //subsetOf : mutableHook( collection => new Mutable( collection.createSubset([]) ) ),
+    
+    subsetOf<T extends Model>( init : Collection<T> ) : SubsetCollection<T> {
+        // Get the model instance.
+        const [ mutable, forceUpdate ] = useReducer( mutableReducer, init, createSubsetOf );
+
+        // TODO: mutable.store = useContext( Store )???
+    
+        // When master collection changes, resolve refs if they are not resolved yet.
+        useEffect( () => {
+            const coll = mutable.value as any;
+            coll.resolvedWith || coll.resolve( init );
+        }, [ Boolean( init.models.length ) ] )
+
+        useEffect( () => {
+            mutable._onChildrenChange = obj => forceUpdate( obj );
+            return () => mutable.value.dispose();
+        }, emptyArray );
+    
+        return mutable.value as any;
+    }
 }
 
 class Mutable {

@@ -8,10 +8,22 @@ export function useModelCopy(model) {
     }, [model._changeToken]);
     return local;
 }
+var createSubsetOf = function (collection) { return new Mutable(collection.createSubset([])); };
 export var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (Collection.of(Model))()); }),
     ofRefs: mutableHook(function (Model) { return new Mutable(new (Collection.ofRefs(Model))()); }),
-    subsetOf: mutableHook(function (collection) { return new Mutable(collection.createSubset([])); })
+    subsetOf: function (init) {
+        var _a = useReducer(mutableReducer, init, createSubsetOf), mutable = _a[0], forceUpdate = _a[1];
+        useEffect(function () {
+            var coll = mutable.value;
+            coll.resolvedWith || coll.resolve(init);
+        }, [Boolean(init.models.length)]);
+        useEffect(function () {
+            mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
+            return function () { return mutable.value.dispose(); };
+        }, emptyArray);
+        return mutable.value;
+    }
 };
 var Mutable = (function () {
     function Mutable(value) {
