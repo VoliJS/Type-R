@@ -186,7 +186,6 @@ function defineSubsetCollection( CollectionClass : typeof Collection ) {
 
 export interface SubsetCollection<M extends Model> extends Collection<M>{
     getModelIds() : string[]
-    toggle( modelOrId : string | M, val : boolean ) : boolean
     addAll() : M[]
     toggleAll() : M[]
     resolve( baseCollection : Collection<M> ) : this
