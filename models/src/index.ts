@@ -3,10 +3,11 @@ if( typeof Symbol === 'undefined' ){
     Object.defineProperty( window, 'Symbol', { value : { iterator : 'Symbol.iterator' }, configurable : true  });
 }
 
-import { Events, Mixable as Class } from '@type-r/mixture';
+import { Events, Mixable as Class, log } from '@type-r/mixture';
 import { CollectionConstructor } from './collection';
 // Define synonims for NestedTypes backward compatibility.
 import { attributes, ChainableAttributeSpec, Model, ModelConstructor, type as _type, value } from './model';
+import { isEmpty } from '@type-r/mixture/lib/tools';
 
 /**
  * Export everything 
@@ -57,10 +58,36 @@ ChainableAttributeSpec.from = ( spec : any ) : ChainableAttributeSpec<any> => {
         return spec;
     }
 
-    return typeof spec === 'function' ||
-        Array.isArray( spec ) ||
-        ( spec && Object.getPrototypeOf( spec ) === Object.prototype ) ?
-            type( spec ) :
-            value( spec );
+    if( typeof spec === 'function' ) return type( spec );
+
+    if( Array.isArray( spec ) ){
+        if( spec.length !== 1 ||
+            !spec[ 0 ] || (
+                typeof spec[ 0 ] !== 'function' &&
+                Object.getPrototypeOf( spec[ 0 ] ) !== Object.prototype
+            )
+        ) {
+            log( 'error', 'Type-R:WrongDeclaration', `Since v4.1, [ ModelType ] and [{ attr1, attr2, }] declares collection of models. Use Array or value([ 1, 2, ... ]) to declare plain array attributes.` );
+            return value( spec );
+        }
+
+        return type( spec );
+    }
+
+    if( spec && typeof spec === 'object' ){
+        if( Object.getPrototypeOf( spec ) !== Object.prototype ){
+            log( 'error', 'Type-R:WrongDeclaration', `Since v4.1, non-primitive values must be wrapped in value(...). All objects are treated as attribute specs and define nested models.` );
+            return value( spec )
+        }
+
+        if( isEmpty( spec ) ){
+            log( 'error', 'Type-R:WrongDeclaration', `Since v4.1, objects are treated as attribute specs and define nested models. Use Object or value({...}) for an object attribute type.` );
+            return value( spec )
+        }
+
+        return type( spec )
+    }
+
+    return value( spec );
 }
     
