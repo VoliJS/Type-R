@@ -2,84 +2,88 @@
 
 ## Overview
 
-`Model` is a typesafe, automatically serializable, and deeply observable object
-represented as plain object in JSON. Models are as easy to use as plain JS objects, and beating them in scenarios with complex data types serialization.
+`Model` is a class with typed attributes which is automatically serializable to JSON and is as easy to use as a plain JS object.
 
-Model checks attribute types on assignment rejecting improper updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.
+Any model can be serialized to and restored from JSON. Model checks attribute types on assignment rejecting improper attribute updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.
 
-Model detect changes in its attributes, including the changes in nested models and collections. Type-R follows BackboneJS change events model which makes it easy to integrate with virtually any view layer.
-
-All aspects of model behavior can be controlled on the attribute level through the attribute metadata. It makes it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
-
-Model can be defined with `attributes()` declaration, or by extending the `Model` base class.
+Model declarations looks close to the shape of JSON objects they describe.
 
 ```javascript
 // Create Role model's constructor.
-@define
-class Role extends Model{
-    static attributes = {
-        createdAt : Date, // date, represented in JSON as UTC string.
-        name : String // Will be converted to string on assignment
-    }
-}
+const Role = attributes({
+    createdAt : Date, // date, represented as UTC string in JSON.
+    name : String // A string. Guaranteed.
+});
 
 // Create Role model's constructor.
 const User = attributes({
     name : String,
 
-    // Collection of roles, represented in JSON as an array of objects.
-    roles : type( [Role] ), 
+    isActive : Boolean, // always boolean, no matter what is assigned.
+
+    // Nested collection of roles, represented as an array of objects in JSON.
+    roles : [Role],
     
-    // Inline nested model, represented in JSON as nested object.
-    permissions : type({
+    // Nested model, represented as nested object in JSON.
+    permissions : {
         canDoA : Boolean,
         canDoB : Boolean,
-    })
+    }
 });
 
-const user = new User( json, { parse : true });
+const user = User.from( json, { parse : true });
 user.permissions.canDoA = true;
 console.log( user.toJSON() );
 ```
 
-Models may have I/O endpoints attached, which enables I/O API. They need to be declared as class to do that.
-There are several standard endpoints awailable in `@type-r/endpoints` package.
+Models may have I/O endpoints attached. There are several endpoints awailable in `@type-r/endpoints` package, including the standard REST endpoint.
 
 ```javascript
-// We have `/api/users` endpoint on the server. Lets describe what it is with a model.
-import { define, Model, Collection, value, type } from '@type-r/models'
-import { restfulIO } from '@type-r/endpoints'
-import { Role } from './roles' // <- That's another model definition.
-
+// Use the class form of the model definition.
 @define class User extends Model {
-    // Tell this model that it has a REST endpoint on the server to enable I/O API.
+    // Bind the REST endpoint to enable I/O API.
     static endpoint = restfulIO( '/api/users' );
 
+    // Define the attributes.
     static attributes = {
-        name : '', // type is inferred from the default value as String
-        email : String, // String
-        isActive : false, // Boolean
-
-        // nested array of objects in JSON, collection of Role models in JS
-        roles : Collection.of( Role )
-
-        // ISO UTC date string in JSON, `Date` in JS. Read it as Date, but don't save it to JSON.
-        createdAt : type( Date ).dontSave, // Date
+        name : String,
+        // ...
     }
 }
 
-// Somewhere in other code...
-
-// Fetch the users list from the server...
+// Fetch the users list.
 const users = await Collection.of( User ).create().fetch();
+const firstUser = users.first();
+firstUser.isActive = true;
+await firstUser.save();
+```
 
+Model observe changes in its attributes, including the changes in nested models and collections. Listeners can subscribe and unsubscribe for change events, which makes it easy to integrate models with virtually any view layer.
+
+```javascript
 // Subscribe for the changes...
 users.onChanges( () => console.log( 'changes!' ) );
 
-// ...and make the first user active.
-const firstUser = users.first();
-firstUser.isActive = true; // Here we'll got the 'changes!' log message
-await firstUser.save();
+users.first().name = "another name";
+// changes!
+```
+
+All aspects of model behavior can be controlled on the attribute level through the attribute metadata. It makes it easy to define reusable attribute types with custom serialization, validation, and reactions on changes.
+
+```javascript
+ // Email attribute is a string...
+const Email = type( String )
+    // ...having @ symbol in it.
+    .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be an email' );
+
+const User = attributes({
+    email : Email.required // Has not be empty to be valid.
+    
+    // Date which is `null` by default, read it from JSON, but don't save it back.
+    createdAt : type( Date ).null.dontSave,
+    
+    //...
+})
 ```
 
 There are four sorts of model attributes:

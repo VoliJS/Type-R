@@ -502,6 +502,8 @@ describe( 'Record', () =>{
                 a : Readonly( String )
             });
 
+            type X = InstanceType<typeof X>;
+
             const x = new X();
             x.a = "dedede"
 
