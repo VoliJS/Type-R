@@ -3,6 +3,8 @@
         
     require( '@type-r/globals' );
 
+    var { value } = Nested;
+
     describe( 'Basic functionality', function(){
         function canHaveNativeProperties( Type ){
             var C = Type.extend({
@@ -102,7 +104,7 @@
             it( 'deep copy defaults JSON literals on model creation', function(){
                 var A = Nested.Model.extend({
                     defaults : {
-                        a : { first : [ 1 ], second : [ 2 ] }
+                        a : { first : value([ 1 ]), second : value([ 2 ]), third : value({}) }
                     }
                 });
 

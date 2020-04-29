@@ -604,7 +604,7 @@
 
   QUnit.test("set value regardless of equality/change", function(assert) {
     assert.expect(1);
-    var model = new ( Backbone.Model.defaults({x: []}) );
+    var model = new ( Backbone.Model.defaults({x: Array }) );
     var a = [];
     model.set({x: a});
     assert.ok(model.get('x') === a);

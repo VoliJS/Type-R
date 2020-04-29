@@ -166,12 +166,7 @@ export class ChainableAttributeSpec<F extends Function>{
     }
 
     static from( spec : any ) : ChainableAttributeSpec<any> {
-        // Pass metatype through untouched...
-        if( spec && spec instanceof ChainableAttributeSpec ) {
-            return spec;
-        }
-
-        return typeof spec === 'function' ? type( spec ) : value( spec );
+        return null; // dependency injection, see the top level index.ts
     }
 }
 
