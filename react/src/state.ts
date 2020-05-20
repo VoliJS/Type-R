@@ -1,7 +1,11 @@
 import { useReducer, useRef, useEffect } from 'react'
 import { Model, Collection, Transactional, SubsetCollection } from '@type-r/models'
 
-export const useModel : <M extends typeof Model>( Ctor : M ) => InstanceType<M> = mutableHook( Model => new Mutable( new Model ) );
+export const useModel : {
+    <M extends typeof Model>( Ctor : M ) : InstanceType<M>
+    copy : typeof useModelCopy
+    delayChanges : typeof useDelayChanges
+} = mutableHook( Model => new Mutable( new Model ) );
 
 export function useModelCopy<M extends Model>( model : M ) : M {
     const local = useModel( model.constructor as any );
@@ -9,6 +13,50 @@ export function useModelCopy<M extends Model>( model : M ) : M {
     useEffect( () => {
         local.assignFrom( model );
     }, [ ( model as any )._changeToken ] );
+
+    return local;
+}
+
+useModel.copy = useModelCopy;
+useModel.delayChanges = useDelayChanges
+
+/**
+ * Copy the model to the local state, copy the changes back with a given delay.
+ * Frequent changes coming within the delay will be throttled.
+ * An alternative performance optimization for large forms.
+ * @param model 
+ * @param delay 
+ */
+export function useDelayChanges<M extends Model>( model : M, delay = 1000 ) : M {
+    const local = useModelCopy( model );
+
+    useEffect( () => {
+        let timeout;
+
+        function onChange(){
+            if( timeout ){
+                clearTimeout( timeout );
+            }
+
+            // Schedule the model update after timeout.
+            timeout = setTimeout( () => {
+                model.assignFrom( local );
+                timeout = null;
+            }, delay );
+        }
+
+        local.on( 'change', onChange );
+
+        return () => {
+            local.off( 'change', onChange );
+            
+            // If there's an update scheduled, apply it immediately.
+            if( timeout ){
+                clearTimeout( timeout );
+                model.assignFrom( local );
+            }
+        }
+    }, [] );
 
     return local;
 }

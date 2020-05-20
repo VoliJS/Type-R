@@ -8,6 +8,33 @@ export function useModelCopy(model) {
     }, [model._changeToken]);
     return local;
 }
+useModel.copy = useModelCopy;
+useModel.delayChanges = useDelayChanges;
+export function useDelayChanges(model, delay) {
+    if (delay === void 0) { delay = 1000; }
+    var local = useModelCopy(model);
+    useEffect(function () {
+        var timeout;
+        function onChange() {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(function () {
+                model.assignFrom(local);
+                timeout = null;
+            }, delay);
+        }
+        local.on('change', onChange);
+        return function () {
+            local.off('change', onChange);
+            if (timeout) {
+                clearTimeout(timeout);
+                model.assignFrom(local);
+            }
+        };
+    }, []);
+    return local;
+}
 var createSubsetOf = function (collection) { return new Mutable(collection.createSubset([])); };
 export var useCollection = {
     of: mutableHook(function (Model) { return new Mutable(new (Collection.of(Model))()); }),

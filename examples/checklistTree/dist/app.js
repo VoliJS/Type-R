@@ -5914,7 +5914,7 @@ function extractChangeToken(x) {
 /*!***************************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \***************************************************************************/
-/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39672,7 +39672,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useEvent, useModel, useModelCopy, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -39684,6 +39684,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModel"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useModelCopy"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useDelayChanges", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useDelayChanges"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return _state__WEBPACK_IMPORTED_MODULE_1__["useCollection"]; });
 
@@ -39702,12 +39704,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["LinkedComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["StateLink"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["helpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["objectHelpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["arrayHelpers"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLink"]; });
 
@@ -39732,6 +39728,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["whenChanged"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["arrayHelpers"]; });
 
 /* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_4__["pureRenderProps"]; });
@@ -39812,13 +39814,14 @@ function propForType(type, key) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/state.js ***!
   \******************************************************/
-/*! exports provided: useModel, useModelCopy, useCollection */
+/*! exports provided: useModel, useModelCopy, useDelayChanges, useCollection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModel", function() { return useModel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useModelCopy", function() { return useModelCopy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useDelayChanges", function() { return useDelayChanges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCollection", function() { return useCollection; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -39831,6 +39834,33 @@ function useModelCopy(model) {
     Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
         local.assignFrom(model);
     }, [model._changeToken]);
+    return local;
+}
+useModel.copy = useModelCopy;
+useModel.delayChanges = useDelayChanges;
+function useDelayChanges(model, delay) {
+    if (delay === void 0) { delay = 1000; }
+    var local = useModelCopy(model);
+    Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+        var timeout;
+        function onChange() {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            timeout = setTimeout(function () {
+                model.assignFrom(local);
+                timeout = null;
+            }, delay);
+        }
+        local.on('change', onChange);
+        return function () {
+            local.off('change', onChange);
+            if (timeout) {
+                clearTimeout(timeout);
+                model.assignFrom(local);
+            }
+        };
+    }, []);
     return local;
 }
 var createSubsetOf = function (collection) { return new Mutable(collection.createSubset([])); };
