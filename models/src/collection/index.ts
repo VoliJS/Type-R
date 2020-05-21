@@ -294,7 +294,8 @@ export class Collection< R extends Model = Model> extends Transactional implemen
         const models = this._shared & ItemsBehavior.share ? this.models : this.map( model => model.clone() ),
               copy : this = new (<any>this.constructor)( models, { model : this.model, comparator : this.comparator }, this._shared );
         
-        if( options.pinStore ) copy._defaultStore = this.getStore();
+        // Always pin the store
+        copy._defaultStore = this.getStore();
         
         return copy;
     }

@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from 'react'
-import { Transactional } from '@type-r/models';
+import { useEffect, useReducer, createContext, useContext } from 'react'
+import { Transactional, Store } from '@type-r/models';
 
 // Force component update when some global model or collection change.
 export function useChanges( instance : Transactional ){
@@ -23,4 +23,10 @@ export function useForceUpdate(){
 
 function transactionalUpdate( _changeToken : object, modelOrCollection : Transactional ){
     return ( modelOrCollection as any )._changeToken;
+}
+
+export const StoreContext = createContext( null as Store );
+
+export function useStore(){
+    return useContext( StoreContext );
 }

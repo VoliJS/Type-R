@@ -147,6 +147,11 @@ export abstract class Transactional implements Messenger, IONode, Validatable, T
         // Unpack linked value.
         const source = a_source instanceof Linked ? a_source.value : a_source;
 
+        // pin the store of the source.
+        if( !this.hasOwnProperty( '_defaultStore' ) && ( source as any )._changeToken ){
+            this._defaultStore = ( source as any ).getStore();
+        }
+
         // Need to delay change events until change token will by synced.
         this.transaction( () =>{
             this.set( ( source as any).__inner_state__ || source, { merge : true } );

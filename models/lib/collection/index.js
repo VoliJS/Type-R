@@ -174,8 +174,7 @@ var Collection = (function (_super) {
     Collection.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
         var models = this._shared & ItemsBehavior.share ? this.models : this.map(function (model) { return model.clone(); }), copy = new this.constructor(models, { model: this.model, comparator: this.comparator }, this._shared);
-        if (options.pinStore)
-            copy._defaultStore = this.getStore();
+        copy._defaultStore = this.getStore();
         return copy;
     };
     Collection.prototype.toJSON = function (options) {

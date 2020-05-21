@@ -1,9 +1,14 @@
 import { Model } from '../model';
 import { Transactional } from '../transactions';
+import { attributesIO } from './attributesIO'
+import { define } from '@type-r/mixture';
 
 let _store : Store = null;
 
+@define
 export class Store extends Model {
+    static endpoint = attributesIO();
+
     getStore() : Store { return this; }
  
     // delegate item lookup to owner, and to the global store if undefined
@@ -15,7 +20,7 @@ export class Store extends Model {
         if( local || this === this._defaultStore ) return local;
 
         // Forward failed lookup to owner or global store.
-        return this._owner ? this._owner.get( name ) : this._defaultStore.get( name ); 
+        return this._owner ? this._owner.getStore().get( name ) : this._defaultStore.get( name ); 
     }
 
     static get global(){ return _store; }

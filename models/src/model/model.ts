@@ -295,7 +295,8 @@ export class Model extends Transactional implements IOModel, AttributesContainer
     clone( options : CloneOptions = {} ) : this {
         const copy : this = new (<any>this.constructor)( this.attributes, { clone : true } );
         
-        if( options.pinStore ) copy._defaultStore = this.getStore();
+        // Always pin the store tp the copy.
+        copy._defaultStore = this.getStore();
 
         return copy;
     }

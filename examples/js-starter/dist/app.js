@@ -1687,8 +1687,7 @@ var Collection = (function (_super) {
     Collection.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
         var models = this._shared & _transactions__WEBPACK_IMPORTED_MODULE_5__["ItemsBehavior"].share ? this.models : this.map(function (model) { return model.clone(); }), copy = new this.constructor(models, { model: this.model, comparator: this.comparator }, this._shared);
-        if (options.pinStore)
-            copy._defaultStore = this.getStore();
+        copy._defaultStore = this.getStore();
         return copy;
     };
     Collection.prototype.toJSON = function (options) {
@@ -2104,7 +2103,7 @@ function _reallocateEmpty(self, source, options) {
 /*!*******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/models/lib/index.js ***!
   \*******************************************************/
-/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, attributesIO, AttributesEndpoint, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2226,6 +2225,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "subsetOf", function() { return _relations__WEBPACK_IMPORTED_MODULE_6__["subsetOf"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return _relations__WEBPACK_IMPORTED_MODULE_6__["Store"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "attributesIO", function() { return _relations__WEBPACK_IMPORTED_MODULE_6__["attributesIO"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AttributesEndpoint", function() { return _relations__WEBPACK_IMPORTED_MODULE_6__["AttributesEndpoint"]; });
 
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./transactions */ "../../models/lib/transactions.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ItemsBehavior", function() { return _transactions__WEBPACK_IMPORTED_MODULE_7__["ItemsBehavior"]; });
@@ -2633,18 +2636,19 @@ function attributes() {
     for (var _i = 0; _i < arguments.length; _i++) {
         models[_i] = arguments[_i];
     }
-    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spreadArrays"])([{}], attrs));
+    var attrDefs = models[models.length - 1], BaseClass = models.length > 1 ? models[0] : null;
     var NamelessModel = (function (_super) {
         Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(NamelessModel, _super);
         function NamelessModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         NamelessModel.attributes = attrDefs;
-        NamelessModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-            _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
-        ], NamelessModel);
         return NamelessModel;
-    }(_model__WEBPACK_IMPORTED_MODULE_6__["Model"]));
+    }((BaseClass || _model__WEBPACK_IMPORTED_MODULE_6__["Model"])));
+    if (models.length > 2) {
+        Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["mixins"])(models.slice(1, models.length - 1))(NamelessModel);
+    }
+    Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"])(NamelessModel);
     return NamelessModel;
 }
 _model__WEBPACK_IMPORTED_MODULE_6__["Model"].onExtend = function (BaseClass) {
@@ -3757,8 +3761,7 @@ var Model = (function (_super) {
     Model.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
         var copy = new this.constructor(this.attributes, { clone: true });
-        if (options.pinStore)
-            copy._defaultStore = this.getStore();
+        copy._defaultStore = this.getStore();
         return copy;
     };
     Model.prototype._validateNested = function (errors) {
@@ -4090,6 +4093,51 @@ var ModelTransaction = (function () {
 
 /***/ }),
 
+/***/ "../../models/lib/relations/attributesIO.js":
+/*!************************************************************************!*\
+  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/attributesIO.js ***!
+  \************************************************************************/
+/*! exports provided: attributesIO, AttributesEndpoint */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "attributesIO", function() { return attributesIO; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AttributesEndpoint", function() { return AttributesEndpoint; });
+function attributesIO() {
+    return new AttributesEndpoint();
+}
+var AttributesEndpoint = (function () {
+    function AttributesEndpoint() {
+    }
+    AttributesEndpoint.prototype.create = function (json, options) {
+        throw new Error('Method is not supported.');
+    };
+    AttributesEndpoint.prototype.update = function (id, json, options) {
+        throw new Error('Method is not supported.');
+    };
+    AttributesEndpoint.prototype.read = function (id, options, record) {
+        var names = record.keys().filter(function (name) { return record[name] && record[name].fetch; }), promises = names.map(function (name) { return record[name].fetch(options); }), promise = Promise.all(promises).then(function () { });
+        promise.abort = function () {
+            promises.forEach(function (x) { return x.abort && x.abort(); });
+        };
+        return promise;
+    };
+    AttributesEndpoint.prototype.destroy = function (id, options) {
+        throw new Error('Method is not supported.');
+    };
+    AttributesEndpoint.prototype.list = function (options) {
+        throw new Error('Method is not supported.');
+    };
+    AttributesEndpoint.prototype.subscribe = function (events) { };
+    AttributesEndpoint.prototype.unsubscribe = function (events) { };
+    return AttributesEndpoint;
+}());
+
+
+
+/***/ }),
+
 /***/ "../../models/lib/relations/commons.js":
 /*!*******************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/commons.js ***!
@@ -4181,7 +4229,7 @@ _model__WEBPACK_IMPORTED_MODULE_1__["Model"].memberOf = theMemberOf;
 /*!*****************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/index.js ***!
   \*****************************************************************/
-/*! exports provided: memberOf, subsetOf, Store */
+/*! exports provided: memberOf, subsetOf, Store, attributesIO, AttributesEndpoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4194,6 +4242,12 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store */ "../../models/lib/relations/store.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return _store__WEBPACK_IMPORTED_MODULE_2__["Store"]; });
+
+/* harmony import */ var _attributesIO__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attributesIO */ "../../models/lib/relations/attributesIO.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "attributesIO", function() { return _attributesIO__WEBPACK_IMPORTED_MODULE_3__["attributesIO"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AttributesEndpoint", function() { return _attributesIO__WEBPACK_IMPORTED_MODULE_3__["AttributesEndpoint"]; });
+
 
 
 
@@ -4215,6 +4269,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../model */ "../../models/lib/model/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
+/* harmony import */ var _attributesIO__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attributesIO */ "../../models/lib/relations/attributesIO.js");
+/* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
+
+
 
 
 
@@ -4229,7 +4287,7 @@ var Store = (function (_super) {
         var local = this[name];
         if (local || this === this._defaultStore)
             return local;
-        return this._owner ? this._owner.get(name) : this._defaultStore.get(name);
+        return this._owner ? this._owner.getStore().get(name) : this._defaultStore.get(name);
     };
     Object.defineProperty(Store, "global", {
         get: function () { return _store; },
@@ -4242,6 +4300,10 @@ var Store = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Store.endpoint = Object(_attributesIO__WEBPACK_IMPORTED_MODULE_3__["attributesIO"])();
+    Store = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+        _type_r_mixture__WEBPACK_IMPORTED_MODULE_4__["define"]
+    ], Store);
     return Store;
 }(_model__WEBPACK_IMPORTED_MODULE_1__["Model"]));
 
@@ -4502,6 +4564,9 @@ var Transactional = (function () {
     Transactional.prototype.assignFrom = function (a_source) {
         var _this = this;
         var source = a_source instanceof _linked_value_lib__WEBPACK_IMPORTED_MODULE_5__["Linked"] ? a_source.value : a_source;
+        if (!this.hasOwnProperty('_defaultStore') && source._changeToken) {
+            this._defaultStore = source.getStore();
+        }
         this.transaction(function () {
             _this.set(source.__inner_state__ || source, { merge: true });
             var _changeToken = source._changeToken;
@@ -37971,13 +38036,15 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 /*!************************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/globalState.js ***!
   \************************************************************/
-/*! exports provided: useChanges, useForceUpdate */
+/*! exports provided: useChanges, useForceUpdate, StoreContext, useStore */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return useChanges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return useForceUpdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StoreContext", function() { return StoreContext; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useStore", function() { return useStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -37998,6 +38065,10 @@ function useForceUpdate() {
 function transactionalUpdate(_changeToken, modelOrCollection) {
     return modelOrCollection._changeToken;
 }
+var StoreContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["createContext"])(null);
+function useStore() {
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(StoreContext);
+}
 
 
 /***/ }),
@@ -38006,7 +38077,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!******************************************************!*\
   !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
   \******************************************************/
-/*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, StoreContext, useStore, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38027,6 +38098,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useChanges", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["useChanges"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useForceUpdate", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["useForceUpdate"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StoreContext", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["StoreContext"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useStore", function() { return _globalState__WEBPACK_IMPORTED_MODULE_2__["useStore"]; });
 
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Link"]; });
@@ -38160,6 +38235,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _type_r_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/models */ "../../models/lib/index.js");
+/* harmony import */ var _globalState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./globalState */ "../../react/lib/globalState.js");
+
 
 
 var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
@@ -38218,25 +38295,33 @@ var Mutable = (function () {
     function Mutable(value) {
         this.value = value;
         this._onChildrenChange = void 0;
+        this.store = null;
         this._changeToken = value._changeToken;
         value._owner = this;
         value._ownerKey || (value._ownerKey = 'reactState');
     }
     Mutable.prototype.getStore = function () {
-        return this.value._defaultStore;
+        return this.store || this.value._defaultStore;
+    };
+    Mutable.prototype.clone = function () {
+        var copy = new Mutable(this.value);
+        copy._onChildrenChange = this._onChildrenChange;
+        return copy;
     };
     return Mutable;
 }());
 function mutableReducer(mutable) {
-    if (mutable._changeToken === mutable.value._changeToken)
-        return mutable;
-    var copy = new Mutable(mutable.value);
-    copy._onChildrenChange = mutable._onChildrenChange;
-    return copy;
+    return mutable._changeToken === mutable.value._changeToken ?
+        mutable :
+        mutable.clone();
 }
 function mutableHook(create) {
     return function (init) {
         var _a = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(mutableReducer, init, create), mutable = _a[0], forceUpdate = _a[1];
+        var store = Object(_globalState__WEBPACK_IMPORTED_MODULE_2__["useStore"])();
+        if (store) {
+            mutable.store = store;
+        }
         Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
             mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
             return function () { return mutable.value.dispose(); };

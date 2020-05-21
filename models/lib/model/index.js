@@ -1,5 +1,5 @@
-import { __decorate, __extends, __rest, __spreadArrays } from "tslib";
-import { define, predefine, tools } from '@type-r/mixture';
+import { __decorate, __extends, __rest } from "tslib";
+import { define, predefine, tools, mixins } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
 import { addAttributeLinks } from './linked-attrs';
@@ -14,18 +14,19 @@ export function attributes() {
     for (var _i = 0; _i < arguments.length; _i++) {
         models[_i] = arguments[_i];
     }
-    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, __spreadArrays([{}], attrs));
+    var attrDefs = models[models.length - 1], BaseClass = models.length > 1 ? models[0] : null;
     var NamelessModel = (function (_super) {
         __extends(NamelessModel, _super);
         function NamelessModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         NamelessModel.attributes = attrDefs;
-        NamelessModel = __decorate([
-            define
-        ], NamelessModel);
         return NamelessModel;
-    }(Model));
+    }((BaseClass || Model)));
+    if (models.length > 2) {
+        mixins(models.slice(1, models.length - 1))(NamelessModel);
+    }
+    define(NamelessModel);
     return NamelessModel;
 }
 Model.onExtend = function (BaseClass) {

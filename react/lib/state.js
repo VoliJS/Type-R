@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from 'react';
 import { Collection } from '@type-r/models';
+import { useStore } from './globalState';
 export var useModel = mutableHook(function (Model) { return new Mutable(new Model); });
 export function useModelCopy(model) {
     var local = useModel(model.constructor);
@@ -56,25 +57,33 @@ var Mutable = (function () {
     function Mutable(value) {
         this.value = value;
         this._onChildrenChange = void 0;
+        this.store = null;
         this._changeToken = value._changeToken;
         value._owner = this;
         value._ownerKey || (value._ownerKey = 'reactState');
     }
     Mutable.prototype.getStore = function () {
-        return this.value._defaultStore;
+        return this.store || this.value._defaultStore;
+    };
+    Mutable.prototype.clone = function () {
+        var copy = new Mutable(this.value);
+        copy._onChildrenChange = this._onChildrenChange;
+        return copy;
     };
     return Mutable;
 }());
 function mutableReducer(mutable) {
-    if (mutable._changeToken === mutable.value._changeToken)
-        return mutable;
-    var copy = new Mutable(mutable.value);
-    copy._onChildrenChange = mutable._onChildrenChange;
-    return copy;
+    return mutable._changeToken === mutable.value._changeToken ?
+        mutable :
+        mutable.clone();
 }
 function mutableHook(create) {
     return function (init) {
         var _a = useReducer(mutableReducer, init, create), mutable = _a[0], forceUpdate = _a[1];
+        var store = useStore();
+        if (store) {
+            mutable.store = store;
+        }
         useEffect(function () {
             mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
             return function () { return mutable.value.dispose(); };

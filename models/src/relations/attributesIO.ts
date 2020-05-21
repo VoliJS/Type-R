@@ -1,8 +1,5 @@
-import { IOEndpoint, IOOptions, IOPromise } from '@type-r/models'
-/**
- * @deprecated Moved to the `@type-r/models` package.
- * Stores uses attributesIO by default, you don't need to import it manually.
- */
+import { IOEndpoint, IOOptions, IOPromise } from '../io-tools'
+
 export function attributesIO(){
     return new AttributesEndpoint();
 }

@@ -154,8 +154,7 @@ var Model = (function (_super) {
     Model.prototype.clone = function (options) {
         if (options === void 0) { options = {}; }
         var copy = new this.constructor(this.attributes, { clone: true });
-        if (options.pinStore)
-            copy._defaultStore = this.getStore();
+        copy._defaultStore = this.getStore();
         return copy;
     };
     Model.prototype._validateNested = function (errors) {

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, createContext, useContext } from 'react';
 export function useChanges(instance) {
     var forceUpdate = useForceUpdate();
     useEffect(function () {
@@ -15,5 +15,9 @@ export function useForceUpdate() {
 }
 function transactionalUpdate(_changeToken, modelOrCollection) {
     return modelOrCollection._changeToken;
+}
+export var StoreContext = createContext(null);
+export function useStore() {
+    return useContext(StoreContext);
 }
 //# sourceMappingURL=globalState.js.map

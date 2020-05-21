@@ -1,5 +1,6 @@
 import { useReducer, useRef, useEffect } from 'react'
-import { Model, Collection, Transactional, SubsetCollection } from '@type-r/models'
+import { Model, Collection, Transactional, Store, SubsetCollection } from '@type-r/models'
+import { useStore } from './globalState'
 
 export const useModel : {
     <M extends typeof Model>( Ctor : M ) : InstanceType<M>
@@ -99,9 +100,10 @@ export const useCollection : CollectionHooks = {
 class Mutable {
     _onChildrenChange : Function = void 0
     _changeToken : object
+    store : Store = null
 
     getStore(){
-        return ( this.value as any )._defaultStore;
+        return this.store || ( this.value as any )._defaultStore;
     }
 
     constructor(
@@ -111,16 +113,19 @@ class Mutable {
         (value as any)._owner = this;
         (value as any)._ownerKey || ( (value as any)._ownerKey = 'reactState' );
     }
+
+    clone(){
+        const copy = new Mutable( this.value );
+        copy._onChildrenChange = this._onChildrenChange;
+        return copy;
+    }
 }
 
 function mutableReducer( mutable : Mutable ){
     // Suppress extra change events.
-    if( mutable._changeToken === (mutable.value as any)._changeToken ) return mutable;
-
-    const copy = new Mutable( mutable.value );
-    copy._onChildrenChange = mutable._onChildrenChange;
-    
-    return copy;
+    return mutable._changeToken === (mutable.value as any)._changeToken ?
+        mutable :
+        mutable.clone()
 }
 
 function mutableHook( create : ( x : any ) => Mutable ) : any {
@@ -128,7 +133,11 @@ function mutableHook( create : ( x : any ) => Mutable ) : any {
         // Get the model instance.
         const [ mutable, forceUpdate ] = useReducer( mutableReducer, init, create );
 
-        // TODO: mutable.store = useContext( Store )???
+        const store = useStore();
+
+        if( store ){
+            mutable.store = store;
+        }
     
         useEffect( () => {
             mutable._onChildrenChange = obj => forceUpdate( obj );

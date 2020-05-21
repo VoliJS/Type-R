@@ -1,4 +1,4 @@
-import { define, predefine, tools } from '@type-r/mixture';
+import { define, predefine, tools, mixins } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
 import { addAttributeLinks } from './linked-attrs';
@@ -16,13 +16,22 @@ export function attributes<D extends object, B1 extends typeof Model, B2 extends
 export function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model>( b1 : B1, b2 : B2, attrDefs : D ) : ModelConstructor<D & B1['attributes'] & B2['attributes']>;
 export function attributes<D extends object, B1 extends typeof Model>( b1 : B1, attrDefs : D ) : ModelConstructor<D & B1['attributes']>;
 export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<D>;
-export function attributes<D extends object>( ...models : any ) : ModelConstructor<D> {
-    const attrs = models.map( x => x instanceof Function ? x.attributes : x ),
-        attrDefs = assign( {}, ...attrs );
+export function attributes<D extends object>( ...models : any[] ) : ModelConstructor<D> {
+    const attrDefs = models[ models.length - 1 ],
+        BaseClass = models.length > 1 ? models[ 0 ] : null;
 
-    @define class NamelessModel extends Model {
+    // Create model class
+    class NamelessModel extends ( BaseClass || Model ) {
         static attributes = attrDefs;
     }
+
+    // apply mixins...
+    if( models.length > 2 ){
+        mixins( models.slice( 1, models.length - 1 ) )( NamelessModel );
+    }
+
+    // seal the definition.
+    define( NamelessModel );
 
     return NamelessModel as any;
 }

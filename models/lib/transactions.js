@@ -65,6 +65,9 @@ var Transactional = (function () {
     Transactional.prototype.assignFrom = function (a_source) {
         var _this = this;
         var source = a_source instanceof Linked ? a_source.value : a_source;
+        if (!this.hasOwnProperty('_defaultStore') && source._changeToken) {
+            this._defaultStore = source.getStore();
+        }
         this.transaction(function () {
             _this.set(source.__inner_state__ || source, { merge: true });
             var _changeToken = source._changeToken;
