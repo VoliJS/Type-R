@@ -11,30 +11,25 @@ import Modal from 'react-modal'
 const Email = type( String )
                 .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
 
-@define class User extends Model {
-    static attributes = {
-        name : type( String )
-                    .required
-                    .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
+const User = attributes({
+    name : type( String )
+                .required
+                .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
 
-        email : type( Email ).required,
-        isActive : true
-    }
-
-    remove(){ this.collection.remove( this ); }
-}
+    email : type( Email ).required,
+    isActive : true
+})
 
 @define class AppState extends Model {
     static endpoint = localStorageIO( '/react-mvx/examples' );
 
     static attributes = {
         id : 'users-list',
-        users   : Collection.of( User ), // No comments required, isn't it?
+        users   : Collection.of( User ),
         editing : User.memberOf( 'users' ), // User from user collection, which is being edited.
         adding  : refTo( User ) // New user, which is being added.
     }
 }
-
 
 const UsersList = () => {
     const state = useModel( AppState );
@@ -93,7 +88,7 @@ const UserRow = ( { user, onEdit } ) =>(
             { user.isActive ? 'Yes' : 'No' }</div>
         <div>
             <button onClick={ onEdit }>Edit</button>
-            <button onClick={ () => user.remove() }>X</button>
+            <button onClick={ () => user.collection.remove( user ) }>X</button>
         </div>
     </div>
 );
