@@ -38,7 +38,7 @@ export declare class Model extends Transactional implements IOModel, AttributesC
     static attributes: AttributesValues;
     _attributes$: object;
     __Attributes$: new (model: Model) => object;
-    readonly $: any;
+    readonly $: object;
     previousAttributes(): AttributesValues;
     readonly changed: AttributesValues;
     changedAttributes(diff?: {}): boolean | {};

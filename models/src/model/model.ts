@@ -109,7 +109,7 @@ export class Model extends Transactional implements IOModel, AttributesContainer
     _attributes$ : object = void 0
     __Attributes$ : new ( model : Model ) => object
 
-    get $() : any {
+    get $() : object {
         return this._attributes$ || ( this._attributes$ = new this.__Attributes$( this ) )
     }
 

@@ -44,7 +44,6 @@ describe("attributes 2.0", ()=>{
     });
 
     it('support metadata', () =>{
-        type State = InstanceType<typeof State>
         const State = attributes({
             a : 1,
             b : String,

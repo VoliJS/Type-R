@@ -57,10 +57,11 @@ export type MergeModelConstructors<First extends typeof Model, Second extends ty
         MergeModels<InstanceType<First>, InstanceType<Second> >,
         First['attributes'] & Second['attributes']
     >
-    
+
 export type MergeModels<First extends Model, Second extends Model> =
-    First &
-    Second &
+    Model &
+    Omit<First,"$"> &
+    Omit<Second,"$"> & //Remove, just do First & Second
     {
         readonly $ : First['$'] & Second['$']
         [ Symbol.iterator ]() : ModelEntriesIterator
