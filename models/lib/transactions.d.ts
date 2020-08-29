@@ -11,6 +11,8 @@ export declare enum ItemsBehavior {
     listen = 2,
     persistent = 4
 }
+export declare const versionToken = "_changeToken";
+export declare const defaultStore = "_defaultStore";
 export interface Transactional extends Messenger {
 }
 export declare abstract class Transactional implements Messenger, IONode, Validatable, Traversable {

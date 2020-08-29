@@ -11,6 +11,8 @@ export var ItemsBehavior;
     ItemsBehavior[ItemsBehavior["listen"] = 2] = "listen";
     ItemsBehavior[ItemsBehavior["persistent"] = 4] = "persistent";
 })(ItemsBehavior || (ItemsBehavior = {}));
+export var versionToken = '_changeToken';
+export var defaultStore = '_defaultStore';
 var Transactional = (function () {
     function Transactional(cid) {
         this._changeToken = {};

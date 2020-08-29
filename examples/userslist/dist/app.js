@@ -2766,7 +2766,7 @@ function _reallocateEmpty(self, source, options) {
 /*!********************************************************!*\
   !*** C:/Users/gaper/GitHub/Type-R/models/lib/index.js ***!
   \********************************************************/
-/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, collection, metadata, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, collection, metadata, Model, attributes, auto, ItemsBehavior, versionToken, defaultStore, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2895,6 +2895,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./transactions */ "../../models/lib/transactions.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ItemsBehavior", function() { return _transactions__WEBPACK_IMPORTED_MODULE_7__["ItemsBehavior"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "versionToken", function() { return _transactions__WEBPACK_IMPORTED_MODULE_7__["versionToken"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "defaultStore", function() { return _transactions__WEBPACK_IMPORTED_MODULE_7__["defaultStore"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Transactional", function() { return _transactions__WEBPACK_IMPORTED_MODULE_7__["Transactional"]; });
 
@@ -5116,12 +5120,14 @@ function toArray(elements) {
 /*!***************************************************************!*\
   !*** C:/Users/gaper/GitHub/Type-R/models/lib/transactions.js ***!
   \***************************************************************/
-/*! exports provided: ItemsBehavior, Transactional, transactionApi */
+/*! exports provided: ItemsBehavior, versionToken, defaultStore, Transactional, transactionApi */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ItemsBehavior", function() { return ItemsBehavior; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "versionToken", function() { return versionToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultStore", function() { return defaultStore; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Transactional", function() { return Transactional; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "transactionApi", function() { return transactionApi; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
@@ -5143,6 +5149,8 @@ var ItemsBehavior;
     ItemsBehavior[ItemsBehavior["listen"] = 2] = "listen";
     ItemsBehavior[ItemsBehavior["persistent"] = 4] = "persistent";
 })(ItemsBehavior || (ItemsBehavior = {}));
+var versionToken = '_changeToken';
+var defaultStore = '_defaultStore';
 var Transactional = (function () {
     function Transactional(cid) {
         this._changeToken = {};
@@ -6005,7 +6013,7 @@ function extractChangeToken(x) {
 /*!****************************************************************************!*\
   !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
   \****************************************************************************/
-/*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: default, Link, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42179,7 +42187,7 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /*!*******************************************************!*\
   !*** C:/Users/gaper/GitHub/Type-R/react/lib/index.js ***!
   \*******************************************************/
-/*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
+/*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, Link, pureRenderProps, LinkedComponent, StateLink, Linked, PropValueLink, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42204,19 +42212,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _linked_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @linked/react */ "../../node_modules/@linked/react/lib/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Link"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Linked"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["PropValueLink"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LinkedComponent", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["LinkedComponent"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StateLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["StateLink"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["helpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Linked", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["Linked"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["objectHelpers"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["arrayHelpers"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PropValueLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["PropValueLink"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLink", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useLink"]; });
 
@@ -42241,6 +42243,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useIO", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["useIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "whenChanged", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["whenChanged"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "helpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["helpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "objectHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["objectHelpers"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "arrayHelpers", function() { return _linked_react__WEBPACK_IMPORTED_MODULE_3__["arrayHelpers"]; });
 
 /* harmony import */ var _pureRender__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pureRender */ "../../react/lib/pureRender.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pureRenderProps", function() { return _pureRender__WEBPACK_IMPORTED_MODULE_4__["pureRenderProps"]; });
@@ -42340,6 +42348,7 @@ function useModelCopy(model) {
     var local = useModel(model.constructor);
     Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
         local.assignFrom(model);
+        local[_type_r_models__WEBPACK_IMPORTED_MODULE_1__["defaultStore"]] = model.getStore();
     }, [model._changeToken]);
     return local;
 }

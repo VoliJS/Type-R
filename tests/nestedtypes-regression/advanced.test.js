@@ -1,7 +1,7 @@
 var Nested = require( '@type-r/models' );
 require( '@type-r/globals' );
 
-const { shared } = Nested;
+const { shared, versionToken } = Nested;
 
 var Model = Nested.Model, Collection = Nested.Collection;
 
@@ -237,16 +237,16 @@ describe( 'Advanced functionality', function(){
 
             it( 'disables change events for an attribute', function(){
                 var m = new M();
-                var token = m._changeToken;
+                var token = m[versionToken];
                 m.a.x = 2;
-                expect( token ).toBe( m._changeToken ); 
+                expect( token ).toBe( m[versionToken] ); 
             } );
 
             it( 'disables change events in case of nested transaction', function(){
                 var m = new M();
                 var token = m._changeToken;
                 m.set({ a : { x : 2 } });
-                expect( token ).toBe( m._changeToken ); 
+                expect( token ).toBe( m[versionToken] ); 
             } );
         });
     });

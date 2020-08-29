@@ -1,5 +1,5 @@
 import { useReducer, useRef, useEffect } from 'react'
-import { Model, Collection, Transactional, SubsetCollection } from '@type-r/models'
+import { Model, Collection, Transactional, defaultStore, SubsetCollection } from '@type-r/models'
 
 export const useModel : {
     <M extends typeof Model>( Ctor : M ) : InstanceType<M>
@@ -12,6 +12,7 @@ export function useModelCopy<M extends Model>( model : M ) : M {
 
     useEffect( () => {
         local.assignFrom( model );
+        local[defaultStore] = model.getStore();
     }, [ ( model as any )._changeToken ] );
 
     return local;

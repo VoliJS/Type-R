@@ -24,6 +24,15 @@ export enum ItemsBehavior {
 
 // Transactional object interface
 
+/**
+ * Used to access the version token of the object,
+ * which changes every time something inside of the object is changed.
+ * 
+ * useEffect( () => data.fetch(), [ state[versionToken] ])
+ */
+export const versionToken = '_changeToken';
+export const defaultStore = '_defaultStore';
+
 export interface Transactional extends Messenger {}
 
 @define
