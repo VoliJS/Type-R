@@ -55,6 +55,7 @@ describe("attributes 2.0", ()=>{
         const d = new Derived();
 
         expect( d ).toBeInstanceOf( Base );
+        expect( d.$.a.value ).toBe( 1 );
         expect( d.$.b.value ).toBe( 2 );
     });
 
@@ -76,6 +77,9 @@ describe("attributes 2.0", ()=>{
         expect( d.a ).toBe( 1 );
         expect( d.m ).toBe( 1 );
         expect( d.b ).toBe( 2 );
+        expect( d.$.a.value ).toBe( 1 );
+        expect( d.$.m.value ).toBe( 1 );
+        expect( d.$.b.value ).toBe( 2 );
     });
 
     it('support metadata', () =>{
@@ -111,5 +115,6 @@ describe("attributes 2.0", ()=>{
 
         expect( state.getEndpoint() ).toBeInstanceOf( MemoryEndpoint );
         expect( state.sum ).toBe( "1b" );
+        expect( state.$.b.value ).toBe("b")
     })
 });
