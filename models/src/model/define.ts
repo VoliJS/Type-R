@@ -54,19 +54,9 @@ export type ModelAttributes<A extends object> =
 
 export type MergeModelConstructors<First extends typeof Model, Second extends typeof Model> =
     MakeModelConstructor<
-        MergeModels<InstanceType<First>, InstanceType<Second> >,
+        InstanceType<First> & InstanceType<Second>,
         First['attributes'] & Second['attributes']
     >
-
-export type MergeModels<First extends Model, Second extends Model> =
-    Model &
-    Omit<First,"$"> &
-    Omit<Second,"$"> & //Remove, just do First & Second
-    {
-        readonly $ : First['$'] & Second['$']
-        [ Symbol.iterator ]() : ModelEntriesIterator
-        _localEvents : EventMap;
-    } 
 
 export type InferAttrs<A extends object> = {
     [K in keyof A]: Infer<A[K]>
