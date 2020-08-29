@@ -56,7 +56,11 @@
         this.one = options.one;
       }
     });
+
     var model = new Model({}, {one: 1});
+
+    console.log( "TEST", model.initialize.toString() );
+
     assert.equal(model.one, 1);
   });
 

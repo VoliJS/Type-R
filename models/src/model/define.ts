@@ -38,8 +38,8 @@ export function parseAnonimousModelDefinition({ [metadata] : md, [collection] : 
     }
 }
 
-export type AnonymousAttributes<D> =
-    AnonymousModelConstructor<Omit<D,typeof metadata|typeof collection>>
+export type AnonymousAttributes<D extends object> =
+    AnonymousModelConstructor<D>
 
 export type AnonymousModelConstructor<A extends object> =
     MakeModelConstructor<
@@ -59,5 +59,5 @@ export type MergeModelConstructors<First extends typeof Model, Second extends ty
     >
 
 export type InferAttrs<A extends object> = {
-    [K in keyof A]: Infer<A[K]>
+    [K in Exclude<keyof A, typeof metadata|typeof collection>]: Infer<A[K]>
 };

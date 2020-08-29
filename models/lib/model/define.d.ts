@@ -39,12 +39,12 @@ export declare function parseAnonimousModelDefinition({ [metadata]: md, [collect
         validate?(): any;
     };
 };
-export declare type AnonymousAttributes<D> = AnonymousModelConstructor<Omit<D, typeof metadata | typeof collection>>;
+export declare type AnonymousAttributes<D extends object> = AnonymousModelConstructor<D>;
 export declare type AnonymousModelConstructor<A extends object> = MakeModelConstructor<ModelAttributes<A>, A>;
 export declare type ModelAttributes<A extends object> = Model & InferAttrs<A> & {
     readonly $: LinkedModelHash<InferAttrs<A>>;
 };
 export declare type MergeModelConstructors<First extends typeof Model, Second extends typeof Model> = MakeModelConstructor<InstanceType<First> & InstanceType<Second>, First['attributes'] & Second['attributes']>;
 export declare type InferAttrs<A extends object> = {
-    [K in keyof A]: Infer<A[K]>;
+    [K in Exclude<keyof A, typeof metadata | typeof collection>]: Infer<A[K]>;
 };
