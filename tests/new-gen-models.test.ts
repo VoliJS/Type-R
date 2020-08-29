@@ -20,7 +20,10 @@ describe("attributes 2.0", ()=>{
                         endpoint : memoryIO()
                     },
                     [collection]: {
-                        comparator : "num"
+                        comparator : "num",
+                        initialize(){
+                            this.add({});
+                        }
                     }
                 }],
 
@@ -30,13 +33,13 @@ describe("attributes 2.0", ()=>{
             });
 
             const state = new State();
-            
+
             expect( state.num ).toBe( 1 );
             expect( state.str ).toBe( "dede" );
             expect( state.nested ).toBeInstanceOf( Collection );
             expect( state[metadata] ).toBeUndefined();
 
-            state.nested.add({});
+            expect( state.nested.length ).toBe(1);
             expect( state.nested.first()[metadata] ).toBeUndefined();
             expect( state.nested.first()[collection] ).toBeUndefined();
             expect( state.nested.first().$[collection] ).toBeUndefined();
