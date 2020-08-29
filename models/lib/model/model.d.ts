@@ -1,10 +1,16 @@
-import { CollectionConstructor } from '../collection';
 import { TheType } from '@type-r/mixture';
+import { CollectionConstructor } from '../collection';
 import { CloneOptions, Owner, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
-import { Infer } from './attrDef';
+import { InferAttrs, ModelAttributes, AnonymousModelConstructor } from './define';
 import { IOModel } from './io-mixin';
-import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues } from './updates';
 import { LinkedModelHash } from './linked-attrs';
+import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues } from './updates';
+export interface MakeModelConstructor<T extends Model, A extends object> extends TheType<typeof Model> {
+    new (attrs?: Partial<InferAttrs<A>>, options?: object): T;
+    prototype: T;
+    attributes: A;
+    Collection: CollectionConstructor<T>;
+}
 export interface ConstructorOptions extends TransactionOptions {
     clone?: boolean;
 }
@@ -14,18 +20,6 @@ export interface ModelDefinition extends TransactionalDefinition {
     collection?: object;
     Collection?: typeof Transactional;
 }
-export interface ModelConstructor<A extends object> extends TheType<typeof Model> {
-    new (attrs?: Partial<InferAttrs<A>>, options?: object): Model & ModelAttributes<A>;
-    prototype: Model;
-    attributes: A;
-    Collection: CollectionConstructor<Model & ModelAttributes<A>>;
-}
-export declare type ModelAttributes<D extends object> = InferAttrs<D> & {
-    readonly $: LinkedModelHash<InferAttrs<D>>;
-};
-export declare type InferAttrs<A extends object> = {
-    [K in keyof A]: Infer<A[K]>;
-};
 export declare type LinkedAttributes<M extends {
     attributes: object;
 }> = LinkedModelHash<InferAttrs<M['attributes']>>;
@@ -39,11 +33,12 @@ export declare class Model extends Transactional implements IOModel, AttributesC
     static DefaultCollection: CollectionConstructor;
     static id: import("./attrDef").ChainableAttributeSpec<StringConstructor>;
     static readonly ref: import("./attrDef").ChainableAttributeSpec<typeof Model>;
-    static extendAttrs<T extends typeof Model, A extends object>(this: T, attrs: A): ModelConstructor<T['attributes'] & A>;
+    static extendAttrs<T extends typeof Model, A extends object>(this: T, attrs: A): AnonymousModelConstructor<T['attributes'] & A>;
     static defaults(attrs: AttributesValues): typeof Model;
     static attributes: AttributesValues;
     _attributes$: object;
     __Attributes$: new (model: Model) => object;
+    readonly $: any;
     previousAttributes(): AttributesValues;
     readonly changed: AttributesValues;
     changedAttributes(diff?: {}): boolean | {};

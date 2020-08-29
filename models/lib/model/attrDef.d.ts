@@ -3,7 +3,8 @@ import { EventsDefinition } from '@type-r/mixture';
 import { Collection } from '../collection';
 import { IOEndpoint } from '../io-tools';
 import { AttributeOptions, AttributeToJSON, Parse } from './metatypes';
-import { Model, ModelAttributes } from './model';
+import { Model } from './model';
+import { ModelAttributes } from './define';
 export interface AttributeCheck {
     (value: any, key: string): boolean;
     error?: any;

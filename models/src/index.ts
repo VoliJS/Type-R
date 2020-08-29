@@ -6,7 +6,8 @@ if( typeof Symbol === 'undefined' ){
 import { Events, Mixable as Class, log } from '@type-r/mixture';
 import { CollectionConstructor } from './collection';
 // Define synonims for NestedTypes backward compatibility.
-import { attributes, ChainableAttributeSpec, Model, ModelConstructor, type as _type, value } from './model';
+import { attributes, ChainableAttributeSpec, Model, type as _type, value } from './model';
+import { AnonymousModelConstructor } from './model/define'
 import { isEmpty } from '@type-r/mixture/lib/tools';
 
 /**
@@ -38,9 +39,9 @@ export function transaction< F extends Function >( method : F ) : F {
 }
 
 export function type<T extends new ( ...args : any ) => Model>( t : T[] ) : ChainableAttributeSpec<CollectionConstructor<InstanceType<T>>>;
-export function type<T extends object>( t : T[] ) : ChainableAttributeSpec<CollectionConstructor<InstanceType<ModelConstructor<T>>>>;
+export function type<T extends object>( t : T[] ) : ChainableAttributeSpec<CollectionConstructor<InstanceType<AnonymousModelConstructor<T>>>>;
 export function type<T extends Function>( t : T | ChainableAttributeSpec<T> ) : ChainableAttributeSpec<T>;
-export function type<T extends object>( t : T ) : ChainableAttributeSpec<ModelConstructor<T>>;
+export function type<T extends object>( t : T ) : ChainableAttributeSpec<AnonymousModelConstructor<T>>;
 export function type<T>( t : T ){
     return Array.isArray( t ) ?
         _type( _toModel( t[ 0 ] ).Collection ) :

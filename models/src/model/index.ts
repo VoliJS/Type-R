@@ -1,30 +1,34 @@
-import { define, predefine, tools } from '@type-r/mixture';
+import { define, mixins, predefine, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
+import { AnonimousModelDefinition, AnonymousAttributes, MergeModelConstructors, parseAnonimousModelDefinition } from './define';
 import { addAttributeLinks } from './linked-attrs';
 import { createAttributesMixin } from './mixin';
-import { Model, ModelConstructor, ModelDefinition } from './model';
-
+import { Model, ModelDefinition } from './model';
+export { collection, metadata, AnonymousModelConstructor, InferAttrs } from './define'
 export * from './attrDef';
 export * from './metatypes';
-export { AttributesMixin, InferAttrs, LinkedAttributes, ModelConstructor } from './model';
+export { AttributesMixin, LinkedAttributes } from './model';
 export { Model };
 
 const { assign, defaults } = tools;
 
-export function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model, B3 extends typeof Model>( b1 : B1, b2 : B2, b3 : B3, attrDefs : D ) : ModelConstructor<D & B1['attributes'] & B2['attributes'] & B3['attributes']>;
-export function attributes<D extends object, B1 extends typeof Model, B2 extends typeof Model>( b1 : B1, b2 : B2, attrDefs : D ) : ModelConstructor<D & B1['attributes'] & B2['attributes']>;
-export function attributes<D extends object, B1 extends typeof Model>( b1 : B1, attrDefs : D ) : ModelConstructor<D & B1['attributes']>;
-export function attributes<D extends object>( attrDefs : D ) : ModelConstructor<D>;
-export function attributes<D extends object>( ...models : any ) : ModelConstructor<D> {
-    const attrs = models.map( x => x instanceof Function ? x.attributes : x ),
-        attrDefs = assign( {}, ...attrs );
+export function attributes<D extends AnonimousModelDefinition, B1 extends typeof Model, B2 extends typeof Model, B3 extends typeof Model>( b1 : B1, b2 : B2, b3 : B3, attrDefs : D ) : MergeModelConstructors<MergeModelConstructors<MergeModelConstructors<B1,B2>,B3>,AnonymousAttributes<D>>
+export function attributes<D extends AnonimousModelDefinition, B1 extends typeof Model, B2 extends typeof Model>( b1 : B1, b2 : B2, attrDefs : D ) : MergeModelConstructors<MergeModelConstructors<B1,B2>,AnonymousAttributes<D>>
+export function attributes<D extends AnonimousModelDefinition, B1 extends typeof Model>( b1 : B1, attrDefs : D ) : MergeModelConstructors<B1,AnonymousAttributes<D>>;
+export function attributes<D extends AnonimousModelDefinition>( attrDefs : D ) : AnonymousAttributes<D>;
+export function attributes( ...models : any[] ){
+    const last = parseAnonimousModelDefinition( models[ models.length - 1 ] ),
+        First = models.length > 1 ? models[ 0 ] : null,
+        toMix = models.length > 2 ? models.slice( 1, models.length - 1 ) : null;
 
-    @define class NamelessModel extends Model {
-        static attributes = attrDefs;
-    }
+        class AnonimousModel extends ( First || Model ){
+        }
 
-    return NamelessModel as any;
+        toMix && mixins( toMix )(AnonimousModel);
+        define( last )( AnonimousModel );
+
+    return AnonimousModel as any;
 }
 
 Model.onExtend = function( this : typeof Model, BaseClass : typeof Model ){

@@ -8,7 +8,8 @@ import { Collection } from '../collection';
 import { IOEndpoint } from '../io-tools';
 import { Transactional } from '../transactions';
 import { AttributeOptions, AttributeToJSON, getMetatype, Parse, SharedType } from './metatypes';
-import { Model, ModelAttributes } from './model';
+import { Model } from './model';
+import { ModelAttributes } from './define'
 import { AttributesContainer } from './updates';
 
 const { assign } = tools;

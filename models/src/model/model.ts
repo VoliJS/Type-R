@@ -3,17 +3,25 @@
  * The root of all definitions. 
  */
 
+import { define, definitions, isProduction, Logger, TheType, logger, LogLevel, mixinRules, tools } from '@type-r/mixture';
 import { CollectionConstructor } from '../collection';
 import { IOEndpoint } from '../io-tools';
-import { define, definitions, isProduction, Logger, logger, LogLevel, mixinRules, TheType, tools } from '@type-r/mixture';
 import { CloneOptions, Owner, Transaction, Transactional, TransactionalDefinition, TransactionOptions } from '../transactions';
 import { ChildrenErrors } from '../validation';
-import { Infer, type } from './attrDef';
+import { type } from './attrDef';
+import { InferAttrs, ModelAttributes, AnonymousModelConstructor } from './define';
 import { IOModel, IOModelMixin } from './io-mixin';
+import { LinkedModelHash } from './linked-attrs';
 import { AggregatedType, AnyType } from './metatypes';
 import { AttributesConstructor, AttributesContainer, AttributesCopyConstructor, AttributesValues, setAttribute, shouldBeAnObject, unknownAttrsWarning, UpdateModelMixin } from './updates';
-import { LinkedModelHash } from './linked-attrs';
 
+export interface MakeModelConstructor<T extends Model, A extends object> extends TheType<typeof Model>
+{
+    new ( attrs? : Partial<InferAttrs<A>>, options? : object ) : T
+    prototype : T
+    attributes : A
+    Collection : CollectionConstructor<T>
+}
 
 const { assign, isEmpty } = tools;
 
@@ -37,19 +45,6 @@ export interface ModelDefinition extends TransactionalDefinition {
     collection? : object
     Collection? : typeof Transactional
 }
-
-export interface ModelConstructor<A extends object> extends TheType<typeof Model> {
-    new ( attrs? : Partial<InferAttrs<A>>, options? : object ) : Model & ModelAttributes<A>
-    prototype : Model
-    attributes : A,
-    Collection : CollectionConstructor<Model & ModelAttributes<A>>
-}
-
-export type ModelAttributes<D extends object> = InferAttrs<D> & { readonly $ : LinkedModelHash<InferAttrs<D>> }
-
-export type InferAttrs<A extends object> = {
-    [K in keyof A]: Infer<A[K]>
-};
 
 export type LinkedAttributes<M extends { attributes : object }> = LinkedModelHash<InferAttrs<M['attributes']>>
 export type AttributesMixin<M extends { attributes : object }> = ModelAttributes<M['attributes']>
@@ -100,7 +95,7 @@ export class Model extends Transactional implements IOModel, AttributesContainer
             });
     }
 
-    static extendAttrs<T extends typeof Model, A extends object>( this : T, attrs : A ) : ModelConstructor<T['attributes'] & A> {
+    static extendAttrs<T extends typeof Model, A extends object>( this : T, attrs : A ) : AnonymousModelConstructor<T['attributes'] & A> {
         return this.defaults( attrs ) as any;
     }
 
@@ -114,7 +109,6 @@ export class Model extends Transactional implements IOModel, AttributesContainer
     _attributes$ : object = void 0
     __Attributes$ : new ( model : Model ) => object
 
-    /** @internal */
     get $() : any {
         return this._attributes$ || ( this._attributes$ = new this.__Attributes$( this ) )
     }
@@ -413,7 +407,7 @@ export class Model extends Transactional implements IOModel, AttributesContainer
             }
         });
 
-        return this;
+        return this
     }
             
     // Returns owner without the key (usually it's collection)

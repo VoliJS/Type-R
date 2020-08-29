@@ -1,10 +1,12 @@
-import { __decorate, __extends, __rest, __spreadArrays } from "tslib";
-import { define, predefine, tools } from '@type-r/mixture';
+import { __decorate, __extends, __rest } from "tslib";
+import { define, mixins, predefine, tools } from '@type-r/mixture';
 import { Transactional } from '../transactions';
 import { type } from './attrDef';
+import { parseAnonimousModelDefinition } from './define';
 import { addAttributeLinks } from './linked-attrs';
 import { createAttributesMixin } from './mixin';
 import { Model } from './model';
+export { collection, metadata } from './define';
 export * from './attrDef';
 export * from './metatypes';
 export { Model };
@@ -14,19 +16,17 @@ export function attributes() {
     for (var _i = 0; _i < arguments.length; _i++) {
         models[_i] = arguments[_i];
     }
-    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, __spreadArrays([{}], attrs));
-    var NamelessModel = (function (_super) {
-        __extends(NamelessModel, _super);
-        function NamelessModel() {
+    var last = parseAnonimousModelDefinition(models[models.length - 1]), First = models.length > 1 ? models[0] : null, toMix = models.length > 2 ? models.slice(1, models.length - 1) : null;
+    var AnonimousModel = (function (_super) {
+        __extends(AnonimousModel, _super);
+        function AnonimousModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        NamelessModel.attributes = attrDefs;
-        NamelessModel = __decorate([
-            define
-        ], NamelessModel);
-        return NamelessModel;
-    }(Model));
-    return NamelessModel;
+        return AnonimousModel;
+    }((First || Model)));
+    toMix && mixins(toMix)(AnonimousModel);
+    define(last)(AnonimousModel);
+    return AnonimousModel;
 }
 Model.onExtend = function (BaseClass) {
     Transactional.onExtend.call(this, BaseClass);

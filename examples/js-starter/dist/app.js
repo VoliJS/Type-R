@@ -87,9 +87,9 @@
 /******/ ({
 
 /***/ "../../mixture/lib/events.js":
-/*!*********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/events.js ***!
-  \*********************************************************/
+/*!**********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/events.js ***!
+  \**********************************************************/
 /*! exports provided: EventMap, Messenger, Events */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -236,9 +236,9 @@ function addReference(listener, source) {
 /***/ }),
 
 /***/ "../../mixture/lib/eventsource.js":
-/*!**************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/eventsource.js ***!
-  \**************************************************************/
+/*!***************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/eventsource.js ***!
+  \***************************************************************/
 /*! exports provided: EventMap, EventDescriptor, EventHandler, on, once, off, strings, trigger2, trigger3, trigger5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -463,9 +463,9 @@ function trigger5(self, name, a, b, c, d, e) {
 /***/ }),
 
 /***/ "../../mixture/lib/index.js":
-/*!********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/index.js ***!
-  \********************************************************/
+/*!*********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/index.js ***!
+  \*********************************************************/
 /*! exports provided: tools, eventsApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -526,9 +526,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../mixture/lib/logging.js":
-/*!**********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/logging.js ***!
-  \**********************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/logging.js ***!
+  \***********************************************************/
 /*! exports provided: isProduction, logEvents, Logger, logger, throwingLogger, log */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -617,9 +617,9 @@ var log = logger.trigger.bind(logger);
 /***/ }),
 
 /***/ "../../mixture/lib/mixins.js":
-/*!*********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/mixins.js ***!
-  \*********************************************************/
+/*!**********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/mixins.js ***!
+  \**********************************************************/
 /*! exports provided: Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -885,9 +885,9 @@ function resolveRule(dest, source, rule) {
 /***/ }),
 
 /***/ "../../mixture/lib/tools.js":
-/*!********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/mixture/lib/tools.js ***!
-  \********************************************************/
+/*!*********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/mixture/lib/tools.js ***!
+  \*********************************************************/
 /*! exports provided: defaults, isValidJSON, getBaseClass, assignToClassProto, isEmpty, some, every, getPropertyDescriptor, omit, transform, fastAssign, fastDefaults, assign, keys, once, notEqual, hashMap, compare */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1127,9 +1127,9 @@ function compare(a, b) {
 /***/ }),
 
 /***/ "../../models/lib/collection/add.js":
-/*!****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/add.js ***!
-  \****************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/add.js ***!
+  \*****************************************************************/
 /*! exports provided: addTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1207,9 +1207,9 @@ function appendElements(collection, a_items, nested, a_options, forceMerge) {
 /***/ }),
 
 /***/ "../../models/lib/collection/arrayMethods.js":
-/*!*************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/arrayMethods.js ***!
-  \*************************************************************************/
+/*!**************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/arrayMethods.js ***!
+  \**************************************************************************/
 /*! exports provided: ArrayMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1335,9 +1335,9 @@ function toPredicateFunction(iteratee) {
 /***/ }),
 
 /***/ "../../models/lib/collection/commons.js":
-/*!********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/commons.js ***!
-  \********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/commons.js ***!
+  \*********************************************************************/
 /*! exports provided: dispose, convertAndAquire, free, freeAll, sortElements, addIndex, removeIndex, updateIndex, CollectionTransaction, logAggregationError */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1491,9 +1491,9 @@ function logAggregationError(collection, options) {
 /***/ }),
 
 /***/ "../../models/lib/collection/index.js":
-/*!******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/index.js ***!
-  \******************************************************************/
+/*!*******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/index.js ***!
+  \*******************************************************************/
 /*! exports provided: Collection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1912,9 +1912,9 @@ var LinkedIncludes = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/collection/remove.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/remove.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/remove.js ***!
+  \********************************************************************/
 /*! exports provided: removeOne, removeMany */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1991,9 +1991,9 @@ function _reallocate(collection, removed) {
 /***/ }),
 
 /***/ "../../models/lib/collection/set.js":
-/*!****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/collection/set.js ***!
-  \****************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/collection/set.js ***!
+  \*****************************************************************/
 /*! exports provided: emptySetTransaction, setTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2101,10 +2101,10 @@ function _reallocateEmpty(self, source, options) {
 /***/ }),
 
 /***/ "../../models/lib/index.js":
-/*!*******************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/index.js ***!
-  \*******************************************************/
-/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*!********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/index.js ***!
+  \********************************************************/
+/*! exports provided: Linked, Record, Class, on, off, trigger, once, listenTo, stopListening, listenToOnce, transaction, type, tools, eventsApi, Collection, getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble, collection, metadata, Model, attributes, auto, ItemsBehavior, Transactional, transactionApi, EventMap, Messenger, Events, isProduction, logEvents, Logger, logger, throwingLogger, log, Mixable, predefine, define, definitions, propertyListDecorator, definitionDecorator, MixinsState, mixins, mixinRules, ChainableAttributeSpec, shared, refTo, value, getMetatype, memberOf, subsetOf, Store, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2181,6 +2181,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "abortIO", function() { return _io_tools__WEBPACK_IMPORTED_MODULE_5__["abortIO"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "triggerAndBubble", function() { return _io_tools__WEBPACK_IMPORTED_MODULE_5__["triggerAndBubble"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "collection", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["collection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "metadata", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["metadata"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _model__WEBPACK_IMPORTED_MODULE_1__["Model"]; });
 
@@ -2307,9 +2311,9 @@ _model__WEBPACK_IMPORTED_MODULE_1__["ChainableAttributeSpec"].from = function (s
 /***/ }),
 
 /***/ "../../models/lib/io-tools.js":
-/*!**********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/io-tools.js ***!
-  \**********************************************************/
+/*!***********************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/io-tools.js ***!
+  \***********************************************************/
 /*! exports provided: getOwnerEndpoint, createIOPromise, startIO, abortIO, triggerAndBubble */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2382,9 +2386,9 @@ function triggerAndBubble(eventSource) {
 /***/ }),
 
 /***/ "../../models/lib/model/attrDef.js":
-/*!***************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/attrDef.js ***!
-  \***************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/attrDef.js ***!
+  \****************************************************************/
 /*! exports provided: ChainableAttributeSpec, type, shared, refTo, value */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2562,11 +2566,35 @@ function inferType(value) {
 
 /***/ }),
 
+/***/ "../../models/lib/model/define.js":
+/*!***************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/define.js ***!
+  \***************************************************************/
+/*! exports provided: collection, metadata, parseAnonimousModelDefinition */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "collection", function() { return collection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "metadata", function() { return metadata; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseAnonimousModelDefinition", function() { return parseAnonimousModelDefinition; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../../node_modules/tslib/tslib.es6.js");
+
+var collection = Symbol("Methods definitions");
+var metadata = Symbol("Methods definitions");
+function parseAnonimousModelDefinition(_a) {
+    var _b = metadata, md = _a[_b], _c = collection, coll = _a[_c], attributes = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, [typeof _b === "symbol" ? _b : _b + "", typeof _c === "symbol" ? _c : _c + ""]);
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ attributes: attributes, collection: coll }, md);
+}
+
+
+/***/ }),
+
 /***/ "../../models/lib/model/index.js":
-/*!*************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/index.js ***!
-  \*************************************************************/
-/*! exports provided: Model, attributes, auto, ChainableAttributeSpec, type, shared, refTo, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/index.js ***!
+  \**************************************************************/
+/*! exports provided: collection, metadata, Model, attributes, auto, ChainableAttributeSpec, type, shared, refTo, value, getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2577,10 +2605,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @type-r/mixture */ "../../mixture/lib/index.js");
 /* harmony import */ var _transactions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../transactions */ "../../models/lib/transactions.js");
 /* harmony import */ var _attrDef__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attrDef */ "../../models/lib/model/attrDef.js");
-/* harmony import */ var _linked_attrs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./linked-attrs */ "../../models/lib/model/linked-attrs.js");
-/* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./mixin */ "../../models/lib/model/mixin.js");
-/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./model */ "../../models/lib/model/model.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _model__WEBPACK_IMPORTED_MODULE_6__["Model"]; });
+/* harmony import */ var _define__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./define */ "../../models/lib/model/define.js");
+/* harmony import */ var _linked_attrs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./linked-attrs */ "../../models/lib/model/linked-attrs.js");
+/* harmony import */ var _mixin__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./mixin */ "../../models/lib/model/mixin.js");
+/* harmony import */ var _model__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./model */ "../../models/lib/model/model.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Model", function() { return _model__WEBPACK_IMPORTED_MODULE_7__["Model"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "collection", function() { return _define__WEBPACK_IMPORTED_MODULE_4__["collection"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "metadata", function() { return _define__WEBPACK_IMPORTED_MODULE_4__["metadata"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ChainableAttributeSpec", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["ChainableAttributeSpec"]; });
 
@@ -2592,30 +2625,32 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "value", function() { return _attrDef__WEBPACK_IMPORTED_MODULE_3__["value"]; });
 
-/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["getMetatype"]; });
+/* harmony import */ var _metatypes__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./metatypes */ "../../models/lib/model/metatypes/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getMetatype", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["getMetatype"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["AnyType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AnyType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["AnyType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ImmutableClassType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["ImmutableClassType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ImmutableClassType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["ImmutableClassType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PrimitiveType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["PrimitiveType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PrimitiveType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["PrimitiveType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NumericType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["NumericType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NumericType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["NumericType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ArrayType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["ArrayType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ArrayType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["ArrayType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObjectType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["ObjectType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ObjectType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["ObjectType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doNothing", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["doNothing"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "doNothing", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["doNothing"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FunctionType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["FunctionType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FunctionType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["FunctionType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["DateType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DateType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["DateType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["AggregatedType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AggregatedType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["AggregatedType"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_7__["SharedType"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SharedType", function() { return _metatypes__WEBPACK_IMPORTED_MODULE_8__["SharedType"]; });
+
+
 
 
 
@@ -2633,21 +2668,19 @@ function attributes() {
     for (var _i = 0; _i < arguments.length; _i++) {
         models[_i] = arguments[_i];
     }
-    var attrs = models.map(function (x) { return x instanceof Function ? x.attributes : x; }), attrDefs = assign.apply(void 0, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spreadArrays"])([{}], attrs));
-    var NamelessModel = (function (_super) {
-        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(NamelessModel, _super);
-        function NamelessModel() {
+    var last = Object(_define__WEBPACK_IMPORTED_MODULE_4__["parseAnonimousModelDefinition"])(models[models.length - 1]), First = models.length > 1 ? models[0] : null, toMix = models.length > 2 ? models.slice(1, models.length - 1) : null;
+    var AnonimousModel = (function (_super) {
+        Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"])(AnonimousModel, _super);
+        function AnonimousModel() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        NamelessModel.attributes = attrDefs;
-        NamelessModel = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-            _type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"]
-        ], NamelessModel);
-        return NamelessModel;
-    }(_model__WEBPACK_IMPORTED_MODULE_6__["Model"]));
-    return NamelessModel;
+        return AnonimousModel;
+    }((First || _model__WEBPACK_IMPORTED_MODULE_7__["Model"])));
+    toMix && Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["mixins"])(toMix)(AnonimousModel);
+    Object(_type_r_mixture__WEBPACK_IMPORTED_MODULE_1__["define"])(last)(AnonimousModel);
+    return AnonimousModel;
 }
-_model__WEBPACK_IMPORTED_MODULE_6__["Model"].onExtend = function (BaseClass) {
+_model__WEBPACK_IMPORTED_MODULE_7__["Model"].onExtend = function (BaseClass) {
     _transactions__WEBPACK_IMPORTED_MODULE_2__["Transactional"].onExtend.call(this, BaseClass);
     var Class = this;
     var DefaultCollection = (function (_super) {
@@ -2666,9 +2699,9 @@ _model__WEBPACK_IMPORTED_MODULE_6__["Model"].onExtend = function (BaseClass) {
         this.Collection = DefaultCollection;
     }
 };
-_model__WEBPACK_IMPORTED_MODULE_6__["Model"].onDefine = function (definition, BaseClass) {
+_model__WEBPACK_IMPORTED_MODULE_7__["Model"].onDefine = function (definition, BaseClass) {
     var baseProto = BaseClass.prototype;
-    var _a = Object(_mixin__WEBPACK_IMPORTED_MODULE_5__["createAttributesMixin"])(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, ["properties", "_localEvents"]);
+    var _a = Object(_mixin__WEBPACK_IMPORTED_MODULE_6__["createAttributesMixin"])(this.attributes = getAttributes(definition), baseProto._attributes), properties = _a.properties, _localEvents = _a._localEvents, dynamicMixin = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(_a, ["properties", "_localEvents"]);
     assign(this.prototype, dynamicMixin);
     definition.properties = defaults(definition.properties || {}, properties);
     definition._localEvents = _localEvents;
@@ -2678,7 +2711,7 @@ _model__WEBPACK_IMPORTED_MODULE_6__["Model"].onDefine = function (definition, Ba
     this.Collection.prototype.model = this;
     if (definition.endpoint)
         this.Collection.prototype._endpoint = definition.endpoint;
-    Object(_linked_attrs__WEBPACK_IMPORTED_MODULE_4__["addAttributeLinks"])(this);
+    Object(_linked_attrs__WEBPACK_IMPORTED_MODULE_5__["addAttributeLinks"])(this);
 };
 function getAttributes(_a) {
     var defaults = _a.defaults, attributes = _a.attributes, idAttribute = _a.idAttribute;
@@ -2709,9 +2742,9 @@ function auto(proto, attrName) {
 /***/ }),
 
 /***/ "../../models/lib/model/io-mixin.js":
-/*!****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/io-mixin.js ***!
-  \****************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/io-mixin.js ***!
+  \*****************************************************************/
 /*! exports provided: IOModelMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2758,9 +2791,9 @@ var IOModelMixin = {
 /***/ }),
 
 /***/ "../../models/lib/model/linked-attrs.js":
-/*!********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/linked-attrs.js ***!
-  \********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/linked-attrs.js ***!
+  \*********************************************************************/
 /*! exports provided: addAttributeLinks, LinkedAttr */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2827,9 +2860,9 @@ Object.defineProperty(LinkedAttr.prototype, '_changeToken', { value: null });
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/any.js":
-/*!*********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/any.js ***!
-  \*********************************************************************/
+/*!**********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/any.js ***!
+  \**********************************************************************/
 /*! exports provided: AnyType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2985,9 +3018,9 @@ function wrapIsRequired(validate) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/basic.js":
-/*!***********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/basic.js ***!
-  \***********************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/basic.js ***!
+  \************************************************************************/
 /*! exports provided: ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3135,9 +3168,9 @@ var FunctionType = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/date.js":
-/*!**********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/date.js ***!
-  \**********************************************************************/
+/*!***********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/date.js ***!
+  \***********************************************************************/
 /*! exports provided: DateType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3226,9 +3259,9 @@ function safeParseDate(date) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/index.js":
-/*!***********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/index.js ***!
-  \***********************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/index.js ***!
+  \************************************************************************/
 /*! exports provided: getMetatype, AnyType, ImmutableClassType, PrimitiveType, NumericType, ArrayType, ObjectType, doNothing, FunctionType, DateType, AggregatedType, SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3287,9 +3320,9 @@ function resolveBuiltins(Ctor) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/owned.js":
-/*!***********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/owned.js ***!
-  \***********************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/owned.js ***!
+  \************************************************************************/
 /*! exports provided: AggregatedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3404,9 +3437,9 @@ var AggregatedType = (function (_super) {
 /***/ }),
 
 /***/ "../../models/lib/model/metatypes/shared.js":
-/*!************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/metatypes/shared.js ***!
-  \************************************************************************/
+/*!*************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/metatypes/shared.js ***!
+  \*************************************************************************/
 /*! exports provided: SharedType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3521,9 +3554,9 @@ function ignore() { }
 /***/ }),
 
 /***/ "../../models/lib/model/mixin.js":
-/*!*************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/mixin.js ***!
-  \*************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/mixin.js ***!
+  \**************************************************************/
 /*! exports provided: createAttribute, createAttributesMixin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3584,9 +3617,9 @@ function createWatcherFromRef(ref, key) {
 /***/ }),
 
 /***/ "../../models/lib/model/model.js":
-/*!*************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/model.js ***!
-  \*************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/model.js ***!
+  \**************************************************************/
 /*! exports provided: Model, ModelEntriesIterator */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3953,9 +3986,9 @@ var ModelEntriesIterator = (function () {
 /***/ }),
 
 /***/ "../../models/lib/model/updates.js":
-/*!***************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/model/updates.js ***!
-  \***************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/model/updates.js ***!
+  \****************************************************************/
 /*! exports provided: setAttribute, UpdateModelMixin, unknownAttrsWarning, constructorsMixin, shouldBeAnObject, ModelTransaction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4091,9 +4124,9 @@ var ModelTransaction = (function () {
 /***/ }),
 
 /***/ "../../models/lib/relations/commons.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/commons.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/commons.js ***!
+  \********************************************************************/
 /*! exports provided: parseReference */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4118,9 +4151,9 @@ function parseReference(collectionRef) {
 /***/ }),
 
 /***/ "../../models/lib/relations/from.js":
-/*!****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/from.js ***!
-  \****************************************************************/
+/*!*****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/from.js ***!
+  \*****************************************************************/
 /*! exports provided: memberOf */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4178,9 +4211,9 @@ _model__WEBPACK_IMPORTED_MODULE_1__["Model"].memberOf = theMemberOf;
 /***/ }),
 
 /***/ "../../models/lib/relations/index.js":
-/*!*****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/index.js ***!
-  \*****************************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/index.js ***!
+  \******************************************************************/
 /*! exports provided: memberOf, subsetOf, Store */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4203,9 +4236,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../models/lib/relations/store.js":
-/*!*****************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/store.js ***!
-  \*****************************************************************/
+/*!******************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/store.js ***!
+  \******************************************************************/
 /*! exports provided: Store */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4251,9 +4284,9 @@ Store.global = new Store();
 /***/ }),
 
 /***/ "../../models/lib/relations/subsetOf.js":
-/*!********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/relations/subsetOf.js ***!
-  \********************************************************************/
+/*!*********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/relations/subsetOf.js ***!
+  \*********************************************************************/
 /*! exports provided: subsetOf */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4418,9 +4451,9 @@ function toArray(elements) {
 /***/ }),
 
 /***/ "../../models/lib/transactions.js":
-/*!**************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/transactions.js ***!
-  \**************************************************************/
+/*!***************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/transactions.js ***!
+  \***************************************************************/
 /*! exports provided: ItemsBehavior, Transactional, transactionApi */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4637,9 +4670,9 @@ function getOwnerEndpoint(self) {
 /***/ }),
 
 /***/ "../../models/lib/traversable.js":
-/*!*************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/traversable.js ***!
-  \*************************************************************/
+/*!**************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/traversable.js ***!
+  \**************************************************************/
 /*! exports provided: CompiledReference, resolveReference */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4693,9 +4726,9 @@ function resolveReference(root, reference, action) {
 /***/ }),
 
 /***/ "../../models/lib/validation.js":
-/*!************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/models/lib/validation.js ***!
-  \************************************************************/
+/*!*************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/models/lib/validation.js ***!
+  \*************************************************************/
 /*! exports provided: ValidationError */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4735,9 +4768,9 @@ var ValidationError = (function () {
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/lib/component.js":
-/*!*******************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/component.js ***!
-  \*******************************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/component.js ***!
+  \********************************************************************************/
 /*! exports provided: LinkedComponent, StateLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4812,9 +4845,9 @@ var StateLink = /** @class */ (function (_super) {
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/lib/hooks.js":
-/*!***************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/hooks.js ***!
-  \***************************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/hooks.js ***!
+  \****************************************************************************/
 /*! exports provided: useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4982,9 +5015,9 @@ function extractChangeToken(x) {
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/lib/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
-  \***************************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/lib/index.js ***!
+  \****************************************************************************/
 /*! exports provided: default, Link, Linked, PropValueLink, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5045,9 +5078,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/node_modules/react/cjs/react.development.js":
-/*!**********************************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/node_modules/react/cjs/react.development.js ***!
-  \**********************************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/node_modules/react/cjs/react.development.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6969,9 +7002,9 @@ exports.version = ReactVersion;
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/node_modules/react/index.js":
-/*!******************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/node_modules/react/index.js ***!
-  \******************************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/node_modules/react/index.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6986,9 +7019,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/@linked/react/node_modules/tslib/tslib.es6.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/react/node_modules/tslib/tslib.es6.js ***!
-  \**********************************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/react/node_modules/tslib/tslib.es6.js ***!
+  \***********************************************************************************************/
 /*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7215,9 +7248,9 @@ function __importDefault(mod) {
 /***/ }),
 
 /***/ "../../node_modules/@linked/value/lib/helpers.js":
-/*!*****************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/value/lib/helpers.js ***!
-  \*****************************************************************************/
+/*!******************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/value/lib/helpers.js ***!
+  \******************************************************************************/
 /*! exports provided: helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7292,9 +7325,9 @@ var arrayHelpers = {
 /***/ }),
 
 /***/ "../../node_modules/@linked/value/lib/index.js":
-/*!***************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/value/lib/index.js ***!
-  \***************************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/value/lib/index.js ***!
+  \****************************************************************************/
 /*! exports provided: Linked, PropValueLink, helpers, objectHelpers, arrayHelpers */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7687,9 +7720,9 @@ function trim(key) {
 /***/ }),
 
 /***/ "../../node_modules/@linked/value/node_modules/tslib/tslib.es6.js":
-/*!**********************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/@linked/value/node_modules/tslib/tslib.es6.js ***!
-  \**********************************************************************************************/
+/*!***********************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/@linked/value/node_modules/tslib/tslib.es6.js ***!
+  \***********************************************************************************************/
 /*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7916,23 +7949,23 @@ function __importDefault(mod) {
 /***/ }),
 
 /***/ "../../node_modules/css-loader/dist/cjs.js?!./src/styles.css":
-/*!**************************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/css-loader/dist/cjs.js??ref--4-1!./src/styles.css ***!
-  \**************************************************************************************************/
+/*!***************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/css-loader/dist/cjs.js??ref--4-1!./src/styles.css ***!
+  \***************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "../../node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "input {\n    margin : 1em;\n    border-radius: 2px;\n}", ""]);
+exports.push([module.i, "input {\r\n    margin : 1em;\r\n    border-radius: 2px;\r\n}", ""]);
 
 
 /***/ }),
 
 /***/ "../../node_modules/css-loader/dist/runtime/api.js":
-/*!*******************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/css-loader/dist/runtime/api.js ***!
-  \*******************************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/css-loader/dist/runtime/api.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8031,9 +8064,9 @@ function toComment(sourceMap) {
 /***/ }),
 
 /***/ "../../node_modules/object-assign/index.js":
-/*!***********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/object-assign/index.js ***!
-  \***********************************************************************/
+/*!************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/object-assign/index.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8133,9 +8166,9 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /***/ }),
 
 /***/ "../../node_modules/process/browser.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/process/browser.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/process/browser.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8328,9 +8361,9 @@ process.umask = function() { return 0; };
 /***/ }),
 
 /***/ "../../node_modules/prop-types/checkPropTypes.js":
-/*!*****************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/prop-types/checkPropTypes.js ***!
-  \*****************************************************************************/
+/*!******************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/checkPropTypes.js ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8442,9 +8475,9 @@ module.exports = checkPropTypes;
 /***/ }),
 
 /***/ "../../node_modules/prop-types/lib/ReactPropTypesSecret.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
-  \***************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8466,9 +8499,9 @@ module.exports = ReactPropTypesSecret;
 /***/ }),
 
 /***/ "../../node_modules/react-dom/cjs/react-dom.development.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/react-dom/cjs/react-dom.development.js ***!
-  \***************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-dom/cjs/react-dom.development.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33693,9 +33726,9 @@ module.exports = reactDom;
 /***/ }),
 
 /***/ "../../node_modules/react-dom/index.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/react-dom/index.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react-dom/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33738,9 +33771,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/react/cjs/react.development.js":
-/*!*******************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/react/cjs/react.development.js ***!
-  \*******************************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react/cjs/react.development.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35985,9 +36018,9 @@ module.exports = react;
 /***/ }),
 
 /***/ "../../node_modules/react/index.js":
-/*!***************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/react/index.js ***!
-  \***************************************************************/
+/*!****************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/react/index.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36002,9 +36035,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/scheduler/cjs/scheduler-tracing.development.js":
-/*!***********************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/scheduler/cjs/scheduler-tracing.development.js ***!
-  \***********************************************************************************************/
+/*!************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/cjs/scheduler-tracing.development.js ***!
+  \************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36480,9 +36513,9 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 /***/ }),
 
 /***/ "../../node_modules/scheduler/cjs/scheduler.development.js":
-/*!***************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/scheduler/cjs/scheduler.development.js ***!
-  \***************************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/cjs/scheduler.development.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37393,9 +37426,9 @@ exports.unstable_getFirstCallbackNode = unstable_getFirstCallbackNode;
 /***/ }),
 
 /***/ "../../node_modules/scheduler/index.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/scheduler/index.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/index.js ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37410,9 +37443,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/scheduler/tracing.js":
-/*!*********************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/scheduler/tracing.js ***!
-  \*********************************************************************/
+/*!**********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/scheduler/tracing.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37427,9 +37460,9 @@ if (false) {} else {
 /***/ }),
 
 /***/ "../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
-/*!******************************************************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
-  \******************************************************************************************************/
+/*!*******************************************************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -37720,9 +37753,9 @@ module.exports = function (list, options) {
 /***/ }),
 
 /***/ "../../node_modules/tslib/tslib.es6.js":
-/*!*******************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/node_modules/tslib/tslib.es6.js ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/node_modules/tslib/tslib.es6.js ***!
+  \********************************************************************/
 /*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37968,9 +38001,9 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 /***/ }),
 
 /***/ "../../react/lib/globalState.js":
-/*!************************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/react/lib/globalState.js ***!
-  \************************************************************/
+/*!*************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/globalState.js ***!
+  \*************************************************************/
 /*! exports provided: useChanges, useForceUpdate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38003,9 +38036,9 @@ function transactionalUpdate(_changeToken, modelOrCollection) {
 /***/ }),
 
 /***/ "../../react/lib/index.js":
-/*!******************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/react/lib/index.js ***!
-  \******************************************************/
+/*!*******************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/index.js ***!
+  \*******************************************************/
 /*! exports provided: useEvent, useModel, useModelCopy, useDelayChanges, useCollection, useChanges, useForceUpdate, Link, Linked, PropValueLink, pureRenderProps, LinkedComponent, StateLink, helpers, objectHelpers, arrayHelpers, useLink, useLinked, useSafeLinked, useSyncLinked, useSafeSyncLinked, useSafeLink, useIsMountedRef, useBoundLink, useSafeBoundLink, useLocalStorage, useIO, whenChanged */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38090,9 +38123,9 @@ function useEvent(source, event, handler) {
 /***/ }),
 
 /***/ "../../react/lib/pureRender.js":
-/*!***********************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/react/lib/pureRender.js ***!
-  \***********************************************************/
+/*!************************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/pureRender.js ***!
+  \************************************************************/
 /*! exports provided: pureRenderProps */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -38145,9 +38178,9 @@ function propForType(type, key) {
 /***/ }),
 
 /***/ "../../react/lib/state.js":
-/*!******************************************************!*\
-  !*** /Users/vbalin/GitHub/Type-R/react/lib/state.js ***!
-  \******************************************************/
+/*!*******************************************************!*\
+  !*** C:/Users/gaper/GitHub/Type-R/react/lib/state.js ***!
+  \*******************************************************/
 /*! exports provided: useModel, useModelCopy, useDelayChanges, useCollection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
