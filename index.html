@@ -152,10 +152,113 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <li><code>tests</code> - private package containing all the unit tests.</li>
 <li><code>examples/*</code> - example <code>@type-r/react</code> apps.</li>
 </ul>
+<h1 id="using-with-react">Using with React</h1>
+<h2 id="local-component-state">Local component state</h2>
+<h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>
+<h3 id="hook-usecollection-of-modelclass-"><code>hook</code> useCollection.of( ModelClass )</h3>
+<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
+    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
+});
+
+<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State <span class="hljs-comment">/* any model class */</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counter++ }&gt;
+            { state.counter }
+        <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
+    );
+}
+</code></pre>
+<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> </span>= attributes({
+    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
+});
+
+<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> counters = useCollection.of( Counter );
+
+    <span class="hljs-keyword">const</span> selected = useCollection.subsetOf( counters );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{ user.counter }<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> user.counter++ }&gt;Add<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
+</code></pre>
+<h2 id="data-binding">Data binding</h2>
+<h3 id="class-linked"><code>class</code> Linked</h3>
+<h3 id="hook-uselinked-value-"><code>hook</code> useLinked( value )</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked local state.</span>
+    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}
+</span>
+</code></pre>
+<h3 id="model-">model.$</h3>
+<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
+    <span class="hljs-keyword">static</span> attributes = {
+        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
+    }
+}
+
+<span class="hljs-keyword">const</span> EditBook = <span class="hljs-function">(<span class="hljs-params">{ book }</span>) =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked model attributes.</span>
+    <span class="hljs-keyword">const</span> { name, author } = book.$;
+
+    <span class="hljs-keyword">return</span> (
+        &lt;div&gt;
+            &lt;input {...name.props} /&gt;
+            &lt;input {...author.props} /&gt;
+        &lt;/div&gt;
+    )
+}
+</code></pre>
+<h3 id="collection-includes-model-">collection.$includes( model )</h3>
+<h3 id="static-linked-value-value-set-"><code>static</code> Linked.value( value, set )</h3>
+<h2 id="normalized-data-and-stores">Normalized data and stores</h2>
+<p><code>Store</code> is the subclass of <code>Model</code> used as a root to resolve id-references in &#39;normalized data structures&#39;, when 
+the data is represented as a set of collections with items referencing each other by id. If you don&#39;t have normalized data structures, you don&#39;t need <code>Store</code>.</p>
+<p>Attributes of types <code>Model.memberOf( &#39;store.someCollection&#39; )</code> and <code>Collection.subsetOf( &#39;store.someCollection&#39; )</code>
+will resolve model ids to the models taken from <code>someCollection</code> belonging to the closest <code>Store</code> model. The closest
+store is located as follows:</p>
+<p>1) The first <code>Store</code> from the model&#39;s owners chain is taken first.
+2) If there are no such a collection in it, the next <code>Store</code> class in ownership chain is taken.
+3) If there are no stores left in the ownerhip chain, the <code>Store.global</code> is used.</p>
+<p>From the particular model&#39;s view, there&#39;s a single <code>store</code> namespace which is defined by <code>Store.global</code> and
+extended by upper stores in its ownership chain.</p>
+<p>In <code>@type-r/react</code>, you can create the store as a local component state, and expose it down to the component subtree
+so its children can opt to use this context store for id resolutions in their local state models.</p>
+<p>That leads to a multi-tier store achitecture where the next tier store may override upper store collections and extend it with new collections.</p>
+<ul>
+<li>Tier 1. <code>Store.global</code> holds the state which is shared across all SPA pages.</li>
+<li>Tier 2. Page component stores holds the state which is related to particular pages.</li>
+<li>Tier 3. Particular components might add their local stores extending the namespace created by upper stores.</li>
+</ul>
+<p>Stores</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> X = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
+    useContextStore( state );
+}
+</code></pre>
 <h1 id="defining-the-model">Defining the model</h1>
 <h2 id="overview">Overview</h2>
-<p><code>Model</code> is a class with typed attributes which is automatically serializable to JSON and is as easy to use as a plain JS object.</p>
-<p>Any model can be serialized to and restored from JSON. Model checks attribute types on assignment rejecting improper attribute updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.</p>
+<p><code>Model</code> is a class with attributes which:</p>
+<ul>
+<li>is deeply observable;</li>
+<li>is automatically serializable to JSON;</li>
+<li>can be mapped to REST endpoint using the declarative annotations;</li>
+<li>is protected from improper updates, checking types at run-time;</li>
+<li>is very fast, easily handling large collections of deeply nested objects (10K and more).</li>
+</ul>
+<p>Models are statically typed when used with TypeScript, and much safer than standard classes when used with JavaScript. When used to describe REST endpoints, it augment TypeScript with a dynamic type checks guarding the client-server protocol against errors on both ends.</p>
 <p>Model declarations looks close to the shape of JSON objects they describe.</p>
 <pre><code class="highlight javascript"><span class="hljs-comment">// Create Role model's constructor.</span>
 <span class="hljs-keyword">const</span> Role = attributes({
@@ -166,9 +269,7 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <span class="hljs-comment">// Create Role model's constructor.</span>
 <span class="hljs-keyword">const</span> User = attributes({
     <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
-
     <span class="hljs-attr">isActive</span> : <span class="hljs-built_in">Boolean</span>, <span class="hljs-comment">// always boolean, no matter what is assigned.</span>
-
     <span class="hljs-comment">// Nested collection of roles, represented as an array of objects in JSON.</span>
     roles : [Role],
 
@@ -179,21 +280,19 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
     }
 });
 
-<span class="hljs-keyword">const</span> user = User.from( json, { <span class="hljs-attr">parse</span> : <span class="hljs-literal">true</span> });
+<span class="hljs-keyword">const</span> user = <span class="hljs-keyword">new</span> User();
+user.onChanges( <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log( <span class="hljs-string">'change'</span> ));
 user.permissions.canDoA = <span class="hljs-literal">true</span>;
-<span class="hljs-built_in">console</span>.log( user.toJSON() );
 </code></pre>
 <p>Models may have I/O endpoints attached. There are several endpoints awailable in <code>@type-r/endpoints</code> package, including the standard REST endpoint.</p>
 <pre><code class="highlight javascript"><span class="hljs-comment">// Use the class form of the model definition.</span>
-@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-comment">// Bind the REST endpoint to enable I/O API.</span>
-    <span class="hljs-keyword">static</span> endpoint = restfulIO( <span class="hljs-string">'/api/users'</span> );
-
-    <span class="hljs-comment">// Define the attributes.</span>
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">name</span> : <span class="hljs-built_in">String</span>,
-        <span class="hljs-comment">// ...</span>
+<span class="hljs-keyword">const</span> User = attributes({
+    [metadata] : {
+        <span class="hljs-comment">// Bind the REST endpoint to enable I/O API.</span>
+        endpoint : restfulIO( <span class="hljs-string">'/api/users'</span> )
     }
+
+    name : <span class="hljs-built_in">String</span>
 }
 
 <span class="hljs-comment">// Fetch the users list.</span>

@@ -2,9 +2,14 @@
 
 ## Overview
 
-`Model` is a class with typed attributes which is automatically serializable to JSON and is as easy to use as a plain JS object.
+`Model` is a class with attributes which:
+- is deeply observable;
+- is automatically serializable to JSON;
+- can be mapped to REST endpoint using the declarative annotations;
+- is protected from improper updates, checking types at run-time;
+- is very fast, easily handling large collections of deeply nested objects (10K and more).
 
-Any model can be serialized to and restored from JSON. Model checks attribute types on assignment rejecting improper attribute updates. It adds safety to JS programming, and augment TypeScript with a dynamic type checks guarding the client-server protocol from errors on both ends. By default, model put warnings to console in case of type errors, which can be turned to exceptions in case of the unit test.
+Models are statically typed when used with TypeScript, and much safer than standard classes when used with JavaScript. When used to describe REST endpoints, it augment TypeScript with a dynamic type checks guarding the client-server protocol against errors on both ends.
 
 Model declarations looks close to the shape of JSON objects they describe.
 
@@ -18,9 +23,7 @@ const Role = attributes({
 // Create Role model's constructor.
 const User = attributes({
     name : String,
-
     isActive : Boolean, // always boolean, no matter what is assigned.
-
     // Nested collection of roles, represented as an array of objects in JSON.
     roles : [Role],
     
@@ -31,24 +34,22 @@ const User = attributes({
     }
 });
 
-const user = User.from( json, { parse : true });
+const user = new User();
+user.onChanges( () => console.log( 'change' ));
 user.permissions.canDoA = true;
-console.log( user.toJSON() );
 ```
 
 Models may have I/O endpoints attached. There are several endpoints awailable in `@type-r/endpoints` package, including the standard REST endpoint.
 
 ```javascript
 // Use the class form of the model definition.
-@define class User extends Model {
-    // Bind the REST endpoint to enable I/O API.
-    static endpoint = restfulIO( '/api/users' );
-
-    // Define the attributes.
-    static attributes = {
-        name : String,
-        // ...
+const User = attributes({
+    [metadata] : {
+        // Bind the REST endpoint to enable I/O API.
+        endpoint : restfulIO( '/api/users' )
     }
+    
+    name : String
 }
 
 // Fetch the users list.

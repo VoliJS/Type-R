@@ -1,10 +1,12 @@
-# Using with React
+# Type-R/React
+
+It's possible to manage React state in Angular style with a help of `type-r/react` and `type-r/models` packages. You'll get nested changes detection, two-way data binding, and "pure render optimization" working on a mutable data.
 
 ## Local component state
 
 ### `hook` useModel( ModelClass )
 
-### `hook` useCollection.of( ModelClass )
+Make the model class instance to be a part of the local React state. When anything will change within the model, the component will be rendered.
 
 ```javascript
 class State = attributes({
@@ -12,7 +14,7 @@ class State = attributes({
 });
 
 const StatefulComponent = () => {
-    const state = useModel( State /* any model class */ );
+    const state = useModel( State );
     
     return (
         <button onClick={ () => state.counter++ }>
@@ -21,6 +23,27 @@ const StatefulComponent = () => {
     );
 }
 ```
+
+### Handling the complex state
+
+```javascript
+class State = attributes({
+    counter : 0
+});
+
+const StatefulComponent = () => {
+    const state = useModel( State );
+    
+    return (
+        <button onClick={ () => state.counter++ }>
+            { state.counter }
+        </button>
+    );
+}
+```
+
+
+### `hook` useCollection.of( ModelClass )
 
 ```javascript
 class Counter = attributes({

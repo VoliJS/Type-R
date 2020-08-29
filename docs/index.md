@@ -13,6 +13,7 @@ toc_footers:
 
 includes:
   - README
+  - react/README
   - models/README
   - models/src/README
   - ext-types/README
