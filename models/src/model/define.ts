@@ -42,12 +42,12 @@ export type AnonymousAttributes<D extends object> =
 
 export type AnonymousModelConstructor<A extends object> =
     MakeModelConstructor<
-        ModelAttributes<A>,
+        Model & ModelAttributes<A>,
         A
     >
 
 export type ModelAttributes<A extends object> =
-    Model & InferAttrs<A> & {
+    InferAttrs<A> & {
         readonly $ : LinkedModelHash<InferAttrs<A>>
     }
 

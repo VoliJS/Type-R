@@ -105,10 +105,13 @@ export class Model extends Transactional implements IOModel, AttributesContainer
     
     static attributes : AttributesValues
 
-
+    /** @internal */
     _attributes$ : object = void 0
+
+    /** @internal */
     __Attributes$ : new ( model : Model ) => object
 
+    /** @internal */
     get $() : object {
         return this._attributes$ || ( this._attributes$ = new this.__Attributes$( this ) )
     }
