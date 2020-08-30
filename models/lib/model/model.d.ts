@@ -36,9 +36,6 @@ export declare class Model extends Transactional implements IOModel, AttributesC
     static extendAttrs<T extends typeof Model, A extends object>(this: T, attrs: A): AnonymousModelConstructor<T['attributes'] & A>;
     static defaults(attrs: AttributesValues): typeof Model;
     static attributes: AttributesValues;
-    _attributes$: object;
-    __Attributes$: new (model: Model) => object;
-    readonly $: object;
     previousAttributes(): AttributesValues;
     readonly changed: AttributesValues;
     changedAttributes(diff?: {}): boolean | {};

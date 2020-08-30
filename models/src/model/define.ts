@@ -1,9 +1,8 @@
-import { LinkedModelHash } from './linked-attrs'
-import { Infer } from './attrDef';
-import { Model, ModelEntriesIterator, MakeModelConstructor } from './model';
-import { CollectionConstructor, GenericComparator } from '../collection';
-import { TheType, EventMap } from '@type-r/mixture';
+import { GenericComparator } from '../collection';
 import { IOEndpoint } from '../io-tools';
+import { Infer } from './attrDef';
+import { LinkedModelHash } from './linked-attrs';
+import { MakeModelConstructor, Model } from './model';
 
 export const collection = Symbol("Methods definitions");
 export const metadata = Symbol("Methods definitions");
@@ -43,12 +42,12 @@ export type AnonymousAttributes<D extends object> =
 
 export type AnonymousModelConstructor<A extends object> =
     MakeModelConstructor<
-        ModelAttributes<A>,
+        Model & ModelAttributes<A>,
         A
     >
 
 export type ModelAttributes<A extends object> =
-    Model & InferAttrs<A> & {
+    InferAttrs<A> & {
         readonly $ : LinkedModelHash<InferAttrs<A>>
     }
 

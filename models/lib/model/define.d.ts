@@ -1,8 +1,8 @@
-import { LinkedModelHash } from './linked-attrs';
-import { Infer } from './attrDef';
-import { Model, MakeModelConstructor } from './model';
 import { GenericComparator } from '../collection';
 import { IOEndpoint } from '../io-tools';
+import { Infer } from './attrDef';
+import { LinkedModelHash } from './linked-attrs';
+import { MakeModelConstructor, Model } from './model';
 export declare const collection: unique symbol;
 export declare const metadata: unique symbol;
 export interface AnonimousModelDefinition {
@@ -40,8 +40,8 @@ export declare function parseAnonimousModelDefinition({ [metadata]: md, [collect
     };
 };
 export declare type AnonymousAttributes<D extends object> = AnonymousModelConstructor<D>;
-export declare type AnonymousModelConstructor<A extends object> = MakeModelConstructor<ModelAttributes<A>, A>;
-export declare type ModelAttributes<A extends object> = Model & InferAttrs<A> & {
+export declare type AnonymousModelConstructor<A extends object> = MakeModelConstructor<Model & ModelAttributes<A>, A>;
+export declare type ModelAttributes<A extends object> = InferAttrs<A> & {
     readonly $: LinkedModelHash<InferAttrs<A>>;
 };
 export declare type MergeModelConstructors<First extends typeof Model, Second extends typeof Model> = MakeModelConstructor<InstanceType<First> & InstanceType<Second>, First['attributes'] & Second['attributes']>;
