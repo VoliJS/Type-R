@@ -152,24 +152,264 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
 <li><code>tests</code> - private package containing all the unit tests.</li>
 <li><code>examples/*</code> - example <code>@type-r/react</code> apps.</li>
 </ul>
-<h1 id="using-with-react">Using with React</h1>
-<h2 id="local-component-state">Local component state</h2>
-<h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>
-<h3 id="hook-usecollection-of-modelclass-"><code>hook</code> useCollection.of( ModelClass )</h3>
-<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
-    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
-});
-
-<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-keyword">const</span> state = useModel( State <span class="hljs-comment">/* any model class */</span> );
+<h1 id="getting-started">Getting Started</h1>
+<h2 id="local-state-and-models">Local state and models</h2>
+<h3 id="const-state-attributes-attrs-">const State = attributes({...attrs})</h3>
+<p><code>attributes()</code> function creates the &quot;model&quot; class out of the attributes definition, which is (in a simplest case) an object filled with default values. The shape of the generated class will repeat the shape of the attributes definition object.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">counters</span> : {
+        <span class="hljs-attr">a</span> : <span class="hljs-number">0</span>,
+        <span class="hljs-attr">b</span> : <span class="hljs-number">1</span>
+    }
+})
+</code></pre>
+<h3 id="const-state-usemodel-state-">const state = useModel(State)</h3>
+<p>Then, you can use it as a component&#39;s local state calling the <code>useModel</code> hook. When anything will change inside of the state, the component will be rendered. The state behaves like a plain mutable object with deeply observable changes.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
 
     <span class="hljs-keyword">return</span> (
-        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counter++ }&gt;
-            { state.counter }
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counters.a++ }&gt;
+            { state.counters.a }
         <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
     );
 }
 </code></pre>
+<p>Attribute definition can be either:</p>
+<ul>
+<li>Default value (<code>0</code>, <code>&quot;&quot;</code>, <code>false</code>)</li>
+<li>Object <code>{ ...attrs }</code>, defining the nested model.</li>
+<li>JS constructor designating the type (<code>Number</code>, <code>String</code>, <code>Boolean</code>, <code>Date</code>, other model&#39;s constructor, etc)</li>
+<li>Array, meaning the collection of models <code>[{ ...attrs }]</code> or <code>[ModelConstructor]</code>.</li>
+<li>Type and <code>null</code> default value (<code>type(Number).null</code>)</li>
+<li>Arbitrary value and type (<code>type(Number).value(null)</code>)</li>
+</ul>
+<p>All attributes are typed, and all attributes have default values. If the default value is provided its constructor is being inferred from the value, and, in turn, if the constructor alone is given it&#39;s invoked to get the default value when the model is created. The following definitions have identical meaning: <code>0</code>, <code>Number</code>, <code>value(0)</code>, <code>type(Number)</code>, <code>type(Number).value(0)</code>. However, the type cannot be inferred from the <code>null</code> default value, which makes definitions like <code>type(Date).null</code> useful.</p>
+<p>Attribute types <strong>are always checked and converted on assignment</strong>. <code>Boolean</code> attribute value will remain boolean no matter which value was assigned. The same applies to <code>String</code>, <code>Number</code>, and all other types. The model is garanteed to preserve its shape at run-time under any circumstances.</p>
+<h2 id="linking-state-to-inputs">Linking state to inputs</h2>
+<h3 id="linked-attributes">Linked attributes</h3>
+<p>The writable reference to the attribute (&quot;linked attribute&quot;) is obtained by prefixing its name with <code>$.</code>.
+This reference is the instance of <code>Linked</code> class encapsulating the attribute&#39;s <code>value</code> and <code>set</code> function to update the value. Linked attributes can be passed to children as a single prop and used to create the data-bound input controls.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">post</span> : {
+        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+    }
+});
+
+<span class="hljs-keyword">const</span> Form = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
+
+    <span class="hljs-keyword">return</span> (
+        ...
+        &lt;Input type=<span class="hljs-string">"text"</span> $value={state.post.$.title}/&gt;
+        ...
+    )
+}
+
+<span class="hljs-keyword">const</span> Input = <span class="hljs-function">(<span class="hljs-params">{ $value, ...rest }</span>) =&gt;</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{$value.value}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{</span> <span class="hljs-attr">e</span> =&gt;</span> $value.set( e.target.value )}
+    /&gt;</span>
+</code></pre>
+<h3 id="ad-hoc-data-binding">Ad-hoc data binding</h3>
+<p>Custom components are not required to use data binding. <code>Linked</code> class has the <code>.props</code> helper to create <code>value</code> and <code>onChange</code> props consumed by standard HTML inputs:</p>
+<pre><code class="highlight javascript">&lt;input type=<span class="hljs-string">"text"</span> {...state.post.$.title.props}/&gt;
+</code></pre>
+<p>However, custom input component are highly useful to encapsulate styles, and are recommended.</p>
+<h3 id="validation-in-components">Validation in components</h3>
+<p><code>Linked</code> class contains <code>error</code> property which is populated by the <code>check</code> method. Checks have a form of asserts, and they can be chained. The first failing check will populate the error, skipping all the rest.</p>
+<p>Error value in the linked attribute can be displayed by the custom input controls.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+})
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useState( State );
+
+    <span class="hljs-comment">// Validate linked attributes.</span>
+    state.$.name
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x, <span class="hljs-string">'Required'</span> );
+
+    state.$.email
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x, <span class="hljs-string">'Required'</span> )
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Should contain @'</span> );
+
+    <span class="hljs-keyword">return</span> (
+        &lt;div&gt;
+            &lt;label&gt;Name:
+                &lt;Input $value={state.$.name}/&gt;
+            &lt;/label&gt;
+            &lt;label&gt;Email:
+                &lt;Input $value={state.$.email}/&gt;
+            &lt;/label&gt;
+        &lt;/div&gt;
+    )
+}
+
+// Input component indicating the validation error.
+const Input = ({ $value, className = "", ...rest }) =&gt;
+    &lt;input
+        className={ $value.error ? className + ' error' : className }
+        value={$value.value}
+        onChange={ e =&gt; $value.set( e.target.value )}
+    /&gt;
+</code></pre>
+<h3 id="validation-in-state">Validation in state</h3>
+<p>Validation checks can be attached directly to the attributes. To do that, wrap the attribute&#39;s default value in <code>value(&#39;&#39;)</code>, or the attribute&#39;s type in <code>type(String)</code>. Validation is attached with a similar <code>check()</code> call, or a pre-defined <code>required</code> shortcut checking for falsy values. This technique can be combined with validation in the React components described above.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : value(<span class="hljs-string">''</span>)
+        .required
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Email must contain @'</span> )
+})
+</code></pre>
+<p>In this case, validation will happen transarently in the moment when the attribute is accessed though <code>$</code> and the error will be attached to the linked attribute. The validation result is cached together with the <code>Linked</code> class, and the validation won&#39;t happen again unless the attribute value will change.</p>
+<p>Also, it&#39;s easy to check if the whole state or its part is valid calling the <code>isValid()</code> method on state or it&#39;s nested object. In this case, the cosserponding state part will be validated recursively checking all the attributes.</p>
+<p>Attribute&#39;s validation can be reused in a variety of ways. Validation function can encapsulate the error message and used in <code>check</code>.</p>
+<pre><code class="highlight javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isEmail</span>(<span class="hljs-params"> x </span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>;
+}
+
+isEmail.error = <span class="hljs-string">'Email must contain @'</span>;
+
+<span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : value(<span class="hljs-string">''</span>).check( isEmail )
+})
+</code></pre>
+<p>Or, a developer can reuse the whole attribute definition.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> Email = value(<span class="hljs-string">''</span>)
+        .required
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Email must contain @'</span> );
+
+<span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : Email
+})
+</code></pre>
+<h2 id="rendering-lists-and-collections">Rendering lists and collections</h2>
+<p>Attribute is a collection if it&#39;s definition is an object enclosed in an array.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">users</span> : [{ <span class="hljs-comment">// Collection of users.</span>
+        name : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+    }]
+})
+</code></pre>
+<p>When the state will be created, the collection will be represented with a <code>Collection</code> class having the most popular methods of <code>Array</code> class (<code>map</code>, <code>reduce</code>, <code>filter</code>, <code>push</code>, <code>slice</code>...) and BackboneJS collections API (<code>get</code>, <code>set</code>, <code>add</code>, <code>remove</code>, <code>groupBy</code>).</p>
+<p>Model instances have a unique auto-generated <code>cid</code> (&quot;client id&quot;) property which is helpful when rendering lists.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> Users = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            { state.users.map( user =&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">User</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{user.cid}</span> <span class="hljs-attr">model</span>=<span class="hljs-string">{user}</span> /&gt;</span>
+            )}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}</span>
+</code></pre>
+<p>Collection items, as well all nested models and collections, can be passed to children components as values. No wrapping in linked $-attributes is needed. Assuming that we&#39;re using out data-bound <code>Input</code> component from the previous section, it will look like this:</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-function">(<span class="hljs-params">{ user }</span>) =&gt;</span>
+    &lt;div&gt;
+        &lt;label&gt;
+            Name:
+            &lt;Input $value={user.$.name}/&gt;
+        &lt;/label&gt;
+        &lt;label&gt;
+            Email:
+            &lt;Input $value={user.$.email}/&gt;
+        &lt;/label&gt;
+    &lt;/div&gt;
+</code></pre>
+<blockquote>
+<p>Internally, collection is a combination of models array (<code>models</code>) and the hash-map index by the model&#39;s <code>id</code> and <code>cid</code> attributes used internally by the <code>get(id)</code> and other methods. As it proxies popular <code>Array</code> methods, accessing the <code>models</code> directly is rarely needed.</p>
+</blockquote>
+<h2 id="managing-the-complex-state">Managing the complex state</h2>
+<p>TODO: move the info about attribute types here.</p>
+<p>When the state becomes complex, it&#39;s definition grows and parts of it often repeats itself. When it will happen, you can split the state definition to parts and compose your state out of them.
+These parts can be reused across different components and in different contexts.</p>
+<p>To do that, simply use the generated model class in place of the attribute&#39;s default value.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// models.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> User = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">''</span>
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Post = attributes({
+    <span class="hljs-attr">author</span> : User
+    title : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+})
+
+<span class="hljs-comment">// page.js</span>
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
+    <span class="hljs-attr">posts</span> : [User]
+});
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            { state.posts.map( x =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">EditPost</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{x.cid}</span> <span class="hljs-attr">post</span>=<span class="hljs-string">{x}</span> /&gt;</span> )}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}</span>
+</code></pre>
+<h2 id="fetching-the-data">Fetching the data</h2>
+<h3 id="defining-the-endpoints">Defining the endpoints</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { attributes, metadata } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/models'</span>
+<span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/endpoints'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Users = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>,
+
+    [metadata] : {
+        <span class="hljs-attr">endpoint</span> : restfulIO(<span class="hljs-string">'/api/users'</span>)
+    }
+})
+</code></pre>
+<h3 id="doing-the-i-o">Doing the I/O</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">users</span> : [Users]
+})
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+
+    <span class="hljs-keyword">const</span> isReady = useIO(<span class="hljs-keyword">async</span> () =&gt;{
+        <span class="hljs-keyword">await</span> state.users.fetch();
+    });
+
+    <span class="hljs-keyword">return</span> isReady ?
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">UsersList</span> <span class="hljs-attr">users</span>=<span class="hljs-string">{state.users}/</span>&gt;</span>
+        :
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+}</span>
+</code></pre>
+<h3 id="todo-bearer-auth">TODO: Bearer Auth</h3>
+<h2 id="managing-the-simple-state">Managing the simple state</h2>
+<h3 id="uselinked-value-">useLinked( value )</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked local state.</span>
+    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}
+</span>
+</code></pre>
+<h3 id="usecollection-of-modelclass-">useCollection.of( ModelClass )</h3>
 <pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> </span>= attributes({
     <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
 });
@@ -186,44 +426,7 @@ msg.subject = <span class="hljs-string">'Nevermore'</span>;
         <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
 }
 </code></pre>
-<h2 id="data-binding">Data binding</h2>
-<h3 id="class-linked"><code>class</code> Linked</h3>
-<h3 id="hook-uselinked-value-"><code>hook</code> useLinked( value )</h3>
-<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-comment">// Obtain linked local state.</span>
-    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
-
-    <span class="hljs-keyword">return</span> (
-        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    )
-}
-</span>
-</code></pre>
-<h3 id="model-">model.$</h3>
-<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
-        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
-    }
-}
-
-<span class="hljs-keyword">const</span> EditBook = <span class="hljs-function">(<span class="hljs-params">{ book }</span>) =&gt;</span> {
-    <span class="hljs-comment">// Obtain linked model attributes.</span>
-    <span class="hljs-keyword">const</span> { name, author } = book.$;
-
-    <span class="hljs-keyword">return</span> (
-        &lt;div&gt;
-            &lt;input {...name.props} /&gt;
-            &lt;input {...author.props} /&gt;
-        &lt;/div&gt;
-    )
-}
-</code></pre>
-<h3 id="collection-includes-model-">collection.$includes( model )</h3>
-<h3 id="static-linked-value-value-set-"><code>static</code> Linked.value( value, set )</h3>
-<h2 id="normalized-data-and-stores">Normalized data and stores</h2>
+<h2 id="remove-normalized-data-and-stores">REMOVE Normalized data and stores</h2>
 <p><code>Store</code> is the subclass of <code>Model</code> used as a root to resolve id-references in &#39;normalized data structures&#39;, when 
 the data is represented as a set of collections with items referencing each other by id. If you don&#39;t have normalized data structures, you don&#39;t need <code>Store</code>.</p>
 <p>Attributes of types <code>Model.memberOf( &#39;store.someCollection&#39; )</code> and <code>Collection.subsetOf( &#39;store.someCollection&#39; )</code>
@@ -1530,24 +1733,264 @@ Store.global = <span class="hljs-keyword">new</span> MyStore();
 <p>Method looks for the <code>Store</code> subclass traversing the ownership chain of current aggregation tree upwards. If there are no store found this way, default Store from <code>Store.global</code> is returned.</p>
 <h2 id="layered-application-state">Layered application state</h2>
 <p>TODO</p>
-<h1 id="using-with-react">Using with React</h1>
-<h2 id="local-component-state">Local component state</h2>
-<h3 id="hook-usemodel-modelclass-"><code>hook</code> useModel( ModelClass )</h3>
-<h3 id="hook-usecollection-of-modelclass-"><code>hook</code> useCollection.of( ModelClass )</h3>
-<pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
-    <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
-});
-
-<span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-keyword">const</span> state = useModel( State <span class="hljs-comment">/* any model class */</span> );
+<h1 id="getting-started">Getting Started</h1>
+<h2 id="local-state-and-models">Local state and models</h2>
+<h3 id="const-state-attributes-attrs-">const State = attributes({...attrs})</h3>
+<p><code>attributes()</code> function creates the &quot;model&quot; class out of the attributes definition, which is (in a simplest case) an object filled with default values. The shape of the generated class will repeat the shape of the attributes definition object.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">counters</span> : {
+        <span class="hljs-attr">a</span> : <span class="hljs-number">0</span>,
+        <span class="hljs-attr">b</span> : <span class="hljs-number">1</span>
+    }
+})
+</code></pre>
+<h3 id="const-state-usemodel-state-">const state = useModel(State)</h3>
+<p>Then, you can use it as a component&#39;s local state calling the <code>useModel</code> hook. When anything will change inside of the state, the component will be rendered. The state behaves like a plain mutable object with deeply observable changes.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulComponent = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
 
     <span class="hljs-keyword">return</span> (
-        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counter++ }&gt;
-            { state.counter }
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{</span> () =&gt;</span> state.counters.a++ }&gt;
+            { state.counters.a }
         <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span>
     );
 }
 </code></pre>
+<p>Attribute definition can be either:</p>
+<ul>
+<li>Default value (<code>0</code>, <code>&quot;&quot;</code>, <code>false</code>)</li>
+<li>Object <code>{ ...attrs }</code>, defining the nested model.</li>
+<li>JS constructor designating the type (<code>Number</code>, <code>String</code>, <code>Boolean</code>, <code>Date</code>, other model&#39;s constructor, etc)</li>
+<li>Array, meaning the collection of models <code>[{ ...attrs }]</code> or <code>[ModelConstructor]</code>.</li>
+<li>Type and <code>null</code> default value (<code>type(Number).null</code>)</li>
+<li>Arbitrary value and type (<code>type(Number).value(null)</code>)</li>
+</ul>
+<p>All attributes are typed, and all attributes have default values. If the default value is provided its constructor is being inferred from the value, and, in turn, if the constructor alone is given it&#39;s invoked to get the default value when the model is created. The following definitions have identical meaning: <code>0</code>, <code>Number</code>, <code>value(0)</code>, <code>type(Number)</code>, <code>type(Number).value(0)</code>. However, the type cannot be inferred from the <code>null</code> default value, which makes definitions like <code>type(Date).null</code> useful.</p>
+<p>Attribute types <strong>are always checked and converted on assignment</strong>. <code>Boolean</code> attribute value will remain boolean no matter which value was assigned. The same applies to <code>String</code>, <code>Number</code>, and all other types. The model is garanteed to preserve its shape at run-time under any circumstances.</p>
+<h2 id="linking-state-to-inputs">Linking state to inputs</h2>
+<h3 id="linked-attributes">Linked attributes</h3>
+<p>The writable reference to the attribute (&quot;linked attribute&quot;) is obtained by prefixing its name with <code>$.</code>.
+This reference is the instance of <code>Linked</code> class encapsulating the attribute&#39;s <code>value</code> and <code>set</code> function to update the value. Linked attributes can be passed to children as a single prop and used to create the data-bound input controls.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">post</span> : {
+        <span class="hljs-attr">title</span> : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+    }
+});
+
+<span class="hljs-keyword">const</span> Form = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel( State );
+
+    <span class="hljs-keyword">return</span> (
+        ...
+        &lt;Input type=<span class="hljs-string">"text"</span> $value={state.post.$.title}/&gt;
+        ...
+    )
+}
+
+<span class="hljs-keyword">const</span> Input = <span class="hljs-function">(<span class="hljs-params">{ $value, ...rest }</span>) =&gt;</span>
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span>
+        <span class="hljs-attr">value</span>=<span class="hljs-string">{$value.value}</span>
+        <span class="hljs-attr">onChange</span>=<span class="hljs-string">{</span> <span class="hljs-attr">e</span> =&gt;</span> $value.set( e.target.value )}
+    /&gt;</span>
+</code></pre>
+<h3 id="ad-hoc-data-binding">Ad-hoc data binding</h3>
+<p>Custom components are not required to use data binding. <code>Linked</code> class has the <code>.props</code> helper to create <code>value</code> and <code>onChange</code> props consumed by standard HTML inputs:</p>
+<pre><code class="highlight javascript">&lt;input type=<span class="hljs-string">"text"</span> {...state.post.$.title.props}/&gt;
+</code></pre>
+<p>However, custom input component are highly useful to encapsulate styles, and are recommended.</p>
+<h3 id="validation-in-components">Validation in components</h3>
+<p><code>Linked</code> class contains <code>error</code> property which is populated by the <code>check</code> method. Checks have a form of asserts, and they can be chained. The first failing check will populate the error, skipping all the rest.</p>
+<p>Error value in the linked attribute can be displayed by the custom input controls.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+})
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useState( State );
+
+    <span class="hljs-comment">// Validate linked attributes.</span>
+    state.$.name
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x, <span class="hljs-string">'Required'</span> );
+
+    state.$.email
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x, <span class="hljs-string">'Required'</span> )
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Should contain @'</span> );
+
+    <span class="hljs-keyword">return</span> (
+        &lt;div&gt;
+            &lt;label&gt;Name:
+                &lt;Input $value={state.$.name}/&gt;
+            &lt;/label&gt;
+            &lt;label&gt;Email:
+                &lt;Input $value={state.$.email}/&gt;
+            &lt;/label&gt;
+        &lt;/div&gt;
+    )
+}
+
+// Input component indicating the validation error.
+const Input = ({ $value, className = "", ...rest }) =&gt;
+    &lt;input
+        className={ $value.error ? className + ' error' : className }
+        value={$value.value}
+        onChange={ e =&gt; $value.set( e.target.value )}
+    /&gt;
+</code></pre>
+<h3 id="validation-in-state">Validation in state</h3>
+<p>Validation checks can be attached directly to the attributes. To do that, wrap the attribute&#39;s default value in <code>value(&#39;&#39;)</code>, or the attribute&#39;s type in <code>type(String)</code>. Validation is attached with a similar <code>check()</code> call, or a pre-defined <code>required</code> shortcut checking for falsy values. This technique can be combined with validation in the React components described above.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : value(<span class="hljs-string">''</span>)
+        .required
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Email must contain @'</span> )
+})
+</code></pre>
+<p>In this case, validation will happen transarently in the moment when the attribute is accessed though <code>$</code> and the error will be attached to the linked attribute. The validation result is cached together with the <code>Linked</code> class, and the validation won&#39;t happen again unless the attribute value will change.</p>
+<p>Also, it&#39;s easy to check if the whole state or its part is valid calling the <code>isValid()</code> method on state or it&#39;s nested object. In this case, the cosserponding state part will be validated recursively checking all the attributes.</p>
+<p>Attribute&#39;s validation can be reused in a variety of ways. Validation function can encapsulate the error message and used in <code>check</code>.</p>
+<pre><code class="highlight javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isEmail</span>(<span class="hljs-params"> x </span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>;
+}
+
+isEmail.error = <span class="hljs-string">'Email must contain @'</span>;
+
+<span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : value(<span class="hljs-string">''</span>).check( isEmail )
+})
+</code></pre>
+<p>Or, a developer can reuse the whole attribute definition.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> Email = value(<span class="hljs-string">''</span>)
+        .required
+        .check( <span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x.indexOf(<span class="hljs-string">'@'</span>) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">'Email must contain @'</span> );
+
+<span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">name</span> : value(<span class="hljs-string">''</span>).required,
+    <span class="hljs-attr">email</span> : Email
+})
+</code></pre>
+<h2 id="rendering-lists-and-collections">Rendering lists and collections</h2>
+<p>Attribute is a collection if it&#39;s definition is an object enclosed in an array.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">users</span> : [{ <span class="hljs-comment">// Collection of users.</span>
+        name : <span class="hljs-string">''</span>,
+        <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>
+    }]
+})
+</code></pre>
+<p>When the state will be created, the collection will be represented with a <code>Collection</code> class having the most popular methods of <code>Array</code> class (<code>map</code>, <code>reduce</code>, <code>filter</code>, <code>push</code>, <code>slice</code>...) and BackboneJS collections API (<code>get</code>, <code>set</code>, <code>add</code>, <code>remove</code>, <code>groupBy</code>).</p>
+<p>Model instances have a unique auto-generated <code>cid</code> (&quot;client id&quot;) property which is helpful when rendering lists.</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> Users = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            { state.users.map( user =&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">User</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{user.cid}</span> <span class="hljs-attr">model</span>=<span class="hljs-string">{user}</span> /&gt;</span>
+            )}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}</span>
+</code></pre>
+<p>Collection items, as well all nested models and collections, can be passed to children components as values. No wrapping in linked $-attributes is needed. Assuming that we&#39;re using out data-bound <code>Input</code> component from the previous section, it will look like this:</p>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> User = <span class="hljs-function">(<span class="hljs-params">{ user }</span>) =&gt;</span>
+    &lt;div&gt;
+        &lt;label&gt;
+            Name:
+            &lt;Input $value={user.$.name}/&gt;
+        &lt;/label&gt;
+        &lt;label&gt;
+            Email:
+            &lt;Input $value={user.$.email}/&gt;
+        &lt;/label&gt;
+    &lt;/div&gt;
+</code></pre>
+<blockquote>
+<p>Internally, collection is a combination of models array (<code>models</code>) and the hash-map index by the model&#39;s <code>id</code> and <code>cid</code> attributes used internally by the <code>get(id)</code> and other methods. As it proxies popular <code>Array</code> methods, accessing the <code>models</code> directly is rarely needed.</p>
+</blockquote>
+<h2 id="managing-the-complex-state">Managing the complex state</h2>
+<p>TODO: move the info about attribute types here.</p>
+<p>When the state becomes complex, it&#39;s definition grows and parts of it often repeats itself. When it will happen, you can split the state definition to parts and compose your state out of them.
+These parts can be reused across different components and in different contexts.</p>
+<p>To do that, simply use the generated model class in place of the attribute&#39;s default value.</p>
+<pre><code class="highlight javascript"><span class="hljs-comment">// models.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> User = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">''</span>
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Post = attributes({
+    <span class="hljs-attr">author</span> : User
+    title : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">body</span> : <span class="hljs-string">''</span>
+})
+
+<span class="hljs-comment">// page.js</span>
+<span class="hljs-keyword">import</span> { User } <span class="hljs-keyword">from</span> <span class="hljs-string">'./models'</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">State</span> </span>= attributes({
+    <span class="hljs-attr">posts</span> : [User]
+});
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            { state.posts.map( x =&gt; <span class="hljs-tag">&lt;<span class="hljs-name">EditPost</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{x.cid}</span> <span class="hljs-attr">post</span>=<span class="hljs-string">{x}</span> /&gt;</span> )}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}</span>
+</code></pre>
+<h2 id="fetching-the-data">Fetching the data</h2>
+<h3 id="defining-the-endpoints">Defining the endpoints</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">import</span> { attributes, metadata } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/models'</span>
+<span class="hljs-keyword">import</span> { restfulIO } <span class="hljs-keyword">from</span> <span class="hljs-string">'@type-r/endpoints'</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Users = attributes({
+    <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
+    <span class="hljs-attr">email</span> : <span class="hljs-string">''</span>,
+
+    [metadata] : {
+        <span class="hljs-attr">endpoint</span> : restfulIO(<span class="hljs-string">'/api/users'</span>)
+    }
+})
+</code></pre>
+<h3 id="doing-the-i-o">Doing the I/O</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> State = attributes({
+    <span class="hljs-attr">users</span> : [Users]
+})
+
+<span class="hljs-keyword">const</span> Page = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> state = useModel(State);
+
+    <span class="hljs-keyword">const</span> isReady = useIO(<span class="hljs-keyword">async</span> () =&gt;{
+        <span class="hljs-keyword">await</span> state.users.fetch();
+    });
+
+    <span class="hljs-keyword">return</span> isReady ?
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">UsersList</span> <span class="hljs-attr">users</span>=<span class="hljs-string">{state.users}/</span>&gt;</span>
+        :
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+}</span>
+</code></pre>
+<h3 id="todo-bearer-auth">TODO: Bearer Auth</h3>
+<h2 id="managing-the-simple-state">Managing the simple state</h2>
+<h3 id="uselinked-value-">useLinked( value )</h3>
+<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-comment">// Obtain linked local state.</span>
+    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
+
+    <span class="hljs-keyword">return</span> (
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+}
+</span>
+</code></pre>
+<h3 id="usecollection-of-modelclass-">useCollection.of( ModelClass )</h3>
 <pre><code class="highlight javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Counter</span> </span>= attributes({
     <span class="hljs-attr">counter</span> : <span class="hljs-number">0</span>
 });
@@ -1564,44 +2007,7 @@ Store.global = <span class="hljs-keyword">new</span> MyStore();
         <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
 }
 </code></pre>
-<h2 id="data-binding">Data binding</h2>
-<h3 id="class-linked"><code>class</code> Linked</h3>
-<h3 id="hook-uselinked-value-"><code>hook</code> useLinked( value )</h3>
-<pre><code class="highlight javascript"><span class="hljs-keyword">const</span> StatefulDataBound = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    <span class="hljs-comment">// Obtain linked local state.</span>
-    <span class="hljs-keyword">const</span> $name = useLinked( <span class="hljs-string">''</span> );
-
-    <span class="hljs-keyword">return</span> (
-        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-name">input</span> {<span class="hljs-attr">...</span>$<span class="hljs-attr">name.props</span>} /&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    )
-}
-</span>
-</code></pre>
-<h3 id="model-">model.$</h3>
-<pre><code class="highlight javascript">@define <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Book</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Model</span> </span>{
-    <span class="hljs-keyword">static</span> attributes = {
-        <span class="hljs-attr">name</span> : <span class="hljs-string">''</span>,
-        <span class="hljs-attr">author</span> : <span class="hljs-string">''</span>
-    }
-}
-
-<span class="hljs-keyword">const</span> EditBook = <span class="hljs-function">(<span class="hljs-params">{ book }</span>) =&gt;</span> {
-    <span class="hljs-comment">// Obtain linked model attributes.</span>
-    <span class="hljs-keyword">const</span> { name, author } = book.$;
-
-    <span class="hljs-keyword">return</span> (
-        &lt;div&gt;
-            &lt;input {...name.props} /&gt;
-            &lt;input {...author.props} /&gt;
-        &lt;/div&gt;
-    )
-}
-</code></pre>
-<h3 id="collection-includes-model-">collection.$includes( model )</h3>
-<h3 id="static-linked-value-value-set-"><code>static</code> Linked.value( value, set )</h3>
-<h2 id="normalized-data-and-stores">Normalized data and stores</h2>
+<h2 id="remove-normalized-data-and-stores">REMOVE Normalized data and stores</h2>
 <p><code>Store</code> is the subclass of <code>Model</code> used as a root to resolve id-references in &#39;normalized data structures&#39;, when 
 the data is represented as a set of collections with items referencing each other by id. If you don&#39;t have normalized data structures, you don&#39;t need <code>Store</code>.</p>
 <p>Attributes of types <code>Model.memberOf( &#39;store.someCollection&#39; )</code> and <code>Collection.subsetOf( &#39;store.someCollection&#39; )</code>
