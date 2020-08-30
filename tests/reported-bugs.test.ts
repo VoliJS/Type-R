@@ -286,7 +286,8 @@ describe( 'Bugs from Volicon Observer', () =>{
                 hi(){ return this.first().there }
             }
 
-            interface MyModel extends AttributesMixin<typeof MyModel> {}
+            type X = { readonly $: object & { }; }
+            interface MyModel extends X {}
             @define class MyModel extends Model {
                 static Collection = MyCollection
                 static attributes = {

@@ -17,7 +17,7 @@ export interface MessengersByCid {
 export declare type EventCallbacks<Context> = {
     [events: string]: EventCallback<Context>;
 };
-export declare type EventCallback<Context> = (this: Context, ...args: any[]) => void;
+export declare type EventCallback<Context> = (...args: any[]) => void;
 export declare class Messenger implements Mixable, EventSource {
     static mixins: MixinsState;
     static onExtend: (BaseClass: Function) => void;

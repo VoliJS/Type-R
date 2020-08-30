@@ -2,13 +2,13 @@ import { useReducer, useRef, useEffect } from 'react'
 import { Model, Collection, Transactional, defaultStore, SubsetCollection } from '@type-r/models'
 
 export const useModel : {
-    <M extends typeof Model>( Ctor : M ) : InstanceType<M>
+    <M extends Model>( Ctor : new (...args) => M ) : M
     copy : typeof useModelCopy
     delayChanges : typeof useDelayChanges
 } = mutableHook( Model => new Mutable( new Model ) );
 
 export function useModelCopy<M extends Model>( model : M ) : M {
-    const local = useModel( model.constructor as any );
+    const local = useModel<M>( model.constructor as any );
 
     useEffect( () => {
         local.assignFrom( model );
@@ -63,11 +63,10 @@ export function useDelayChanges<M extends Model>( model : M, delay = 1000 ) : M 
 }
 
 export interface CollectionHooks {
-    of<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
-    ofRefs<M extends typeof Model>( Ctor : M ) : Collection<InstanceType<M>>
+    of<M extends Model>( Ctor : new () => M ) : Collection<M>
+    ofRefs<M extends Model>( Ctor : new () => M ) : Collection<M>
     subsetOf<T extends Model>( init : Collection<T> ) : SubsetCollection<T>
 }
-
 
 const createSubsetOf = collection => new Mutable( collection.createSubset([]) );
 
@@ -89,7 +88,7 @@ export const useCollection : CollectionHooks = {
         }, [ Boolean( init.models.length ) ] )
 
         useEffect( () => {
-            mutable._onChildrenChange = obj => forceUpdate( obj );
+            mutable._onChildrenChange = forceUpdate;
             return () => mutable.value.dispose();
         }, emptyArray );
     
@@ -132,7 +131,7 @@ function mutableHook( create : ( x : any ) => Mutable ) : any {
         // TODO: mutable.store = useContext( Store )???
     
         useEffect( () => {
-            mutable._onChildrenChange = obj => forceUpdate( obj );
+            mutable._onChildrenChange = forceUpdate;
             return () => mutable.value.dispose();
         }, emptyArray );
     

@@ -186,7 +186,7 @@ describe( 'IO', function(){
                 } )
 
                 .post( '/users' )
-                .reply( 200, function ( uri, requestBody ) {
+                .reply( 200, function ( uri, requestBody : any ) {
                     let id   = ++usersStorage.counter,
                         user = {
                             id: String( id ),
@@ -197,7 +197,7 @@ describe( 'IO', function(){
                 } )
 
                 .put( USER_REGEX )
-                .reply( function ( uri, requestBody ) {
+                .reply( function ( uri, requestBody : any ) {
                     const user = getUser( getUserId( uri ) );
 
                     if( user ) {

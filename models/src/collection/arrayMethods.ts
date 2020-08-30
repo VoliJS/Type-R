@@ -1,6 +1,6 @@
 import { Model } from '../model'
 
-export type Predicate<R> = ( ( val : R, key? : number ) => boolean ) | Partial<R>;
+export type Predicate<R extends Model> = ( ( val : R, key? : number ) => boolean ) | Partial<Omit<R,'$'>>;
 
 /**
  * Optimized array methods.
@@ -163,7 +163,7 @@ const defaultGrouping = ( acc = [], x ) => ( acc.push( x ), acc );
 
 const noOp = x => x;
 
-function toPredicateFunction<R>( iteratee : Predicate<R> ){
+function toPredicateFunction<R extends Model>( iteratee : Predicate<R> ){
     if( iteratee == null ) return noOp;
 
     switch( typeof iteratee ){

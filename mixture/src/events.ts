@@ -31,7 +31,7 @@ export interface MessengersByCid {
 }
 
 export type EventCallbacks<Context> = { [ events : string ] : EventCallback<Context> }
-export type EventCallback<Context> = ( this : Context, ...args : any[] ) => void
+export type EventCallback<Context> = ( ...args : any[] ) => void
 
 /*************************
  * Messenger is mixable class with capabilities of sending and receiving synchronous events.

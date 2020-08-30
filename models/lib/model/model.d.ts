@@ -9,7 +9,7 @@ export interface MakeModelConstructor<T extends Model, A extends object> extends
     new (attrs?: Partial<InferAttrs<A>>, options?: object): T;
     prototype: T;
     attributes: A;
-    Collection: CollectionConstructor<T>;
+    Collection: CollectionConstructor<Model & T>;
 }
 export interface ConstructorOptions extends TransactionOptions {
     clone?: boolean;

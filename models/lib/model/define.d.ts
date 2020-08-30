@@ -1,8 +1,8 @@
-import { LinkedModelHash } from './linked-attrs';
-import { Infer } from './attrDef';
-import { Model, MakeModelConstructor } from './model';
 import { GenericComparator } from '../collection';
 import { IOEndpoint } from '../io-tools';
+import { Infer } from './attrDef';
+import { LinkedModelHash } from './linked-attrs';
+import { MakeModelConstructor, Model } from './model';
 export declare const collection: unique symbol;
 export declare const metadata: unique symbol;
 export interface AnonimousModelDefinition {

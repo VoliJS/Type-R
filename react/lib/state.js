@@ -47,7 +47,7 @@ export var useCollection = {
             coll.resolvedWith || coll.resolve(init);
         }, [Boolean(init.models.length)]);
         useEffect(function () {
-            mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
+            mutable._onChildrenChange = forceUpdate;
             return function () { return mutable.value.dispose(); };
         }, emptyArray);
         return mutable.value;
@@ -77,7 +77,7 @@ function mutableHook(create) {
     return function (init) {
         var _a = useReducer(mutableReducer, init, create), mutable = _a[0], forceUpdate = _a[1];
         useEffect(function () {
-            mutable._onChildrenChange = function (obj) { return forceUpdate(obj); };
+            mutable._onChildrenChange = forceUpdate;
             return function () { return mutable.value.dispose(); };
         }, emptyArray);
         return mutable.value;
