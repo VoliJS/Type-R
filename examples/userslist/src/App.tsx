@@ -1,5 +1,5 @@
 import { localStorageIO } from '@type-r/endpoints'
-import { attributes, Linked, metadata, type, define } from '@type-r/models'
+import { attributes, Linked, metadata, type } from '@type-r/models'
 import { useIO, useLinked, useModel } from '@type-r/react'
 import React, { ComponentProps, FormEvent } from 'react'
 import Modal from 'react-modal'
@@ -8,22 +8,19 @@ import './App.css'
 const Email = type( String )
     .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
 
-@define class User extends
-    attributes({
-        name : type( String )
-                    .required
-                    .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
+type User = InstanceType<typeof User>
+const User = attributes({
+    name : type( String )
+                .required
+                .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
 
-        email : type( Email ).required,
-        isActive : true,
+    email : type( Email ).required,
+    isActive : true,
 
-        [metadata] : {
-            endpoint : localStorageIO( '/react-mvx/examples/userslist' )
-        }
-    }){
-
-    remove(){ this.collection.remove( this ); }
-}
+    [metadata] : {
+        endpoint : localStorageIO( '/react-mvx/examples/userslist' )
+    }
+})
 
 const AppState = attributes({
     users : [User]
@@ -90,7 +87,7 @@ const UserRow = ( { user, onEdit } :{
             { user.isActive ? 'Yes' : 'No' }</div>
         <div>
             <button onClick={ onEdit }>Edit</button>
-            <button onClick={ () => user.remove() }>X</button>
+            <button onClick={ () => user.destroy() }>X</button>
         </div>
     </div>
 
