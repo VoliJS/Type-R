@@ -216,7 +216,7 @@ describe( 'IO', function(){
                     if( user ) {
                         const idx = usersStorage.models.indexOf( user )
                         usersStorage.models.splice( idx, 1 );
-                        return [ 200 ]
+                        return [ 200, {} ]
                     }
                     else {
                         console.warn( "DELETE: NOT FOUND", uri )
