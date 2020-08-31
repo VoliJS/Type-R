@@ -2,13 +2,13 @@ import { Collection } from '../collection';
 import { Model } from '../model';
 import { CompiledReference } from '../traversable';
 
-export type CollectionReference = ( () => Collection ) | Collection | string; 
+export type CollectionReference = ( ( self : any ) => Collection ) | Collection | string; 
 
 /** @private */
 export function parseReference( collectionRef : CollectionReference ) : ( root : Model ) => Collection {
     switch( typeof collectionRef ){
         case 'function' :
-            return root => (<any>collectionRef).call( root );
+            return root => (<any>collectionRef).call( root, root );
         case 'object'   :
             return () => <Collection>collectionRef;
         case 'string'   :

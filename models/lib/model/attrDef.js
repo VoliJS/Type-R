@@ -49,6 +49,13 @@ var ChainableAttributeSpec = (function () {
     ChainableAttributeSpec.prototype.watcher = function (ref) {
         return this.metadata({ _onChange: ref });
     };
+    ChainableAttributeSpec.prototype.onChange = function (handler) {
+        return this.metadata({
+            _onChange: function (a_value, a_key) {
+                handler(this, a_value, a_key);
+            }
+        });
+    };
     ChainableAttributeSpec.prototype.parse = function (fun) {
         return this.metadata({ parse: fun });
     };

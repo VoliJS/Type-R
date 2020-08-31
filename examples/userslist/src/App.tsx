@@ -1,49 +1,45 @@
 import { localStorageIO } from '@type-r/endpoints'
-import { Collection, define, Model, refTo, type } from '@type-r/models'
-import { useIO, useModel } from '@type-r/react'
-import React, { useEffect } from 'react'
+import { attributes, Linked, metadata, type, define } from '@type-r/models'
+import { useIO, useLinked, useModel } from '@type-r/react'
+import React, { ComponentProps, FormEvent } from 'react'
 import Modal from 'react-modal'
-import './main.css'
+import './App.css'
 
 const Email = type( String )
-                .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
+    .check( x => !x || x.indexOf( '@' ) >= 0, 'Must be valid e-mail' );
 
-@define class User extends Model {
-    static attributes = {
+@define class User extends
+    attributes({
         name : type( String )
                     .required
                     .check( x => x.indexOf( ' ' ) < 0, 'Spaces are not allowed' ),
 
         email : type( Email ).required,
-        isActive : true
-    }
+        isActive : true,
+
+        [metadata] : {
+            endpoint : localStorageIO( '/react-mvx/examples/userslist' )
+        }
+    }){
 
     remove(){ this.collection.remove( this ); }
 }
 
-@define class AppState extends Model {
-    static endpoint = localStorageIO( '/react-mvx/examples' );
-
-    static attributes = {
-        id : 'users-list',
-        users   : Collection.of( User ), // No comments required, isn't it?
-        editing : User.memberOf( 'users' ), // User from user collection, which is being edited.
-        adding  : refTo( User ) // New user, which is being added.
-    }
-}
+const AppState = attributes({
+    users : [User]
+})
 
 export default () => {
-    const state = useModel( AppState );
+    const state = useModel( AppState ),
+        $editing = useLinked<User|null>( null );
 
     useIO( async () => {
-        window.onunload = () => state.save();
-
-        await state.fetch();
+        await state.users.fetch();
     });
 
     return (
         <div>
-            <button onClick={ () => state.adding = new User() }>
+            <button onClick={ () => $editing.set( new User() )}>
                 Add User
             </button>
 
@@ -52,20 +48,19 @@ export default () => {
             { state.users.map( user => (
                 <UserRow key={ user.cid }
                             user={ user }
-                            onEdit={ () => state.editing = user }
+                            onEdit={ () => $editing.set( user ) }
                 />
             ) )}
 
-            { state.adding &&
+            { $editing.value &&
                 <Modal isOpen={true}>
-                    <EditUser $user={ state.$.adding }
-                            onSave={ () => state.users.add( state.adding ) }/>
-                </Modal>
-            }
-
-            { state.editing &&
-                <Modal isOpen={true}>
-                    <EditUser $user={ state.$.editing } />
+                    <EditUser
+                        $user={ $editing as Linked<User> }
+                        onSave={ async user => {
+                            state.users.add( user );
+                            await user.save();
+                        }}
+                    />
                 </Modal>
             }
         </div>
@@ -81,31 +76,35 @@ const Header = () =>(
     </div>
 );
 
-const UserRow = ( { user, onEdit } ) =>(
+const UserRow = ( { user, onEdit } :{
+    user : User
+    onEdit() : void
+}) =>
     <div className="users-row" onDoubleClick={ onEdit }>
         <div>{ user.name }</div>
         <div>{ user.email }</div>
-        <div onClick={ () => user.isActive = !user.isActive }>
+        <div onClick={ () => {
+            user.isActive = !user.isActive;
+            user.save();
+        }}>
             { user.isActive ? 'Yes' : 'No' }</div>
         <div>
             <button onClick={ onEdit }>Edit</button>
             <button onClick={ () => user.remove() }>X</button>
         </div>
     </div>
-);
 
-const EditUser = ({ $user, onSave }) => {
-    const user = useModel( User );
+const EditUser = ({ $user, onSave }:{
+    $user : Linked<User>,
+    onSave?( user : User ) : void
+}) => {
+    const user = useModel.copy( $user.value );
 
-    useEffect( () => {
-        user.assignFrom( $user );
-    }, [ $user.value ] );
-
-    const onSubmit = e => {
+    function onSubmit( e : FormEvent ){
         e.preventDefault();
         $user.value.assignFrom( user );
         onSave && onSave( $user.value );
-        $user.set( null );
+        $user.null();
     }
 
     return (
@@ -126,14 +125,16 @@ const EditUser = ({ $user, onSave }) => {
                 Save
             </button>
  
-            <button type="button" onClick={ () => $user.set( null ) }>
+            <button type="button" onClick={ $user.null }>
                 Cancel
             </button>
         </form>
     );
 }
 
-const ValidatedInput = ({ $value, ...props }) => (
+const ValidatedInput = ({ $value, ...props }:{
+    $value : Linked<string>
+} & ComponentProps<'input'> ) => (
     <div>
         <input {...$value.props} { ...props } />
         <div className="validation-error">

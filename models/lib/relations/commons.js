@@ -2,7 +2,7 @@ import { CompiledReference } from '../traversable';
 export function parseReference(collectionRef) {
     switch (typeof collectionRef) {
         case 'function':
-            return function (root) { return collectionRef.call(root); };
+            return function (root) { return collectionRef.call(root, root); };
         case 'object':
             return function () { return collectionRef; };
         case 'string':

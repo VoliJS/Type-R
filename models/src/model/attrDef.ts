@@ -19,7 +19,6 @@ export interface AttributeCheck {
     error? : any
 }
 
-
 // Infer the proper TS type from a Type-R attribute spec.
 export type Infer<A> =
     A extends Function ? TrueReturnType<A> :
@@ -32,15 +31,18 @@ export type Infer<A> =
         T[]
     ) :
     A extends object ? Model & ModelAttributes<A> :
-    A | null;
+    A;
 
 // Extract the proper TS return type for a function or constructor.
 type TrueReturnType<F extends Function> =
-    F extends DateConstructor ? Date | null :
+    F extends DateConstructor ? MaybeNull<F,Date> :
     F extends typeof Linked ? Linked<any> :
-    F extends ( ...args : any[] ) => infer R ? R | null :
-    F extends new ( ...args : any[] ) => infer R ? R | null:
+    F extends ( ...args : any[] ) => infer R ? MaybeNull<F,R> :
+    F extends new ( ...args : any[] ) => infer R ? MaybeNull<F,R>:
     void;
+
+type MaybeNull<F,R> = F extends { isNullable : true } ? R | null : R
+export type Nullable<F> = F & { isNullable : true }
 
 export class ChainableAttributeSpec<F extends Function>{
     options : AttributeOptions & { type? : F };
@@ -74,6 +76,7 @@ export class ChainableAttributeSpec<F extends Function>{
         return definitionDecorator( 'attributes', this );
     }
 
+    /** @deprecated */
     get isRequired() : this {
         return this.required;
     }
@@ -86,8 +89,20 @@ export class ChainableAttributeSpec<F extends Function>{
         return this.metadata({ endpoint });
     }
 
+    /** @deprecated */
     watcher( ref : string | ( ( value : any, key : string ) => void ) ) : this {
         return this.metadata({ _onChange : ref });
+    }
+
+    /**
+     * Called when the attribute has changed its value.
+     */
+    onChange( handler : ( model : Model, value : Infer<F>, key : string ) => void ) : this {
+        return this.metadata({
+            _onChange( a_value : any, a_key : string ){
+                handler( this, a_value, a_key );
+            }
+        });
     }
 
     // Attribute-specific parse transform
@@ -105,8 +120,8 @@ export class ChainableAttributeSpec<F extends Function>{
         return this.toJSON( false );
     }
 
-    get null(){
-        return this.value( null );
+    get null() : ChainableAttributeSpec<Nullable<F>>{
+        return this.value( null ) as any;
     }
 
     // Attribute get hook.
@@ -182,12 +197,12 @@ export function type<F extends Function>( this : void, Type : ChainableAttribute
     return defaultValue === void 0 ? attrDef : attrDef.value( defaultValue );
 }
 
-export function shared<C extends Function>( this : void, Constructor : C ) : ChainableAttributeSpec<C> {
+export function shared<C extends Function>( this : void, Constructor : C ) : ChainableAttributeSpec<Nullable<C>> {
     return new ChainableAttributeSpec<C>({
         value : null,
         type : Constructor,
         _metatype : SharedType
-    });
+    }) as any;
 }
 
 export { shared as refTo };

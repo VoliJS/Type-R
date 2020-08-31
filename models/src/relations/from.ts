@@ -1,4 +1,4 @@
-import { AnyType, ChainableAttributeSpec, Model } from '../model';
+import { AnyType, ChainableAttributeSpec, Model, Nullable } from '../model';
 import { CollectionReference, parseReference } from './commons';
 
 
@@ -38,7 +38,7 @@ class ModelRefType extends AnyType {
     validate( model, value, name ){}
 }
 
-function theMemberOf<R extends typeof Model>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<R> {
+function theMemberOf<R extends new () => Model>( this : void, masterCollection : CollectionReference, T? : R ) : ChainableAttributeSpec<Nullable<R>> {
     const getMasterCollection = parseReference( masterCollection );
 
     const typeSpec = new ChainableAttributeSpec<R>({
@@ -65,14 +65,14 @@ function theMemberOf<R extends typeof Model>( this : void, masterCollection : Co
             }
 
             return record;
-        });
+        }) as any;
 }
 
 export { theMemberOf as memberOf }
 
 declare module '../model' {
     namespace Model {
-        export const memberOf : <R extends typeof Model>( this : R, masterCollection : CollectionReference ) => ChainableAttributeSpec<R>;
+        export const memberOf : <R extends new () => Model>( this : R, masterCollection : CollectionReference ) => ChainableAttributeSpec<Nullable<R>>;
     }
 }
 

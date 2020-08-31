@@ -3119,6 +3119,13 @@ var ChainableAttributeSpec = (function () {
     ChainableAttributeSpec.prototype.watcher = function (ref) {
         return this.metadata({ _onChange: ref });
     };
+    ChainableAttributeSpec.prototype.onChange = function (handler) {
+        return this.metadata({
+            _onChange: function (a_value, a_key) {
+                handler(this, a_value, a_key);
+            }
+        });
+    };
     ChainableAttributeSpec.prototype.parse = function (fun) {
         return this.metadata({ parse: fun });
     };
@@ -4804,7 +4811,7 @@ __webpack_require__.r(__webpack_exports__);
 function parseReference(collectionRef) {
     switch (typeof collectionRef) {
         case 'function':
-            return function (root) { return collectionRef.call(root); };
+            return function (root) { return collectionRef.call(root, root); };
         case 'object':
             return function () { return collectionRef; };
         case 'string':

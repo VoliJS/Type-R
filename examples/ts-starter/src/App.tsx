@@ -26,9 +26,9 @@ export default () => {
 }
 
 const ValidatedInput = ({ $value } : {
-    $value : Linked<string|null>
+    $value : Linked<string>
 }) =>
     <div>
-        <input { ...$value.props as any} /> 
+        <input { ...$value.props } /> 
         <span>{ $value.error || '' }</span>
     </div>
