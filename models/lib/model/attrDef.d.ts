@@ -28,7 +28,7 @@ export declare class ChainableAttributeSpec<F extends Function> {
     readonly required: this;
     endpoint(endpoint: IOEndpoint): this;
     watcher(ref: string | ((value: any, key: string) => void)): this;
-    onChange(handler: (model: Model, value: Infer<F>, key: string) => void): this;
+    onChange(handler: (model: any, value: any, key: string) => void): this;
     parse(fun: Parse): this;
     toJSON(fun: AttributeToJSON | false): this;
     readonly dontSave: this;
